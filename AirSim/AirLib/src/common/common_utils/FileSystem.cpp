@@ -88,7 +88,7 @@ std::string FileSystem::getUserDocumentsFolder() {
     // fall back in case SHGetFolderPath failed for some reason.
 #endif
     if (path == "") {
-        path = combine(getUserHomeFolder(), "Documents");
+        path = combine(getUserHomeFolder(), "Driverless-Competition-Simulator/UE4Project/Plugins/AirSim");
     }
     return ensureFolder(path);
 }
