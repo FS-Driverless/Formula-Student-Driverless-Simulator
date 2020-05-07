@@ -9,7 +9,7 @@ To check the videocard drivers, run `vulkaninfo`. It should output a bunch of li
 Also make sure you have 100GB free disk space. 
 You also need to run **ubuntu 18.04 LTS**. Any other platforms are not supported.
 If your computer does not suffice you can use a remote workstation on google cloud platform.
-Read [this tutorial] on how to setup your virtual workstation.
+Read [this tutorial](gcp-remote-workstation.md) on how to setup your virtual workstation.
 
 We will be compiling all kinds of c++ files and it is important that they are all compiled using the same compiler version. 
 Therefore we will install gcc-8 and set it to use it when `gcc` is called.

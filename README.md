@@ -26,7 +26,7 @@ We recommand the following computer specs. You might be able to run with less po
 * 100GB free SSD storage (required)
 * Recent NVidia card with vulkan support and like 3 gb of memory.
 
-If you do not have access to such a computer (like the most of) you can [setup a remote workstation in google cloud].
+If you do not have access to such a computer (like the most of) you can [setup a remote workstation in google cloud](docs/gcp-remote-workstation.md).
 
 To actually setup your computer for development follow [this tutorial](docs/get-ready-to-develop.md).
 
