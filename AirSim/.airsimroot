@@ -1,0 +1,1 @@
+CommonSetup.cmake needs to know where the airsim root directory is, so it searches for this file.
