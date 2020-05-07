@@ -15,6 +15,7 @@ When AirSim is compiled, the AirLib binaries are placed within `/UE4Project/Plug
 
 `/Simulator` is the simulation controll system. This is a ros workspace.
 
+This repo uses LFS for some large files. All files bigger then 90MB are added to LFS.
 
 ## Development
 

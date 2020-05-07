@@ -44,6 +44,8 @@ sudo apt install ros-melodic-desktop ros-melodic-mavros ros-melodic-tf2-geometry
 
 ## Install the project
 
+This repo uses git lfs. So ensure you have lfs installed: `sudo apt-get install git-lfs`
+
 Let's start by cloning this repository in the home directory
 ```
 git clone git@github.com:FS-Online/Driverless-Competition-Simulator.git
