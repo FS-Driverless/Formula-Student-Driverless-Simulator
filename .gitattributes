@@ -1,0 +1,2 @@
+UE4Project/Content/RaceCourse/Textures/Environment/Terrain/splat.uasset filter=lfs diff=lfs merge=lfs -text
+UE4Project/Plugins/AirSim/Content/VehicleAdv/SUV/SUV.uasset filter=lfs diff=lfs merge=lfs -text
