@@ -102,34 +102,6 @@ if [ ! -d "external/rpclib/rpclib-2.2.1" ]; then
     rm v2.2.1.zip
 fi
 
-# Download high-polycount SUV model
-if $downloadHighPolySuv; then
-    if [ ! -d "Unreal/Plugins/AirSim/Content/VehicleAdv" ]; then
-        mkdir -p "Unreal/Plugins/AirSim/Content/VehicleAdv"
-    fi
-    if [ ! -d "Unreal/Plugins/AirSim/Content/VehicleAdv/SUV/v1.2.0" ]; then
-            echo "*********************************************************************************************"
-            echo "Downloading high-poly car assets.... The download is ~37MB and can take some time."
-            echo "To install without this assets, re-run setup.sh with the argument --no-full-poly-car"
-            echo "*********************************************************************************************"
-
-            if [ -d "suv_download_tmp" ]; then
-                rm -rf "suv_download_tmp"
-            fi
-            mkdir -p "suv_download_tmp"
-            cd suv_download_tmp
-            wget  https://github.com/Microsoft/AirSim/releases/download/v1.2.0/car_assets.zip
-            if [ -d "../Unreal/Plugins/AirSim/Content/VehicleAdv/SUV" ]; then
-                rm -rf "../Unreal/Plugins/AirSim/Content/VehicleAdv/SUV"
-            fi
-            unzip car_assets.zip -d ../Unreal/Plugins/AirSim/Content/VehicleAdv
-            cd ..
-            rm -rf "suv_download_tmp"
-    fi
-else
-    echo "### Not downloading high-poly car asset (--no-full-poly-car). The default unreal vehicle will be used."
-fi
-
 echo "Installing Eigen library..."
 
 if [ ! -d "AirLib/deps/eigen3" ]; then
