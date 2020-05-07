@@ -3,3 +3,4 @@ project(AirSim)
 
 add_subdirectory("rpclib_wrapper")
 add_subdirectory("AirLib")
+add_subdirectory("MavLinkCom")
