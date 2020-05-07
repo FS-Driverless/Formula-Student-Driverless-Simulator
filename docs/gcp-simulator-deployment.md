@@ -92,6 +92,7 @@ Section "Screen"
 EndSection
 
 ```
+Note that the resolution can be higher. To see the effect of changes to this file, run `sudo systemctl restart lxdm`
 
 Install the vnc server:
 
