@@ -12,7 +12,7 @@
 // This defines a default folder name for all the files created by AirLib so they 
 // are all gathered nicely in one place in the user's documents folder.
 #ifndef ProductFolderName
-#define ProductFolderName "AirSim" 
+#define ProductFolderName "Settings" 
 #endif
 
 #ifndef _CRT_SECURE_NO_WARNINGS
