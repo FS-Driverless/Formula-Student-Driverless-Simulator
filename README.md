@@ -11,6 +11,7 @@ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 800 --slave /
 1. Install Unreal Engine 4.24. You can install it anywhere on your computer.
 ```
 git clone --depth=1 -b 4.24 https://github.com/EpicGames/UnrealEngine.git
+cd UnrealEngine
 ./Setup.sh
 ./GenerateProjectFiles.sh
 make
