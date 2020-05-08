@@ -134,12 +134,12 @@ public:
 private:
     /// ROS timer callbacks
     void img_response_timer_cb(const ros::TimerEvent& event); // update images from airsim_client_ every nth sec
-    void drone_state_timer_cb(const ros::TimerEvent& event); // update drone state from airsim_client_ every nth sec
+    void car_state_timer_cb(const ros::TimerEvent& event); // update drone state from airsim_client_ every nth sec
     void lidar_timer_cb(const ros::TimerEvent& event);
 
     /// ROS subscriber callbacks
-    void vel_cmd_world_frame_cb(const ros_interface::VelCmd::ConstPtr& msg, const std::string& vehicle_name);
-    void vel_cmd_body_frame_cb(const ros_interface::VelCmd::ConstPtr& msg, const std::string& vehicle_name);
+    // void vel_cmd_world_frame_cb(const ros_interface::VelCmd::ConstPtr& msg, const std::string& vehicle_name);
+    // void vel_cmd_body_frame_cb(const ros_interface::VelCmd::ConstPtr& msg, const std::string& vehicle_name);
 
     // void vel_cmd_group_body_frame_cb(const ros_interface::VelCmdGroup& msg);
     // void vel_cmd_group_world_frame_cb(const ros_interface::VelCmdGroup& msg);
@@ -148,8 +148,8 @@ private:
     // void vel_cmd_all_body_frame_cb(const ros_interface::VelCmd& msg);
 
     // void vel_cmd_body_frame_cb(const ros_interface::VelCmd& msg, const std::string& vehicle_name);
-    void gimbal_angle_quat_cmd_cb(const ros_interface::GimbalAngleQuatCmd& gimbal_angle_quat_cmd_msg);
-    void gimbal_angle_euler_cmd_cb(const ros_interface::GimbalAngleEulerCmd& gimbal_angle_euler_cmd_msg);
+    // void gimbal_angle_quat_cmd_cb(const ros_interface::GimbalAngleQuatCmd& gimbal_angle_quat_cmd_msg);
+    // void gimbal_angle_euler_cmd_cb(const ros_interface::GimbalAngleEulerCmd& gimbal_angle_euler_cmd_msg);
 
     ros::Time make_ts(uint64_t unreal_ts);
     // void set_zero_vel_cmd();
@@ -192,7 +192,7 @@ private:
 
     nav_msgs::Odometry get_odom_msg_from_airsim_state(const msr::airlib::CarApiBase::CarState& car_state) const;
     ros_interface::GPSYaw get_gps_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
-    sensor_msgs::NavSatFix get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
+    // sensor_msgs::NavSatFix get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
     sensor_msgs::Imu get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data);
     sensor_msgs::PointCloud2 get_lidar_msg_from_airsim(const msr::airlib::LidarData& lidar_data) const;
 

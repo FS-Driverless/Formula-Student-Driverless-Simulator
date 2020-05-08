@@ -85,15 +85,15 @@ void AirsimROSWrapper::initialize_ros()
     // nh_.getParam("max_horz_vel", max_horz_vel_)
 
     create_ros_pubs_from_settings_json();
-    airsim_control_update_timer_ = nh_private_.createTimer(ros::Duration(update_airsim_control_every_n_sec), &AirsimROSWrapper::drone_state_timer_cb, this);
+    airsim_control_update_timer_ = nh_private_.createTimer(ros::Duration(update_airsim_control_every_n_sec), &AirsimROSWrapper::car_state_timer_cb, this);
 }
 
 // XmlRpc::XmlRpcValue can't be const in this case
 void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 {
     // subscribe to control commands on global nodehandle
-    gimbal_angle_quat_cmd_sub_ = nh_private_.subscribe("gimbal_angle_quat_cmd", 50, &AirsimROSWrapper::gimbal_angle_quat_cmd_cb, this);
-    gimbal_angle_euler_cmd_sub_ = nh_private_.subscribe("gimbal_angle_euler_cmd", 50, &AirsimROSWrapper::gimbal_angle_euler_cmd_cb, this);
+    // gimbal_angle_quat_cmd_sub_ = nh_private_.subscribe("gimbal_angle_quat_cmd", 50, &AirsimROSWrapper::gimbal_angle_quat_cmd_cb, this);
+    // gimbal_angle_euler_cmd_sub_ = nh_private_.subscribe("gimbal_angle_euler_cmd", 50, &AirsimROSWrapper::gimbal_angle_euler_cmd_cb, this);
     origin_geo_point_pub_ = nh_private_.advertise<ros_interface::GPSYaw>("origin_geo_point", 10);       
 
     airsim_img_request_vehicle_name_pair_vec_.clear();
@@ -132,10 +132,10 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 
         // bind to a single callback. todo optimal subs queue length
         // bind multiple topics to a single callback, but keep track of which vehicle name it was by passing curr_vehicle_name as the 2nd argument 
-        fscar_ros.vel_cmd_body_frame_sub = nh_private_.subscribe<ros_interface::VelCmd>(curr_vehicle_name + "/vel_cmd_body_frame", 1, 
-            boost::bind(&AirsimROSWrapper::vel_cmd_body_frame_cb, this, _1, fscar_ros.vehicle_name)); // todo ros::TransportHints().tcpNoDelay();
-        fscar_ros.vel_cmd_world_frame_sub = nh_private_.subscribe<ros_interface::VelCmd>(curr_vehicle_name + "/vel_cmd_world_frame", 1, 
-            boost::bind(&AirsimROSWrapper::vel_cmd_world_frame_cb, this, _1, fscar_ros.vehicle_name));
+        // fscar_ros.vel_cmd_body_frame_sub = nh_private_.subscribe<ros_interface::VelCmd>(curr_vehicle_name + "/vel_cmd_body_frame", 1, 
+        //     boost::bind(&AirsimROSWrapper::vel_cmd_body_frame_cb, this, _1, fscar_ros.vehicle_name)); // todo ros::TransportHints().tcpNoDelay();
+        // fscar_ros.vel_cmd_world_frame_sub = nh_private_.subscribe<ros_interface::VelCmd>(curr_vehicle_name + "/vel_cmd_world_frame", 1, 
+        //     boost::bind(&AirsimROSWrapper::vel_cmd_world_frame_cb, this, _1, fscar_ros.vehicle_name));
 
         // multirotor_ros.takeoff_srvr = nh_private_.advertiseService<ros_interface::Takeoff::Request, ros_interface::Takeoff::Response>(curr_vehicle_name + "/takeoff", 
         //     boost::bind(&AirsimROSWrapper::takeoff_srv_cb, this, _1, _2, multirotor_ros.vehicle_name) );
@@ -422,25 +422,25 @@ msr::airlib::Quaternionr AirsimROSWrapper::get_airlib_quat(const tf2::Quaternion
 }
 
 // void AirsimROSWrapper::vel_cmd_body_frame_cb(const ros_interface::VelCmd& msg, const std::string& vehicle_name)
-void AirsimROSWrapper::vel_cmd_body_frame_cb(const ros_interface::VelCmd::ConstPtr& msg, const std::string& vehicle_name)
-{
-    std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
+// void AirsimROSWrapper::vel_cmd_body_frame_cb(const ros_interface::VelCmd::ConstPtr& msg, const std::string& vehicle_name)
+// {
+//     std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
 
-    int vehicle_idx = vehicle_name_idx_map_[vehicle_name];
+//     int vehicle_idx = vehicle_name_idx_map_[vehicle_name];
 
-    double roll, pitch, yaw;
-    tf2::Matrix3x3(get_tf2_quat(fscar_ros_vec_[vehicle_idx].curr_car_state.kinematics_estimated.pose.orientation)).getRPY(roll, pitch, yaw); // ros uses xyzw
+//     double roll, pitch, yaw;
+//     tf2::Matrix3x3(get_tf2_quat(fscar_ros_vec_[vehicle_idx].curr_car_state.kinematics_estimated.pose.orientation)).getRPY(roll, pitch, yaw); // ros uses xyzw
 
-    // todo do actual body frame?
-    fscar_ros_vec_[vehicle_idx].vel_cmd.x = (msg->twist.linear.x * cos(yaw)) - (msg->twist.linear.y * sin(yaw)); //body frame assuming zero pitch roll
-    fscar_ros_vec_[vehicle_idx].vel_cmd.y = (msg->twist.linear.x * sin(yaw)) + (msg->twist.linear.y * cos(yaw)); //body frame
-    fscar_ros_vec_[vehicle_idx].vel_cmd.z = msg->twist.linear.z;
-    fscar_ros_vec_[vehicle_idx].vel_cmd.drivetrain = msr::airlib::DrivetrainType::MaxDegreeOfFreedom;
-    fscar_ros_vec_[vehicle_idx].vel_cmd.yaw_mode.is_rate = true;
-    // airsim uses degrees
-    fscar_ros_vec_[vehicle_idx].vel_cmd.yaw_mode.yaw_or_rate = math_common::rad2deg(msg->twist.angular.z);
-    fscar_ros_vec_[vehicle_idx].has_vel_cmd = true;
-}
+//     // todo do actual body frame?
+//     fscar_ros_vec_[vehicle_idx].vel_cmd.x = (msg->twist.linear.x * cos(yaw)) - (msg->twist.linear.y * sin(yaw)); //body frame assuming zero pitch roll
+//     fscar_ros_vec_[vehicle_idx].vel_cmd.y = (msg->twist.linear.x * sin(yaw)) + (msg->twist.linear.y * cos(yaw)); //body frame
+//     fscar_ros_vec_[vehicle_idx].vel_cmd.z = msg->twist.linear.z;
+//     fscar_ros_vec_[vehicle_idx].vel_cmd.drivetrain = msr::airlib::DrivetrainType::MaxDegreeOfFreedom;
+//     fscar_ros_vec_[vehicle_idx].vel_cmd.yaw_mode.is_rate = true;
+//     // airsim uses degrees
+//     fscar_ros_vec_[vehicle_idx].vel_cmd.yaw_mode.yaw_or_rate = math_common::rad2deg(msg->twist.angular.z);
+//     fscar_ros_vec_[vehicle_idx].has_vel_cmd = true;
+// }
 
 // void AirsimROSWrapper::vel_cmd_group_body_frame_cb(const ros_interface::VelCmdGroup& msg)
 // {
@@ -702,14 +702,14 @@ ros_interface::GPSYaw AirsimROSWrapper::get_gps_msg_from_airsim_geo_point(const 
     return gps_msg;
 }
 
-sensor_msgs::NavSatFix AirsimROSWrapper::get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const
-{
-    sensor_msgs::NavSatFix gps_msg;
-    gps_msg.latitude = geo_point.latitude;
-    gps_msg.longitude = geo_point.longitude; 
-    gps_msg.altitude = geo_point.altitude;
-    return gps_msg;
-}
+// sensor_msgs::NavSatFix AirsimROSWrapper::get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const
+// {
+//     sensor_msgs::NavSatFix gps_msg;
+//     gps_msg.latitude = geo_point.latitude;
+//     gps_msg.longitude = geo_point.longitude; 
+//     gps_msg.altitude = geo_point.altitude;
+//     return gps_msg;
+// }
 
 // todo unused
 // void AirsimROSWrapper::set_zero_vel_cmd()
@@ -727,7 +727,7 @@ sensor_msgs::NavSatFix AirsimROSWrapper::get_gps_sensor_msg_from_airsim_geo_poin
 //     vel_cmd_.yaw_mode.yaw_or_rate = yaw;
 // }
 
-void AirsimROSWrapper::drone_state_timer_cb(const ros::TimerEvent& event)
+void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent& event)
 {
     try
     {
