@@ -42,7 +42,8 @@ sudo apt install ros-melodic-desktop ros-melodic-mavros ros-melodic-tf2-geometry
 
 ## Install the project
 
-This repo uses git LFS. So ensure you have LFS installed: `sudo apt-get install git-lfs`
+This repo uses git LFS. So ensure you have LFS installed: `sudo apt-get install git-lfs`. 
+Once git-lfs is downloaded, `git lfs install` must be run.
 
 Let's start by cloning this repository in the home directory
 ```
