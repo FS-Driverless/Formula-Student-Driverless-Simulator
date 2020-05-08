@@ -14,16 +14,16 @@ STRICT_MODE_ON
 // #include "vehicles/multirotor/api/MultirotorRpcLibClient.hpp"
 #include "vehicles/car/api/CarRpcLibClient.hpp"
 #include "yaml-cpp/yaml.h"
-#include <ros_interface/GimbalAngleEulerCmd.h>
-#include <ros_interface/GimbalAngleQuatCmd.h>
+// #include <ros_interface/GimbalAngleEulerCmd.h>
+// #include <ros_interface/GimbalAngleQuatCmd.h>
 #include <ros_interface/GPSYaw.h>
-#include <ros_interface/Land.h>
-#include <ros_interface/LandGroup.h>
+// #include <ros_interface/Land.h>
+// #include <ros_interface/LandGroup.h>
 #include <ros_interface/Reset.h>
-#include <ros_interface/Takeoff.h>
-#include <ros_interface/TakeoffGroup.h>
-#include <ros_interface/VelCmd.h>
-#include <ros_interface/VelCmdGroup.h>
+// #include <ros_interface/Takeoff.h>
+// #include <ros_interface/TakeoffGroup.h>
+// #include <ros_interface/VelCmd.h>
+// #include <ros_interface/VelCmdGroup.h>
 #include <chrono>
 #include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/PoseStamped.h>
