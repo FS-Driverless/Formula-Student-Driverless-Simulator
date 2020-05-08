@@ -57,7 +57,7 @@ public:
         MultirotorState()
         {}
 
-        MultirotorState(const msr::airlib::MultirotorState& s)
+        MultirotorState(const msr::airlib::CarApiBase::CarState& s)
         {
             collision = s.collision;
             kinematics_estimated = s.kinematics_estimated;
@@ -70,9 +70,9 @@ public:
             can_arm = s.can_arm;
         }
 
-        msr::airlib::MultirotorState to() const
+        msr::airlib::CarApiBase::CarState to() const
         {
-            return msr::airlib::MultirotorState(collision.to(), kinematics_estimated.to(), 
+            return msr::airlib::CarApiBase::CarState(collision.to(), kinematics_estimated.to(), 
                 gps_location.to(), timestamp, landed_state, rc_data.to(), ready, ready_message, can_arm);
         }
     };

@@ -52,13 +52,13 @@ void PIDPositionController::reset_errors()
 
 void PIDPositionController::initialize_ros()
 {
-    vel_cmd_ = airsim_ros_pkgs::VelCmd();
+    vel_cmd_ = ros_interface::VelCmd();
     // ROS params
     double update_control_every_n_sec;
     nh_private_.getParam("update_control_every_n_sec", update_control_every_n_sec);
 
     // ROS publishers
-    airsim_vel_cmd_world_frame_pub_ = nh_private_.advertise<airsim_ros_pkgs::VelCmd>("/vel_cmd_world_frame", 1);
+    airsim_vel_cmd_world_frame_pub_ = nh_private_.advertise<ros_interface::VelCmd>("/vel_cmd_world_frame", 1);
  
     // ROS subscribers
     airsim_odom_sub_ = nh_.subscribe("/airsim_node/odom_local_ned", 50, &PIDPositionController::airsim_odom_cb, this);
@@ -99,7 +99,7 @@ void PIDPositionController::check_reached_goal()
         reached_goal_ = true; 
 }
 
-bool PIDPositionController::local_position_goal_srv_cb(airsim_ros_pkgs::SetLocalPosition::Request& request, airsim_ros_pkgs::SetLocalPosition::Response& response)
+bool PIDPositionController::local_position_goal_srv_cb(ros_interface::SetLocalPosition::Request& request, ros_interface::SetLocalPosition::Response& response)
 {
     // this tells the update timer callback to not do active hovering 
     if(!got_goal_once_)
@@ -129,7 +129,7 @@ bool PIDPositionController::local_position_goal_srv_cb(airsim_ros_pkgs::SetLocal
     }
 }
 
-bool PIDPositionController::local_position_goal_srv_override_cb(airsim_ros_pkgs::SetLocalPosition::Request& request, airsim_ros_pkgs::SetLocalPosition::Response& response)
+bool PIDPositionController::local_position_goal_srv_override_cb(ros_interface::SetLocalPosition::Request& request, ros_interface::SetLocalPosition::Response& response)
 {
     // this tells the update timer callback to not do active hovering 
     if(!got_goal_once_)
@@ -149,7 +149,7 @@ bool PIDPositionController::local_position_goal_srv_override_cb(airsim_ros_pkgs:
     return true;
 }
 
-void PIDPositionController::home_geopoint_cb(const airsim_ros_pkgs::GPSYaw& gps_msg)
+void PIDPositionController::home_geopoint_cb(const ros_interface::GPSYaw& gps_msg)
 {
     if(has_home_geo_)
         return;
@@ -160,7 +160,7 @@ void PIDPositionController::home_geopoint_cb(const airsim_ros_pkgs::GPSYaw& gps_
 }
 
 // todo do relative altitude, or add an option for the same?
-bool PIDPositionController::gps_goal_srv_cb(airsim_ros_pkgs::SetGPSPosition::Request& request, airsim_ros_pkgs::SetGPSPosition::Response& response)
+bool PIDPositionController::gps_goal_srv_cb(ros_interface::SetGPSPosition::Request& request, ros_interface::SetGPSPosition::Response& response)
 {
     if(!has_home_geo_)
     {
@@ -209,7 +209,7 @@ bool PIDPositionController::gps_goal_srv_cb(airsim_ros_pkgs::SetGPSPosition::Req
 }
 
 // todo do relative altitude, or add an option for the same?
-bool PIDPositionController::gps_goal_srv_override_cb(airsim_ros_pkgs::SetGPSPosition::Request& request, airsim_ros_pkgs::SetGPSPosition::Response& response)
+bool PIDPositionController::gps_goal_srv_override_cb(ros_interface::SetGPSPosition::Request& request, ros_interface::SetGPSPosition::Response& response)
 {
     if(!has_home_geo_)
     {

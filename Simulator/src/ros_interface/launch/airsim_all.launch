@@ -1,9 +1,9 @@
 <launch> 
 
 <!-- AirSim ROS Wrapper -->
-	<include file="$(find airsim_ros_pkgs)/launch/airsim_node.launch"/>
+	<include file="$(find ros_interface)/launch/airsim_node.launch"/>
 <!-- Vehicle Dynamic Constraints -->
-	<include file="$(find airsim_ros_pkgs)/launch/dynamic_constraints.launch"/>
+	<include file="$(find ros_interface)/launch/dynamic_constraints.launch"/>
 <!-- Simple PID Position Controller -->
-	<include file="$(find airsim_ros_pkgs)/launch/position_controller_simple.launch"/>
+	<include file="$(find ros_interface)/launch/position_controller_simple.launch"/>
 </launch>

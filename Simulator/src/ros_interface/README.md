@@ -1,3 +1,3 @@
-# airsim_ros_pkgs
+# ros_interface
 
-This page has moved [here](https://github.com/microsoft/AirSim/blob/master/docs/airsim_ros_pkgs.md).
+This page has moved [here](https://github.com/microsoft/AirSim/blob/master/docs/ros_interface.md).

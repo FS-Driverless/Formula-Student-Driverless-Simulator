@@ -18,10 +18,10 @@ STRICT_MODE_ON
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <nav_msgs/Odometry.h>
 #include <math.h>
-#include <airsim_ros_pkgs/VelCmd.h>
-#include <airsim_ros_pkgs/SetLocalPosition.h>
-#include <airsim_ros_pkgs/SetGPSPosition.h>
-#include <airsim_ros_pkgs/GPSYaw.h>
+#include <ros_interface/VelCmd.h>
+#include <ros_interface/SetLocalPosition.h>
+#include <ros_interface/SetGPSPosition.h>
+#include <ros_interface/GPSYaw.h>
 #include <geodetic_conv.hpp>
 #include <math_common.h>
 #include <utils.h>
@@ -90,14 +90,14 @@ public:
     PIDPositionController(const ros::NodeHandle &nh, const ros::NodeHandle &nh_private);
 
     // ROS service callbacks
-    bool local_position_goal_srv_cb(airsim_ros_pkgs::SetLocalPosition::Request& request, airsim_ros_pkgs::SetLocalPosition::Response& response); 
-    bool local_position_goal_srv_override_cb(airsim_ros_pkgs::SetLocalPosition::Request& request, airsim_ros_pkgs::SetLocalPosition::Response& response); 
-    bool gps_goal_srv_cb(airsim_ros_pkgs::SetGPSPosition::Request& request, airsim_ros_pkgs::SetGPSPosition::Response& response);
-    bool gps_goal_srv_override_cb(airsim_ros_pkgs::SetGPSPosition::Request& request, airsim_ros_pkgs::SetGPSPosition::Response& response);
+    bool local_position_goal_srv_cb(ros_interface::SetLocalPosition::Request& request, ros_interface::SetLocalPosition::Response& response); 
+    bool local_position_goal_srv_override_cb(ros_interface::SetLocalPosition::Request& request, ros_interface::SetLocalPosition::Response& response); 
+    bool gps_goal_srv_cb(ros_interface::SetGPSPosition::Request& request, ros_interface::SetGPSPosition::Response& response);
+    bool gps_goal_srv_override_cb(ros_interface::SetGPSPosition::Request& request, ros_interface::SetGPSPosition::Response& response);
 
     // ROS subscriber callbacks
     void airsim_odom_cb(const nav_msgs::Odometry& odom_msg);
-    void home_geopoint_cb(const airsim_ros_pkgs::GPSYaw& gps_msg);
+    void home_geopoint_cb(const ros_interface::GPSYaw& gps_msg);
 
     void update_control_cmd_timer_cb(const ros::TimerEvent& event);
 
@@ -124,10 +124,10 @@ private:
     XYZYaw curr_error_;
 
     bool has_home_geo_;
-    airsim_ros_pkgs::GPSYaw gps_home_msg_;
+    ros_interface::GPSYaw gps_home_msg_;
 
     nav_msgs::Odometry curr_odom_;
-    airsim_ros_pkgs::VelCmd vel_cmd_;
+    ros_interface::VelCmd vel_cmd_;
     bool reached_goal_;
     bool has_goal_;
     bool has_odom_;
