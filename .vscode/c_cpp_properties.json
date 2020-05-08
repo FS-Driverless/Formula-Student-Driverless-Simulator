@@ -3,13 +3,15 @@
         {
             "name": "Linux",
             "includePath": [
+                "/opt/ros/melodic/include",
+                "/home/davidoort/Driverless-Competition-Simulator/Simulator/**",
                 "${workspaceFolder}/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",
             "cStandard": "c11",
             "cppStandard": "c++17",
-            "intelliSenseMode": "gcc-x86"
+            "intelliSenseMode": "gcc-x64"
         }
     ],
     "version": 4
