@@ -110,6 +110,7 @@ After=xdisplay.service
 
 [Service]
 Environment=XAUTHORITY=/var/run/lxdm/lxdm-:0.auth
+ExecStartPre=/bin/sleep 30
 ExecStart=/usr/bin/x0tigervncserver -SecurityTypes=none -display :0
 Restart=on-abort
 
