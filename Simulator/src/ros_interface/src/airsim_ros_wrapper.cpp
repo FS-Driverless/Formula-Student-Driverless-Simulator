@@ -758,14 +758,14 @@ void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent& event)
             fscar_ros.curr_odom_ned.child_frame_id = fscar_ros.odom_frame_id;
             fscar_ros.curr_odom_ned.header.stamp = curr_ros_time;
 
-            msr::airlib::GeoPoint gps_location = airsim_client_.getGpsData().gnss.geo_point;
+            msr::airlib::GeoPoint gps_location = airsim_client_.getGpsData("Gps", fscar_ros.vehicle_name).gnss.geo_point;
             fscar_ros.gps_sensor_msg = get_gps_sensor_msg_from_airsim_geo_point(gps_location);
             fscar_ros.gps_sensor_msg.header.stamp = curr_ros_time;
 
             // publish to ROS!  
             fscar_ros.odom_local_ned_pub.publish(fscar_ros.curr_odom_ned);
             publish_odom_tf(fscar_ros.curr_odom_ned);
-            // fscar_ros.global_gps_pub.publish(fscar_ros.gps_sensor_msg);
+            fscar_ros.global_gps_pub.publish(fscar_ros.gps_sensor_msg);
 
             // send control commands from the last callback to airsim
             // if (multirotor_ros.has_vel_cmd)
