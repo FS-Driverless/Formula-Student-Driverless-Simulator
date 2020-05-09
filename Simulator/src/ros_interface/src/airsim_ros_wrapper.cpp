@@ -501,7 +501,7 @@ void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent &event)
             fscar_ros.curr_odom_ned.child_frame_id = fscar_ros.odom_frame_id;
             fscar_ros.curr_odom_ned.header.stamp = curr_ros_time;
 
-            std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
+            lck.lock();
             msr::airlib::GeoPoint gps_location = airsim_client_.getGpsData("Gps", fscar_ros.vehicle_name).gnss.geo_point;
             lck.unlock();
             fscar_ros.gps_sensor_msg = get_gps_sensor_msg_from_airsim_geo_point(gps_location);
