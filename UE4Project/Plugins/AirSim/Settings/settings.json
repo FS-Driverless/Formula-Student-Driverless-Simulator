@@ -12,7 +12,7 @@
       "EnableCollisions": true,
       "AllowAPIAlways": true,
       "RC": {
-        "RemoteControlID": -1
+        "RemoteControlID": -1 // keyboard mode (will switch to API once ROS connection is established)
       },
       "Sensors": {
         "Imu": {
@@ -30,8 +30,8 @@
           "PointsPerSecond": 10000,
           "X": 0,
           "Y": 0,
-          "Z": -1,
-          "DrawDebugPoints": false
+          "Z": -0.1,
+          "DrawDebugPoints": true
         }
       },
       "Cameras": {
