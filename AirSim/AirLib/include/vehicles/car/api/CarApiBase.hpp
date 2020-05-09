@@ -87,6 +87,19 @@ public:
         }
     };
 
+    struct RefereeState {
+        uint doo_counter = 0;
+
+        RefereeState() 
+        {
+        }
+
+        RefereeState(uint doo_counter_val) : doo_counter(doo_counter_val)
+        {
+        }
+
+    };
+
 public:
     // TODO: Temporary constructor for the Unity implementation which does not use the new Sensor Configuration Settings implementation.
     //CarApiBase() {}

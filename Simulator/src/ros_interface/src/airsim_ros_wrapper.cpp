@@ -64,6 +64,8 @@ void AirsimROSWrapper::initialize_airsim()
         origin_geo_point_ = airsim_client_.getHomeGeoPoint("");
         // todo there's only one global origin geopoint for environment. but airsim API accept a parameter vehicle_name? inside carsimpawnapi.cpp, there's a geopoint being assigned in the constructor. by? 
         origin_geo_point_msg_ = get_gps_msg_from_airsim_geo_point(origin_geo_point_);
+ 
+        std::cout << "DOO COUNTER: " << airsim_client_.getRefereeState().doo_counter << std::endl;
     }
     catch (rpc::rpc_error&  e)
     {
