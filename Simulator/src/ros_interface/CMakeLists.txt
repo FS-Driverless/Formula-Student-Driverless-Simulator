@@ -30,6 +30,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   nav_msgs
   # nodelet
+  joy
   roscpp
   rospy
   sensor_msgs
