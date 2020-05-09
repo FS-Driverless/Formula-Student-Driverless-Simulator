@@ -31,7 +31,7 @@
           "X": 0,
           "Y": 0,
           "Z": -0.1,
-          "DrawDebugPoints": true
+          "DrawDebugPoints": false
         }
       },
       "Cameras": {
