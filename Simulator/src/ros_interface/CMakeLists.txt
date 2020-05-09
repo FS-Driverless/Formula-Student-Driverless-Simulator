@@ -79,6 +79,9 @@ include_directories(
 add_library(airsim_settings_parser src/airsim_settings_parser.cpp)
 target_link_libraries(airsim_settings_parser ${catkin_LIBRARIES} AirLib)
 
+add_library(joycontrol src/joystick.cpp)
+target_link_libraries(joycontrol ${catkin_LIBRARIES})
+
 # add_library(pd_position_controller_simple src/pd_position_controller_simple.cpp)
 # add_dependencies(pd_position_controller_simple ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 # add_dependencies(pd_position_controller_simple ${catkin_EXPORTED_TARGETS})

@@ -472,6 +472,7 @@ void AirsimROSWrapper::car_control_cb(const airsim_ros_interface::ControlCommand
     CarApiBase::CarControls controls;
     controls.throttle = msg->throttle;
     controls.steering = msg->steering;
+    controls.brake = msg->brake;
 
     // std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
     airsim_client_.setCarControls(controls, vehicle_name);
