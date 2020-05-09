@@ -128,7 +128,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         fscar_ros.odom_frame_id = curr_vehicle_name + "/odom_local_ned";
         fscar_ros.vehicle_name = curr_vehicle_name;
         fscar_ros.odom_local_ned_pub = nh_private_.advertise<nav_msgs::Odometry>(curr_vehicle_name + "/odom_local_ned", 10);
-        // fscar_ros.global_gps_pub = nh_private_.advertise<sensor_msgs::NavSatFix>(curr_vehicle_name + "/global_gps", 10);
+        fscar_ros.global_gps_pub = nh_private_.advertise<sensor_msgs::NavSatFix>(curr_vehicle_name + "/global_gps", 10);
 
         // bind to a single callback. todo optimal subs queue length
         // bind multiple topics to a single callback, but keep track of which vehicle name it was by passing curr_vehicle_name as the 2nd argument 
