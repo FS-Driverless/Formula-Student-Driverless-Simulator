@@ -702,14 +702,14 @@ ros_interface::GPSYaw AirsimROSWrapper::get_gps_msg_from_airsim_geo_point(const 
     return gps_msg;
 }
 
-// sensor_msgs::NavSatFix AirsimROSWrapper::get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const
-// {
-//     sensor_msgs::NavSatFix gps_msg;
-//     gps_msg.latitude = geo_point.latitude;
-//     gps_msg.longitude = geo_point.longitude; 
-//     gps_msg.altitude = geo_point.altitude;
-//     return gps_msg;
-// }
+sensor_msgs::NavSatFix AirsimROSWrapper::get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const
+{
+    sensor_msgs::NavSatFix gps_msg;
+    gps_msg.latitude = geo_point.latitude;
+    gps_msg.longitude = geo_point.longitude; 
+    gps_msg.altitude = geo_point.altitude;
+    return gps_msg;
+}
 
 // todo unused
 // void AirsimROSWrapper::set_zero_vel_cmd()
@@ -725,6 +725,14 @@ ros_interface::GPSYaw AirsimROSWrapper::get_gps_msg_from_airsim_geo_point(const 
 //     double roll, pitch, yaw;
 //     tf2::Matrix3x3(get_tf2_quat(curr_car_state_.kinematics_estimated.pose.orientation)).getRPY(roll, pitch, yaw); // ros uses xyzw
 //     vel_cmd_.yaw_mode.yaw_or_rate = yaw;
+// }
+
+// TODO: implement this function
+// void AirsimROSWrapper::car_control_cb(ros_interface::control_cmd) {
+    
+//     CarApiBase::CarControls controls;
+
+//     airsim_client_.setCarControls()
 // }
 
 void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent& event)
@@ -750,8 +758,9 @@ void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent& event)
             fscar_ros.curr_odom_ned.child_frame_id = fscar_ros.odom_frame_id;
             fscar_ros.curr_odom_ned.header.stamp = curr_ros_time;
 
-            // fscar_ros.gps_sensor_msg = get_gps_sensor_msg_from_airsim_geo_point(fscar_ros.curr_car_state.gps_location);
-            // fscar_ros.gps_sensor_msg.header.stamp = curr_ros_time;
+            msr::airlib::GeoPoint gps_location = airsim_client_.getGpsData().gnss.geo_point;
+            fscar_ros.gps_sensor_msg = get_gps_sensor_msg_from_airsim_geo_point(gps_location);
+            fscar_ros.gps_sensor_msg.header.stamp = curr_ros_time;
 
             // publish to ROS!  
             fscar_ros.odom_local_ned_pub.publish(fscar_ros.curr_odom_ned);
