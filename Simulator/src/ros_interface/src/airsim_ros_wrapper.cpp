@@ -94,7 +94,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
     // subscribe to control commands on global nodehandle
     // gimbal_angle_quat_cmd_sub_ = nh_private_.subscribe("gimbal_angle_quat_cmd", 50, &AirsimROSWrapper::gimbal_angle_quat_cmd_cb, this);
     // gimbal_angle_euler_cmd_sub_ = nh_private_.subscribe("gimbal_angle_euler_cmd", 50, &AirsimROSWrapper::gimbal_angle_euler_cmd_cb, this);
-    origin_geo_point_pub_ = nh_private_.advertise<ros_interface::GPSYaw>("origin_geo_point", 10);       
+    origin_geo_point_pub_ = nh_private_.advertise<airsim_ros_interface::GPSYaw>("origin_geo_point", 10, true);       
 
     airsim_img_request_vehicle_name_pair_vec_.clear();
     image_pub_vec_.clear();
@@ -132,14 +132,14 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 
         // bind to a single callback. todo optimal subs queue length
         // bind multiple topics to a single callback, but keep track of which vehicle name it was by passing curr_vehicle_name as the 2nd argument 
-        // fscar_ros.vel_cmd_body_frame_sub = nh_private_.subscribe<ros_interface::VelCmd>(curr_vehicle_name + "/vel_cmd_body_frame", 1, 
+        // fscar_ros.vel_cmd_body_frame_sub = nh_private_.subscribe<airsim_ros_interface::VelCmd>(curr_vehicle_name + "/vel_cmd_body_frame", 1, 
         //     boost::bind(&AirsimROSWrapper::vel_cmd_body_frame_cb, this, _1, fscar_ros.vehicle_name)); // todo ros::TransportHints().tcpNoDelay();
-        // fscar_ros.vel_cmd_world_frame_sub = nh_private_.subscribe<ros_interface::VelCmd>(curr_vehicle_name + "/vel_cmd_world_frame", 1, 
+        // fscar_ros.vel_cmd_world_frame_sub = nh_private_.subscribe<airsim_ros_interface::VelCmd>(curr_vehicle_name + "/vel_cmd_world_frame", 1, 
         //     boost::bind(&AirsimROSWrapper::vel_cmd_world_frame_cb, this, _1, fscar_ros.vehicle_name));
-
-        // multirotor_ros.takeoff_srvr = nh_private_.advertiseService<ros_interface::Takeoff::Request, ros_interface::Takeoff::Response>(curr_vehicle_name + "/takeoff", 
+        fscar_ros.control_cmd_sub = nh_private_.subscribe<airsim_ros_interface::ControlCommand>(curr_vehicle_name + "/control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, fscar_ros.vehicle_name));
+        // multirotor_ros.takeoff_srvr = nh_private_.advertiseService<airsim_ros_interface::Takeoff::Request, airsim_ros_interface::Takeoff::Response>(curr_vehicle_name + "/takeoff", 
         //     boost::bind(&AirsimROSWrapper::takeoff_srv_cb, this, _1, _2, multirotor_ros.vehicle_name) );
-        // multirotor_ros.land_srvr = nh_private_.advertiseService<ros_interface::Land::Request, ros_interface::Land::Response>(curr_vehicle_name + "/land", 
+        // multirotor_ros.land_srvr = nh_private_.advertiseService<airsim_ros_interface::Land::Request, airsim_ros_interface::Land::Response>(curr_vehicle_name + "/land", 
         //     boost::bind(&AirsimROSWrapper::land_srv_cb, this, _1, _2, multirotor_ros.vehicle_name) );
         // multirotor_ros.reset_srvr = nh_private_.advertiseService(curr_vehicle_name + "/reset",&AirsimROSWrapper::reset_srv_cb, this);
 
@@ -316,7 +316,7 @@ ros::Time AirsimROSWrapper::make_ts(uint64_t unreal_ts) {
 
 
 // todo: error check. if state is not landed, return error. 
-// bool AirsimROSWrapper::takeoff_srv_cb(ros_interface::Takeoff::Request& request, ros_interface::Takeoff::Response& response, const std::string& vehicle_name)
+// bool AirsimROSWrapper::takeoff_srv_cb(airsim_ros_interface::Takeoff::Request& request, airsim_ros_interface::Takeoff::Response& response, const std::string& vehicle_name)
 // {
 //     std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
 
@@ -329,7 +329,7 @@ ros::Time AirsimROSWrapper::make_ts(uint64_t unreal_ts) {
 //     return true;
 // }
 
-// bool AirsimROSWrapper::takeoff_group_srv_cb(ros_interface::TakeoffGroup::Request& request, ros_interface::TakeoffGroup::Response& response)
+// bool AirsimROSWrapper::takeoff_group_srv_cb(airsim_ros_interface::TakeoffGroup::Request& request, airsim_ros_interface::TakeoffGroup::Response& response)
 // {
 //     std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
 
@@ -344,7 +344,7 @@ ros::Time AirsimROSWrapper::make_ts(uint64_t unreal_ts) {
 //     return true;
 // }
 
-// bool AirsimROSWrapper::takeoff_all_srv_cb(ros_interface::Takeoff::Request& request, ros_interface::Takeoff::Response& response)
+// bool AirsimROSWrapper::takeoff_all_srv_cb(airsim_ros_interface::Takeoff::Request& request, airsim_ros_interface::Takeoff::Response& response)
 // {
 //     std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
 
@@ -359,7 +359,7 @@ ros::Time AirsimROSWrapper::make_ts(uint64_t unreal_ts) {
 //     return true;
 // }
 
-// bool AirsimROSWrapper::land_srv_cb(ros_interface::Land::Request& request, ros_interface::Land::Response& response, const std::string& vehicle_name)
+// bool AirsimROSWrapper::land_srv_cb(airsim_ros_interface::Land::Request& request, airsim_ros_interface::Land::Response& response, const std::string& vehicle_name)
 // {
 //     std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
 
@@ -370,7 +370,7 @@ ros::Time AirsimROSWrapper::make_ts(uint64_t unreal_ts) {
 //     return true; //todo
 // }
 
-// bool AirsimROSWrapper::land_group_srv_cb(ros_interface::LandGroup::Request& request, ros_interface::LandGroup::Response& response)
+// bool AirsimROSWrapper::land_group_srv_cb(airsim_ros_interface::LandGroup::Request& request, airsim_ros_interface::LandGroup::Response& response)
 // {
 //     std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
 
@@ -383,7 +383,7 @@ ros::Time AirsimROSWrapper::make_ts(uint64_t unreal_ts) {
 //     return true; //todo
 // }
 
-// bool AirsimROSWrapper::land_all_srv_cb(ros_interface::Land::Request& request, ros_interface::Land::Response& response)
+// bool AirsimROSWrapper::land_all_srv_cb(airsim_ros_interface::Land::Request& request, airsim_ros_interface::Land::Response& response)
 // {
 //     std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
 
@@ -398,7 +398,7 @@ ros::Time AirsimROSWrapper::make_ts(uint64_t unreal_ts) {
 
 // todo add reset by vehicle_name API to airlib
 // todo not async remove waitonlasttask
-bool AirsimROSWrapper::reset_srv_cb(ros_interface::Reset::Request& request, ros_interface::Reset::Response& response)
+bool AirsimROSWrapper::reset_srv_cb(airsim_ros_interface::Reset::Request& request, airsim_ros_interface::Reset::Response& response)
 {
     std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
 
@@ -421,8 +421,8 @@ msr::airlib::Quaternionr AirsimROSWrapper::get_airlib_quat(const tf2::Quaternion
     return msr::airlib::Quaternionr(tf2_quat.w(), tf2_quat.x(), tf2_quat.y(), tf2_quat.z()); 
 }
 
-// void AirsimROSWrapper::vel_cmd_body_frame_cb(const ros_interface::VelCmd& msg, const std::string& vehicle_name)
-// void AirsimROSWrapper::vel_cmd_body_frame_cb(const ros_interface::VelCmd::ConstPtr& msg, const std::string& vehicle_name)
+// void AirsimROSWrapper::vel_cmd_body_frame_cb(const airsim_ros_interface::VelCmd& msg, const std::string& vehicle_name)
+// void AirsimROSWrapper::vel_cmd_body_frame_cb(const airsim_ros_interface::VelCmd::ConstPtr& msg, const std::string& vehicle_name)
 // {
 //     std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
 
@@ -442,7 +442,7 @@ msr::airlib::Quaternionr AirsimROSWrapper::get_airlib_quat(const tf2::Quaternion
 //     fscar_ros_vec_[vehicle_idx].has_vel_cmd = true;
 // }
 
-// void AirsimROSWrapper::vel_cmd_group_body_frame_cb(const ros_interface::VelCmdGroup& msg)
+// void AirsimROSWrapper::vel_cmd_group_body_frame_cb(const airsim_ros_interface::VelCmdGroup& msg)
 // {
 //     std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
 
@@ -464,8 +464,8 @@ msr::airlib::Quaternionr AirsimROSWrapper::get_airlib_quat(const tf2::Quaternion
 //     }
 // }
 
-// // void AirsimROSWrapper::vel_cmd_all_body_frame_cb(const ros_interface::VelCmd::ConstPtr& msg)
-// void AirsimROSWrapper::vel_cmd_all_body_frame_cb(const ros_interface::VelCmd& msg)
+// // void AirsimROSWrapper::vel_cmd_all_body_frame_cb(const airsim_ros_interface::VelCmd::ConstPtr& msg)
+// void AirsimROSWrapper::vel_cmd_all_body_frame_cb(const airsim_ros_interface::VelCmd& msg)
 // {
 //     std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
 
@@ -488,7 +488,7 @@ msr::airlib::Quaternionr AirsimROSWrapper::get_airlib_quat(const tf2::Quaternion
 //     }
 // }
 
-// void AirsimROSWrapper::vel_cmd_world_frame_cb(const ros_interface::VelCmd::ConstPtr& msg, const std::string& vehicle_name)
+// void AirsimROSWrapper::vel_cmd_world_frame_cb(const airsim_ros_interface::VelCmd::ConstPtr& msg, const std::string& vehicle_name)
 // {
 //     std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
 
@@ -504,7 +504,7 @@ msr::airlib::Quaternionr AirsimROSWrapper::get_airlib_quat(const tf2::Quaternion
 // }
 
 // this is kinda unnecessary but maybe it makes life easier for the end user. 
-// void AirsimROSWrapper::vel_cmd_group_world_frame_cb(const ros_interface::VelCmdGroup& msg)
+// void AirsimROSWrapper::vel_cmd_group_world_frame_cb(const airsim_ros_interface::VelCmdGroup& msg)
 // {
 //     std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
 
@@ -522,7 +522,7 @@ msr::airlib::Quaternionr AirsimROSWrapper::get_airlib_quat(const tf2::Quaternion
 //     }
 // }
 
-// void AirsimROSWrapper::vel_cmd_all_world_frame_cb(const ros_interface::VelCmd& msg)
+// void AirsimROSWrapper::vel_cmd_all_world_frame_cb(const airsim_ros_interface::VelCmd& msg)
 // {
 //     std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
 
@@ -542,7 +542,7 @@ msr::airlib::Quaternionr AirsimROSWrapper::get_airlib_quat(const tf2::Quaternion
 // }
 
 // // todo support multiple gimbal commands
-// void AirsimROSWrapper::gimbal_angle_quat_cmd_cb(const ros_interface::GimbalAngleQuatCmd& gimbal_angle_quat_cmd_msg)
+// void AirsimROSWrapper::gimbal_angle_quat_cmd_cb(const airsim_ros_interface::GimbalAngleQuatCmd& gimbal_angle_quat_cmd_msg)
 // {
 //     tf2::Quaternion quat_control_cmd;
 //     try
@@ -564,7 +564,7 @@ msr::airlib::Quaternionr AirsimROSWrapper::get_airlib_quat(const tf2::Quaternion
 // // 1. find quaternion of default gimbal pose
 // // 2. forward multiply with quaternion equivalent to desired euler commands (in degrees)
 // // 3. call airsim client's setcameraorientation which sets camera orientation wrt world (or takeoff?) ned frame. todo 
-// void AirsimROSWrapper::gimbal_angle_euler_cmd_cb(const ros_interface::GimbalAngleEulerCmd& gimbal_angle_euler_cmd_msg)
+// void AirsimROSWrapper::gimbal_angle_euler_cmd_cb(const airsim_ros_interface::GimbalAngleEulerCmd& gimbal_angle_euler_cmd_msg)
 // {
 //     try
 //     {
@@ -693,9 +693,9 @@ void AirsimROSWrapper::publish_odom_tf(const nav_msgs::Odometry& odom_ned_msg)
     tf_broadcaster_.sendTransform(odom_tf);
 }
 
-ros_interface::GPSYaw AirsimROSWrapper::get_gps_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const
+airsim_ros_interface::GPSYaw AirsimROSWrapper::get_gps_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const
 {
-    ros_interface::GPSYaw gps_msg;
+    airsim_ros_interface::GPSYaw gps_msg;
     gps_msg.latitude = geo_point.latitude;
     gps_msg.longitude = geo_point.longitude; 
     gps_msg.altitude = geo_point.altitude;
@@ -727,13 +727,14 @@ sensor_msgs::NavSatFix AirsimROSWrapper::get_gps_sensor_msg_from_airsim_geo_poin
 //     vel_cmd_.yaw_mode.yaw_or_rate = yaw;
 // }
 
-// TODO: implement this function
-// void AirsimROSWrapper::car_control_cb(ros_interface::control_cmd) {
+void AirsimROSWrapper::car_control_cb(const airsim_ros_interface::ControlCommand::ConstPtr& msg, const std::string& vehicle_name) {
     
-//     CarApiBase::CarControls controls;
+    CarApiBase::CarControls controls;
+    controls.throttle = msg->throttle;
+    controls.steering = msg->steering;
 
-//     airsim_client_.setCarControls()
-// }
+    airsim_client_.setCarControls(controls, vehicle_name);
+}
 
 void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent& event)
 {

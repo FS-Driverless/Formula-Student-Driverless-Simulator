@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>ros_interface</name>
+  <name>airsim_ros_interface</name>
   <version>0.0.1</version>
   <description>FSOnline ROS Wrapper over AirSim's C++ car client library</description>
 
