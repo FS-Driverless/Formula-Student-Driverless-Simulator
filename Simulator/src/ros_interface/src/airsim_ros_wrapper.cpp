@@ -473,9 +473,9 @@ void AirsimROSWrapper::car_control_cb(const airsim_ros_interface::ControlCommand
     controls.throttle = msg->throttle;
     controls.steering = msg->steering;
 
-    std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
+    // std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
     airsim_client_.setCarControls(controls, vehicle_name);
-    lck.unlock();
+    // lck.unlock();
 }
 
 void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent &event)
