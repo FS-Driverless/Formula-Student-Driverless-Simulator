@@ -21,11 +21,14 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	msr::airlib::CarApiBase::RefereeState state = {0};
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	
+	UFUNCTION(BlueprintCallable, Category="Referee")
+	int32 ConeHit(FString coneName);
 	
 };

@@ -19,8 +19,7 @@ void AReferee::BeginPlay()
 }
 
 msr::airlib::CarApiBase::RefereeState AReferee::getState() {
-	//todo: implement a counter and update the counter based on cone hits
-	return msr::airlib::CarApiBase::RefereeState(1);
+	return this->state;
 }
 
 // Called every frame
@@ -30,3 +29,7 @@ void AReferee::Tick(float DeltaTime)
 
 }
 
+int32 AReferee::ConeHit(FString coneName)
+{
+	return (int32) (++state.doo_counter);
+}
