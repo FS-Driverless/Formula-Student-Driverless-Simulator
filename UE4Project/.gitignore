@@ -32,5 +32,6 @@ obj/
 *.sdf
 *.suo
 *_BuiltData.uasset
+FSOnline.code-workspace 
 
 Plugins/AirSim/Source/AirLib/
