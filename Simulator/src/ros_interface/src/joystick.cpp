@@ -192,7 +192,7 @@ void JoyCallback(const sensor_msgs::Joy &joystickmsg)
     cmd.throttle = (-1 * right_trigger + 1) * (max_acceleration / 2);
   }
 
-  cmd.steering = joystickmsg.axes[0] * max_steerangle;
+  cmd.steering = -joystickmsg.axes[0] * max_steerangle;
   PREVIOUS_STEERANGLE = cmd.steering;
 
   if (cmd.throttle > max_acceleration)
