@@ -1,3 +1,4 @@
 Content/RaceCourse/Maps/IM_MAP1.umap filter=lfs diff=lfs merge=lfs -text
 Content/RaceCourse/Model/Splines/spline_cones.uasset filter=lfs diff=lfs merge=lfs -text
 Content/blueprint/RefereeBlueprint.uasset filter=lfs diff=lfs merge=lfs -text
+Content/blueprint/trafficone_big_orange_Blueprint.uasset filter=lfs diff=lfs merge=lfs -text
