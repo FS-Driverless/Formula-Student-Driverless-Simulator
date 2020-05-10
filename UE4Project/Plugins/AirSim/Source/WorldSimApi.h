@@ -4,6 +4,7 @@
 #include "common/CommonStructs.hpp"
 #include "api/WorldSimApiBase.hpp"
 #include "SimMode/SimModeBase.h"
+#include "vehicles/car/api/CarApiBase.hpp"
 #include <string>
 
 class WorldSimApi : public msr::airlib::WorldSimApiBase {
@@ -36,6 +37,7 @@ public:
     virtual std::vector<std::string> listSceneObjects(const std::string& name_regex) const override;
     virtual Pose getObjectPose(const std::string& object_name) const override;
     virtual bool setObjectPose(const std::string& object_name, const Pose& pose, bool teleport) override;
+    virtual msr::airlib::CarApiBase::RefereeState getRefereeState() const override;
 
     //----------- Plotting APIs ----------/
     virtual void simFlushPersistentMarkers() override;

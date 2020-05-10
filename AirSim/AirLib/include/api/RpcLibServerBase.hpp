@@ -59,6 +59,10 @@ protected:
                 "' is not available. This could be because this is not a simulation");
     }
 
+    virtual ApiProvider* getApiProvider() {
+        return api_provider_;
+    };
+
 
 private:
     ApiProvider* api_provider_;

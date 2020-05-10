@@ -5,6 +5,7 @@
 #define air_WorldSimApiBase_hpp
 
 #include "common/CommonStructs.hpp"
+#include "vehicles/car/api/CarApiBase.hpp"
 
 namespace msr { namespace airlib {
 
@@ -55,6 +56,7 @@ public:
     virtual std::vector<std::string> listSceneObjects(const std::string& name_regex) const = 0;
     virtual Pose getObjectPose(const std::string& object_name) const = 0;
     virtual bool setObjectPose(const std::string& object_name, const Pose& pose, bool teleport) = 0;
+    virtual CarApiBase::RefereeState getRefereeState() const = 0;
 
 	virtual std::unique_ptr<std::vector<std::string>> swapTextures(const std::string& tag, int tex_id = 0, int component_id = 0, int material_id = 0) = 0;
     virtual vector<MeshPositionVertexBuffersResponse> getMeshPositionVertexBuffers() const = 0;

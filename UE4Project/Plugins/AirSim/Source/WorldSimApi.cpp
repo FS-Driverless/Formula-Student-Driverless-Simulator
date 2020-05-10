@@ -4,6 +4,7 @@
 #include "common/common_utils/Utils.hpp"
 #include "Weather/WeatherLib.h"
 #include "DrawDebugHelpers.h"
+#include "Referee.h"
 
 WorldSimApi::WorldSimApi(ASimModeBase* simmode)
     : simmode_(simmode)
@@ -79,6 +80,16 @@ WorldSimApi::Pose WorldSimApi::getObjectPose(const std::string& object_name) con
         AActor* actor = UAirBlueprintLib::FindActor<AActor>(simmode_, FString(object_name.c_str()));
         result = actor ? simmode_->getGlobalNedTransform().toGlobalNed(FTransform(actor->GetActorRotation(), actor->GetActorLocation()))
             : Pose::nanPose();
+    }, true);
+    return result;
+}
+
+msr::airlib::CarApiBase::RefereeState WorldSimApi::getRefereeState() const
+{
+    msr::airlib::CarApiBase::RefereeState result;
+    UAirBlueprintLib::RunCommandOnGameThread([this, &result]() {
+        AReferee* referee = UAirBlueprintLib::FindActor<AReferee>(simmode_, FString("referee"));
+        result = referee ? referee->getState() : msr::airlib::CarApiBase::RefereeState();
     }, true);
     return result;
 }

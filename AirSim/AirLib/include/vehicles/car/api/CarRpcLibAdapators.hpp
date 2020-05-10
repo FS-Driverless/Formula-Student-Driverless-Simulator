@@ -86,7 +86,9 @@ public:
         MSGPACK_DEFINE_MAP(doo_counter);
 
         RefereeState() {}
-        RefereeState(uint doo_counter_val) : doo_counter(doo_counter_val){}
+        RefereeState(const msr::airlib::CarApiBase::RefereeState& s) {
+            doo_counter = s.doo_counter;
+        }
 
         msr::airlib::CarApiBase::RefereeState to() const
         {

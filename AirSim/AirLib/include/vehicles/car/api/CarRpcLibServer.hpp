@@ -24,6 +24,11 @@ protected:
     {
         return static_cast<CarApiBase*>(RpcLibServerBase::getVehicleApi(vehicle_name));
     }
+
+    virtual CarApiBase::RefereeState getRefereeState()
+    {
+        return RpcLibServerBase::getWorldSimApi()->getRefereeState();
+    }
 };
 
 #endif
