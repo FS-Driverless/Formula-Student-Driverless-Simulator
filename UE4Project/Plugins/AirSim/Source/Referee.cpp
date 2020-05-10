@@ -20,7 +20,7 @@ void AReferee::BeginPlay()
 
 msr::airlib::CarApiBase::RefereeState AReferee::getState() {
 	//todo: implement a counter and update the counter based on cone hits
-	return msr::airlib::CarApiBase::RefereeState(99714);
+	return msr::airlib::CarApiBase::RefereeState(1);
 }
 
 // Called every frame
