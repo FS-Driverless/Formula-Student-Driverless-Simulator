@@ -195,7 +195,7 @@ void JoyCallback(const sensor_msgs::Joy &joystickmsg)
   cmd.steering = joystickmsg.axes[0] * max_steerangle;
   PREVIOUS_STEERANGLE = cmd.steering;
 
-  if (cmd.throttle > max_acceleration || cmd.brake < MAXBRAKE)
+  if (cmd.throttle > max_acceleration)
   {
     ROS_INFO(
         "ManualJoyControl:: Out of bounds acceleration (%f) detected. Reset acceleration to 0.",
