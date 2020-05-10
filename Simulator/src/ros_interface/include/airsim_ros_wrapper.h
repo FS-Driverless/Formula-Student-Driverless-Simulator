@@ -77,44 +77,6 @@ struct SimpleMatrix
     }
 };
 
-struct VelCmd
-{
-    double x;
-    double y;
-    double z;
-    msr::airlib::DrivetrainType drivetrain;
-    msr::airlib::YawMode yaw_mode;
-    std::string vehicle_name;
-
-    // VelCmd() :
-    //     x(0), y(0), z(0),
-    //     vehicle_name("") {drivetrain = msr::airlib::DrivetrainType::MaxDegreeOfFreedom;
-    //             yaw_mode = msr::airlib::YawMode();};
-
-    // VelCmd(const double& x, const double& y, const double& z,
-    //         msr::airlib::DrivetrainType drivetrain,
-    //         const msr::airlib::YawMode& yaw_mode,
-    //         const std::string& vehicle_name) :
-    //     x(x), y(y), z(z),
-    //     drivetrain(drivetrain),
-    //     yaw_mode(yaw_mode),
-    //     vehicle_name(vehicle_name) {};
-};
-
-struct GimbalCmd
-{
-    std::string vehicle_name;
-    std::string camera_name;
-    msr::airlib::Quaternionr target_quat;
-
-    // GimbalCmd() : vehicle_name(vehicle_name), camera_name(camera_name), target_quat(msr::airlib::Quaternionr(1,0,0,0)) {}
-
-    // GimbalCmd(const std::string& vehicle_name,
-    //         const std::string& camera_name,
-    //         const msr::airlib::Quaternionr& target_quat) :
-    //         vehicle_name(vehicle_name), camera_name(camera_name), target_quat(target_quat) {};
-};
-
 class AirsimROSWrapper
 {
 public:
@@ -142,29 +104,10 @@ private:
     /// ROS subscriber callbacks
     void car_control_cb(const airsim_ros_interface::ControlCommand::ConstPtr &msg, const std::string &vehicle_name);
 
-    // void vel_cmd_world_frame_cb(const airsim_ros_interface::VelCmd::ConstPtr& msg, const std::string& vehicle_name);
-    // void vel_cmd_body_frame_cb(const airsim_ros_interface::VelCmd::ConstPtr& msg, const std::string& vehicle_name);
-
-    // void vel_cmd_group_body_frame_cb(const airsim_ros_interface::VelCmdGroup& msg);
-    // void vel_cmd_group_world_frame_cb(const airsim_ros_interface::VelCmdGroup& msg);
-
-    // void vel_cmd_all_world_frame_cb(const airsim_ros_interface::VelCmd& msg);
-    // void vel_cmd_all_body_frame_cb(const airsim_ros_interface::VelCmd& msg);
-
-    // void vel_cmd_body_frame_cb(const airsim_ros_interface::VelCmd& msg, const std::string& vehicle_name);
-    // void gimbal_angle_quat_cmd_cb(const airsim_ros_interface::GimbalAngleQuatCmd& gimbal_angle_quat_cmd_msg);
-    // void gimbal_angle_euler_cmd_cb(const airsim_ros_interface::GimbalAngleEulerCmd& gimbal_angle_euler_cmd_msg);
-
     ros::Time make_ts(uint64_t unreal_ts);
     // void set_zero_vel_cmd();
 
     /// ROS service callbacks
-    // bool takeoff_srv_cb(airsim_ros_interface::Takeoff::Request& request, airsim_ros_interface::Takeoff::Response& response, const std::string& vehicle_name);
-    // bool takeoff_group_srv_cb(airsim_ros_interface::TakeoffGroup::Request& request, airsim_ros_interface::TakeoffGroup::Response& response);
-    // bool takeoff_all_srv_cb(airsim_ros_interface::Takeoff::Request& request, airsim_ros_interface::Takeoff::Response& response);
-    // bool land_srv_cb(airsim_ros_interface::Land::Request& request, airsim_ros_interface::Land::Response& response, const std::string& vehicle_name);
-    // bool land_group_srv_cb(airsim_ros_interface::LandGroup::Request& request, airsim_ros_interface::LandGroup::Response& response);
-    // bool land_all_srv_cb(airsim_ros_interface::Land::Request& request, airsim_ros_interface::Land::Response& response);
     bool reset_srv_cb(airsim_ros_interface::Reset::Request &request, airsim_ros_interface::Reset::Response &response);
 
     /// ROS tf broadcasters
@@ -205,17 +148,6 @@ private:
     void convert_yaml_to_simple_mat(const YAML::Node &node, SimpleMatrix &m) const; // todo ugly
 
 private:
-    // subscriber / services for ALL robots
-    // ros::Subscriber vel_cmd_all_body_frame_sub_;
-    // ros::Subscriber vel_cmd_all_world_frame_sub_;
-    // ros::ServiceServer takeoff_all_srvr_;
-    // ros::ServiceServer land_all_srvr_;
-
-    // todo - subscriber / services for a GROUP of robots, which is defined by a list of `vehicle_name`s passed in the ros msg / srv request
-    // ros::Subscriber vel_cmd_group_body_frame_sub_;
-    // ros::Subscriber vel_cmd_group_world_frame_sub_;
-    // ros::ServiceServer takeoff_group_srvr_;
-    // ros::ServiceServer land_group_srvr_;
 
     // utility struct for a SINGLE robot
     struct FSCarROS
@@ -225,27 +157,15 @@ private:
         /// All things ROS
         ros::Publisher odom_local_ned_pub;
         ros::Publisher global_gps_pub;
-        // ros::Publisher home_geo_point_pub_; // geo coord of unreal origin
-
-        // ros::Subscriber vel_cmd_body_frame_sub;
-        // ros::Subscriber vel_cmd_world_frame_sub;
         ros::Subscriber control_cmd_sub;
-        // ros::ServiceServer takeoff_srvr;
-        // ros::ServiceServer land_srvr;
 
         /// State
         msr::airlib::CarApiBase::CarState curr_car_state;
-        // bool in_air_; // todo change to "status" and keep track of this
         nav_msgs::Odometry curr_odom_ned;
         sensor_msgs::NavSatFix gps_sensor_msg;
-        bool has_vel_cmd;
-        VelCmd vel_cmd;
 
         std::string odom_frame_id;
-        /// Status
-        // bool in_air_; // todo change to "status" and keep track of this
-        // bool is_armed_;
-        // std::string mode_;
+  
     };
 
     ros::ServiceServer reset_srvr_;
@@ -281,10 +201,6 @@ private:
     std::recursive_mutex car_control_mutex_;
     // std::recursive_mutex img_mutex_;
     // std::recursive_mutex lidar_mutex_;
-
-    // gimbal control
-    bool has_gimbal_cmd_;
-    GimbalCmd gimbal_cmd_;
 
     /// ROS tf
     std::string world_frame_id_;

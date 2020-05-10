@@ -79,10 +79,6 @@ void AirsimROSWrapper::initialize_ros()
     nh_private_.getParam("is_vulkan", is_vulkan_);
     nh_private_.getParam("update_airsim_control_every_n_sec", update_airsim_control_every_n_sec);
     vel_cmd_duration_ = 0.05; // todo rosparam
-    // todo enforce dynamics constraints in this node as well?
-    // nh_.getParam("max_vert_vel_", max_vert_vel_);
-    // nh_.getParam("max_horz_vel", max_horz_vel_)
-
     create_ros_pubs_from_settings_json();
     airsim_control_update_timer_ = nh_private_.createTimer(ros::Duration(update_airsim_control_every_n_sec), &AirsimROSWrapper::car_state_timer_cb, this);
 }
@@ -91,8 +87,6 @@ void AirsimROSWrapper::initialize_ros()
 void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 {
     // subscribe to control commands on global nodehandle
-    // gimbal_angle_quat_cmd_sub_ = nh_private_.subscribe("gimbal_angle_quat_cmd", 50, &AirsimROSWrapper::gimbal_angle_quat_cmd_cb, this);
-    // gimbal_angle_euler_cmd_sub_ = nh_private_.subscribe("gimbal_angle_euler_cmd", 50, &AirsimROSWrapper::gimbal_angle_euler_cmd_cb, this);
     origin_geo_point_pub_ = nh_private_.advertise<airsim_ros_interface::GPSYaw>("origin_geo_point", 10, true);
 
     airsim_img_request_vehicle_name_pair_vec_.clear();
@@ -128,20 +122,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         fscar_ros.vehicle_name = curr_vehicle_name;
         fscar_ros.odom_local_ned_pub = nh_private_.advertise<nav_msgs::Odometry>(curr_vehicle_name + "/odom_local_ned", 10);
         fscar_ros.global_gps_pub = nh_private_.advertise<sensor_msgs::NavSatFix>(curr_vehicle_name + "/global_gps", 10);
-
-        // bind to a single callback. todo optimal subs queue length
-        // bind multiple topics to a single callback, but keep track of which vehicle name it was by passing curr_vehicle_name as the 2nd argument
-        // fscar_ros.vel_cmd_body_frame_sub = nh_private_.subscribe<airsim_ros_interface::VelCmd>(curr_vehicle_name + "/vel_cmd_body_frame", 1,
-        //     boost::bind(&AirsimROSWrapper::vel_cmd_body_frame_cb, this, _1, fscar_ros.vehicle_name)); // todo ros::TransportHints().tcpNoDelay();
-        // fscar_ros.vel_cmd_world_frame_sub = nh_private_.subscribe<airsim_ros_interface::VelCmd>(curr_vehicle_name + "/vel_cmd_world_frame", 1,
-        //     boost::bind(&AirsimROSWrapper::vel_cmd_world_frame_cb, this, _1, fscar_ros.vehicle_name));
         fscar_ros.control_cmd_sub = nh_private_.subscribe<airsim_ros_interface::ControlCommand>(curr_vehicle_name + "/control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, fscar_ros.vehicle_name));
-        // multirotor_ros.takeoff_srvr = nh_private_.advertiseService<airsim_ros_interface::Takeoff::Request, airsim_ros_interface::Takeoff::Response>(curr_vehicle_name + "/takeoff",
-        //     boost::bind(&AirsimROSWrapper::takeoff_srv_cb, this, _1, _2, multirotor_ros.vehicle_name) );
-        // multirotor_ros.land_srvr = nh_private_.advertiseService<airsim_ros_interface::Land::Request, airsim_ros_interface::Land::Response>(curr_vehicle_name + "/land",
-        //     boost::bind(&AirsimROSWrapper::land_srv_cb, this, _1, _2, multirotor_ros.vehicle_name) );
-        // multirotor_ros.reset_srvr = nh_private_.advertiseService(curr_vehicle_name + "/reset",&AirsimROSWrapper::reset_srv_cb, this);
-
         fscar_ros_vec_.push_back(fscar_ros);
         idx++;
 
@@ -450,22 +431,6 @@ sensor_msgs::NavSatFix AirsimROSWrapper::get_gps_sensor_msg_from_airsim_geo_poin
     return gps_msg;
 }
 
-// todo unused
-// void AirsimROSWrapper::set_zero_vel_cmd()
-// {
-//     vel_cmd_.x = 0.0;
-//     vel_cmd_.y = 0.0;
-//     vel_cmd_.z = 0.0;
-
-//     vel_cmd_.drivetrain = msr::airlib::DrivetrainType::MaxDegreeOfFreedom;
-//     vel_cmd_.yaw_mode.is_rate = false;
-
-//     // todo make class member or a fucntion
-//     double roll, pitch, yaw;
-//     tf2::Matrix3x3(get_tf2_quat(curr_car_state_.kinematics_estimated.pose.orientation)).getRPY(roll, pitch, yaw); // ros uses xyzw
-//     vel_cmd_.yaw_mode.yaw_or_rate = yaw;
-// }
-
 void AirsimROSWrapper::car_control_cb(const airsim_ros_interface::ControlCommand::ConstPtr &msg, const std::string &vehicle_name)
 {
 
@@ -474,9 +439,9 @@ void AirsimROSWrapper::car_control_cb(const airsim_ros_interface::ControlCommand
     controls.steering = msg->steering;
     controls.brake = msg->brake;
 
-    // std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
+    std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
     airsim_client_.setCarControls(controls, vehicle_name);
-    // lck.unlock();
+    lck.unlock();
 }
 
 void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent &event)
@@ -511,17 +476,6 @@ void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent &event)
             publish_odom_tf(fscar_ros.curr_odom_ned);
             fscar_ros.global_gps_pub.publish(fscar_ros.gps_sensor_msg);
 
-            // send control commands from the last callback to airsim
-            // if (multirotor_ros.has_vel_cmd)
-            // {
-            //     std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
-            //     airsim_client_.moveByVelocityAsync(multirotor_ros.vel_cmd.x, multirotor_ros.vel_cmd.y, multirotor_ros.vel_cmd.z, vel_cmd_duration_,
-            //         msr::airlib::DrivetrainType::MaxDegreeOfFreedom, multirotor_ros.vel_cmd.yaw_mode, multirotor_ros.vehicle_name);
-            //     lck.unlock();
-            // }
-
-            // "clear" control cmds
-            fscar_ros.has_vel_cmd = false;
         }
 
         // IMUS
@@ -553,15 +507,6 @@ void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent &event)
             static_tf_msg_vec_.clear();
         }
 
-        // todo add and expose a gimbal angular velocity to airlib
-        if (has_gimbal_cmd_)
-        {
-            std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
-            airsim_client_.simSetCameraOrientation(gimbal_cmd_.camera_name, gimbal_cmd_.target_quat, gimbal_cmd_.vehicle_name);
-            lck.unlock();
-        }
-
-        has_gimbal_cmd_ = false;
     }
 
     catch (rpc::rpc_error &e)
