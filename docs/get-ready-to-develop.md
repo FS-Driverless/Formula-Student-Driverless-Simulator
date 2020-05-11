@@ -2,7 +2,7 @@
 So you want to make changes to this project, amazing! We always love new developers <3
 Using this tutorial you can setup your local development environment.
 
-## Prerequisituies
+## Prerequisites
 To run this project you need quite a good computer with a modern nvidia videocard.
 To check the videocard drivers, run `vulkaninfo`. It should output a bunch of lines without errors.
 
