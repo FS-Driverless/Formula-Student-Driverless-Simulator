@@ -4,27 +4,19 @@ STRICT_MODE_OFF //todo what does this do?
 #define RPCLIB_MSGPACK clmdep_msgpack
 #endif // !RPCLIB_MSGPACK
 #include "rpc/rpc_error.h"
-    STRICT_MODE_ON
+STRICT_MODE_ON
 
-#include "airsim_settings_parser.h"
+// #include "airsim_settings_parser.h"
 #include "common/AirSimSettings.hpp"
+// #include "sensors/SensorBase.hpp"
 #include "common/common_utils/FileSystem.hpp"
 #include "ros/ros.h"
 #include "sensors/imu/ImuBase.hpp"
-// #include "vehicles/multirotor/api/MultirotorRpcLibClient.hpp"
 #include "vehicles/car/api/CarRpcLibClient.hpp"
 #include "yaml-cpp/yaml.h"
-// #include <airsim_ros_interface/GimbalAngleEulerCmd.h>
-// #include <airsim_ros_interface/GimbalAngleQuatCmd.h>
 #include <airsim_ros_interface/GPSYaw.h>
 #include <airsim_ros_interface/ControlCommand.h>
-// #include <airsim_ros_interface/Land.h>
-// #include <airsim_ros_interface/LandGroup.h>
 #include <airsim_ros_interface/Reset.h>
-// #include <airsim_ros_interface/Takeoff.h>
-// #include <airsim_ros_interface/TakeoffGroup.h>
-// #include <airsim_ros_interface/VelCmd.h>
-// #include <airsim_ros_interface/VelCmdGroup.h>
 #include <chrono>
 #include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -54,17 +46,19 @@ STRICT_MODE_OFF //todo what does this do?
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
 #include <unordered_map>
-    // #include "nodelet/nodelet.h"
 
-    // todo move airlib typedefs to separate header file?
-    typedef msr::airlib::ImageCaptureBase::ImageRequest ImageRequest;
+// todo move airlib typedefs to separate header file?
+typedef msr::airlib::ImageCaptureBase::ImageRequest ImageRequest;
 typedef msr::airlib::ImageCaptureBase::ImageResponse ImageResponse;
 typedef msr::airlib::ImageCaptureBase::ImageType ImageType;
 typedef msr::airlib::AirSimSettings::CaptureSetting CaptureSetting;
 typedef msr::airlib::AirSimSettings::VehicleSetting VehicleSetting;
 typedef msr::airlib::AirSimSettings::CameraSetting CameraSetting;
 typedef msr::airlib::AirSimSettings::LidarSetting LidarSetting;
-
+typedef msr::airlib::AirSimSettings AirSimSettings;
+typedef msr::airlib::AirSimSettings::VehicleSetting VehicleSetting;
+typedef msr::airlib::SensorBase SensorBase;
+typedef msr::airlib::CarApiBase CarApiBase;
 struct SimpleMatrix
 {
     int rows;
@@ -148,7 +142,6 @@ private:
     void convert_yaml_to_simple_mat(const YAML::Node &node, SimpleMatrix &m) const; // todo ugly
 
 private:
-
     // utility struct for a SINGLE robot
     struct FSCarROS
     {
@@ -165,7 +158,6 @@ private:
         sensor_msgs::NavSatFix gps_sensor_msg;
 
         std::string odom_frame_id;
-  
     };
 
     ros::ServiceServer reset_srvr_;
@@ -175,9 +167,9 @@ private:
 
     std::vector<FSCarROS> fscar_ros_vec_;
 
-    std::vector<string> vehicle_names_;
+    std::vector<std::string> vehicle_names_;
     std::vector<VehicleSetting> vehicle_setting_vec_;
-    AirSimSettingsParser airsim_settings_parser_;
+    // AirSimSettingsParser airsim_settings_parser_;
     std::unordered_map<std::string, int> vehicle_name_idx_map_;
     static const std::unordered_map<int, std::string> image_type_int_to_string_map_;
     std::map<std::string, std::string> vehicle_imu_map_;
@@ -199,8 +191,6 @@ private:
 
     // todo race condition
     std::recursive_mutex car_control_mutex_;
-    // std::recursive_mutex img_mutex_;
-    // std::recursive_mutex lidar_mutex_;
 
     /// ROS tf
     std::string world_frame_id_;
@@ -227,9 +217,6 @@ private:
 
     /// ROS other publishers
     ros::Publisher clock_pub_;
-
-    ros::Subscriber gimbal_angle_quat_cmd_sub_;
-    ros::Subscriber gimbal_angle_euler_cmd_sub_;
 
     static constexpr char CAM_YML_NAME[] = "camera_name";
     static constexpr char WIDTH_YML_NAME[] = "image_width";
