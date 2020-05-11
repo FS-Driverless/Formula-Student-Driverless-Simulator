@@ -1,6 +1,12 @@
-This is a Formula Student Driverless Simulation Competition System.
+This is a Formula Student Driverless Simulation Competition System. (FSDS)
 It will provide a virtual environment where Autonomous Systems from different Formula Student teams can compete in time-trial challenges. 
-The competition will take place during the driverless event, FS-Online 2020.
+The first competition will take place during the driverless event, FS-Online 2020.
+
+FSDS is brought to you by your friends at Formula Student Team Delft, MIT Driverless and FSEast.
+
+Would you like to help develop this project? Create [an issues](https://github.com/FS-Online/Driverless-Competition-Simulator/issues) introducing yourself and we will get you up to speed.
+
+You can read all about how FSDS works in this [systems overview document](/docs/system-overview.md)
 
 ## Repo Overview
 
@@ -9,21 +15,22 @@ In here you will find everything that runs inside Unreal Engine.
 This includes the world, all assets and the AirSim server.
 The AirSim server uses the AirLib shared code (see `/AirSim/AirLib`).
 
+`/Simulator` is the simulation control system. This is a ROS workspace.
+Simulator connect to the autonomous systems, offers a web gui for officials to controll the simulation and connects to the virtual world inside Unreal Engine.
+
 `/AirSim` is a slimmed-down, hard-fork of the [AirSim](https://github.com/microsoft/AirSim) project.
 There is only code located that is shared between Simulator and UE4 plugin.
 When AirSim is compiled, the AirLib binaries are placed within `/UE4Project/Plugins/AirSim/Source/AirLib`.
-
-`/Simulator` is the simulation control system. This is a ROS workspace.
 
 This repo uses LFS for some large files. All files bigger than 90MB are added to LFS.
 
 ## Development
 
 For developing within this repo you need quite a good computer because Unreal Engine is a heavy baby.
-We recommend the following computer specs. You might be able to run with less power but everything will be slower.
+We highly recommend the following computer specs. You might be able to run with less power but everything will be slower.
 * 8 core 3Ghz CPU
 * 12 GB memory
-* 100GB free SSD storage (required)
+* 100GB free SSD storage
 * Recent NVidia card with Vulkan support and 3 GB of memory.
 
 If you do not have access to such a computer, you can [set up a remote workstation in google cloud](docs/gcp-remote-workstation.md).
