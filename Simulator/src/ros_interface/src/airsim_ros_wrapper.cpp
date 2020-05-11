@@ -39,14 +39,10 @@ AirsimROSWrapper::AirsimROSWrapper(const ros::NodeHandle &nh, const ros::NodeHan
     initialize_ros();
 
     std::cout << "AirsimROSWrapper Initialized!\n";
-    // intitialize placeholder control commands
-    // vel_cmd_ = VelCmd();
-    // gimbal_cmd_ = GimbalCmd();
 }
 
 void AirsimROSWrapper::initialize_airsim()
 {
-    // todo do not reset if already in air?
     try
     {
         airsim_client_.confirmConnection();
@@ -78,7 +74,6 @@ void AirsimROSWrapper::initialize_ros()
     double update_airsim_control_every_n_sec;
     nh_private_.getParam("is_vulkan", is_vulkan_);
     nh_private_.getParam("update_airsim_control_every_n_sec", update_airsim_control_every_n_sec);
-    vel_cmd_duration_ = 0.05; // todo rosparam
     create_ros_pubs_from_settings_json();
     airsim_control_update_timer_ = nh_private_.createTimer(ros::Duration(update_airsim_control_every_n_sec), &AirsimROSWrapper::car_state_timer_cb, this);
 }
