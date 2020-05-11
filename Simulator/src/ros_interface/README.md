@@ -99,8 +99,8 @@ roslaunch airsim_ros_interface joystick.launch
 ### Visualization
 This package contains some useful launch and config files which will help you in visualizing the data being streamed through the above topics.
 
-To open Rviz with [this]() configuration file, run `roslaunch airsim_ros_interface rviz.launch`.
+To open Rviz with [this](config/rviz/default.rviz) configuration file, run `roslaunch airsim_ros_interface rviz.launch`.
 
-
+To open Multiplot with [this](config/multiplot/multiplot.xml) configuration file, run `roslaunch airsim_ros_interface plot.launch`
 
 
