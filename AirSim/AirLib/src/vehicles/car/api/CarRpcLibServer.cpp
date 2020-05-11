@@ -56,6 +56,12 @@ CarRpcLibServer::CarRpcLibServer(ApiProvider* api_provider, string server_addres
 		return CarRpcLibAdapators::CarControls(getVehicleApi(vehicle_name)->getCarControls());
 	});
 
+    // competition specific bindings:
+	(static_cast<rpc::server*>(getServer()))->
+		bind("getRefereeState", [&]() -> CarRpcLibAdapators::RefereeState {
+		return CarRpcLibAdapators::RefereeState(RpcLibServerBase::getWorldSimApi()->getRefereeState());
+	});
+
 }
 
 //required for pimpl

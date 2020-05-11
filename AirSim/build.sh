@@ -80,6 +80,8 @@ cp $build_dir/output/lib/librpc.a AirLib/deps/rpclib/lib/librpc.a
 rsync -a --delete $build_dir/output/lib/ AirLib/lib/x64/Debug
 rsync -a --delete external/rpclib/rpclib-2.2.1/include AirLib/deps/rpclib
 rsync -a --delete MavLinkCom/include AirLib/deps/MavLinkCom
+
+../UE4Project/clean.sh
 rsync -a --delete AirLib ../UE4Project/Plugins/AirSim/Source
 
 set +x
