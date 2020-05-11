@@ -48,9 +48,7 @@ add_message_files(
 
 add_service_files(
   FILES
-  SetGPSPosition.srv
   Reset.srv
-  SetLocalPosition.srv
 )
 
 generate_messages(
