@@ -79,6 +79,23 @@ public:
                 speed, gear, rpm, maxrpm, handbrake, kinematics_estimated.to(), timestamp);
         }
     };
+
+    struct RefereeState {
+        uint doo_counter = 0;
+
+        MSGPACK_DEFINE_MAP(doo_counter);
+
+        RefereeState() {}
+        RefereeState(const msr::airlib::CarApiBase::RefereeState& s) {
+            doo_counter = s.doo_counter;
+        }
+
+        msr::airlib::CarApiBase::RefereeState to() const
+        {
+            return msr::airlib::CarApiBase::RefereeState(doo_counter);
+        }
+
+    };
 };
 
 }} //namespace

@@ -1,18 +1,18 @@
 # Let's get ready to develop this project
 So you want to make changes to this project, amazing! We always love new developers <3
-Using this tutorial you can setup your local development environment.
+Using this tutorial you can set up your local development environment.
 
 ## Prerequisites
-To run this project you need quite a good computer with a modern nvidia videocard.
-To check the videocard drivers, run `vulkaninfo`. It should output a bunch of lines without errors.
+To run this project you need quite a good computer with a modern Nvidia video card.
+To check the video card drivers, run `vulkaninfo`. It should output a bunch of lines without errors.
 
-Also make sure you have 100GB free disk space. 
+Also, make sure you have 100GB free disk space. 
 You also need to run **ubuntu 18.04 LTS**. Any other platforms are not supported.
-If your computer does not suffice you can use a remote workstation on google cloud platform.
+If your computer does not suffice you can use a remote workstation on Google Cloud Platform.
 Read [this tutorial](gcp-remote-workstation.md) on how to setup your virtual workstation.
 
-We will be compiling all kinds of c++ files and it is important that they are all compiled using the same compiler version. 
-Therefore we will install gcc-8 and set it to use it when `gcc` is called.
+We will be compiling all kinds of C++ files and it is important that they are all compiled using the same compiler version. 
+Therefore we will install GCC 8 and set it to use it when `gcc` is called.
 
 ```
 sudo apt-get install gcc-8 g++-8
@@ -42,7 +42,8 @@ sudo apt install ros-melodic-desktop ros-melodic-mavros ros-melodic-tf2-geometry
 
 ## Install the project
 
-This repo uses git lfs. So ensure you have lfs installed: `sudo apt-get install git-lfs`
+This repo uses git LFS. So ensure you have LFS installed: `sudo apt-get install git-lfs`. 
+Once git-lfs is downloaded, `git lfs install` must be run.
 
 Let's start by cloning this repository in the home directory
 ```
@@ -50,7 +51,7 @@ git clone git@github.com:FS-Online/Driverless-Competition-Simulator.git
 ```
 
 **THE REPO HAS TO BE CLONED IN THE HOME DIRECTORY!**. So the repo location should be `~/Driverless-Competition-Simulator`.
-Why you ask? Because we couldn't get relative paths in the cpp code to work so now we have hard-coded some paths to the home directory.
+Why you ask? Because we couldn't get relative paths in the C++ code to work so now we have hard-coded some paths to the home directory.
 I know yes it is ugly but it works. If you are bothered by it I would welcome you to open a pr with a fix.
 
 
@@ -61,13 +62,13 @@ AirSim/setup.sh
 AirSim/build.sh
 ```
 
-To setup the Simulator ros workspace, go cd into the `Simulator` folder and run
+To set up the Simulator ROS workspace, cd into the `Simulator` folder and run
 ```
 catkin init
 catkin build
 ```
 
-Finally you can launch the FSOnline Unreal Engine Project by running UE4Editor and selecting the `UE4Project/FSOnline.uproject` project.
+Finally, you can launch the FSOnline Unreal Engine Project by running UE4Editor and selecting the `UE4Project/FSOnline.uproject` project.
 To do this in a single command you can run `UE4Editor Driverless-Competition-Simulator/UE4Project/FSOnline.uproject`
 
 
