@@ -4,8 +4,6 @@ The first competition will take place during the driverless event, FS-Online 202
 
 FSDS is brought to you by your friends at Formula Student Team Delft, MIT Driverless and FSEast.
 
-Would you like to help develop this project? Create [an issues](https://github.com/FS-Online/Driverless-Competition-Simulator/issues) introducing yourself and we will get you up to speed.
-
 You can read all about how FSDS works in this [systems overview document](/docs/system-overview.md)
 
 ## Repo Overview
