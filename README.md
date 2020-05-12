@@ -16,7 +16,7 @@ This includes the world, all assets and the AirSim server.
 The AirSim server uses the AirLib shared code (see `/AirSim/AirLib`).
 
 `/Simulator` is the simulation control system. This is a ROS workspace.
-Simulator connect to the autonomous systems, offers a web gui for officials to controll the simulation and connects to the virtual world inside Unreal Engine.
+The simulator provides a ROS bridge between the autonomous systems and the simulation, offers a web gui for officials to control the simulation and connects to the virtual world inside Unreal Engine.
 
 `/AirSim` is a slimmed-down, hard-fork of the [AirSim](https://github.com/microsoft/AirSim) project.
 There is only code located that is shared between Simulator and UE4 plugin.

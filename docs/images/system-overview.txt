@@ -20,10 +20,13 @@ package "Google Cloud" {
     
     
     [Simulator] --> [AirSim plugin]: World state
+    [Simulator] --> [AirSim plugin]: Control setpoints
+    [Simulator] <-- [AirSim plugin]: Sensor data
+    [Simulator] --> [AirSim plugin]: settings.json
     [AirSim plugin] <--> [Game Engine]
     
-    [AS] -right-> [Simulator] : Car controll setpoints
-    [Simulator] -left-> [AS] : Sensor values
+    [AS] -right-> [Simulator] : Car control setpoints
+    [Simulator] -left-> [AS] : Sensor data
 }
 
 [Official's browser<size:20><&person></size>] as official
