@@ -18,8 +18,8 @@ file(GLOB_RECURSE ${PROJECT_NAME}_sources
   ${AIRSIM_ROOT}/${PROJECT_NAME}/src/common/common_utils/*.cpp
   ${AIRSIM_ROOT}/${PROJECT_NAME}/src/safety/*.cpp
   ${AIRSIM_ROOT}/${PROJECT_NAME}/src/vehicles/car/api/*.cpp
-  ${AIRSIM_ROOT}/${PROJECT_NAME}/src/vehicles/multirotor/*.cpp
-  ${AIRSIM_ROOT}/${PROJECT_NAME}/src/vehicles/multirotor/api/*.cpp
+  # ${AIRSIM_ROOT}/${PROJECT_NAME}/src/vehicles/multirotor/*.cpp
+  # ${AIRSIM_ROOT}/${PROJECT_NAME}/src/vehicles/multirotor/api/*.cpp
 )
 
 add_library(${PROJECT_NAME} STATIC ${${PROJECT_NAME}_sources})
