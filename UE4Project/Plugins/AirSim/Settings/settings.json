@@ -19,6 +19,10 @@
             "SensorType": 2,
             "Enabled": true
           },
+          "Gps" : {
+            "SensorType": 3,
+            "Enabled": true
+          },
           "LidarCustom": {
             "SensorType": 6,
             "Enabled": true,
