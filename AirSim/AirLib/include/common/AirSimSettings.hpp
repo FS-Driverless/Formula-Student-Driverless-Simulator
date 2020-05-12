@@ -775,7 +775,7 @@ private:
 
         //create default computer vision vehicle
         auto cv_setting = std::unique_ptr<VehicleSetting>(new VehicleSetting());
-        cv_setting->vehicle_name = "ComputerVision";
+        cv_setting->vehicle_name = "ComputerVisiontest";
         cv_setting->vehicle_type = kVehicleTypeComputerVision;
         vehicles[cv_setting->vehicle_name] = std::move(cv_setting);
     }
