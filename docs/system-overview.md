@@ -57,7 +57,7 @@ This is information that in a physical world would be relevant to the referee.
 Currently, this includes a list of down or out cones and the timestamp of when they went down or out, a list of lap times and a list of when the car went off-track.
 More information will for sure be added.
 
-A single logbook will store what happened inside the simulation.
+What happens inside the simulation is stored in a single logbook.
 This includes all referee updates, which autonomous systems were selected and which tracks were used.
 If something unexpected went wrong like a system's crash or error, a short description of what happened is included in this logbook.
 It gives a timeline of everything that happened to always go back afterwards and check what happened.
