@@ -10,7 +10,6 @@ IncludeEigen()
 include_directories(
   ${AIRSIM_ROOT}/AirLib/
   ${AIRSIM_ROOT}/AirLib/include
-  ${AIRSIM_ROOT}/MavLinkCom/include
   ${RPC_LIB_INCLUDES}
 )
 
@@ -27,7 +26,6 @@ add_library(${PROJECT_NAME} STATIC ${${PROJECT_NAME}_sources})
 
 CommonTargetLink()
 target_link_libraries(${PROJECT_NAME} ${RPC_LIB})
-target_link_libraries(${PROJECT_NAME} MavLinkCom)
 
 #string(SUBSTRING ${CMAKE_STATIC_LINKER_FLAGS} 9 -1 "BUILD_PLATFORM")
 #find_package(Threads REQUIRED)
