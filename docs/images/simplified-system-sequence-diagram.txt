@@ -1,0 +1,19 @@
+# This file is the source for the image with the same name.
+# Use https://sequencediagram.org/ to render this text to an image
+
+title simplified system sequence diagram
+
+Official->Simulator: GO!
+loop until finished or stopped
+
+Simulator<-UnrealEngine: sensor data
+Simulator->Autonomous System: sensor data
+Simulator<-Autonomous System: car setpoints
+Simulator->UnrealEngine: car setpoints
+end
+
+Official->Simulator: STOP!
+
+Simulator->UnrealEngine:get simulation statistics
+Simulator<--UnrealEngine:simulation statistics
+Official<--Simulator:simulation statistics

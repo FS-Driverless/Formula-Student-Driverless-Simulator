@@ -103,4 +103,3 @@ To open Rviz with [this](../Simulator/src/airsim_ros_interface/config/rviz/defau
 
 To open Multiplot with [this](../Simulator/src/airsim_ros_interface/config/multiplot/multiplot.xml) configuration file, run `roslaunch airsim_ros_interface plot.launch`
 
-
