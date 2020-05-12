@@ -759,13 +759,13 @@ private:
         //to sync code in createVehicleSetting() as well.
 
         //create simple flight as default multirotor
-        auto simple_flight_setting = std::unique_ptr<VehicleSetting>(new VehicleSetting());
-        simple_flight_setting->vehicle_name = "SimpleFlight";
-        simple_flight_setting->vehicle_type = kVehicleTypeSimpleFlight;
-        //TODO: we should be selecting remote if available else keyboard
-        //currently keyboard is not supported so use rc as default
-        simple_flight_setting->rc.remote_control_id = 0;
-        vehicles[simple_flight_setting->vehicle_name] = std::move(simple_flight_setting);
+        // auto simple_flight_setting = std::unique_ptr<VehicleSetting>(new VehicleSetting());
+        // simple_flight_setting->vehicle_name = "SimpleFlight";
+        // simple_flight_setting->vehicle_type = kVehicleTypeSimpleFlight;
+        // //TODO: we should be selecting remote if available else keyboard
+        // //currently keyboard is not supported so use rc as default
+        // simple_flight_setting->rc.remote_control_id = 0;
+        // vehicles[simple_flight_setting->vehicle_name] = std::move(simple_flight_setting);
 
         //create default car vehicle
         auto physx_car_setting = std::unique_ptr<VehicleSetting>(new VehicleSetting());
@@ -774,10 +774,10 @@ private:
         vehicles[physx_car_setting->vehicle_name] = std::move(physx_car_setting);
 
         //create default computer vision vehicle
-        auto cv_setting = std::unique_ptr<VehicleSetting>(new VehicleSetting());
-        cv_setting->vehicle_name = "ComputerVisiontest";
-        cv_setting->vehicle_type = kVehicleTypeComputerVision;
-        vehicles[cv_setting->vehicle_name] = std::move(cv_setting);
+        // auto cv_setting = std::unique_ptr<VehicleSetting>(new VehicleSetting());
+        // cv_setting->vehicle_name = "ComputerVisiontest";
+        // cv_setting->vehicle_type = kVehicleTypeComputerVision;
+        // vehicles[cv_setting->vehicle_name] = std::move(cv_setting);
     }
 
     static void loadVehicleSettings(const std::string& simmode_name, const Settings& settings_json,
