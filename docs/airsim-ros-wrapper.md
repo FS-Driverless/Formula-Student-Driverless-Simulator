@@ -4,7 +4,7 @@ A ROS wrapper over the AirSim C++ **Car** client library. This code is based on 
 
 ## Prerequisites
 
-Before being able to test this ROS wrapper, you will have to follow the steps described [here](../../../docs/get-ready-to-develop.md).
+Before being able to test this ROS wrapper, you will have to follow the steps described [here](get-ready-to-develop.md).
 
 ##  Build
 - Build AirSim. From the root of this repository, run:
@@ -38,8 +38,8 @@ Let's look at the ROS API for both nodes:
 
 ### AirSim ROS Wrapper Node
 #### Publishers:
-- `/airsim_node/origin_geo_point` [airsim_ros_interface/GPSYaw](msg/GPSYaw.msg)   
-GPS coordinates corresponding to global NED frame. This is set in the airsim's [settings.json](https://microsoft.github.io/AirSim/docs/settings/) file under (located [here](../../../UE4Project/Plugins/AirSim/Settings/settings.json)) the `OriginGeopoint` key. 
+- `/airsim_node/origin_geo_point` [airsim_ros_interface/GPSYaw](../Simulator/src/airsim_ros_interface/msg/GPSYaw.msg)   
+GPS coordinates corresponding to global NED frame. This is set in the airsim's [settings.json](https://microsoft.github.io/AirSim/docs/settings/) file under (located [here](../UE4Project/Plugins/AirSim/Settings/settings.json)) the `OriginGeopoint` key. 
   
 - `/airsim_node/VEHICLE_NAME/global_gps` [sensor_msgs/NavSatFix](https://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html)   
 This the current GPS coordinates of the drone in airsim. 
@@ -50,19 +50,19 @@ Odometry in NED frame wrt starting point.  THIS WILL NOT BE STREAMED DURING COMP
 - `/airsim_node/VEHICLE_NAME/CAMERA_NAME/IMAGE_TYPE/camera_info` [sensor_msgs/CameraInfo](https://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html)
 
 - `/airsim_node/VEHICLE_NAME/CAMERA_NAME/IMAGE_TYPE` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)   
-  RGB or float image depending on image type requested in [settings.json](../../../UE4Project/Plugins/AirSim/Settings/settings.json).
+  RGB or float image depending on image type requested in [settings.json](../UE4Project/Plugins/AirSim/Settings/settings.json).
 
 - `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)
 
-where `VEHICLE_NAME`, `CAMERA_NAME` and `IMAGE_TYPE` are extracted from [settings.json](../../../UE4Project/Plugins/AirSim/Settings/settings.json).
+where `VEHICLE_NAME`, `CAMERA_NAME` and `IMAGE_TYPE` are extracted from [settings.json](../UE4Project/Plugins/AirSim/Settings/settings.json).
 
 #### Subscribers: 
-- `/airsim_node/VEHICLE_NAME/control_command` [airsim_ros_interface/ControlCommand](msg/ControlCommand.msg) 
+- `/airsim_node/VEHICLE_NAME/control_command` [airsim_ros_interface/ControlCommand](../Simulator/src/airsim_ros_interface/msg/ControlCommand.msg) 
 The contents of this message fill the essential parts of the `msr::airlib::CarApiBase::CarControl` struct. This is the only way to control the car when the airsim ROS client is connected (keyboard will no longer work!).
 
 #### Services:
 
-- `/airsim_node/reset` [airsim_ros_interface/Reset](srv/Empty.html)
+- `/airsim_node/reset` [airsim_ros_interface/Reset](../Simulator/src/airsim_ros_interface/srv/Empty.html)
  Resets car to start location.
 
 #### Parameters:
@@ -91,16 +91,16 @@ roslaunch airsim_ros_interface joystick.launch
 
 #### Subscribers:
 - `/joy` [sensor_msgs/Joy](https://github.com/microsoft/AirSim/tree/master/ros/src/airsim_ros_interface/msg/GPSYaw.msg)   
-  Listens to joystick input which is then mapped to the control command msg. The mapping should feel intuitive but in case something is unclear, it is described in detail [here](src/joystick.cpp) 
+  Listens to joystick input which is then mapped to the control command msg. The mapping should feel intuitive but in case something is unclear, it is described in detail [here](../Simulator/src/airsim_ros_interface/src/joystick.cpp) 
 
 #### Publishers:
-- `/airsim_node/VEHICLE_NAME/control_command` [airsim_ros_interface/ControlCommand](msg/ControlCommand.msg) 
+- `/airsim_node/VEHICLE_NAME/control_command` [airsim_ros_interface/ControlCommand](../Simulator/src/airsim_ros_interface/msg/ControlCommand.msg) 
 
 ### Visualization
 This package contains some useful launch and config files which will help you in visualizing the data being streamed through the above topics.
 
-To open Rviz with [this](config/rviz/default.rviz) configuration file, run `roslaunch airsim_ros_interface rviz.launch`.
+To open Rviz with [this](../Simulator/src/airsim_ros_interface/config/rviz/default.rviz) configuration file, run `roslaunch airsim_ros_interface rviz.launch`.
 
-To open Multiplot with [this](config/multiplot/multiplot.xml) configuration file, run `roslaunch airsim_ros_interface plot.launch`
+To open Multiplot with [this](../Simulator/src/airsim_ros_interface/config/multiplot/multiplot.xml) configuration file, run `roslaunch airsim_ros_interface plot.launch`
 
 
