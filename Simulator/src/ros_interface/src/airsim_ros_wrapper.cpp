@@ -121,6 +121,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         fscar_ros.vehicle_name = curr_vehicle_name;
         fscar_ros.odom_local_ned_pub = nh_private_.advertise<nav_msgs::Odometry>(curr_vehicle_name + "/odom_local_ned", 10);
         fscar_ros.global_gps_pub = nh_private_.advertise<sensor_msgs::NavSatFix>(curr_vehicle_name + "/global_gps", 10);
+        fscar_ros.control_cmd_sub = nh_private_.subscribe<ros_interface::ControlCommand>(curr_vehicle_name + "/control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, fscar_ros.vehicle_name));
 
 
         fscar_ros_vec_.push_back(fscar_ros);

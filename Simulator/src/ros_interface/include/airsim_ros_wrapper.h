@@ -158,6 +158,7 @@ private:
         /// All things ROS
         ros::Publisher odom_local_ned_pub;
         ros::Publisher global_gps_pub;
+        ros::Subscriber control_cmd_sub;
 
         /// State
         msr::airlib::CarApiBase::CarState curr_car_state;
