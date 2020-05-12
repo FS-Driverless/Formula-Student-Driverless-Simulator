@@ -41,9 +41,6 @@ AirsimROSWrapper::AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHan
     initialize_ros();
 
     std::cout << "AirsimROSWrapper Initialized!\n";
-    // intitialize placeholder control commands
-    // vel_cmd_ = VelCmd();
-    // gimbal_cmd_ = GimbalCmd();
 }
 
 void AirsimROSWrapper::initialize_airsim()
@@ -80,7 +77,6 @@ void AirsimROSWrapper::initialize_ros()
     double update_airsim_control_every_n_sec;
     nh_private_.getParam("is_vulkan", is_vulkan_);
     nh_private_.getParam("update_airsim_control_every_n_sec", update_airsim_control_every_n_sec);
-    vel_cmd_duration_ = 0.05; // todo rosparam
 
     create_ros_pubs_from_settings_json();
     airsim_control_update_timer_ = nh_private_.createTimer(ros::Duration(update_airsim_control_every_n_sec), &AirsimROSWrapper::car_state_timer_cb, this);
@@ -425,6 +421,28 @@ ros_interface::GPSYaw AirsimROSWrapper::get_gps_msg_from_airsim_geo_point(const 
     return gps_msg;
 }
 
+sensor_msgs::NavSatFix AirsimROSWrapper::get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint &geo_point) const 
+{
+    sensor_msgs::NavSatFix gps_msg;
+    gps_msg.latitude = geo_point.latitude;
+    gps_msg.longitude = geo_point.longitude;
+    gps_msg.altitude = geo_point.altitude;
+    return gps_msg;
+}
+
+void AirsimROSWrapper::car_control_cb(const ros_interface::ControlCommand::ConstPtr &msg, const std::string &vehicle_name)
+{
+
+    CarApiBase::CarControls controls;
+    controls.throttle = msg->throttle;
+    controls.steering = msg->steering;
+    controls.brake = msg->brake;
+
+    std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
+    airsim_client_.setCarControls(controls, vehicle_name);
+    lck.unlock();
+}
+
 void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent& event)
 {
     try
@@ -452,16 +470,15 @@ void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent& event)
             fscar_ros.curr_odom_ned.child_frame_id = fscar_ros.odom_frame_id;
             fscar_ros.curr_odom_ned.header.stamp = curr_ros_time;
 
-            // fscar_ros.gps_sensor_msg = get_gps_sensor_msg_from_airsim_geo_point(fscar_ros.curr_car_state.gps_location);
-            // fscar_ros.gps_sensor_msg.header.stamp = curr_ros_time;
+            msr::airlib::GeoPoint gps_location = airsim_client_.getGpsData("Gps", fscar_ros.vehicle_name).gnss.geo_point;
+            fscar_ros.gps_sensor_msg = get_gps_sensor_msg_from_airsim_geo_point(gps_location);
+            fscar_ros.gps_sensor_msg.header.stamp = curr_ros_time;
 
             // publish to ROS!  
             fscar_ros.odom_local_ned_pub.publish(fscar_ros.curr_odom_ned);
             publish_odom_tf(fscar_ros.curr_odom_ned);
-            // fscar_ros.global_gps_pub.publish(fscar_ros.gps_sensor_msg);
+            fscar_ros.global_gps_pub.publish(fscar_ros.gps_sensor_msg);
 
-            // "clear" control cmds
-            fscar_ros.has_vel_cmd = false;
         }
 
         // IMUS
@@ -493,15 +510,6 @@ void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent& event)
             static_tf_msg_vec_.clear();
         }
 
-        // todo add and expose a gimbal angular velocity to airlib
-        if (has_gimbal_cmd_)
-        {
-            std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
-            airsim_client_.simSetCameraOrientation(gimbal_cmd_.camera_name, gimbal_cmd_.target_quat, gimbal_cmd_.vehicle_name);
-            lck.unlock();
-        }
-
-        has_gimbal_cmd_ = false;
     }
 
     catch (rpc::rpc_error& e)

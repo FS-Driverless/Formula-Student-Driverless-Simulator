@@ -5,7 +5,7 @@
 #include "iostream"
 
 #include <sensor_msgs/Joy.h>
-#include <airsim_ros_interface/ControlCommand.h>
+#include <ros_interface/ControlCommand.h>
 
 /*
  This node gets input from a joystick xbox controller (see http://wiki.ros.org/joy)
@@ -99,7 +99,7 @@ inline bool FileExists(const std::string &devicefilename)
 
 void SendMaxBreak()
 {
-  airsim_ros_interface::ControlCommand cmd = airsim_ros_interface::ControlCommand();
+  ros_interface::ControlCommand cmd = ros_interface::ControlCommand();
   cmd.header.stamp = ros::Time::now();
   cmd.throttle = 0;
   cmd.steering = PREVIOUS_STEERANGLE;
@@ -163,7 +163,7 @@ void JoyCallback(const sensor_msgs::Joy &joystickmsg)
     }
   }
 
-  airsim_ros_interface::ControlCommand cmd = airsim_ros_interface::ControlCommand();
+  ros_interface::ControlCommand cmd = ros_interface::ControlCommand();
 
   bool boost_button_pressed = joystickmsg.buttons[1] != 0;
   float max_acceleration = -1;
@@ -226,7 +226,7 @@ int main(
   ros::init(argc, argv, ros::this_node::getName());
   ros::NodeHandle node_handle;
   node_handle.getParam("/joy/dev", JOYSTICK_PATH);
-  CONTROL_PUBLISHER = node_handle.advertise<airsim_ros_interface::ControlCommand>(
+  CONTROL_PUBLISHER = node_handle.advertise<ros_interface::ControlCommand>(
       "/airsim_node/FSCar/control_command", 1);
   // we only care about the last message so queue size set to 1 deletes any older messages.
   JOY_SUBSCRIBER = node_handle.subscribe("/joy", 1, JoyCallback);

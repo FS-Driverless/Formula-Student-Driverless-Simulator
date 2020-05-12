@@ -4,6 +4,6 @@
         <param name="dev" type="string" value="/dev/input/js0"/>
     </node>
 
-    <node name="joycontrol" type="joycontrol" pkg="airsim_ros_interface" output="screen" required="true"/>
+    <node name="joycontrol" type="joycontrol" pkg="ros_interface" output="screen" required="true"/>
 </launch>
 
