@@ -23,40 +23,40 @@ jobs:
 
     # Runs a set of commands using the runners shell
     - name: ROS 2 CI Action
-    uses: ros-tooling/action-ros-ci@0.0.16
-    with:
-      # Colcon mixin to be used to compile and test (empty means no mixin)
-      colcon-mixin-name: # optional, default is 
-      # Mixin repository containing the mixin specified in colcon-mixin-name
-      colcon-mixin-repository: # optional, default is https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
-      # Ignore all files matching this pattern in the coverage report.
-      # It will be injected in colcon-lcov-result --filter option.
-      # Useful for ignoring tests or examples in the coverage report.
+      uses: ros-tooling/action-ros-ci@0.0.16
+      with:
+        # Colcon mixin to be used to compile and test (empty means no mixin)
+        colcon-mixin-name: # optional, default is 
+        # Mixin repository containing the mixin specified in colcon-mixin-name
+        colcon-mixin-repository: # optional, default is https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
+        # Ignore all files matching this pattern in the coverage report.
+        # It will be injected in colcon-lcov-result --filter option.
+        # Useful for ignoring tests or examples in the coverage report.
 
-      coverage-ignore-pattern: # optional
-      # Additional flags passed to CMake (using colcon build --cmake-args)
+        coverage-ignore-pattern: # optional
+        # Additional flags passed to CMake (using colcon build --cmake-args)
 
-      extra-cmake-args: # optional, default is 
-      # Name of the package(s) under test, as expected by colcon.
-      # Passing multiple package names is allowed.
-      # Package names can be separated by any whitespace character.
+        extra-cmake-args: # optional, default is 
+        # Name of the package(s) under test, as expected by colcon.
+        # Passing multiple package names is allowed.
+        # Package names can be separated by any whitespace character.
 
-      package-name: "melodic"
-      # Source setup.sh from one or more binary ROS installations (Linux only).
-      # For instance, if dashing is passed, /opt/ros/dashing/setup.sh will
-      # be sourced before running colcon.
-      # Multiple ROS distributions separated by one or more whitespace\
-      # characters are allowed. This is typically used to setup a ROS and
-      # a ROS 2 distribution to build packages relying on both, such as
-      # the ros1_bridge.
-      # Example of valid values include "", "dashing", "melodic dashing".
+        package-name: "melodic"
+        # Source setup.sh from one or more binary ROS installations (Linux only).
+        # For instance, if dashing is passed, /opt/ros/dashing/setup.sh will
+        # be sourced before running colcon.
+        # Multiple ROS distributions separated by one or more whitespace\
+        # characters are allowed. This is typically used to setup a ROS and
+        # a ROS 2 distribution to build packages relying on both, such as
+        # the ros1_bridge.
+        # Example of valid values include "", "dashing", "melodic dashing".
 
-      source-ros-binary-installation: # optional, default is 
-      # repo file URL passed to vcs to initialize the colcon workspace.
-      # The URL may point to a local file, such as file://path/to/file.txt
+        source-ros-binary-installation: # optional, default is 
+        # repo file URL passed to vcs to initialize the colcon workspace.
+        # The URL may point to a local file, such as file://path/to/file.txt
 
-      vcs-repo-file-url: # optional, default is https://raw.githubusercontent.com/ros2/ros2/master/ros2.repos
-      run: |
-        set -ex o pipefail
-        catkin build
-      working-directory: ./Simulator
+        vcs-repo-file-url: # optional, default is https://raw.githubusercontent.com/ros2/ros2/master/ros2.repos
+        run: |
+          set -ex o pipefail
+          catkin build
+        working-directory: ./Simulator
