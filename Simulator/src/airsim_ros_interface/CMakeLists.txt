@@ -87,6 +87,7 @@ add_executable(airsim_node src/airsim_node.cpp)
 target_link_libraries(airsim_node airsim_ros ${catkin_LIBRARIES} AirLib)
 
 add_executable(joycontrol src/joystick.cpp)
+add_dependencies(joycontrol ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(joycontrol ${catkin_LIBRARIES})
 
 
