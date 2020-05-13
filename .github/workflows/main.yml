@@ -39,5 +39,5 @@ jobs:
     - name: Build catkin ws
       run: |
         set -ex o pipefail
-        catkin build
-      working-directory: ./Simulator 
+        catkin build airsim_ros_interface
+      # working-directory: ./Simulator 
