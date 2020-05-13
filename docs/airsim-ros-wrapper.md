@@ -46,7 +46,7 @@ This the current GPS coordinates of the drone in airsim.
 
 - `/airsim_node/VEHICLE_NAME/odom_local_ned` [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)   
 Odometry in NED frame wrt starting point.  THIS WILL NOT BE STREAMED DURING COMPETITION.
- 
+
 - `/airsim_node/VEHICLE_NAME/CAMERA_NAME/IMAGE_TYPE/camera_info` [sensor_msgs/CameraInfo](https://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html)
 
 - `/airsim_node/VEHICLE_NAME/CAMERA_NAME/IMAGE_TYPE` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)   
@@ -102,4 +102,3 @@ This package contains some useful launch and config files which will help you in
 To open Rviz with [this](../Simulator/src/airsim_ros_interface/config/rviz/default.rviz) configuration file, run `roslaunch airsim_ros_interface rviz.launch`.
 
 To open Multiplot with [this](../Simulator/src/airsim_ros_interface/config/multiplot/multiplot.xml) configuration file, run `roslaunch airsim_ros_interface plot.launch`
-
