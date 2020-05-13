@@ -55,6 +55,9 @@ typedef msr::airlib::AirSimSettings::CaptureSetting CaptureSetting;
 typedef msr::airlib::AirSimSettings::VehicleSetting VehicleSetting;
 typedef msr::airlib::AirSimSettings::CameraSetting CameraSetting;
 typedef msr::airlib::AirSimSettings::LidarSetting LidarSetting;
+typedef msr::airlib::AirSimSettings AirSimSettings;
+typedef msr::airlib::SensorBase SensorBase;
+typedef msr::airlib::CarApiBase CarApiBase;
 
 struct SimpleMatrix
 {
