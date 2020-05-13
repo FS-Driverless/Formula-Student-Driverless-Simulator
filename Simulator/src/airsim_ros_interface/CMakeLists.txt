@@ -70,8 +70,8 @@ include_directories(
   ${Boost_INCLUDE_DIRS}
 )
 
-# add_library(airsim_settings_parser src/airsim_settings_parser.cpp)
-# target_link_libraries(airsim_settings_parser ${catkin_LIBRARIES} AirLib)
+add_library(airsim_settings_parser src/airsim_settings_parser.cpp)
+target_link_libraries(airsim_settings_parser ${catkin_LIBRARIES} AirLib)
 
 add_library(airsim_ros src/airsim_ros_wrapper.cpp)
 add_dependencies(airsim_ros ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

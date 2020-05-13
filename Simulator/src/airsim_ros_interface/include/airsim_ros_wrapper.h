@@ -55,6 +55,7 @@ typedef msr::airlib::AirSimSettings::CaptureSetting CaptureSetting;
 typedef msr::airlib::AirSimSettings::VehicleSetting VehicleSetting;
 typedef msr::airlib::AirSimSettings::CameraSetting CameraSetting;
 typedef msr::airlib::AirSimSettings::LidarSetting LidarSetting;
+typedef msr::airlib::CarApiBase CarApiBase;
 
 struct SimpleMatrix
 {
@@ -65,16 +66,6 @@ struct SimpleMatrix
     SimpleMatrix(int rows, int cols, double* data)
         : rows(rows), cols(cols), data(data)
     {}
-};
-
-struct VelCmd
-{
-    double x;
-    double y;
-    double z;
-    msr::airlib::DrivetrainType drivetrain;
-    msr::airlib::YawMode yaw_mode;
-    std::string vehicle_name;
 };
 
 
@@ -177,7 +168,7 @@ private:
 
     std::vector<FSCarROS> fscar_ros_vec_;
 
-    std::vector<string> vehicle_names_;
+    std::vector<std::string> vehicle_names_;
     std::vector<VehicleSetting> vehicle_setting_vec_;
     AirSimSettingsParser airsim_settings_parser_;
     std::unordered_map<std::string, int> vehicle_name_idx_map_;
