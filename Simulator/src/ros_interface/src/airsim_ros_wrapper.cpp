@@ -86,7 +86,7 @@ void AirsimROSWrapper::initialize_ros()
 void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 {
     // subscribe to control commands on global nodehandle
-    origin_geo_point_pub_ = nh_private_.advertise<ros_interface::GPSYaw>("origin_geo_point", 10);       
+    origin_geo_point_pub_ = nh_private_.advertise<airsim_ros_interface::GPSYaw>("origin_geo_point", 10);       
 
     airsim_img_request_vehicle_name_pair_vec_.clear();
     image_pub_vec_.clear();
@@ -121,7 +121,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         fscar_ros.vehicle_name = curr_vehicle_name;
         fscar_ros.odom_local_ned_pub = nh_private_.advertise<nav_msgs::Odometry>(curr_vehicle_name + "/odom_local_ned", 10);
         fscar_ros.global_gps_pub = nh_private_.advertise<sensor_msgs::NavSatFix>(curr_vehicle_name + "/global_gps", 10);
-        fscar_ros.control_cmd_sub = nh_private_.subscribe<ros_interface::ControlCommand>(curr_vehicle_name + "/control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, fscar_ros.vehicle_name));
+        fscar_ros.control_cmd_sub = nh_private_.subscribe<airsim_ros_interface::ControlCommand>(curr_vehicle_name + "/control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, fscar_ros.vehicle_name));
 
 
         fscar_ros_vec_.push_back(fscar_ros);
@@ -279,7 +279,7 @@ ros::Time AirsimROSWrapper::make_ts(uint64_t unreal_ts) {
 
 // todo add reset by vehicle_name API to airlib
 // todo not async remove waitonlasttask
-bool AirsimROSWrapper::reset_srv_cb(ros_interface::Reset::Request& request, ros_interface::Reset::Response& response)
+bool AirsimROSWrapper::reset_srv_cb(airsim_ros_interface::Reset::Request& request, airsim_ros_interface::Reset::Response& response)
 {
     std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
 
@@ -413,9 +413,9 @@ void AirsimROSWrapper::publish_odom_tf(const nav_msgs::Odometry& odom_ned_msg)
     tf_broadcaster_.sendTransform(odom_tf);
 }
 
-ros_interface::GPSYaw AirsimROSWrapper::get_gps_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const
+airsim_ros_interface::GPSYaw AirsimROSWrapper::get_gps_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const
 {
-    ros_interface::GPSYaw gps_msg;
+    airsim_ros_interface::GPSYaw gps_msg;
     gps_msg.latitude = geo_point.latitude;
     gps_msg.longitude = geo_point.longitude; 
     gps_msg.altitude = geo_point.altitude;
@@ -431,7 +431,7 @@ sensor_msgs::NavSatFix AirsimROSWrapper::get_gps_sensor_msg_from_airsim_geo_poin
     return gps_msg;
 }
 
-void AirsimROSWrapper::car_control_cb(const ros_interface::ControlCommand::ConstPtr &msg, const std::string &vehicle_name)
+void AirsimROSWrapper::car_control_cb(const airsim_ros_interface::ControlCommand::ConstPtr &msg, const std::string &vehicle_name)
 {
  
     CarApiBase::CarControls controls;

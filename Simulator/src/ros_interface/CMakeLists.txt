@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10.0)
-project(ros_interface)
+project(airsim_ros_interface)
 
 # set this to path to AirSim root folder if you want your catkin workspace in a custom directory
 set(AIRSIM_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../../../AirSim/)

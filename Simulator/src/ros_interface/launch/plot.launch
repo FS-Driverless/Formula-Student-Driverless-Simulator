@@ -1,4 +1,4 @@
 <?xml version="1.0"?>
 <launch>
-    <node name="rqt_multiplot_general" pkg="rqt_multiplot" type="rqt_multiplot" args="--multiplot-config $(find ros_interface)/config/multiplot/multiplot.xml --multiplot-run-all"/>
+    <node name="rqt_multiplot_general" pkg="rqt_multiplot" type="rqt_multiplot" args="--multiplot-config $(find airsim_ros_interface)/config/multiplot/multiplot.xml --multiplot-run-all"/>
 </launch>
