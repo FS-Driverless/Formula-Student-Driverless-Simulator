@@ -6,7 +6,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include "rpc/rpc_error.h"
 STRICT_MODE_ON
 
-// #include "airsim_settings_parser.h"
+#include "airsim_settings_parser.h"
 #include "common/AirSimSettings.hpp"
 #include "common/common_utils/FileSystem.hpp"
 #include "ros/ros.h"
@@ -55,9 +55,6 @@ typedef msr::airlib::AirSimSettings::CaptureSetting CaptureSetting;
 typedef msr::airlib::AirSimSettings::VehicleSetting VehicleSetting;
 typedef msr::airlib::AirSimSettings::CameraSetting CameraSetting;
 typedef msr::airlib::AirSimSettings::LidarSetting LidarSetting;
-typedef msr::airlib::AirSimSettings AirSimSettings;
-typedef msr::airlib::SensorBase SensorBase;
-typedef msr::airlib::CarApiBase CarApiBase;
 
 struct SimpleMatrix
 {
@@ -68,6 +65,16 @@ struct SimpleMatrix
     SimpleMatrix(int rows, int cols, double* data)
         : rows(rows), cols(cols), data(data)
     {}
+};
+
+struct VelCmd
+{
+    double x;
+    double y;
+    double z;
+    msr::airlib::DrivetrainType drivetrain;
+    msr::airlib::YawMode yaw_mode;
+    std::string vehicle_name;
 };
 
 
@@ -170,8 +177,9 @@ private:
 
     std::vector<FSCarROS> fscar_ros_vec_;
 
-    std::vector<std::string> vehicle_names_;
+    std::vector<string> vehicle_names_;
     std::vector<VehicleSetting> vehicle_setting_vec_;
+    AirSimSettingsParser airsim_settings_parser_;
     std::unordered_map<std::string, int> vehicle_name_idx_map_;
     static const std::unordered_map<int, std::string> image_type_int_to_string_map_;
     std::map<std::string, std::string> vehicle_imu_map_;
