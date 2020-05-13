@@ -21,7 +21,7 @@ message(STATUS "found RPC_LIB_INCLUDES=${RPC_LIB_INCLUDES}")
 # todo eigen3 in AirLib already
 # find_package(Eigen3 REQUIRED) 
 find_package(Boost REQUIRED)
-# find_package(OpenCV REQUIRED)
+find_package(OpenCV REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS
   cv_bridge
@@ -67,7 +67,7 @@ include_directories(
   ${AIRSIM_ROOT}/AirLib/deps/eigen3
   ${AIRSIM_ROOT}/AirLib/include
   ${RPC_LIB_INCLUDES}
-  # ${OpenCV_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
 )
 
