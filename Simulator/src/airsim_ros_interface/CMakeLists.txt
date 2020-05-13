@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10.0)
-project(ros_interface)
+project(airsim_ros_interface)
 
 # set this to path to AirSim root folder if you want your catkin workspace in a custom directory
 set(AIRSIM_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../../../AirSim/)
@@ -29,7 +29,7 @@ find_package(catkin REQUIRED COMPONENTS
   mavros_msgs
   message_generation
   nav_msgs
-  # nodelet
+  joy
   roscpp
   rospy
   sensor_msgs
@@ -42,6 +42,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   GPSYaw.msg
+  ControlCommand.msg
 )
 
 add_service_files(
@@ -78,10 +79,6 @@ include_directories(
 add_library(airsim_settings_parser src/airsim_settings_parser.cpp)
 target_link_libraries(airsim_settings_parser ${catkin_LIBRARIES} AirLib)
 
-# add_library(pd_position_controller_simple src/pd_position_controller_simple.cpp)
-# add_dependencies(pd_position_controller_simple ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-# add_dependencies(pd_position_controller_simple ${catkin_EXPORTED_TARGETS})
-
 add_library(airsim_ros src/airsim_ros_wrapper.cpp)
 add_dependencies(airsim_ros ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(airsim_ros ${catkin_LIBRARIES} ${OpenCV_LIBS} yaml-cpp AirLib airsim_settings_parser)
@@ -89,14 +86,10 @@ target_link_libraries(airsim_ros ${catkin_LIBRARIES} ${OpenCV_LIBS} yaml-cpp Air
 add_executable(airsim_node src/airsim_node.cpp)
 target_link_libraries(airsim_node airsim_ros ${catkin_LIBRARIES} AirLib)
 
-# add_executable(pd_position_controller_simple_node src/pd_position_controller_simple_node.cpp)
-# target_link_libraries(pd_position_controller_simple_node pd_position_controller_simple airsim_ros ${catkin_LIBRARIES} AirLib)
+add_executable(joycontrol src/joystick.cpp)
+add_dependencies(joycontrol ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(joycontrol ${catkin_LIBRARIES})
 
-# install(TARGETS
-#     #list of nodes
-#     pd_position_controller_simple_node
-#     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
 
 install(TARGETS 
     #list of shared libraries
