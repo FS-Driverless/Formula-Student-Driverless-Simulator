@@ -434,6 +434,8 @@ sensor_msgs::NavSatFix AirsimROSWrapper::get_gps_sensor_msg_from_airsim_geo_poin
 void AirsimROSWrapper::car_control_cb(const ros_interface::ControlCommand::ConstPtr &msg, const std::string &vehicle_name)
 {
 
+    std::cout << "Control acc: " << msg->throttle << std::endl;
+ 
     CarApiBase::CarControls controls;
     controls.throttle = msg->throttle;
     controls.steering = msg->steering;
