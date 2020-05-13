@@ -36,9 +36,13 @@ jobs:
         sudo apt-get install gcc-8 g++-8
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 700 --slave /usr/bin/g++ g++ /usr/bin/g++-7
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 800 --slave /usr/bin/g++ g++ /usr/bin/g++-8
+    - name: Setup AirSim 
+      run: |
+        ./setup.sh
+        ./build.sh
+      working-directory: ./AirSim 
     - name: Build catkin ws
       run: |
         set -ex o pipefail
-        cd Simulator
         catkin build airsim_ros_interface
-      # working-directory: ./Simulator 
+      working-directory: ./Simulator 
