@@ -29,6 +29,7 @@ jobs:
         ros-version: # optional, default is melodic
         # Root directory of the catkin workspace
         workspace: ./Simulator 
+    - name: Build catkin ws
       run: |
         set -ex o pipefail
         catkin build
