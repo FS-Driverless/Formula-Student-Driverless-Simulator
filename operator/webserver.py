@@ -1,30 +1,31 @@
 #!/usr/bin/env python
 
 from flask import Flask, request, abort
-import subprocess, time, signal, sys, os
+import subprocess, time, signal, sys, os, airsim
 
 app = Flask(__name__)
 
-@app.route('/mission/start')
-def mission_start():
-    return {"message": "hello world"}
-
-@app.route('/mission/stop')
-def mission_stop():
-    return 
-
-global interfaceprocess
 interfaceprocess = None
 
-# curl --header "Content-Type: application/json" --request POST --data '{"master": "http://localhost:11311"}' http://localhost:5000/mission/selectcar
+client = airsim.CarClient()
+client.confirmConnection()
 
-@app.route('/mission/selectcar', methods=['POST'])
-def mission_changecar():
+# curl --header "Content-Type: application/json" --request POST --data '{"master": "http://localhost:11311"}' http://localhost:5000/mission/selectcar
+@app.route('/mission/start', methods=['POST'])
+def mission_start():
     if request.json is None or request.json['master'] is None:
-        return abort(400)
+        return abort(400)    
+
+    procenv = os.environ.copy()
+    procenv["ROS_MASTER_URI"] = request.json['master']
 
     global interfaceprocess
+    interfaceprocess = subprocess.Popen(['roslaunch', 'fsds_ros_bridge', 'fsds_ros_bridge.launch'], env=procenv)   
 
+    return {'message': 'Mission started'}
+
+@app.route('/mission/stop', methods=['POST'])
+def mission_stop():
     # check if previous process is still running
     if interfaceprocess is not None and interfaceprocess.poll() is None:
         # try to stop it gracefully. SIGINT is the equivilant to doing ctrl-c
@@ -37,12 +38,12 @@ def mission_changecar():
             # wait for it to finish
             interfaceprocess.wait()
 
-    procenv = os.environ.copy()
-    procenv["ROS_MASTER_URI"] = request.json['master']
+    return {'message': 'Mission stopped'}
 
-    interfaceprocess = subprocess.Popen(['roslaunch', 'fsds_ros_bridge', 'fsds_ros_bridge.launch'], env=procenv)    
-
-    return {'message': 'ok'}
+@app.route('/mission/reset', methods=['POST'])
+def mission_reset():
+    client.reset()
+    return {'message': 'Car reset'}
 
 if __name__ == '__main__':
     app.run()
