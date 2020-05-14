@@ -29,8 +29,8 @@ jobs:
         ros-version: # optional, default is melodic
         # Root directory of the catkin workspace
         workspace: ./Simulator 
-    - name: Install catkin tools
-      run: sudo apt-get install python-catkin-tools
+    - name: Install ROS deps
+      run: sudo apt-get install python-catkin-tools ros-melodic-tf2-geometry-msgs python-catkin-tools ros-melodic-rqt-multiplot ros-melodic-joy
     - name: Compilation settings
       run: |
         sudo apt-get install gcc-8 g++-8
