@@ -5,22 +5,25 @@ import subprocess, time, signal, sys, os, airsim
 
 app = Flask(__name__)
 
-interfaceprocess = None
-
 client = airsim.CarClient()
 client.confirmConnection()
 
-# curl --header "Content-Type: application/json" --request POST --data '{"master": "http://localhost:11311"}' http://localhost:5000/mission/selectcar
+interfaceprocess = None
+
+# curl --header "Content-Type: application/json" --request POST --data '{"master": "http://localhost:11311", "mission": "trackdrive"}' http://localhost:5000/mission/selectcar
 @app.route('/mission/start', methods=['POST'])
 def mission_start():
-    if request.json is None or request.json['master'] is None:
+    if request.json is None or request.json['master'] is None or request.json['mission']:
         return abort(400)    
 
+    master = request.json['master']
+    mission = request.json['mission']
+
     procenv = os.environ.copy()
-    procenv["ROS_MASTER_URI"] = request.json['master']
+    procenv["ROS_MASTER_URI"] = master
 
     global interfaceprocess
-    interfaceprocess = subprocess.Popen(['roslaunch', 'fsds_ros_bridge', 'fsds_ros_bridge.launch'], env=procenv)   
+    interfaceprocess = subprocess.Popen(['roslaunch', 'fsds_ros_bridge', 'fsds_ros_bridge.launch', 'mission:={}'.format(mission)], env=procenv)   
 
     return {'message': 'Mission started'}
 
