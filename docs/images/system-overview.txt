@@ -15,22 +15,21 @@ package "Google Cloud" {
             [Game Engine]
             [AirSim plugin]
         }
-        [Simulator]
+        [Operator]
+        [ROS-Bridge]
     } 
     
     
-    [Simulator] --> [AirSim plugin]: World state
-    [Simulator] --> [AirSim plugin]: Control setpoints
-    [Simulator] <-- [AirSim plugin]: Sensor data
-    [Simulator] --> [AirSim plugin]: settings.json
-    [AirSim plugin] <--> [Game Engine]
-    
-    [AS] -right-> [Simulator] : Car control setpoints
-    [Simulator] -left-> [AS] : Sensor data
+    [Operator] --> [AirSim plugin]: Get referee state
+    [ROS-Bridge] --> [AirSim plugin]: Set car control setpoints
+    [ROS-Bridge] <-- [AirSim plugin]: Get Sensor data
+
+    [AS] -right-> [ROS-Bridge] : Car control setpoints
+    [ROS-Bridge] -left-> [AS] : Sensor data
 }
 
 [Official's browser<size:20><&person></size>] as official
-[official] -right-> [Simulator] : Management
+[official] -down-> [Operator] : Instruction
 
 
 @enduml

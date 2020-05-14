@@ -11,6 +11,8 @@ A separate component - the simulator - will handle all control of the simulation
 
 ![System overview](images/system-overview.png)
 
+![System Communication Diagram](images/simplified-system-sequence-diagram.png)
+
 ## Autonomous systems
 
 Every Autonomous System (AS) will run on its separated environment. 
