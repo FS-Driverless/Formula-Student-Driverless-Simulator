@@ -105,7 +105,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 
     int idx = 0;
     // iterate over std::map<std::string, std::unique_ptr<VehicleSetting>> vehicles;
-    for (const auto& curr_vehicle_elem : AirSimSettings::singleton().vehicles)
+    for (const auto& curr_vehicle_elem : msr::airlib::AirSimSettings::singleton().vehicles)
     {
         auto& vehicle_setting = curr_vehicle_elem.second;
         auto curr_vehicle_name = curr_vehicle_elem.first;
@@ -178,12 +178,12 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 
             switch (sensor_setting->sensor_type)
             {
-                case SensorBase::SensorType::Barometer:
+                case msr::airlib::SensorBase::SensorType::Barometer:
                 {
                     std::cout << "Barometer" << std::endl; 
                     break;
                 }
-                case SensorBase::SensorType::Imu:
+                case msr::airlib::SensorBase::SensorType::Imu:
                 {
                     vehicle_imu_map_[curr_vehicle_name] = sensor_name; 
                     // todo this is pretty non scalable, refactor airsim and ros api and maintain a vehicle <-> sensor (setting) map
@@ -191,22 +191,22 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
                     imu_pub_vec_.push_back(nh_private_.advertise<sensor_msgs::Imu> (curr_vehicle_name + "/imu/" + sensor_name, 10));
                     break;
                 }
-                case SensorBase::SensorType::Gps:
+                case msr::airlib::SensorBase::SensorType::Gps:
                 {
                     std::cout << "Gps" << std::endl; 
                     break;
                 }
-                case SensorBase::SensorType::Magnetometer:
+                case msr::airlib::SensorBase::SensorType::Magnetometer:
                 {
                     std::cout << "Magnetometer" << std::endl; 
                     break;
                 }
-                case SensorBase::SensorType::Distance:
+                case msr::airlib::SensorBase::SensorType::Distance:
                 {
                     std::cout << "Distance" << std::endl; 
                     break;
                 }
-                case SensorBase::SensorType::Lidar:
+                case msr::airlib::SensorBase::SensorType::Lidar:
                 {
                     std::cout << "Lidar" << std::endl;
                     auto lidar_setting = *static_cast<LidarSetting*>(sensor_setting.get());
@@ -360,7 +360,7 @@ sensor_msgs::PointCloud2 AirsimROSWrapper::get_lidar_msg_from_airsim(const msr::
         std::vector<float> data_std = lidar_data.point_cloud;
 
         const unsigned char* bytes = reinterpret_cast<const unsigned char*>(&data_std[0]);
-        vector<unsigned char> lidar_msg_data(bytes, bytes + sizeof(float) * data_std.size());
+        std::vector<unsigned char> lidar_msg_data(bytes, bytes + sizeof(float) * data_std.size());
         lidar_msg.data = std::move(lidar_msg_data);
     }
     else

@@ -4,9 +4,9 @@
   <version>0.0.1</version>
   <description>FSDS ROS bridge connecting 1 autonomous system to the simulated world</description>
 
-  <maintainer email="davidoort@hotmail.com">David Oort Alonso</maintainer>
+  <maintainer email="autonomy@fsteamdelft.nl">David Oort Alonso</maintainer>
 
-  <license>MIT</license>
+  <license>GPLv2</license>
 
   <buildtool_depend>catkin</buildtool_depend>
 

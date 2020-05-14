@@ -6,7 +6,7 @@ STRICT_MODE_OFF
 #include "rpc/rpc_error.h"
 STRICT_MODE_ON
 
-#include "vehicles/multirotor/api/MultirotorRpcLibClient.hpp"
+// #include "vehicles/multirotor/api/MultirotorRpcLibClient.hpp"
 #include "common/common_utils/FileSystem.hpp"
 #include <iostream>
 #include <chrono>
@@ -18,6 +18,7 @@ class AirSimSettingsParser
 public:
     typedef msr::airlib::AirSimSettings AirSimSettings;
     typedef msr::airlib::AirSimSettings::VehicleSetting VehicleSetting;
+    typedef msr::airlib::Settings Settings;
 
 public:
     AirSimSettingsParser();
