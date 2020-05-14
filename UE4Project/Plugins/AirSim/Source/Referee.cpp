@@ -33,3 +33,9 @@ int32 AReferee::ConeHit(FString coneName)
 {
 	return (int32) (++state.doo_counter);
 }
+
+int32 AReferee::LapCompleted(float lapTime)
+{
+	state.laps.push_back(lapTime);
+	return state.laps.size();
+}
