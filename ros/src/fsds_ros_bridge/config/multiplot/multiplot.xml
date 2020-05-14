@@ -235,7 +235,7 @@
                                         <type>0</type>
                                     </scale>
                                     <topic>/airsim_node/FSCar/control_command</topic>
-                                    <type>airsim_ros_interface/ControlCommand</type>
+                                    <type>fsds_ros_bridge/ControlCommand</type>
                                 </x_axis>
                                 <y_axis>
                                     <field>throttle</field>
@@ -248,7 +248,7 @@
                                         <type>0</type>
                                     </scale>
                                     <topic>/airsim_node/FSCar/control_command</topic>
-                                    <type>airsim_ros_interface/ControlCommand</type>
+                                    <type>fsds_ros_bridge/ControlCommand</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -510,7 +510,7 @@
                                         <type>0</type>
                                     </scale>
                                     <topic>/airsim_node/FSCar/control_command</topic>
-                                    <type>airsim_ros_interface/ControlCommand</type>
+                                    <type>fsds_ros_bridge/ControlCommand</type>
                                 </x_axis>
                                 <y_axis>
                                     <field>steering</field>
@@ -523,7 +523,7 @@
                                         <type>0</type>
                                     </scale>
                                     <topic>/airsim_node/FSCar/control_command</topic>
-                                    <type>airsim_ros_interface/ControlCommand</type>
+                                    <type>fsds_ros_bridge/ControlCommand</type>
                                 </y_axis>
                             </axes>
                             <color>

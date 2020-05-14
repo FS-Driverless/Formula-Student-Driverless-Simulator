@@ -1,44 +1,23 @@
-# Airsim ROS wrapper (Car API)
+# FSDS Ros bridge
 
 A ROS wrapper over the AirSim C++ **Car** client library. This code is based on the [original AirSim ROS wrapper for the *Multirotor* API](https://github.com/microsoft/AirSim/tree/master/ros/src/airsim_ros_interface) and provides an interface between AirSim + Unreal Engine and your ROS-based autonomous system. 
 
-## Prerequisites
-
-Before being able to test this ROS wrapper, you will have to follow the steps described [here](get-ready-to-develop.md).
-
-##  Build
-- Build AirSim. From the root of this repository, run:
-```
-cd AirSim
-./setup.sh
-./build.sh
-```
-- Build ROS package
-
-```
-cd Simulator
-catkin build
-```
-
-If your default GCC isn't 8 or greater (check using `gcc --version`), then compilation will fail. In that case, use `gcc-8` explicitly as follows-
-
-```
-catkin build -DCMAKE_C_COMPILER=gcc-8 -DCMAKE_CXX_COMPILER=g++-8
-```
+The fsds_ros_bridge is supposed to be launched pointing at the Autonomous System's ROS master so that it can publish and subscribe to topics within the autonomous system. 
+Phisically this node should run on the airsim simulation server (that is the one that also runs the Unreal) project.
+The node connects to the AirSim plugin, periodicly retrieves sensor data (images, lidar, imu, gps) and publishes it on ros topics.
+It listens for car setpoints on other another and forwards these to the AirSim plugin.
 
 ## Running
+Make sure you have [built the ros workspace](building-ros.md).
+
 ```
+cd ros
 source devel/setup.bash
-roslaunch airsim_ros_interface airsim_node.launch
+roslaunch fsds_ros_bridge fsds_ros_bridge.launch
 ```
 
-# Using AirSim ROS wrapper
-The ROS wrapper is composed of two ROS nodes - the first is a wrapper over AirSim's car C++ client library, and the second is a joystick controller interface node.    
-Let's look at the ROS API for both nodes: 
-
-### AirSim ROS Wrapper Node
-#### Publishers:
-- `/airsim_node/origin_geo_point` [airsim_ros_interface/GPSYaw](../Simulator/src/airsim_ros_interface/msg/GPSYaw.msg)   
+## Publishers
+- `/airsim_node/origin_geo_point` [fsds_ros_bridge/GPSYaw](../ros/src/fsds_ros_bridge/msg/GPSYaw.msg)   
 GPS coordinates corresponding to global NED frame. This is set in the airsim's [settings.json](https://microsoft.github.io/AirSim/docs/settings/) file under (located [here](../../../UE4Project/Plugins/AirSim/Settings/settings.json)) the `OriginGeopoint` key. 
 
 - `/airsim_node/VEHICLE_NAME/global_gps` [sensor_msgs/NavSatFix](https://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html)   
@@ -56,49 +35,33 @@ Odometry in NED frame wrt starting point.  THIS WILL NOT BE STREAMED DURING COMP
 
 where `VEHICLE_NAME`, `CAMERA_NAME` and `IMAGE_TYPE` are extracted from [settings.json](../UE4Project/Plugins/AirSim/Settings/settings.json).
 
-#### Subscribers: 
-- `/airsim_node/VEHICLE_NAME/control_command` [airsim_ros_interface/ControlCommand](../Simulator/src/airsim_ros_interface/msg/ControlCommand.msg) 
+## Subscribers
+- `/airsim_node/VEHICLE_NAME/control_command` [fsds_ros_bridge/ControlCommand](../Simulator/src/fsds_ros_bridge/msg/ControlCommand.msg) 
 The contents of this message fill the essential parts of the `msr::airlib::CarApiBase::CarControl` struct. This is the only way to control the car when the airsim ROS client is connected (keyboard will no longer work!).
 
-#### Services:
+## Services
 
-- `/airsim_node/reset` [airsim_ros_interface/Reset](../Simulator/src/airsim_ros_interface/srv/Empty.html)
+- `/airsim_node/reset` [fsds_ros_bridge/Reset](../Simulator/src/fsds_ros_bridge/srv/Empty.html)
  Resets car to start location.
 
-#### Parameters:
+## Parameters
 - `/airsim_node/update_airsim_control_every_n_sec` [double]   
-  Set in: `$(airsim_ros_interface)/launch/airsim_node.launch`   
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   
   Default: 0.01 seconds.    
   Timer callback frequency for updating drone odom and state from airsim, and sending in control commands.    
   The current RPClib interface to unreal engine maxes out at 50 Hz.   
   Timer callbacks in ROS run at maximum rate possible, so it's best to not touch this parameter. 
 
 - `/airsim_node/update_airsim_img_response_every_n_sec` [double]   
-  Set in: `$(airsim_ros_interface)/launch/airsim_node.launch`   
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   
   Default: 0.01 seconds.    
   Timer callback frequency for receiving images from all cameras in airsim.    
   The speed will depend on number of images requested and their resolution.   
   Timer callbacks in ROS run at maximum rate possible, so it's best to not touch this parameter. 
 
-### Joystick Controller Node 
-
-If you are interested in driving the car around to gather training data without having to rely on your autonomous system, you can use an XBox controller to do so. Simply run:
-
-```
-source devel/setup.bash
-roslaunch airsim_ros_interface joystick.launch
-```
-
-#### Subscribers:
-- `/joy` [sensor_msgs/Joy](https://github.com/microsoft/AirSim/tree/master/ros/src/airsim_ros_interface/msg/GPSYaw.msg)   
-  Listens to joystick input which is then mapped to the control command msg. The mapping should feel intuitive but in case something is unclear, it is described in detail [here](../Simulator/src/airsim_ros_interface/src/joystick.cpp) 
-
-#### Publishers:
-- `/airsim_node/VEHICLE_NAME/control_command` [airsim_ros_interface/ControlCommand](../Simulator/src/airsim_ros_interface/msg/ControlCommand.msg) 
-
-### Visualization
+## Visualization
 This package contains some useful launch and config files which will help you in visualizing the data being streamed through the above topics.
 
-To open Rviz with [this](../Simulator/src/airsim_ros_interface/config/rviz/default.rviz) configuration file, run `roslaunch airsim_ros_interface rviz.launch`.
+To open Rviz with [this](../Simulator/src/fsds_ros_bridge/config/rviz/default.rviz) configuration file, run `roslaunch fsds_ros_bridge rviz.launch`.
 
-To open Multiplot with [this](../Simulator/src/airsim_ros_interface/config/multiplot/multiplot.xml) configuration file, run `roslaunch airsim_ros_interface plot.launch`
+To open Multiplot with [this](../Simulator/src/fsds_ros_bridge/config/multiplot/multiplot.xml) configuration file, run `roslaunch fsds_ros_bridge plot.launch`

@@ -40,7 +40,7 @@ def mission_changecar():
     procenv = os.environ.copy()
     procenv["ROS_MASTER_URI"] = request.json['master']
 
-    interfaceprocess = subprocess.Popen(['roslaunch', 'airsim_ros_interface', 'airsim_node.launch'], env=procenv)    
+    interfaceprocess = subprocess.Popen(['roslaunch', 'fsds_ros_bridge', 'fsds_ros_bridge.launch'], env=procenv)    
 
     return {'message': 'ok'}
 

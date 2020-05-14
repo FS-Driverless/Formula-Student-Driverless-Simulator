@@ -13,8 +13,12 @@ In here you will find everything that runs inside Unreal Engine.
 This includes the world, all assets and the AirSim server.
 The AirSim server uses the AirLib shared code (see `/AirSim/AirLib`).
 
-`/Simulator` is the simulation control system. This is a ROS workspace.
-The simulator provides a ROS bridge between the autonomous systems and the simulation, offers a web gui for officials to control the simulation and connects to the virtual world inside Unreal Engine.
+`/operator` is the simulation control system. 
+This is a python project that offers a web gui for officials to control the simulation, stores lap times and chooses what car is currently connected to the world.
+It launches the ASBridge to connect a autonomous system to the Unreal world and stops the bridge when the autonomous system is no longer allowed to control the car.
+
+`/ros` is a ros workspace that contains the `fsds_ros_bridge`. 
+This node can connect 1 autonomous system with the simulated world.
 
 `/AirSim` is a slimmed-down, hard-fork of the [AirSim](https://github.com/microsoft/AirSim) project.
 There is only code located that is shared between Simulator and UE4 plugin.
