@@ -175,7 +175,7 @@ int main(
   ros::NodeHandle node_handle;
   node_handle.getParam("/joy/dev", JOYSTICK_PATH);
   CONTROL_PUBLISHER = node_handle.advertise<fsds_ros_bridge::ControlCommand>(
-      "/airsim_node/FSCar/control_command", 1);
+      "/fsds_ros_bridge/FSCar/control_command", 1);
   // we only care about the last message so queue size set to 1 deletes any older messages.
   JOY_SUBSCRIBER = node_handle.subscribe("/joy", 1, JoyCallback);
 

@@ -35,7 +35,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/odom_local_ned</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/odom_local_ned</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </x_axis>
                                 <y_axis>
@@ -48,7 +48,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/odom_local_ned</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/odom_local_ned</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </y_axis>
                             </axes>
@@ -109,7 +109,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/odom_local_ned</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/odom_local_ned</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </x_axis>
                                 <y_axis>
@@ -122,7 +122,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/odom_local_ned</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/odom_local_ned</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </y_axis>
                             </axes>
@@ -160,7 +160,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/odom_local_ned</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/odom_local_ned</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </x_axis>
                                 <y_axis>
@@ -173,7 +173,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/odom_local_ned</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/odom_local_ned</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </y_axis>
                             </axes>
@@ -234,7 +234,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/control_command</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/control_command</topic>
                                     <type>fsds_ros_bridge/ControlCommand</type>
                                 </x_axis>
                                 <y_axis>
@@ -247,7 +247,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/control_command</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/control_command</topic>
                                     <type>fsds_ros_bridge/ControlCommand</type>
                                 </y_axis>
                             </axes>
@@ -310,7 +310,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/global_gps</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/global_gps</topic>
                                     <type>sensor_msgs/NavSatFix</type>
                                 </x_axis>
                                 <y_axis>
@@ -323,7 +323,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/global_gps</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/global_gps</topic>
                                     <type>sensor_msgs/NavSatFix</type>
                                 </y_axis>
                             </axes>
@@ -384,7 +384,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/imu/Imu</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </x_axis>
                                 <y_axis>
@@ -397,7 +397,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/imu/Imu</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </y_axis>
                             </axes>
@@ -435,7 +435,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/imu/Imu</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </x_axis>
                                 <y_axis>
@@ -448,7 +448,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/imu/Imu</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </y_axis>
                             </axes>
@@ -509,7 +509,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/control_command</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/control_command</topic>
                                     <type>fsds_ros_bridge/ControlCommand</type>
                                 </x_axis>
                                 <y_axis>
@@ -522,7 +522,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/control_command</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/control_command</topic>
                                     <type>fsds_ros_bridge/ControlCommand</type>
                                 </y_axis>
                             </axes>
@@ -606,7 +606,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/imu/Imu</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </x_axis>
                                 <y_axis>
@@ -619,7 +619,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/imu/Imu</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </y_axis>
                             </axes>
@@ -657,7 +657,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/imu/Imu</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </x_axis>
                                 <y_axis>
@@ -670,7 +670,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/imu/Imu</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </y_axis>
                             </axes>
@@ -708,7 +708,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/imu/Imu</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </x_axis>
                                 <y_axis>
@@ -721,7 +721,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/airsim_node/FSCar/imu/Imu</topic>
+                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </y_axis>
                             </axes>
