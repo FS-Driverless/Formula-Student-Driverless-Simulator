@@ -67,8 +67,8 @@ On the other hand, it receives car control commands from the AS and forwards it 
 So it acts as a bridge between the two.
 
 The node that is launched pointing at the AS's ROS master so that it can publish and subscribe to topics within the AS.
-Phisically this node runs on the server where the Unreal world is being simulated.
-The node is launched by the Operator.
+Physically this node runs on the server where the Unreal world is being simulated.
+The node is launched by the operator.
 
 When the operator launches the ros bridge it passes along some mission variables.
 This includes mission type (trackdrive or autocross) and information about how it can use data collected in previous runs.
@@ -78,10 +78,10 @@ Then it receives "trackdrive on track A" and it knows it can use data collected 
 It is the responsibilty of the teams to detect when they are 'done'. 
 After the required number of laps, the car has to come to a full stop.
 If the AS wants to store things (like track information), this is the time to wrap those up.
-In case of a successfull run the official will instruct the operator to stop the ros bridge and the AS won't receive sensordata anymore.
-When the official presses the emergency brake, the connection between the ros bridge is stopped immediatly and the operator will send one last car setpoint to make the car come to a stop. 
+In case of a successfull run the official will instruct the operator to stop the ros bridge and the AS won't receive sensor data anymore.
+When the official presses the emergency brake, the connection between the ros bridge is stopped immediately and the operator will send one last car setpoint to make the car come to a stop. 
 Thers is no 'stop' signal from the simulator to the AS.
-We advise AS to get ready for a new drive when no sensordata is received for 2 seconds.
+We advise AS to get ready for a new drive when no sensor data is received for 2 seconds.
 
 At this point only ros is supported, at this moment there are no plans to support other technologies.
 
@@ -91,7 +91,7 @@ The actual simulation takes place inside an Unreal Engine 4 world.
 Unreal takes care of the heavy lifting involved with a real-life simulation.
 All physics, lighting and world-building are handled by Unreal.
 
-AirSim is used to connect Unreal with the Simulator.
+AirSim is used to connect Unreal with the operator and ros bridge.
 This plugin is added inside the Unreal world and takes control of most of the game logic.
 It receives the sensor suite and simulates the sensors, it moves the car according to trajectory setpoints and exposes an RPC API for external management.
 This RPC API is used by the simulator to interact with the world.

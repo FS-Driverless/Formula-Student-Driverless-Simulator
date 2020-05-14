@@ -65,8 +65,8 @@ You can debug the input values from the joy driver by checking the `/joy` topic.
 
 ## Subscribers:
 - `/joy` [sensor_msgs/Joy](https://github.com/microsoft/AirSim/tree/master/ros/src/fsds_ros_bridge/msg/GPSYaw.msg)   
-  Listens to joystick input which is then mapped to the control command msg. The mapping should feel intuitive but in case something is unclear, it is described in detail [here](../Simulator/src/fsds_ros_bridge/src/joystick.cpp) 
+  Listens to joystick input which is then mapped to the control command msg. The mapping should feel intuitive but in case something is unclear, it is described in detail [here](../ros/src/fsds_ros_bridge/src/joystick.cpp) 
 
 ## Publishers:
-- `/fsds_ros_bridge/VEHICLE_NAME/control_command` [fsds_ros_bridge/ControlCommand](../Simulator/src/fsds_ros_bridge/msg/ControlCommand.msg) 
+- `/fsds_ros_bridge/VEHICLE_NAME/control_command` [fsds_ros_bridge/ControlCommand](../ros/src/fsds_ros_bridge/msg/ControlCommand.msg) 
 

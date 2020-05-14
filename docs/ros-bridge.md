@@ -3,8 +3,8 @@
 A ROS wrapper over the AirSim C++ **Car** client library. This code is based on the [original AirSim ROS wrapper for the *Multirotor* API](https://github.com/microsoft/AirSim/tree/master/ros/src/airsim_ros_interface) and provides an interface between AirSim + Unreal Engine and your ROS-based autonomous system. 
 
 The fsds_ros_bridge is supposed to be launched pointing at the Autonomous System's ROS master so that it can publish and subscribe to topics within the autonomous system. 
-Phisically this node should run on the airsim simulation server (that is the one that also runs the Unreal) project.
-The node connects to the AirSim plugin, periodicly retrieves sensor data (images, lidar, imu, gps) and publishes it on ros topics.
+Physically this node should run on the airsim simulation server (that is the one that also runs the Unreal) project.
+The node connects to the AirSim plugin, periodically retrieves sensor data (images, lidar, imu, gps) and publishes it on ros topics.
 It listens for car setpoints on other another and forwards these to the AirSim plugin.
 
 ## Running
@@ -36,12 +36,12 @@ Odometry in NED frame wrt starting point.  THIS WILL NOT BE STREAMED DURING COMP
 where `VEHICLE_NAME`, `CAMERA_NAME` and `IMAGE_TYPE` are extracted from [settings.json](../UE4Project/Plugins/AirSim/Settings/settings.json).
 
 ## Subscribers
-- `/fsds_ros_bridge/VEHICLE_NAME/control_command` [fsds_ros_bridge/ControlCommand](../Simulator/src/fsds_ros_bridge/msg/ControlCommand.msg) 
+- `/fsds_ros_bridge/VEHICLE_NAME/control_command` [fsds_ros_bridge/ControlCommand](../ros/src/fsds_ros_bridge/msg/ControlCommand.msg) 
 The contents of this message fill the essential parts of the `msr::airlib::CarApiBase::CarControl` struct. This is the only way to control the car when the airsim ROS client is connected (keyboard will no longer work!).
 
 ## Services
 
-- `/fsds_ros_bridge/reset` [fsds_ros_bridge/Reset](../Simulator/src/fsds_ros_bridge/srv/Empty.html)
+- `/fsds_ros_bridge/reset` [fsds_ros_bridge/Reset](../ros/src/fsds_ros_bridge/srv/Empty.html)
  Resets car to start location.
 
 ## Parameters
@@ -62,6 +62,6 @@ The contents of this message fill the essential parts of the `msr::airlib::CarAp
 ## Visualization
 This package contains some useful launch and config files which will help you in visualizing the data being streamed through the above topics.
 
-To open Rviz with [this](../Simulator/src/fsds_ros_bridge/config/rviz/default.rviz) configuration file, run `roslaunch fsds_ros_bridge rviz.launch`.
+To open Rviz with [this](../ros/src/fsds_ros_bridge/config/rviz/default.rviz) configuration file, run `roslaunch fsds_ros_bridge rviz.launch`.
 
-To open Multiplot with [this](../Simulator/src/fsds_ros_bridge/config/multiplot/multiplot.xml) configuration file, run `roslaunch fsds_ros_bridge plot.launch`
+To open Multiplot with [this](../ros/src/fsds_ros_bridge/config/multiplot/multiplot.xml) configuration file, run `roslaunch fsds_ros_bridge plot.launch`

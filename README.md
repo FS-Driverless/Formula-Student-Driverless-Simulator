@@ -21,7 +21,7 @@ It launches the ASBridge to connect a autonomous system to the Unreal world and 
 This node can connect 1 autonomous system with the simulated world.
 
 `/AirSim` is a slimmed-down, hard-fork of the [AirSim](https://github.com/microsoft/AirSim) project.
-There is only code located that is shared between Simulator and UE4 plugin.
+There is only code located that is shared between operator, ros-bridge and UE4 plugin.
 When AirSim is compiled, the AirLib binaries are placed within `/UE4Project/Plugins/AirSim/Source/AirLib`.
 
 This repo uses LFS for some large files. All files bigger than 90MB are added to LFS.
@@ -51,7 +51,7 @@ Many game assets like the surrounding world are based on assets from the [Formul
 
 ## License
 
-Copyright (C) 2020 Driverless-Competition-Simulator Contributors
+Copyright (C) 2020 Formula Driverless Competition Simulator Contributors
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

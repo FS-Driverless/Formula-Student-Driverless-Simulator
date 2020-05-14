@@ -11,7 +11,7 @@ cd AirSim
 - Build ROS package
 
 ```
-cd Simulator
+cd ros
 catkin build
 ```
 
