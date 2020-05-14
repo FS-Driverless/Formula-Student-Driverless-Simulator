@@ -194,7 +194,7 @@ private:
     ros::NodeHandle nh_;
     ros::NodeHandle nh_private_;
 
-    // todo not sure if async spinners shuold be inside this class, or should be instantiated in airsim_node.cpp, and cb queues should be public
+    // todo not sure if async spinners shuold be inside this class, or should be instantiated in fsds_ros_bridge.cpp, and cb queues should be public
     // todo for multiple drones with multiple sensors, this won't scale. make it a part of MultiRotorROS?
     ros::CallbackQueue img_timer_cb_queue_;
     ros::CallbackQueue lidar_timer_cb_queue_;

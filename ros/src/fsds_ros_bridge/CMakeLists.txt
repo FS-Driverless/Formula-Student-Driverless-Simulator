@@ -82,8 +82,8 @@ add_library(airsim_ros src/airsim_ros_wrapper.cpp)
 add_dependencies(airsim_ros ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(airsim_ros ${catkin_LIBRARIES} ${OpenCV_LIBS} yaml-cpp AirLib airsim_settings_parser)
 
-add_executable(fsds_bridge src/fsds_bridge.cpp)
-target_link_libraries(fsds_bridge airsim_ros ${catkin_LIBRARIES} AirLib)
+add_executable(fsds_ros_bridge src/fsds_ros_bridge.cpp)
+target_link_libraries(fsds_ros_bridge airsim_ros ${catkin_LIBRARIES} AirLib)
 
 
 install(TARGETS 

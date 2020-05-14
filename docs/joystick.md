@@ -11,7 +11,7 @@ source devel/setup.bash
 roslaunch joystick joystick.launch
 ```
 
-This node gets input from a joystick xbox controller (see http://wiki.ros.org/joy) and sends the values to the lowlevel controls (hardware) on topic /airsim_node/FSCar/control_command 
+This node gets input from a joystick xbox controller (see http://wiki.ros.org/joy) and sends the values to the lowlevel controls (hardware) on topic /fsds_ros_bridge/FSCar/control_command 
 
 * The right trigger (RT) controls the acceleration (gas) 
 * The left trigger (LT) controls brake (negative acceleration).
@@ -60,7 +60,7 @@ is normal. Nothing to worry about. It is a warning that always happens with wire
 
 ## testing
 To test this node on your computer just attach an xbox controller and run it as described above.
-Now chek the /airsim_node/FSCar/control_command topic and you should see values corresponding to your controller movements.
+Now chek the /fsds_ros_bridge/FSCar/control_command topic and you should see values corresponding to your controller movements.
 You can debug the input values from the joy driver by checking the `/joy` topic.
 
 ## Subscribers:
@@ -68,5 +68,5 @@ You can debug the input values from the joy driver by checking the `/joy` topic.
   Listens to joystick input which is then mapped to the control command msg. The mapping should feel intuitive but in case something is unclear, it is described in detail [here](../Simulator/src/fsds_ros_bridge/src/joystick.cpp) 
 
 ## Publishers:
-- `/airsim_node/VEHICLE_NAME/control_command` [fsds_ros_bridge/ControlCommand](../Simulator/src/fsds_ros_bridge/msg/ControlCommand.msg) 
+- `/fsds_ros_bridge/VEHICLE_NAME/control_command` [fsds_ros_bridge/ControlCommand](../Simulator/src/fsds_ros_bridge/msg/ControlCommand.msg) 
 
