@@ -25,7 +25,6 @@ STRICT_MODE_ON
 #include <iostream>
 #include <math.h>
 #include <math_common.h>
-#include <mavros_msgs/State.h>
 #include <nav_msgs/Odometry.h>
 #include <opencv2/opencv.hpp>
 #include <ros/callback_queue.h>

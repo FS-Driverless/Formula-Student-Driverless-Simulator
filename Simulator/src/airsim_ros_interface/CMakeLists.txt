@@ -21,7 +21,6 @@ message(STATUS "found RPC_LIB_INCLUDES=${RPC_LIB_INCLUDES}")
 # todo eigen3 in AirLib already
 # find_package(Eigen3 REQUIRED) 
 find_package(Boost REQUIRED)
-find_package(OpenCV REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS
   cv_bridge
@@ -67,7 +66,6 @@ include_directories(
   ${AIRSIM_ROOT}/AirLib/deps/eigen3
   ${AIRSIM_ROOT}/AirLib/include
   ${RPC_LIB_INCLUDES}
-  ${OpenCV_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
 )
 
@@ -76,7 +74,7 @@ target_link_libraries(airsim_settings_parser ${catkin_LIBRARIES} AirLib)
 
 add_library(airsim_ros src/airsim_ros_wrapper.cpp)
 add_dependencies(airsim_ros ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(airsim_ros ${catkin_LIBRARIES} ${OpenCV_LIBS} yaml-cpp AirLib airsim_settings_parser)
+target_link_libraries(airsim_ros ${catkin_LIBRARIES} yaml-cpp AirLib airsim_settings_parser)
 
 add_executable(airsim_node src/airsim_node.cpp)
 target_link_libraries(airsim_node airsim_ros ${catkin_LIBRARIES} AirLib)
