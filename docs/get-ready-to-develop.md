@@ -37,7 +37,7 @@ sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main
 sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 curl -sSL 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xC1CF6E31E6BADE8868B172B4F42ED6FBAB17C654' | sudo apt-key add -
 sudo apt update
-sudo apt install ros-melodic-desktop ros-melodic-mavros ros-melodic-tf2-geometry-msgs python-catkin-tools
+sudo apt install ros-melodic-desktop ros-melodic-tf2-geometry-msgs python-catkin-tools ros-melodic-rqt-multiplot ros-melodic-joy ros-melodic-cv-bridge ros-melodic-image-transport libyaml-cpp-dev
 ```
 
 ## Install the project
@@ -62,7 +62,7 @@ AirSim/setup.sh
 AirSim/build.sh
 ```
 
-To set up the Simulator ROS workspace, cd into the `Simulator` folder and run
+To set up the ROS workspace, cd into the `ros` folder and run
 ```
 catkin init
 catkin build
