@@ -1,0 +1,9 @@
+<launch>
+    <!-- joy node -->
+    <node pkg="joy" type="joy_node" name="joy" required="true" output="screen">
+        <param name="dev" type="string" value="/dev/input/js0"/>
+    </node>
+
+    <node name="joycontrol" type="joycontrol" pkg="joystick" output="screen" required="true"/>
+</launch>
+

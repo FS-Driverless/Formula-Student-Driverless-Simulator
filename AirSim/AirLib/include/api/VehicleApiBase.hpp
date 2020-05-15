@@ -8,7 +8,7 @@
 #include "common/UpdatableObject.hpp"
 #include "common/Common.hpp"
 #include "common/Waiter.hpp"
-#include "safety/SafetyEval.hpp"
+// #include "safety/SafetyEval.hpp"
 #include "common/CommonStructs.hpp"
 #include "common/ImageCaptureBase.hpp"
 #include "sensors/SensorCollection.hpp"
