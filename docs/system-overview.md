@@ -20,7 +20,7 @@ Ideally, this would be separate virtual machines but also Docker containers coul
 The ASs are expected to continuously run a ROS master.
 When the simulator is ready to do a drive for the given AS it will launch a ROS node connected to this AS's ROS master.
 This ROS node will exist outside of the AS's environment. Instead, it will run on the simulator computer.
-The simulator ROS node will publish sensor data and listen for car setpoints on a set of topics defined [here](airsim-ros-wrapper.md).
+The simulator ROS node will publish sensor data and listen for car setpoints on a set of topics defined [here](ros-bridge.md).
 When the simulation is finished, the ROS node will disconnect from the AS's ROS master and sensor data stops coming in.
 
 During the competition, the teams will not be allowed to access their ASs.
