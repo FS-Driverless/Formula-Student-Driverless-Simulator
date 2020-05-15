@@ -1,23 +1,31 @@
 #!/usr/bin/env python
 
-from flask import Flask, request, abort
-import subprocess, time, signal, sys, os, airsim
+from flask import Flask, request, abort, render_template
+import subprocess, time, signal, sys, os, airsim, json
 
 app = Flask(__name__)
 
-client = airsim.CarClient()
-client.confirmConnection()
+# client = airsim.CarClient()
+# client.confirmConnection()
+
+with open('../config/team_config.json', 'r') as file:
+    team_config = json.load(file)
 
 interfaceprocess = None
+
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('index.html', team_config=team_config)
 
 # curl --header "Content-Type: application/json" --request POST --data '{"master": "http://localhost:11311", "mission": "trackdrive"}' http://localhost:5000/mission/selectcar
 @app.route('/mission/start', methods=['POST'])
 def mission_start():
-    if request.json is None or request.json['master'] is None or request.json['mission']:
+    if request.json is None or request.json['id'] is None or request.json['mission'] is None:
         return abort(400)    
 
-    master = request.json['master']
+    teamId = request.json['id']
     mission = request.json['mission']
+    master = team_config[int(teamId) - 1]['master']
 
     procenv = os.environ.copy()
     procenv["ROS_MASTER_URI"] = master
