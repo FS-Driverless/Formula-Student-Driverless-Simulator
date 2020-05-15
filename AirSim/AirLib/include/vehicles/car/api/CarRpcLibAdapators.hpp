@@ -82,17 +82,19 @@ public:
 
     struct RefereeState {
         uint doo_counter = 0;
+	std::vector<float> laps;
 
-        MSGPACK_DEFINE_MAP(doo_counter);
+        MSGPACK_DEFINE_MAP(doo_counter, laps);
 
         RefereeState() {}
         RefereeState(const msr::airlib::CarApiBase::RefereeState& s) {
             doo_counter = s.doo_counter;
+	    laps = s.laps;
         }
 
         msr::airlib::CarApiBase::RefereeState to() const
         {
-            return msr::airlib::CarApiBase::RefereeState(doo_counter);
+            return msr::airlib::CarApiBase::RefereeState(doo_counter, laps);
         }
 
     };
