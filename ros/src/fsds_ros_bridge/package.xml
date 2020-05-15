@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>airsim_ros_interface</name>
+  <name>fsds_ros_bridge</name>
   <version>0.0.1</version>
-  <description>FSOnline ROS Wrapper over AirSim's C++ car client library</description>
+  <description>FSDS ROS bridge connecting 1 autonomous system to the simulated world</description>
 
   <maintainer email="autonomy@fsteamdelft.nl">David Oort Alonso</maintainer>
 

@@ -132,7 +132,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/Image
       Enabled: true
-      Image Topic: /airsim_node/FSCar/front_center_custom/Scene
+      Image Topic: /fsds_ros_bridge/FSCar/front_center_custom/Scene
       Max Value: 1
       Median window: 5
       Min Value: 0
@@ -167,7 +167,7 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.009999999776482582
       Style: Flat Squares
-      Topic: /airsim_node/FSCar/lidar/LidarCustom
+      Topic: /fsds_ros_bridge/FSCar/lidar/LidarCustom
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true

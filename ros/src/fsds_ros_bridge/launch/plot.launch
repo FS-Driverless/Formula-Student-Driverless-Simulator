@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<launch>
+    <node name="rqt_multiplot_general" pkg="rqt_multiplot" type="rqt_multiplot" args="--multiplot-config $(find fsds_ros_bridge)/config/multiplot/multiplot.xml --multiplot-run-all"/>
+</launch>

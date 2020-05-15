@@ -28,7 +28,7 @@ jobs:
         # Version range or exact version of ROS version to use, using SemVer's version range syntax.
         ros-version: # optional, default is melodic
         # Root directory of the catkin workspace
-        workspace: ./Simulator 
+        workspace: ./ros 
     - name: Install ROS deps
       run: sudo apt-get install python-catkin-tools ros-melodic-tf2-geometry-msgs python-catkin-tools ros-melodic-rqt-multiplot ros-melodic-joy ros-melodic-cv-bridge ros-melodic-image-transport libyaml-cpp-dev
     - name: Compilation settings
@@ -45,4 +45,4 @@ jobs:
       run: |
         set -ex o pipefail
         catkin build 
-      working-directory: ./Simulator 
+      working-directory: ./ros 

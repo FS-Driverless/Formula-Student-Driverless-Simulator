@@ -1,19 +1,24 @@
 # This file is the source for the image with the same name.
 # Use https://sequencediagram.org/ to render this text to an image
 
-title simplified system sequence diagram
+title system sequence diagram
 
-Official->Simulator: GO!
+Official->Operator: Start mission x
+Operator->*ROS-Bridge: create
+
+ROS-Bridge->Autonomous System: start mission x
 loop until finished or stopped
-
-Simulator<-UnrealEngine: sensor data
-Simulator->Autonomous System: sensor data
-Simulator<-Autonomous System: car setpoints
-Simulator->UnrealEngine: car setpoints
+ROS-Bridge<-UnrealEngine: sensor data
+ROS-Bridge->Autonomous System: sensor data
+ROS-Bridge<-Autonomous System: car setpoints
+ROS-Bridge->UnrealEngine: car setpoints
 end
 
-Official->Simulator: STOP!
+Official->Operator: Stop mission or mission finished
+Operator->ROS-Bridge: Stop process
+destroy ROS-Bridge
 
-Simulator->UnrealEngine:get simulation statistics
-Simulator<--UnrealEngine:simulation statistics
-Official<--Simulator:simulation statistics
+
+Operator->UnrealEngine:get simulation statistics
+Operator<--UnrealEngine:simulation statistics
+Official<--Operator:simulation statistics

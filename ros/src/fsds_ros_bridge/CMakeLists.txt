@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10.0)
-project(airsim_ros_interface)
+project(fsds_ros_bridge)
 
 # set this to path to AirSim root folder if you want your catkin workspace in a custom directory
 set(AIRSIM_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../../../AirSim/)
@@ -27,7 +27,6 @@ find_package(catkin REQUIRED COMPONENTS
   image_transport
   message_generation
   nav_msgs
-  joy
   roscpp
   rospy
   sensor_msgs
@@ -76,12 +75,8 @@ add_library(airsim_ros src/airsim_ros_wrapper.cpp)
 add_dependencies(airsim_ros ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(airsim_ros ${catkin_LIBRARIES} yaml-cpp AirLib airsim_settings_parser)
 
-add_executable(airsim_node src/airsim_node.cpp)
-target_link_libraries(airsim_node airsim_ros ${catkin_LIBRARIES} AirLib)
-
-add_executable(joycontrol src/joystick.cpp)
-add_dependencies(joycontrol ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(joycontrol ${catkin_LIBRARIES})
+add_executable(fsds_ros_bridge src/fsds_ros_bridge.cpp)
+target_link_libraries(fsds_ros_bridge airsim_ros ${catkin_LIBRARIES} AirLib)
 
 
 install(TARGETS 

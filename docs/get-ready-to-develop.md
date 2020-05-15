@@ -62,7 +62,7 @@ AirSim/setup.sh
 AirSim/build.sh
 ```
 
-To set up the Simulator ROS workspace, cd into the `Simulator` folder and run
+To set up the ROS workspace, cd into the `ros` folder and run
 ```
 catkin init
 catkin build

@@ -4,7 +4,7 @@
 
 int main(int argc, char ** argv)
 {
-    ros::init(argc, argv, "airsim_node");
+    ros::init(argc, argv, "fsds_ros_bridge");
     ros::NodeHandle nh;
     ros::NodeHandle nh_private("~");
 

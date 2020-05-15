@@ -13,9 +13,9 @@ STRICT_MODE_ON
 #include "sensors/imu/ImuBase.hpp"
 #include "vehicles/car/api/CarRpcLibClient.hpp"
 #include "yaml-cpp/yaml.h"
-#include <airsim_ros_interface/GPSYaw.h>
-#include <airsim_ros_interface/ControlCommand.h>
-#include <airsim_ros_interface/Reset.h>
+#include <fsds_ros_bridge/GPSYaw.h>
+#include <fsds_ros_bridge/ControlCommand.h>
+#include <fsds_ros_bridge/Reset.h>
 #include <chrono>
 #include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -90,7 +90,7 @@ private:
     /// ROS timer callbacks
     void img_response_timer_cb(const ros::TimerEvent& event); // update images from airsim_client_ every nth sec
     void car_state_timer_cb(const ros::TimerEvent& event); // update drone state from airsim_client_ every nth sec
-    void car_control_cb(const airsim_ros_interface::ControlCommand::ConstPtr &msg, const std::string &vehicle_name);
+    void car_control_cb(const fsds_ros_bridge::ControlCommand::ConstPtr &msg, const std::string &vehicle_name);
     void lidar_timer_cb(const ros::TimerEvent& event);
 
     /// ROS subscriber callbacks
@@ -99,7 +99,7 @@ private:
     // void set_zero_vel_cmd();
 
     /// ROS service callbacks
-    bool reset_srv_cb(airsim_ros_interface::Reset::Request& request, airsim_ros_interface::Reset::Response& response);
+    bool reset_srv_cb(fsds_ros_bridge::Reset::Request& request, fsds_ros_bridge::Reset::Response& response);
 
     /// ROS tf broadcasters
     void publish_camera_tf(const ImageResponse& img_response, const ros::Time& ros_time, const std::string& frame_id, const std::string& child_frame_id);
@@ -129,7 +129,7 @@ private:
     msr::airlib::Quaternionr get_airlib_quat(const tf2::Quaternion& tf2_quat) const;
 
     nav_msgs::Odometry get_odom_msg_from_airsim_state(const msr::airlib::CarApiBase::CarState& car_state) const;
-    airsim_ros_interface::GPSYaw get_gps_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
+    fsds_ros_bridge::GPSYaw get_gps_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
     sensor_msgs::NavSatFix get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
     sensor_msgs::Imu get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data);
     sensor_msgs::PointCloud2 get_lidar_msg_from_airsim(const msr::airlib::LidarData& lidar_data) const;
@@ -163,7 +163,7 @@ private:
     ros::ServiceServer reset_srvr_;
     ros::Publisher origin_geo_point_pub_; // home geo coord of drones
     msr::airlib::GeoPoint origin_geo_point_;// gps coord of unreal origin 
-    airsim_ros_interface::GPSYaw origin_geo_point_msg_; // todo duplicate
+    fsds_ros_bridge::GPSYaw origin_geo_point_msg_; // todo duplicate
 
     std::vector<FSCarROS> fscar_ros_vec_;
 
@@ -184,7 +184,7 @@ private:
     ros::NodeHandle nh_;
     ros::NodeHandle nh_private_;
 
-    // todo not sure if async spinners shuold be inside this class, or should be instantiated in airsim_node.cpp, and cb queues should be public
+    // todo not sure if async spinners shuold be inside this class, or should be instantiated in fsds_ros_bridge.cpp, and cb queues should be public
     // todo for multiple drones with multiple sensors, this won't scale. make it a part of MultiRotorROS?
     ros::CallbackQueue img_timer_cb_queue_;
     ros::CallbackQueue lidar_timer_cb_queue_;
