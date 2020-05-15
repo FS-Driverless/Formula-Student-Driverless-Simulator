@@ -5,8 +5,8 @@ import subprocess, time, signal, sys, os, airsim, json
 
 app = Flask(__name__)
 
-# client = airsim.CarClient()
-# client.confirmConnection()
+client = airsim.CarClient()
+client.confirmConnection()
 
 with open('../config/team_config.json', 'r') as file:
     team_config = json.load(file)

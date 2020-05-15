@@ -68,6 +68,45 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
-        <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+        <!-- <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script> -->
+        <script>
+            $(document).ready(function() {
+
+                // Start button handler
+                $('#start').click(function() {
+                    const selectedTeam = $("input:radio[name ='team-select']:checked").val();
+                    if (selectedTeam === undefined) {
+                        alert('Select a team.');
+                        return
+                    }
+
+                    const selectedMission = $("input:radio[name ='mission-select']:checked").val();
+                    if (selectedMission === undefined) {
+                        alert('Select a mission.');
+                        return
+                    }
+
+                    $.ajax('mission/start', {
+                        data: JSON.stringify({id: selectedTeam, mission: selectedMission}),
+                        contentType: 'application/json',
+                        type: 'POST'
+                    });
+                });
+
+                // Stop button handler
+                $('#stop').click(function() {
+                    $.ajax('mission/stop', {
+                        type: 'POST'
+                    });     
+                });
+
+                // Reset button handler
+                $('#reset').click(function() {
+                    $.ajax('mission/reset', {
+                        type: 'POST'
+                    });     
+                });
+            });
+        </script>
     </body>
 </html>
