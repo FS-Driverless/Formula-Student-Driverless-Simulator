@@ -127,8 +127,7 @@ void PawnSimApi::createCamerasFromSettings()
         const auto& setting = camera_setting_pair.second;
 
         //get pose
-        FVector position = transform.fromLocalNed(
-            NedTransform::Vector3r(setting.position.x(), setting.position.y(), setting.position.z()))
+        FVector position = transform.fromLocalNed(NedTransform::Vector3r(setting.position.x(), setting.position.y(), setting.position.z()))
             - transform.fromLocalNed(NedTransform::Vector3r(0.0, 0.0, 0.0));
         FTransform camera_transform(FRotator(setting.rotation.pitch, setting.rotation.yaw, setting.rotation.roll),
             position, FVector(1., 1., 1.));
@@ -142,16 +141,16 @@ void PawnSimApi::createCamerasFromSettings()
 }
 
 //Update camera with new pos and orientation settings
-void PawnSimApi::updateCamera(const std::string& camera_name, float xpos, float ypos, float zpos, float pitch, float roll, float yaw)
-{   APIPCamera* camera=getCamera(camera_name);
+void PawnSimApi::updateCamera(const std::string& camera_name, const float xpos, const float ypos, const float zpos, const float pitch, const float roll, const float yaw)
+{   APIPCamera* camera = getCamera(camera_name);
     if(camera==nullptr){
-        throw std::runtime_error(Utils::stringf("Cannot configure this camera because '%s' is not a recognized camera name", camera_name));
+        throw std::runtime_error("Cannot configure this camera because it is not a recognized camera name");
     }
-    else{
-    FVector position = transform.fromLocalNed(NedTransform::Vector3r(xpos, ypos, zpos)- transform.fromLocalNed(NedTransform::Vector3r(0.0, 0.0, 0.0));
+
+    const auto& transform = getNedTransform();
+    FVector position = transform.fromLocalNed(NedTransform::Vector3r(xpos, ypos, zpos)) + getUUPosition();
     FTransform camera_transform(FRotator(pitch, yaw, roll), position, FVector(1., 1., 1.));
-    camera.SetActorTransform(position, false, null, ETeleportType::ResetPhysics);
-    }
+    camera->SetActorTransform(camera_transform, false, nullptr, ETeleportType::None);
 }
 
 

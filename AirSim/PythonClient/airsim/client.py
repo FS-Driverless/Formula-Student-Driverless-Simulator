@@ -1125,3 +1125,6 @@ class CarClient(VehicleClient, object):
         """
         controls_raw = self.client.call('getCarControls', vehicle_name)
         return CarControls.from_msgpack(controls_raw)
+
+    def updateCamera(self, vehicle_name, camera_name, x, y, z, pitch, roll, yaw):
+        self.client.call('updateCamera', vehicle_name, camera_name, x, y, z, pitch, roll, yaw)
