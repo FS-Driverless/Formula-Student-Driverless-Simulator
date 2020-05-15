@@ -76,8 +76,8 @@ void PawnSimApi::pawnTick(float dt)
     update();
     updateRenderedState(dt);
     updateRendering(dt);
-}
-
+    msr::airlib::ImageCaptureBase::ImageType ImageType;
+    typedef msr::airlib::AirSimSetting
 void PawnSimApi::detectUsbRc()
 {
     if (getRemoteControlID() >= 0) {
@@ -136,11 +136,24 @@ void PawnSimApi::createCamerasFromSettings()
         //spawn and attach camera to pawn
         APIPCamera* camera = params_.pawn->GetWorld()->SpawnActor<APIPCamera>(params_.pip_camera_class, camera_transform, camera_spawn_params);
         camera->AttachToComponent(bodyMesh, FAttachmentTransformRules::KeepRelativeTransform);
-
         //add on to our collection
         cameras_.insert_or_assign(camera_setting_pair.first, camera);
     }
 }
+
+//Update camera with new pos and orientation settings
+void PawnSimApi::updateCamera(const std::string& camera_name, float xpos, float ypos, float zpos, float pitch, float roll, float yaw)
+{   APIPCamera* camera=getCamera(camera_name);
+    if(camera==nullptr){
+        throw std::runtime_error(Utils::stringf("Cannot configure this camera because '%s' is not a recognized camera name", camera_name));
+    }
+    else{
+    FVector position = transform.fromLocalNed(NedTransform::Vector3r(xpos, ypos, zpos)- transform.fromLocalNed(NedTransform::Vector3r(0.0, 0.0, 0.0));
+    FTransform camera_transform(FRotator(pitch, yaw, roll), position, FVector(1., 1., 1.));
+    camera.SetActorTransform(position, false, null, ETeleportType::ResetPhysics);
+    }
+}
+
 
 void PawnSimApi::onCollision(class UPrimitiveComponent* MyComp, class AActor* Other, class UPrimitiveComponent* OtherComp, 
     bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)

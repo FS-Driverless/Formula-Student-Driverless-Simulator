@@ -57,7 +57,7 @@ public:
 
     virtual bool armDisarm(bool arm) override
     {
-        //TODO: implement arming for car
+        //TODO: implement arming for carf
         unused(arm);
         return true;
     }

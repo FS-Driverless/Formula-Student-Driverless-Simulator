@@ -60,6 +60,11 @@ CarRpcLibServer::CarRpcLibServer(ApiProvider* api_provider, string server_addres
 	(static_cast<rpc::server*>(getServer()))->
 		bind("getRefereeState", [&]() -> CarRpcLibAdapators::RefereeState {
 		return CarRpcLibAdapators::RefereeState(RpcLibServerBase::getWorldSimApi()->getRefereeState());
+    });
+
+	(static_cast<rpc::server*>(getServer()))->
+		bind("updateCamera", [&](const std::string& vehicle_name, const std::string& camera_name, float x, float y ,float z, float pitch, foat roll, float yaw) -> void {
+        getVehicleSimApi(vehicle_name).updateCameraLocation(camera_name, x, y, z, roll, pitch, yaw);
 	});
 
 }

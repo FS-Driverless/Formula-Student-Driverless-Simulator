@@ -394,6 +394,14 @@ public: //methods
         loadClockSettings(settings_json);
     }
 
+    //Would have to have the settings instance, settings type and senory list passed on, which creates and initializes the newly read settings json
+    //Tryign to figure out where do I call it properly (how does it trickle down to UE, perhaps airsim_settings_parser or S) and what settings instance should I pass it?
+    void updateSensorSettings(const Settings& settings_json, const std::string& collectionName,
+        std::map<std::string, std::unique_ptr<SensorSetting>>& sensors)
+    {
+        loadSensorSettings(settings_json, "Sensors" ,vehicle_setting->sensors)   
+    }
+
     static void initializeSettings(const std::string& json_settings_text)
     {
         Settings& settings_json = Settings::loadJSonString(json_settings_text);
@@ -421,7 +429,8 @@ public: //methods
             throw std::invalid_argument(Utils::stringf("VehicleSetting for vehicle name %s was requested but not found",
                 vehicle_name.c_str()).c_str());
         else
-            return it->second.get();
+            return it->second.g
+et();
     }
 
 private:

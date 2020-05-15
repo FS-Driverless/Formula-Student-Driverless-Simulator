@@ -23,6 +23,7 @@ public:
     typedef msr::airlib::ImageCaptureBase::ImageType ImageType;
     typedef msr::airlib::AirSimSettings AirSimSettings;
     typedef AirSimSettings::CameraSetting CameraSetting;
+    typedef AirSimSettings::CaptureSetting CaptureSetting;
 
 
     APIPCamera();
@@ -31,6 +32,7 @@ public:
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaSeconds) override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+    static void updateCameraSetting(UCameraComponent* camera, const CaptureSetting& setting, const NedTransform& ned_transform);
 
     void showToScreen();
     void disableAll();
@@ -70,7 +72,6 @@ private: //members
 
 private: //methods
     typedef common_utils::Utils Utils;
-    typedef AirSimSettings::CaptureSetting CaptureSetting;
     typedef AirSimSettings::NoiseSetting NoiseSetting;
 
     static unsigned int imageTypeCount();
@@ -79,5 +80,4 @@ private: //methods
         bool auto_format, const EPixelFormat& pixel_format, const CaptureSetting& setting, const NedTransform& ned_transform);
     void setNoiseMaterial(int image_type, UObject* outer, FPostProcessSettings& obj, const NoiseSetting& settings);
     static void updateCameraPostProcessingSetting(FPostProcessSettings& obj, const CaptureSetting& setting);
-    static void updateCameraSetting(UCameraComponent* camera, const CaptureSetting& setting, const NedTransform& ned_transform);
 };
