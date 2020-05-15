@@ -76,8 +76,8 @@ void PawnSimApi::pawnTick(float dt)
     update();
     updateRenderedState(dt);
     updateRendering(dt);
-    msr::airlib::ImageCaptureBase::ImageType ImageType;
-    typedef msr::airlib::AirSimSetting
+}
+
 void PawnSimApi::detectUsbRc()
 {
     if (getRemoteControlID() >= 0) {
