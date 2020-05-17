@@ -21,7 +21,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	msr::airlib::CarApiBase::RefereeState state = {0};
+	msr::airlib::CarApiBase::RefereeState state;
 
 public:	
 	// Called every frame
@@ -30,5 +30,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="Referee")
 	int32 ConeHit(FString coneName);
-	
+
+	UFUNCTION(BlueprintCallable, Category="Referee")
+	int32 LapCompleted(float lapTime);
 };

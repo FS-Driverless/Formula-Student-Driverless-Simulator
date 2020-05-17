@@ -89,12 +89,13 @@ public:
 
     struct RefereeState {
         uint doo_counter = 0;
+	std::vector<float> laps;
 
         RefereeState() 
         {
         }
 
-        RefereeState(uint doo_counter_val) : doo_counter(doo_counter_val)
+        RefereeState(const uint &doo_counter_val, const std::vector<float> &laps_val) : doo_counter(doo_counter_val), laps(laps_val)
         {
         }
 
