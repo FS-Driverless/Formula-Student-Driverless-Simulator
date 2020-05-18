@@ -56,8 +56,15 @@
                 <h3 style="text-align: center">
                     Simulator logbook
                 </h3>
-                <div style="border: 1px; border-style: solid; height: 100%;">
-
+                <div class="log-window" style="
+                padding: 10px;
+                border: 1px; 
+                border-style: solid; 
+                height: 100%;
+                overflow: scroll">
+                    {% for item in logs %}
+                        <p>{{item}}</p>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -69,44 +76,50 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
         <!-- <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script> -->
-        <script>
-            $(document).ready(function() {
+<script>
+    // Start button handler
+    $('#start').click(function() {
+        const selectedTeam = $("input:radio[name ='team-select']:checked").val();
+        if (selectedTeam === undefined) {
+            alert('Select a team.');
+            return
+        }
 
-                // Start button handler
-                $('#start').click(function() {
-                    const selectedTeam = $("input:radio[name ='team-select']:checked").val();
-                    if (selectedTeam === undefined) {
-                        alert('Select a team.');
-                        return
-                    }
+        const selectedMission = $("input:radio[name ='mission-select']:checked").val();
+        if (selectedMission === undefined) {
+            alert('Select a mission.');
+            return
+        }
 
-                    const selectedMission = $("input:radio[name ='mission-select']:checked").val();
-                    if (selectedMission === undefined) {
-                        alert('Select a mission.');
-                        return
-                    }
+        $.ajax('mission/start', {
+            data: JSON.stringify({id: selectedTeam, mission: selectedMission}),
+            contentType: 'application/json',
+            type: 'POST',
+            success: function(res) {
+                $('.log-window').append(`<p>${res.response}</p>`)
+            }
+        });
+    });
 
-                    $.ajax('mission/start', {
-                        data: JSON.stringify({id: selectedTeam, mission: selectedMission}),
-                        contentType: 'application/json',
-                        type: 'POST'
-                    });
-                });
+    // Stop button handler
+    $('#stop').click(function() {
+        $.ajax('mission/stop', {
+            type: 'POST',
+            success: function(res) {
+                $('.log-window').append(`<p>${res.response}</p>`)
+            }
+        });     
+    });
 
-                // Stop button handler
-                $('#stop').click(function() {
-                    $.ajax('mission/stop', {
-                        type: 'POST'
-                    });     
-                });
-
-                // Reset button handler
-                $('#reset').click(function() {
-                    $.ajax('mission/reset', {
-                        type: 'POST'
-                    });     
-                });
-            });
-        </script>
+    // Reset button handler
+    $('#reset').click(function() {
+        $.ajax('mission/reset', {
+            type: 'POST',
+            success: function(res) {
+                $('.log-window').append(`<p>${res.response}</p>`)
+            }
+        });     
+    });
+</script>
     </body>
 </html>

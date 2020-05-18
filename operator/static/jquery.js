@@ -17,16 +17,24 @@ $(document).ready(function() {
         $.ajax('mission/start', {
             data: JSON.stringify({id: selectedTeam, mission: selectedMission}),
             contentType: 'application/json',
-            type: 'POST'
+            type: 'POST',
+            success: function(res) {
+                alert(res);
+                $('.log-window').html(res);
+            }
         });
     });
 
     // Stop button handler
     $('#stop').click(function() {
-        alert('hello')
         $.ajax('mission/stop', {
-            data: JSON.stringify({message: 'stop'}),
-            contentType: 'application/json',
+            type: 'POST'
+        });     
+    });
+
+    // Reset button handler
+    $('#reset').click(function() {
+        $.ajax('mission/reset', {
             type: 'POST'
         });     
     });

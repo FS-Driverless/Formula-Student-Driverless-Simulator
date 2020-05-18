@@ -2,20 +2,22 @@
 
 from flask import Flask, request, abort, render_template
 import subprocess, time, signal, sys, os, airsim, json
+from datetime import datetime
 
 app = Flask(__name__)
 
-client = airsim.CarClient()
-client.confirmConnection()
+# client = airsim.CarClient()
+# client.confirmConnection()
 
 with open('../config/team_config.json', 'r') as file:
     team_config = json.load(file)
 
 interfaceprocess = None
+logs = []
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html', team_config=team_config)
+    return render_template('index.html', team_config=team_config, logs=logs)
 
 # curl --header "Content-Type: application/json" --request POST --data '{"master": "http://localhost:11311", "mission": "trackdrive"}' http://localhost:5000/mission/selectcar
 @app.route('/mission/start', methods=['POST'])
@@ -33,7 +35,10 @@ def mission_start():
     global interfaceprocess
     interfaceprocess = subprocess.Popen(['roslaunch', 'fsds_ros_bridge', 'fsds_ros_bridge.launch', 'mission:={}'.format(mission)], env=procenv)   
 
-    return {'message': 'Mission started'}
+    log = '{}: {}'.format(str(datetime.now()), 'Mission started')
+    logs.append(log)
+    #return render_template('index.html', team_config=team_config, logs=logs)
+    return {'response': log}
 
 @app.route('/mission/stop', methods=['POST'])
 def mission_stop():
@@ -49,12 +54,19 @@ def mission_stop():
             # wait for it to finish
             interfaceprocess.wait()
 
-    return {'message': 'Mission stopped'}
+    log = '{}: {}'.format(str(datetime.now()), 'Mission stopped')
+    logs.append(log)
+
+    return {'response': log}
 
 @app.route('/mission/reset', methods=['POST'])
 def mission_reset():
-    client.reset()
-    return {'message': 'Car reset'}
+    #client.reset()
+
+    log = '{}: {}'.format(str(datetime.now()), 'Car reset')
+    logs.append(log)
+
+    return {'response': log}
 
 if __name__ == '__main__':
     app.run()

@@ -24,3 +24,9 @@
     margin-bottom: auto;
     text-align: center;
 }
+.log-window {
+    padding: 10px;
+    border: 1px; 
+    border-style: solid; 
+    height: 100%;
+}
