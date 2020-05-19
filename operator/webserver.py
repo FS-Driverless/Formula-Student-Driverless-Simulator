@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 
 from flask import Flask, request, abort, render_template
-import subprocess, time, signal, sys, os, airsim, json
+import subprocess, time, signal, sys, os, json
 from datetime import datetime
+import AirSim.PythonClient.airsim as airsim
 
 app = Flask(__name__)
 
-# client = airsim.CarClient()
-# client.confirmConnection()
+client = airsim.CarClient()
+client.confirmConnection()
+client.getRefereeState()
 
 with open('../config/team_config.json', 'r') as file:
     team_config = json.load(file)
@@ -61,7 +63,7 @@ def mission_stop():
 
 @app.route('/mission/reset', methods=['POST'])
 def mission_reset():
-    #client.reset()
+    client.reset()
 
     log = '{}: {}'.format(str(datetime.now()), 'Car reset')
     logs.append(log)

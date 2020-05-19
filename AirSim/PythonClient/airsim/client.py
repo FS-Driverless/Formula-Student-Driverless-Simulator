@@ -1125,3 +1125,7 @@ class CarClient(VehicleClient, object):
         """
         controls_raw = self.client.call('getCarControls', vehicle_name)
         return CarControls.from_msgpack(controls_raw)
+
+    def getRefereeState(self):
+        referee_state_raw = self.client.call('getRefereeState')
+        return RefereeState.from_msgpack(referee_state_raw)
