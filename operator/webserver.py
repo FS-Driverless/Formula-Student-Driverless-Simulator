@@ -3,11 +3,14 @@
 from flask import Flask, request, abort, render_template
 import subprocess, time, signal, sys, os, json
 from datetime import datetime
-import AirSim.PythonClient.airsim as airsim
+
+import sys
+sys.path.append('../AirSim/PythonClient')
+from airsim.client import CarClient
 
 app = Flask(__name__)
 
-client = airsim.CarClient()
+client = CarClient()
 client.confirmConnection()
 client.getRefereeState()
 
