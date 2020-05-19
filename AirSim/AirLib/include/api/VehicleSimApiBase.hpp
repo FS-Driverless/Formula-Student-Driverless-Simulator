@@ -66,7 +66,7 @@ public:
     virtual void setTraceLine(const std::vector<float>& color_rgba, float thickness) = 0;
 
     virtual void updateCamera(const std::string& camera_name, const float xpos, const float ypos, const float zpos, const float pitch, const float roll, const float yaw) = 0;
-
+    virtual void jsonSettingsUpdate() = 0;
     //use pointer here because of derived classes for VehicleSetting
     const AirSimSettings::VehicleSetting* getVehicleSetting() const
     {

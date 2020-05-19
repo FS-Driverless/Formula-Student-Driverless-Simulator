@@ -76,6 +76,11 @@ public:
         return static_cast<PawnSimApi*>(api_provider_->getVehicleSimApi(vehicle_name));
     }
 
+    CarPawnSimApi* getCarPawnSimApi(const std::string& vehicle_name = "")
+    {
+        return static_cast<CarPawnSimApi*>(api_provider_->getVehicleSimApi(vehicle_name));
+    }
+
 protected: //must overrides
     typedef msr::airlib::AirSimSettings AirSimSettings;
 

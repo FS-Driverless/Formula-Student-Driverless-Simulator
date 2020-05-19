@@ -49,6 +49,17 @@ protected:
             throw ApiNotSupported("Vehicle Sim-API for '" + vehicle_name +
                 "' is not available. This could either because this is not a simulation or this vehicle does not exist");
     }
+
+    virtual CarPawnSimApi* getCarPawnSimApi(const std::string& vehicle_name)
+    {
+        auto* api = api_provider_->getCarPawnSimApi(vehicle_name);
+        if (api)
+            return api;
+        else
+            throw ApiNotSupported("Car Sim-API for '" + vehicle_name +
+                "' is not available. This could either because this is not a simulation or this vehicle does not exist");
+    }
+    
     virtual WorldSimApiBase* getWorldSimApi()
     {
         auto* api = api_provider_->getWorldSimApi();

@@ -1128,3 +1128,6 @@ class CarClient(VehicleClient, object):
 
     def updateCamera(self, vehicle_name, camera_name, x, y, z, pitch, roll, yaw):
         self.client.call('updateCamera', vehicle_name, camera_name, x, y, z, pitch, roll, yaw)
+
+    def jsonSettingsUpdate(self):
+        self.client.call('jsonSettingsUpdate')

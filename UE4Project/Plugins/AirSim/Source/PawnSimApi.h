@@ -97,6 +97,7 @@ public: //implementation of VehicleSimApiBase
     virtual void reportState(msr::airlib::StateReporter& reporter) override;
 
     virtual void updateCamera(const std::string& camera_name, const float xpos, const float ypos, const float zpos, const float pitch,const  float roll, const float yaw) override;
+    virtual void jsonSettingsUpdate() override;
 
 protected: //additional interface for derived class
     virtual void pawnTick(float dt);

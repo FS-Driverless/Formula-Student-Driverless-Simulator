@@ -147,9 +147,10 @@ void PawnSimApi::updateCamera(const std::string& camera_name, const float xpos, 
         throw std::runtime_error("Cannot configure this camera because it is not a recognized camera name");
     }
 
-    const auto& transform = getNedTransform();
-    FVector position = transform.fromLocalNed(NedTransform::Vector3r(xpos, ypos, zpos)) + getUUPosition();
-    FTransform camera_transform(FRotator(pitch, yaw, roll), position, FVector(1., 1., 1.));
+    const auto& transform = getNedTransform(); 
+    FVector position = getUUPosition() + transform.fromLocalNed(NedTransform::Vector3r(xpos, ypos, zpos)) - transform.fromLocalNed(NedTransform::Vector3r(0, 0, 0));
+    FRotator rotation = FRotator(pitch, yaw, roll) + getUUOrientation();
+    FTransform camera_transform(rotation, position, FVector(1., 1., 1.));
     camera->SetActorTransform(camera_transform, false, nullptr, ETeleportType::None);
 }
 

@@ -27,6 +27,7 @@ public:
 public:
     NedTransform(const FTransform& global_transform, float world_to_meters);
     NedTransform(const AActor* pivot, const NedTransform& global_transform);
+    FVector toFVector(const Vector3r& vec, float scale, bool convert_from_ned) const;
 
     //UU -> local NED
     Vector3r toLocalNed(const FVector& position) const;
@@ -56,7 +57,6 @@ public:
 
 private:
     NedTransform(const AActor* pivot, const FTransform& global_transform, float world_to_meters); //create only through static factory methods
-    FVector toFVector(const Vector3r& vec, float scale, bool convert_from_ned) const;
     Vector3r toVector3r(const FVector& vec, float scale, bool convert_to_ned) const;
 
 private:

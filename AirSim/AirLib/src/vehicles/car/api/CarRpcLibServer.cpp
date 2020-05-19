@@ -67,6 +67,10 @@ CarRpcLibServer::CarRpcLibServer(ApiProvider* api_provider, string server_addres
         getVehicleSimApi(vehicle_name)->updateCamera(camera_name, x, y, z, roll, pitch, yaw);
 	});
 
+	(static_cast<rpc::server*>(getServer()))->
+		bind("jsonSettingsUpdate", [&](const std::string& vehicle_name) -> void {
+        getCarSimApi(vehicle_name)->jsonSettingsUpdate();
+	});
 }
 
 //required for pimpl
