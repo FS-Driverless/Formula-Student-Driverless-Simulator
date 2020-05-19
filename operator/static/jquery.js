@@ -19,8 +19,7 @@ $(document).ready(function() {
             contentType: 'application/json',
             type: 'POST',
             success: function(res) {
-                alert(res);
-                $('.log-window').html(res);
+                $('.log-window').append(`<p>${res.response}</p>`)
             }
         });
     });
@@ -28,14 +27,20 @@ $(document).ready(function() {
     // Stop button handler
     $('#stop').click(function() {
         $.ajax('mission/stop', {
-            type: 'POST'
+            type: 'POST',
+            success: function(res) {
+                $('.log-window').append(`<p>${res.response}</p>`)
+            }
         });     
     });
 
     // Reset button handler
     $('#reset').click(function() {
         $.ajax('mission/reset', {
-            type: 'POST'
+            type: 'POST',
+            success: function(res) {
+                $('.log-window').append(`<p>${res.response}</p>`)
+            }
         });     
     });
 });
