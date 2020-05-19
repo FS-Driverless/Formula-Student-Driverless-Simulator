@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 client = CarClient()
 client.confirmConnection()
-client.getRefereeState()
+referee = client.getRefereeState()
 
 with open('../config/team_config.json', 'r') as file:
     team_config = json.load(file)
