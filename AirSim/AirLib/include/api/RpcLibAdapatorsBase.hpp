@@ -375,7 +375,7 @@ public:
                 request.push_back(item.to());
 
             return request;
-        }         
+        }
     };
 
     struct ImageResponse {
@@ -401,8 +401,8 @@ public:
         ImageResponse(const msr::airlib::ImageCaptureBase::ImageResponse& s)
         {
             pixels_as_float = s.pixels_as_float;
-            
-            image_data_uint8 = s.image_data_uint8;
+
+            image_data_uint8 = *(s.image_data_uint8);
             image_data_float = s.image_data_float;
 
             //TODO: remove bug workaround for https://github.com/rpclib/rpclib/issues/152
@@ -428,8 +428,8 @@ public:
 
             d.pixels_as_float = pixels_as_float;
 
-            if (! pixels_as_float)
-                d.image_data_uint8 = image_data_uint8;
+            if (!pixels_as_float)
+                d.image_data_uint8->insert(d.image_data_uint8->begin(), image_data_uint8.front(), image_data_uint8.back());
             else
                 d.image_data_float = image_data_float;
 

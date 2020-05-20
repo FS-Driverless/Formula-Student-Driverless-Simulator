@@ -1,0 +1,35 @@
+--- .gitignore
++++ .gitignore
+@@ -358,18 +358,11 @@ xcuserdata/
+ !*.xcworkspace/contents.xcworkspacedata
+ /*.gcno
+ 
+-# Unity
++/Unity/UnityDemo/Library
+ /Unity/UnityDemo/Assembly-CSharp.csproj
+ /Unity/UnityDemo/UnityDemo.sln
+-/Unity/linux-build
+-/Unity/UnityDemo/Assets/Plugins/
+-/Unity/UnityDemo/[Ll]ibrary/
+-/Unity/UnityDemo/[Tt]emp/
+-/Unity/UnityDemo/[Oo]bj/
+-/Unity/UnityDemo/[Bb]uild/
+-/Unity/UnityDemo/[Bb]uilds/
+-/Unity/UnityDemo/[Ll]ogs/
+-/Unity/UnityDemo/[Uu]ser[Ss]ettings/
++/Unity/UnityDemo/Logs/
++/Unity/UnityDemo/Assets/Plugins/AirsimWrapper.dll
+ 
+ # ROS
+ ros/.catkin_tools/
+@@ -377,10 +370,3 @@ ros/devel/
+ ros/logs/
+ ros/.catkin_workspace
+ ros/src/CMakeLists.txt
+-
+-# docs
+-docs/README.md
+-build_docs/
+-
+-# api docs
+-PythonClient/docs/_build
