@@ -42,7 +42,7 @@ def mission_start():
 
     log = '{}: {}'.format(str(datetime.now()), 'Mission started')
     logs.append(log)
-    #return render_template('index.html', team_config=team_config, logs=logs)
+    
     return {'response': log}
 
 @app.route('/mission/stop', methods=['POST'])
