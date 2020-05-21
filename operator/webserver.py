@@ -11,11 +11,11 @@ from airsim.client import CarClient
 
 app = Flask(__name__)
 
-# client = CarClient()
-# client.confirmConnection()
-# ref =  client.getRefereeState()
-# doo_count = ref.doo_counter
-# laps = ref.laps
+client = CarClient()
+client.confirmConnection()
+ref =  client.getRefereeState()
+doo_count = ref.doo_counter
+laps = ref.laps
 
 interfaceprocess = None
 logs = []
@@ -100,4 +100,4 @@ def referee_state_listener():
 
 if __name__ == '__main__':
     app.run()
-    #referee_state_listener()
+    referee_state_listener()
