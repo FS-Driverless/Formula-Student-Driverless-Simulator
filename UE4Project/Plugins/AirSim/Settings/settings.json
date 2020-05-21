@@ -98,6 +98,4 @@
       {"WindowID": 1, "ImageType": 0, "CameraName": "front_center_custom", "Visible": false},
       {"WindowID": 2, "ImageType": 0, "CameraName": "front_right_custom", "Visible": true}
     ]
-  }
-  
-  
+}
