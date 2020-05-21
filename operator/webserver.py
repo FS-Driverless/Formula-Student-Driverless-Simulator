@@ -3,6 +3,7 @@
 from flask import Flask, request, abort, render_template
 import subprocess, time, signal, sys, os, json
 from datetime import datetime
+from threading import Timer
 
 import sys
 sys.path.append('../AirSim/PythonClient')
@@ -10,9 +11,14 @@ from airsim.client import CarClient
 
 app = Flask(__name__)
 
-client = CarClient()
-client.confirmConnection()
-referee = client.getRefereeState()
+# client = CarClient()
+# client.confirmConnection()
+# ref =  client.getRefereeState()
+# doo_count = ref.doo_counter
+# laps = ref.laps
+
+interfaceprocess = None
+logs = []
 
 with open('../config/team_config.json', 'r') as file:
     team_config = json.load(file)
@@ -32,7 +38,8 @@ def mission_start():
 
     teamId = request.json['id']
     mission = request.json['mission']
-    master = team_config[int(teamId) - 1]['master']
+    for obj in team_config: 
+        if obj['id'] == teamId: master = obj['master']
 
     procenv = os.environ.copy()
     procenv["ROS_MASTER_URI"] = master
@@ -42,7 +49,7 @@ def mission_start():
 
     log = '{}: {}'.format(str(datetime.now()), 'Mission started')
     logs.append(log)
-    
+
     return {'response': log}
 
 @app.route('/mission/stop', methods=['POST'])
@@ -73,5 +80,24 @@ def mission_reset():
 
     return {'response': log}
 
+@app.route('/logs', methods=['GET'])
+def get_logs():
+    return {'response': logs}
+
+def referee_state_listener():
+    Timer.repeat(2.0, referee_state_listener).start()
+    ref = client.getRefereeState()
+
+    if doo_count != ref.doo_counter:
+        doo_count = ref.doo_counter
+        log = '{}: {}. {} {}'.format(str(datetime.now()), 'Cone hit', doo_count, 'DOO cones')
+        logs.append(log)
+
+    if laps != ref.laps:
+        laps = ref.laps
+        log = '{}: {} {} {}'.format(str(datetime.now()), 'Lap completed. Completed', doo_count, 'laps')
+        logs.append(log) 
+
 if __name__ == '__main__':
     app.run()
+    #referee_state_listener()
