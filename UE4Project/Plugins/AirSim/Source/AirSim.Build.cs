@@ -40,8 +40,6 @@ public class AirSim : ModuleRules
 
     private void SetupCompileMode(CompileMode mode, ReadOnlyTargetRules Target)
     {
-        LoadAirSimDependency(Target, "MavLinkCom", "MavLinkCom");
-
         switch (mode)
         {
             case CompileMode.HeaderOnlyNoRpc:
@@ -57,7 +55,6 @@ public class AirSim : ModuleRules
                 break;
 
             case CompileMode.CppCompileNoRpc:
-                LoadAirSimDependency(Target, "MavLinkCom", "MavLinkCom");
                 PublicDefinitions.Add("AIRLIB_NO_RPC=1");
                 break;
 

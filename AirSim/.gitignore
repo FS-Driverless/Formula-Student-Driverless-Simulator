@@ -224,17 +224,6 @@ GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
 /ThrowAway
-/MavLinkCom/CMakeFiles
-/MavLinkCom/CMakeCache.txt
-/MavLinkCom/cmake_install.cmake
-/MavLinkCom/libMavLinkComLib.a
-/MavLinkCom/libMavLinkCom.a
-/MavLinkCom/MavLinkCom
-/MavLinkTest/CMakeFiles
-/MavLinkTest/CMakeCache.txt
-/MavLinkTest/cmake_install.cmake
-/MavLinkTest/MavLinkTest
-/MavLinkCom/enc_temp_folder/
 /CMakeFiles
 /MavLinkTest/Makefile
 /Makefile
