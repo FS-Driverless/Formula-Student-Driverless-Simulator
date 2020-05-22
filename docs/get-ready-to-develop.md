@@ -40,6 +40,12 @@ sudo apt update
 sudo apt install ros-melodic-desktop ros-melodic-tf2-geometry-msgs python-catkin-tools ros-melodic-rqt-multiplot ros-melodic-joy ros-melodic-cv-bridge ros-melodic-image-transport libyaml-cpp-dev
 ```
 
+Add the following line to end of your `~/.bashrc` file:
+```
+source /opt/ros/melodic/setup.bash
+source ~/Driverless-Competition-Simulator/ros/devel/setup.bash
+```
+
 ## Install the project
 
 This repo uses git LFS. So ensure you have LFS installed: `sudo apt-get install git-lfs`. 
@@ -71,6 +77,11 @@ catkin build
 Finally, you can launch the FSOnline Unreal Engine Project by running UE4Editor and selecting the `UE4Project/FSOnline.uproject` project.
 To do this in a single command you can run `UE4Editor Driverless-Competition-Simulator/UE4Project/FSOnline.uproject`
 
+Optionally you can make your life easy by add the following line to end of your `~/.bashrc` file:
+```
+alias ue="~/UnrealEngine/Engine/Binaries/Linux/UE4Editor ~/Driverless-Competition-Simulator/UE4Project/FSOnline.uproject"
+```
+Now you can run `ue` to launch Unreal Editor with the FSOnline project.
 
 ## Development workflow
 
