@@ -6,6 +6,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include "rpc/rpc_error.h"
 STRICT_MODE_ON
 
+#include "statistics.h"
 #include "airsim_settings_parser.h"
 #include "common/AirSimSettings.hpp"
 #include "common/common_utils/FileSystem.hpp"
@@ -87,11 +88,16 @@ public:
     int64_t first_imu_unreal_ts = -1;
 
 private:
+
+    // Statistics object
+    ros_bridge::Statistics statistics;
+
     /// ROS timer callbacks
     void img_response_timer_cb(const ros::TimerEvent& event); // update images from airsim_client_ every nth sec
     void car_state_timer_cb(const ros::TimerEvent& event); // update drone state from airsim_client_ every nth sec
     void car_control_cb(const fsds_ros_bridge::ControlCommand::ConstPtr &msg, const std::string &vehicle_name);
     void lidar_timer_cb(const ros::TimerEvent& event);
+    void statistics_timer_cb(const ros::TimerEvent& event);
 
     /// ROS subscriber callbacks
    
