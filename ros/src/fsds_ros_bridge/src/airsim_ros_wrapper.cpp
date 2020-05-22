@@ -36,6 +36,7 @@ AirsimROSWrapper::AirsimROSWrapper(const ros::NodeHandle &nh, const ros::NodeHan
 
     world_frame_id_ = "world_ned"; // todo rosparam?
 
+    initialize_statistics();
     initialize_ros();
 
     std::cout << "AirsimROSWrapper Initialized!\n";
@@ -67,6 +68,15 @@ void AirsimROSWrapper::initialize_airsim()
                   << msg << std::endl;
     }
 }
+
+void AirsimROSWrapper::initialize_statistics() {
+    // TODO: complete initialization for all instances
+    setCarControlsStatistics = ros_bridge::Statistics("setCarControls");
+    control_cmd_sub_statistics = ros_bridge::Statistics("control_cmd_sub");
+    global_gps_pub_statistics = ros_bridge::Statistics("global_gps_pub");
+    odom_local_ned_pub_statistics = ros_bridge::Statistics("odom_local_ned_pub");
+}
+
 
 void AirsimROSWrapper::initialize_ros()
 {
@@ -434,7 +444,7 @@ sensor_msgs::NavSatFix AirsimROSWrapper::get_gps_sensor_msg_from_airsim_geo_poin
 
 void AirsimROSWrapper::car_control_cb(const fsds_ros_bridge::ControlCommand::ConstPtr &msg, const std::string &vehicle_name)
 {
-    ros_bridge::ROSMsgCounter counter(&control_cmd_sub_statistics);
+    ros_bridge::ROSMsgCounter counter(control_cmd_sub_statistics);
 
     CarApiBase::CarControls controls;
     controls.throttle = msg->throttle;
@@ -444,7 +454,7 @@ void AirsimROSWrapper::car_control_cb(const fsds_ros_bridge::ControlCommand::Con
 
     // TODO: time this!
     {
-        ros_bridge::Timer timer(&setCarControlsStatistics);
+        ros_bridge::Timer timer(setCarControlsStatistics);
         std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
         airsim_client_.setCarControls(controls, vehicle_name);
         lck.unlock();
@@ -490,7 +500,7 @@ void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent &event)
 
             // publish to ROS and keep track of incoming messages!
             {
-                ros_bridge::ROSMsgCounter counter(&odom_local_ned_pub_statistics);
+                ros_bridge::ROSMsgCounter counter(odom_local_ned_pub_statistics);
                 fscar_ros.odom_local_ned_pub.publish(fscar_ros.curr_odom_ned);
             }
             publish_odom_tf(fscar_ros.curr_odom_ned);
@@ -825,7 +835,7 @@ void AirsimROSWrapper::process_and_publish_img_response(const std::vector<ImageR
         camera_info_msg_vec_[img_response_idx_internal].header.stamp = curr_ros_time;
         // TODO: add counter
         {
-            ros_bridge::ROSMsgCounter counter(&cam_info_pub_vec_statistics[img_response_idx_internal]);
+            ros_bridge::ROSMsgCounter counter(cam_info_pub_vec_statistics[img_response_idx_internal]);
             cam_info_pub_vec_[img_response_idx_internal].publish(camera_info_msg_vec_[img_response_idx_internal]);
         }
 

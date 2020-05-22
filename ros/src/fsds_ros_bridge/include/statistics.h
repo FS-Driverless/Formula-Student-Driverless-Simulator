@@ -46,7 +46,7 @@ namespace ros_bridge
 
         // do the Rpc Call
 
-    } // Go out of scope -> call the timer destructor 
+    } // Go out of scope . call the timer destructor 
      // which automatically stores the time elapsed in the instance of 
      // the class that was passed
 
@@ -58,7 +58,7 @@ namespace ros_bridge
 
 
     For a publisher:
-
+    // TODO: finish this bit of documentation and make it into a separate file (if it works)
     {
 
     }
@@ -84,7 +84,9 @@ namespace ros_bridge
      */
 
     public:
-        Statistics(const std::string&& name) : _statisticsType(name){};
+        // Having the default constructor is necessary for the workspace to build!
+        Statistics(){};
+        Statistics(const std::string name) : _statisticsType(name){};
 
         void Print()
         {
@@ -114,7 +116,7 @@ namespace ros_bridge
         }
 
     private:
-        const std::string _statisticsType;
+        std::string _statisticsType;
         uint _rosMsgCount;
         std::vector<Duration> _durationHistory{};
     };
@@ -122,7 +124,7 @@ namespace ros_bridge
     class Timer
     {
     public:
-        Timer(Statistics *statistics) : _statistics(statistics)
+        Timer(Statistics &statistics) : _statistics(statistics)
         {
             _start = std::chrono::high_resolution_clock::now();
         };
@@ -131,28 +133,28 @@ namespace ros_bridge
         {
             _end = std::chrono::high_resolution_clock::now();
             // Append the duration to the appropriate vector
-            _statistics->addDurationRecording(std::move(_end - _start));
+            _statistics.addDurationRecording(std::move(_end - _start));
         }
 
     private:
         HighResClock _start, _end;
 
-        Statistics *_statistics;
+        Statistics _statistics;
     };
 
     class ROSMsgCounter
     {
     public:
-        ROSMsgCounter(Statistics *statistics) : _statistics(statistics){};
+        ROSMsgCounter(Statistics &statistics) : _statistics(statistics){};
 
         ~ROSMsgCounter()
         {
             // Increment message count
-            _statistics->addCount();
+            _statistics.addCount();
         }
 
     private:
-        Statistics *_statistics;
+        Statistics _statistics;
     };
 
 } // namespace ros_bridge
