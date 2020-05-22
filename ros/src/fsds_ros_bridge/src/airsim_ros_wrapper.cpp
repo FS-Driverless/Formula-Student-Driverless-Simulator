@@ -440,6 +440,7 @@ void AirsimROSWrapper::car_control_cb(const fsds_ros_bridge::ControlCommand::Con
     controls.throttle = msg->throttle;
     controls.steering = msg->steering;
     controls.brake = msg->brake;
+    ros::Time time = msg->header.stamp;
 
     // TODO: time this!
     {
