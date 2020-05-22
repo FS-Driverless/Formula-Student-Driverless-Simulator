@@ -89,8 +89,25 @@ public:
 
 private:
 
-    // Statistics object
-    ros_bridge::Statistics statistics;
+    // STATISTICS objects (where possible, 
+    // the convention of RpcCall+Statistics 
+    // or Pub/Sub name + _statistics 
+    // for naming is followed)
+    // TODO: complete all instances
+    ros_bridge::Statistics setCarControlsStatistics("setCarControls");
+    ros_bridge::Statistics control_cmd_sub_statistics("control_cmd_sub");
+    ros_bridge::Statistics global_gps_pub_statistics("global_gps_pub");
+    ros_bridge::Statistics odom_local_ned_pub_statistics("odom_local_ned_pub");
+    std::vector<ros_bridge::Statistics> cam_info_pub_vec_statistics;
+    std::vector<ros_bridge::Statistics> lidar_pub_vec_statistics;
+    std::vector<ros_bridge::Statistics> imu_pub_vec_statistics;
+
+    // Print all statistics
+    void PrintStatistics();
+    
+    // Reset statistics
+    void ResetStatistics();
+
 
     /// ROS timer callbacks
     void img_response_timer_cb(const ros::TimerEvent& event); // update images from airsim_client_ every nth sec
@@ -211,6 +228,7 @@ private:
     ros::Timer airsim_img_response_timer_;
     ros::Timer airsim_control_update_timer_;
     ros::Timer airsim_lidar_update_timer_;
+    ros::Timer statistics_timer_;
 
     typedef std::pair<std::vector<ImageRequest>, std::string> airsim_img_request_vehicle_name_pair;
     std::vector<airsim_img_request_vehicle_name_pair> airsim_img_request_vehicle_name_pair_vec_;

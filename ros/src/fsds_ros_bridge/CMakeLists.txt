@@ -71,12 +71,12 @@ include_directories(
 add_library(airsim_settings_parser src/airsim_settings_parser.cpp)
 target_link_libraries(airsim_settings_parser ${catkin_LIBRARIES} AirLib)
 
-add_library(ros_bridge_monitor src/statistics.cpp)
-target_link_libraries(ros_bridge_monitor ${catkin_LIBRARIES})
+# add_library(ros_bridge_monitor src/statistics.cpp)
+# target_link_libraries(ros_bridge_monitor ${catkin_LIBRARIES})
 
 add_library(airsim_ros src/airsim_ros_wrapper.cpp)
 add_dependencies(airsim_ros ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(airsim_ros ${catkin_LIBRARIES} yaml-cpp AirLib airsim_settings_parser ros_bridge_monitor)
+target_link_libraries(airsim_ros ${catkin_LIBRARIES} yaml-cpp AirLib airsim_settings_parser)
 
 add_executable(fsds_ros_bridge src/fsds_ros_bridge.cpp)
 target_link_libraries(fsds_ros_bridge airsim_ros ${catkin_LIBRARIES} AirLib)

@@ -26,18 +26,23 @@ namespace ros_bridge
         - getLidarData
         - setCarControls
     - ROS publishing frequency of the following publishers:
-        - 
-    - ROS callback frequency of the following subscriber:
-        - 
+        - odom_local_ned_pub
+        - global_gps_pub
+        - cam_info_pub_vec_
+        - lidar_pub_vec_
+        - imu_pub_vec_
+    - ROS callback frequency of the following subscriber(s):
+        - control_cmd_sub
 
-    There will be one instance of this class for each Rpc call to be monitored. 
-    To make a latency measurement, the appropriate instance pointer has to be passed
+    There will be one instance of this class for each Rpc 
+    call to be monitored. To make a latency measurement, 
+    the appropriate instance pointer has to be passed
     to a new Timer class (see below):
 
-    ros_bridge::Statistics rpcCallExample;
+    ros_bridge::Statistics rpcCallStatistics;
 
     { // Enter scope to be timed
-        ros_bridge::Timer timer(&rpcCallExample); // Start timing
+        ros_bridge::Timer timer(&rpcCallStatistics); // Start timing
 
         // do the Rpc Call
 
@@ -45,15 +50,41 @@ namespace ros_bridge
      // which automatically stores the time elapsed in the instance of 
      // the class that was passed
 
-    // TODO: make sure this wrapper is a template
-    In the 1Hz ROS timer, the Print function will be called (or some wrapper which applies this action to all the instances) 
-    followed by the Reset function(s) (or some wrapper which applies this action to all the instances). 
+    There will also be an instance of this class for each ROS 
+    publisher/subscriber. To count a new incoming or outgoing message the
+    simple construct below can be used:
 
+    ros_bridge::Statistics pubSubStatistics;
+
+
+    For a publisher:
+
+    {
+
+    }
+
+    For a subscriber:
+
+    void callback(msg) {
+        // pass pointer to persistent Statistics object
+        ros_bridge::ROSMsgCounter counter(&pubSubStatistics); 
+
+        // Do something with msg
+
+
+    } // scope ends, destructor is called and count is incremented for 
+      // the Statistics object
+
+    In the 1Hz ROS timer, the Print function will be called 
+    (or some wrapper which applies this action to all the instances) 
+    followed by the Reset function(s) (or some wrapper which applies 
+    this action to all the instances) which ensures that counters 
+    are set to 0 and that vectors of durations (latencies) are emptied. 
 
      */
 
     public:
-        Statistics(const std::string &name) : _statisticsType(name){};
+        Statistics(const std::string&& name) : _statisticsType(name){};
 
         void Print()
         {
@@ -71,13 +102,14 @@ namespace ros_bridge
             ++_rosMsgCount;
         }
 
-        void ResetCount()
+        // There is probably a better way of resetting the vector which prevents
+        // allocating all the space needed for its elements again
+        void Reset()
         {
+            // Reset count
             _rosMsgCount = 0;
-        }
 
-        void ResetDurationHistory()
-        {
+            // reset duration history
             _durationHistory = {};
         }
 
@@ -110,6 +142,7 @@ namespace ros_bridge
 
     class ROSMsgCounter
     {
+    public:
         ROSMsgCounter(Statistics *statistics) : _statistics(statistics){};
 
         ~ROSMsgCounter()
