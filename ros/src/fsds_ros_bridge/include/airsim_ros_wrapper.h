@@ -4,7 +4,7 @@ STRICT_MODE_OFF //todo what does this do?
 #define RPCLIB_MSGPACK clmdep_msgpack
 #endif // !RPCLIB_MSGPACK
 #include "rpc/rpc_error.h"
-STRICT_MODE_ON
+    STRICT_MODE_ON
 
 #include "statistics.h"
 #include "airsim_settings_parser.h"
@@ -46,10 +46,10 @@ STRICT_MODE_ON
 #include <tf2_ros/transform_listener.h>
 #include <unordered_map>
 // #include "nodelet/nodelet.h"
-#define printVariableNameAndValue(x) std::cout<<"The name of variable **"<<(#x)<<"** and the value of variable is => "<<x<<"\n"
+#define printVariableNameAndValue(x) std::cout << "The name of variable **" << (#x) << "** and the value of variable is => " << x << "\n"
 
-// todo move airlib typedefs to separate header file?
-typedef msr::airlib::ImageCaptureBase::ImageRequest ImageRequest;
+    // todo move airlib typedefs to separate header file?
+    typedef msr::airlib::ImageCaptureBase::ImageRequest ImageRequest;
 typedef msr::airlib::ImageCaptureBase::ImageResponse ImageResponse;
 typedef msr::airlib::ImageCaptureBase::ImageType ImageType;
 typedef msr::airlib::AirSimSettings::CaptureSetting CaptureSetting;
@@ -62,19 +62,19 @@ struct SimpleMatrix
 {
     int rows;
     int cols;
-    double* data;
+    double *data;
 
-    SimpleMatrix(int rows, int cols, double* data)
+    SimpleMatrix(int rows, int cols, double *data)
         : rows(rows), cols(cols), data(data)
-    {}
+    {
+    }
 };
-
 
 class AirsimROSWrapper
 {
 public:
-    AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, const std::string & host_ip);
-    ~AirsimROSWrapper() {}; 
+    AirsimROSWrapper(const ros::NodeHandle &nh, const ros::NodeHandle &nh_private, const std::string &host_ip);
+    ~AirsimROSWrapper(){};
 
     void initialize_airsim();
     void initialize_ros();
@@ -90,14 +90,14 @@ public:
     int64_t first_imu_unreal_ts = -1;
 
 private:
-
-    // STATISTICS objects (where possible, 
-    // the convention of RpcCall+Statistics 
-    // or Pub/Sub name + _statistics 
+    // STATISTICS objects (where possible,
+    // the convention of RpcCall+Statistics
+    // or Pub/Sub name + _statistics
     // for naming is followed)
     // These instances need to be initialized elsewhere than where they are declared (ie not here)
     // TODO: complete all instances
     ros_bridge::Statistics setCarControlsStatistics;
+    ros_bridge::Statistics getGpsDataStatistics;
     ros_bridge::Statistics control_cmd_sub_statistics;
     ros_bridge::Statistics global_gps_pub_statistics;
     ros_bridge::Statistics odom_local_ned_pub_statistics;
@@ -107,65 +107,63 @@ private:
 
     // Print all statistics
     void PrintStatistics();
-    
+
     // Reset statistics
     void ResetStatistics();
 
-
     /// ROS timer callbacks
-    void img_response_timer_cb(const ros::TimerEvent& event); // update images from airsim_client_ every nth sec
-    void car_state_timer_cb(const ros::TimerEvent& event); // update drone state from airsim_client_ every nth sec
+    void img_response_timer_cb(const ros::TimerEvent &event); // update images from airsim_client_ every nth sec
+    void car_state_timer_cb(const ros::TimerEvent &event);    // update drone state from airsim_client_ every nth sec
     void car_control_cb(const fsds_ros_bridge::ControlCommand::ConstPtr &msg, const std::string &vehicle_name);
-    void lidar_timer_cb(const ros::TimerEvent& event);
-    void statistics_timer_cb(const ros::TimerEvent& event);
+    void lidar_timer_cb(const ros::TimerEvent &event);
+    void statistics_timer_cb(const ros::TimerEvent &event);
 
     /// ROS subscriber callbacks
-   
+
     ros::Time make_ts(uint64_t unreal_ts);
     // void set_zero_vel_cmd();
 
     /// ROS service callbacks
-    bool reset_srv_cb(fsds_ros_bridge::Reset::Request& request, fsds_ros_bridge::Reset::Response& response);
+    bool reset_srv_cb(fsds_ros_bridge::Reset::Request &request, fsds_ros_bridge::Reset::Response &response);
 
     /// ROS tf broadcasters
-    void publish_camera_tf(const ImageResponse& img_response, const ros::Time& ros_time, const std::string& frame_id, const std::string& child_frame_id);
-    void publish_odom_tf(const nav_msgs::Odometry& odom_ned_msg);
+    void publish_camera_tf(const ImageResponse &img_response, const ros::Time &ros_time, const std::string &frame_id, const std::string &child_frame_id);
+    void publish_odom_tf(const nav_msgs::Odometry &odom_ned_msg);
 
     /// camera helper methods
-    sensor_msgs::CameraInfo generate_cam_info(const std::string& camera_name, const CameraSetting& camera_setting, const CaptureSetting& capture_setting) const;
-    cv::Mat manual_decode_depth(const ImageResponse& img_response) const;
+    sensor_msgs::CameraInfo generate_cam_info(const std::string &camera_name, const CameraSetting &camera_setting, const CaptureSetting &capture_setting) const;
+    cv::Mat manual_decode_depth(const ImageResponse &img_response) const;
 
-    sensor_msgs::ImagePtr get_img_msg_from_response(const ImageResponse& img_response, const ros::Time curr_ros_time, const std::string frame_id);
-    sensor_msgs::ImagePtr get_depth_img_msg_from_response(const ImageResponse& img_response, const ros::Time curr_ros_time, const std::string frame_id);
-    
-    void process_and_publish_img_response(const std::vector<ImageResponse>& img_response_vec, const int img_response_idx, const std::string& vehicle_name);
+    sensor_msgs::ImagePtr get_img_msg_from_response(const ImageResponse &img_response, const ros::Time curr_ros_time, const std::string frame_id);
+    sensor_msgs::ImagePtr get_depth_img_msg_from_response(const ImageResponse &img_response, const ros::Time curr_ros_time, const std::string frame_id);
+
+    void process_and_publish_img_response(const std::vector<ImageResponse> &img_response_vec, const int img_response_idx, const std::string &vehicle_name);
 
     // methods which parse setting json ang generate ros pubsubsrv
     void create_ros_pubs_from_settings_json();
-    void append_static_camera_tf(const std::string& vehicle_name, const std::string& camera_name, const CameraSetting& camera_setting);
-    void append_static_lidar_tf(const std::string& vehicle_name, const std::string& lidar_name, const LidarSetting& lidar_setting);
-    void append_static_vehicle_tf(const std::string& vehicle_name, const VehicleSetting& vehicle_setting);
-    void set_nans_to_zeros_in_pose(VehicleSetting& vehicle_setting) const;
-    void set_nans_to_zeros_in_pose(const VehicleSetting& vehicle_setting, CameraSetting& camera_setting) const;
-    void set_nans_to_zeros_in_pose(const VehicleSetting& vehicle_setting, LidarSetting& lidar_setting) const;
+    void append_static_camera_tf(const std::string &vehicle_name, const std::string &camera_name, const CameraSetting &camera_setting);
+    void append_static_lidar_tf(const std::string &vehicle_name, const std::string &lidar_name, const LidarSetting &lidar_setting);
+    void append_static_vehicle_tf(const std::string &vehicle_name, const VehicleSetting &vehicle_setting);
+    void set_nans_to_zeros_in_pose(VehicleSetting &vehicle_setting) const;
+    void set_nans_to_zeros_in_pose(const VehicleSetting &vehicle_setting, CameraSetting &camera_setting) const;
+    void set_nans_to_zeros_in_pose(const VehicleSetting &vehicle_setting, LidarSetting &lidar_setting) const;
 
     /// utils. todo parse into an Airlib<->ROS conversion class
-    tf2::Quaternion get_tf2_quat(const msr::airlib::Quaternionr& airlib_quat) const;
-    msr::airlib::Quaternionr get_airlib_quat(const geometry_msgs::Quaternion& geometry_msgs_quat) const;
-    msr::airlib::Quaternionr get_airlib_quat(const tf2::Quaternion& tf2_quat) const;
+    tf2::Quaternion get_tf2_quat(const msr::airlib::Quaternionr &airlib_quat) const;
+    msr::airlib::Quaternionr get_airlib_quat(const geometry_msgs::Quaternion &geometry_msgs_quat) const;
+    msr::airlib::Quaternionr get_airlib_quat(const tf2::Quaternion &tf2_quat) const;
 
-    nav_msgs::Odometry get_odom_msg_from_airsim_state(const msr::airlib::CarApiBase::CarState& car_state) const;
-    fsds_ros_bridge::GPSYaw get_gps_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
-    sensor_msgs::NavSatFix get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
-    sensor_msgs::Imu get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data);
-    sensor_msgs::PointCloud2 get_lidar_msg_from_airsim(const msr::airlib::LidarData& lidar_data) const;
+    nav_msgs::Odometry get_odom_msg_from_airsim_state(const msr::airlib::CarApiBase::CarState &car_state) const;
+    fsds_ros_bridge::GPSYaw get_gps_msg_from_airsim_geo_point(const msr::airlib::GeoPoint &geo_point) const;
+    sensor_msgs::NavSatFix get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint &geo_point) const;
+    sensor_msgs::Imu get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output &imu_data);
+    sensor_msgs::PointCloud2 get_lidar_msg_from_airsim(const msr::airlib::LidarData &lidar_data) const;
 
     // not used anymore, but can be useful in future with an unreal camera calibration environment
-    void read_params_from_yaml_and_fill_cam_info_msg(const std::string& file_name, sensor_msgs::CameraInfo& cam_info) const;
-    void convert_yaml_to_simple_mat(const YAML::Node& node, SimpleMatrix& m) const; // todo ugly
+    void read_params_from_yaml_and_fill_cam_info_msg(const std::string &file_name, sensor_msgs::CameraInfo &cam_info) const;
+    void convert_yaml_to_simple_mat(const YAML::Node &node, SimpleMatrix &m) const; // todo ugly
 
 private:
-
     // utility struct for a SINGLE robot
     struct FSCarROS
     {
@@ -183,12 +181,11 @@ private:
         sensor_msgs::NavSatFix gps_sensor_msg;
 
         std::string odom_frame_id;
-        
     };
 
     ros::ServiceServer reset_srvr_;
-    ros::Publisher origin_geo_point_pub_; // home geo coord of drones
-    msr::airlib::GeoPoint origin_geo_point_;// gps coord of unreal origin 
+    ros::Publisher origin_geo_point_pub_;          // home geo coord of drones
+    msr::airlib::GeoPoint origin_geo_point_;       // gps coord of unreal origin
     fsds_ros_bridge::GPSYaw origin_geo_point_msg_; // todo duplicate
 
     std::vector<FSCarROS> fscar_ros_vec_;
@@ -219,7 +216,6 @@ private:
     std::recursive_mutex car_control_mutex_;
     // std::recursive_mutex img_mutex_;
     // std::recursive_mutex lidar_mutex_;
- 
 
     /// ROS tf
     std::string world_frame_id_;
@@ -235,7 +231,7 @@ private:
 
     typedef std::pair<std::vector<ImageRequest>, std::string> airsim_img_request_vehicle_name_pair;
     std::vector<airsim_img_request_vehicle_name_pair> airsim_img_request_vehicle_name_pair_vec_;
-    std::vector<image_transport::Publisher> image_pub_vec_; 
+    std::vector<image_transport::Publisher> image_pub_vec_;
     std::vector<ros::Publisher> cam_info_pub_vec_;
     std::vector<ros::Publisher> lidar_pub_vec_;
     std::vector<ros::Publisher> imu_pub_vec_;
@@ -248,13 +244,12 @@ private:
     ros::Subscriber gimbal_angle_quat_cmd_sub_;
     ros::Subscriber gimbal_angle_euler_cmd_sub_;
 
-    static constexpr char CAM_YML_NAME[]    = "camera_name";
-    static constexpr char WIDTH_YML_NAME[]  = "image_width";
+    static constexpr char CAM_YML_NAME[] = "camera_name";
+    static constexpr char WIDTH_YML_NAME[] = "image_width";
     static constexpr char HEIGHT_YML_NAME[] = "image_height";
-    static constexpr char K_YML_NAME[]      = "camera_matrix";
-    static constexpr char D_YML_NAME[]      = "distortion_coefficients";
-    static constexpr char R_YML_NAME[]      = "rectification_matrix";
-    static constexpr char P_YML_NAME[]      = "projection_matrix";
+    static constexpr char K_YML_NAME[] = "camera_matrix";
+    static constexpr char D_YML_NAME[] = "distortion_coefficients";
+    static constexpr char R_YML_NAME[] = "rectification_matrix";
+    static constexpr char P_YML_NAME[] = "projection_matrix";
     static constexpr char DMODEL_YML_NAME[] = "distortion_model";
-
 };

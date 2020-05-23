@@ -73,6 +73,7 @@ void AirsimROSWrapper::initialize_statistics()
 {
     // TODO: complete initialization for all instances
     setCarControlsStatistics = ros_bridge::Statistics("setCarControls");
+    getGpsDataStatistics = ros_bridge::Statistics("getGpsData");
     control_cmd_sub_statistics = ros_bridge::Statistics("control_cmd_sub");
     global_gps_pub_statistics = ros_bridge::Statistics("global_gps_pub");
     odom_local_ned_pub_statistics = ros_bridge::Statistics("odom_local_ned_pub");
@@ -454,7 +455,7 @@ void AirsimROSWrapper::car_control_cb(const fsds_ros_bridge::ControlCommand::Con
 
     // TODO: time this!
     {
-        // ros_bridge::Timer timer(setCarControlsStatistics);
+        ros_bridge::Timer timer(&setCarControlsStatistics);
         std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
         airsim_client_.setCarControls(controls, vehicle_name);
         lck.unlock();
@@ -487,15 +488,18 @@ void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent &event)
 
             ros::Time curr_ros_time = ros::Time::now();
 
-            // convert airsim car state to ROS msgs
+            // convert airsim car state to ROS msgs 
             fscar_ros.curr_odom_ned = get_odom_msg_from_airsim_state(fscar_ros.curr_car_state);
             fscar_ros.curr_odom_ned.header.frame_id = fscar_ros.vehicle_name;
             fscar_ros.curr_odom_ned.child_frame_id = fscar_ros.odom_frame_id;
             fscar_ros.curr_odom_ned.header.stamp = curr_ros_time;
 
             // TODO: use statistics to time this
-            msr::airlib::GeoPoint gps_location = airsim_client_.getGpsData("Gps", fscar_ros.vehicle_name).gnss.geo_point;
-            fscar_ros.gps_sensor_msg = get_gps_sensor_msg_from_airsim_geo_point(gps_location);
+            {
+                ros_bridge::Timer timer(&getGpsDataStatistics);
+                msr::airlib::GeoPoint gps_location = airsim_client_.getGpsData("Gps", fscar_ros.vehicle_name).gnss.geo_point;
+                fscar_ros.gps_sensor_msg = get_gps_sensor_msg_from_airsim_geo_point(gps_location);
+            }
             fscar_ros.gps_sensor_msg.header.stamp = curr_ros_time;
 
             // publish to ROS and keep track of incoming messages!
@@ -954,25 +958,26 @@ void AirsimROSWrapper::PrintStatistics()
 {
     // std::cout << "[Print] Statistics for object " << &global_gps_pub_statistics << "\n";
 
-    // setCarControlsStatistics.Print();
+    setCarControlsStatistics.Print();
+    getGpsDataStatistics.Print();
     control_cmd_sub_statistics.Print();
     global_gps_pub_statistics.Print();
     odom_local_ned_pub_statistics.Print();
 
     // Print camera statistics
-    for (auto cam_info_pub_statistics : cam_info_pub_vec_statistics)
+    for (auto &cam_info_pub_statistics : cam_info_pub_vec_statistics)
     {
         cam_info_pub_statistics.Print();
     }
 
     // Print lidar statistics
-    for (auto lidar_pub_statistics : lidar_pub_vec_statistics)
+    for (auto &lidar_pub_statistics : lidar_pub_vec_statistics)
     {
         lidar_pub_statistics.Print();
     }
 
     // Print IMU statistics
-    for (auto imu_pub_statistics : imu_pub_vec_statistics)
+    for (auto &imu_pub_statistics : imu_pub_vec_statistics)
     {
         imu_pub_statistics.Print();
     }
@@ -980,7 +985,8 @@ void AirsimROSWrapper::PrintStatistics()
 
 void AirsimROSWrapper::ResetStatistics()
 {
-    // setCarControlsStatistics.Reset();
+    setCarControlsStatistics.Reset();
+    getGpsDataStatistics.Reset();
     control_cmd_sub_statistics.Reset();
     global_gps_pub_statistics.Reset();
     odom_local_ned_pub_statistics.Reset();
@@ -1004,7 +1010,7 @@ void AirsimROSWrapper::ResetStatistics()
     }
 }
 
-// This callback is executed every 1 second 
+// This callback is executed every 1 second
 void AirsimROSWrapper::statistics_timer_cb(const ros::TimerEvent &event)
 {
     // The lines below are technically correct but for some reason they introduce a lot of noise in the data, which is exactly what they are not supposed to do

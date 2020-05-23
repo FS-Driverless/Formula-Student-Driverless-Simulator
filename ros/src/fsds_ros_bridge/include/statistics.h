@@ -30,14 +30,15 @@ namespace ros_bridge
             if (!_durationHistory.empty())
             {
                 float max_latency = *std::max_element(_durationHistory.begin(), _durationHistory.end());
-                std::cout << "Max latency Rpc call: " << max_latency << "\n";
+                std::cout << "Max latency Rpc call: " << max_latency << "us\n";
             }
             std::cout << "-----------------------------------------------------\n";
         }
 
         void addDurationRecording(const Duration &duration)
         {
-            _durationHistory.emplace_back(duration.count());
+            std::cout << "[Statistics] adding recording: " << duration.count() << "\n";
+            _durationHistory.emplace_back(std::chrono::duration_cast<std::chrono::microseconds>(duration).count());
         }
 
         void addCount()
