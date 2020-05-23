@@ -444,7 +444,7 @@ sensor_msgs::NavSatFix AirsimROSWrapper::get_gps_sensor_msg_from_airsim_geo_poin
 
 void AirsimROSWrapper::car_control_cb(const fsds_ros_bridge::ControlCommand::ConstPtr &msg, const std::string &vehicle_name)
 {
-    // ros_bridge::ROSMsgCounter counter(control_cmd_sub_statistics);
+    ros_bridge::ROSMsgCounter counter(&control_cmd_sub_statistics);
 
     CarApiBase::CarControls controls;
     controls.throttle = msg->throttle;
@@ -500,14 +500,14 @@ void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent &event)
 
             // publish to ROS and keep track of incoming messages!
             {
-                // ros_bridge::ROSMsgCounter counter(odom_local_ned_pub_statistics);
+                ros_bridge::ROSMsgCounter counter(&odom_local_ned_pub_statistics);
                 fscar_ros.odom_local_ned_pub.publish(fscar_ros.curr_odom_ned);
             }
             publish_odom_tf(fscar_ros.curr_odom_ned);
 
             // TODO: add counter
             {
-                ros_bridge::ROSMsgCounter counter(global_gps_pub_statistics);
+                ros_bridge::ROSMsgCounter counter(&global_gps_pub_statistics);
                 fscar_ros.global_gps_pub.publish(fscar_ros.gps_sensor_msg);
             }
         }
@@ -838,7 +838,7 @@ void AirsimROSWrapper::process_and_publish_img_response(const std::vector<ImageR
         camera_info_msg_vec_[img_response_idx_internal].header.stamp = curr_ros_time;
         // TODO: add counter
         {
-            ros_bridge::ROSMsgCounter counter(cam_info_pub_vec_statistics[img_response_idx_internal]);
+            ros_bridge::ROSMsgCounter counter(&cam_info_pub_vec_statistics[img_response_idx_internal]);
             cam_info_pub_vec_[img_response_idx_internal].publish(camera_info_msg_vec_[img_response_idx_internal]);
         }
 
@@ -952,10 +952,12 @@ void AirsimROSWrapper::read_params_from_yaml_and_fill_cam_info_msg(const std::st
 // functions with templates or something similar
 void AirsimROSWrapper::PrintStatistics()
 {
+    // std::cout << "[Print] Statistics for object " << &global_gps_pub_statistics << "\n";
+
     // setCarControlsStatistics.Print();
-    // control_cmd_sub_statistics.Print();
+    control_cmd_sub_statistics.Print();
     global_gps_pub_statistics.Print();
-    // odom_local_ned_pub_statistics.Print();
+    odom_local_ned_pub_statistics.Print();
 
     // Print camera statistics
     for (auto cam_info_pub_statistics : cam_info_pub_vec_statistics)
@@ -963,45 +965,51 @@ void AirsimROSWrapper::PrintStatistics()
         cam_info_pub_statistics.Print();
     }
 
-    // // Print lidar statistics
-    // for (auto lidar_pub_statistics : lidar_pub_vec_statistics) {
-    //     lidar_pub_statistics.Print();
-    // }
+    // Print lidar statistics
+    for (auto lidar_pub_statistics : lidar_pub_vec_statistics)
+    {
+        lidar_pub_statistics.Print();
+    }
 
-    // // Print IMU statistics
-    // for (auto imu_pub_statistics : imu_pub_vec_statistics) {
-    //     imu_pub_statistics.Print();
-    // }
+    // Print IMU statistics
+    for (auto imu_pub_statistics : imu_pub_vec_statistics)
+    {
+        imu_pub_statistics.Print();
+    }
 }
 
 void AirsimROSWrapper::ResetStatistics()
 {
     // setCarControlsStatistics.Reset();
-    // control_cmd_sub_statistics.Reset();
+    control_cmd_sub_statistics.Reset();
     global_gps_pub_statistics.Reset();
-    // odom_local_ned_pub_statistics.Reset();
+    odom_local_ned_pub_statistics.Reset();
 
     // Reset camera statistics
-    for (auto cam_info_pub_statistics : cam_info_pub_vec_statistics)
+    for (auto &cam_info_pub_statistics : cam_info_pub_vec_statistics)
     {
         cam_info_pub_statistics.Reset();
     }
 
-    // // Reset lidar statistics
-    // for (auto lidar_pub_statistics : lidar_pub_vec_statistics) {
-    //     lidar_pub_statistics.Reset();
-    // }
+    // Reset lidar statistics
+    for (auto &lidar_pub_statistics : lidar_pub_vec_statistics)
+    {
+        lidar_pub_statistics.Reset();
+    }
 
-    // // Reset IMU statistics
-    // for (auto imu_pub_statistics : imu_pub_vec_statistics) {
-    //     imu_pub_statistics.Reset();
-    // }
+    // Reset IMU statistics
+    for (auto &imu_pub_statistics : imu_pub_vec_statistics)
+    {
+        imu_pub_statistics.Reset();
+    }
 }
 
-// This callback is executed every 1 second // TODO: keep track of the time elapsed between timer events
+// This callback is executed every 1 second 
 void AirsimROSWrapper::statistics_timer_cb(const ros::TimerEvent &event)
 {
-    // TODO: set Statistics member variable
+    // The lines below are technically correct but for some reason they introduce a lot of noise in the data, which is exactly what they are not supposed to do
+    // long double time_elapsed = event.current_real.nsec - event.last_real.nsec; // nanoseconds for accuracy
+    // ros_bridge::Statistics::SetTimeElapsed((double)(time_elapsed*std::pow(10, -9))); // convert back to seconds
     PrintStatistics();
     ResetStatistics();
 }
