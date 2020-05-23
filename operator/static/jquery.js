@@ -11,7 +11,7 @@ $(document).ready(function() {
                 res.response.forEach(log => {
                     if (!logs.includes(log)) {
                         logs.push(log);
-                        $('.log-window').append(`<p>${res.response}</p>`);
+                        $('.log-window').append(`<p>${log}</p>`);
                     }
                 });
             }
