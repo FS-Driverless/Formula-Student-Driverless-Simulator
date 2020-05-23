@@ -89,6 +89,7 @@ namespace ros_bridge
 
         ~ROSMsgCounter()
         {
+            std::cout << "Incrementing count! \n";
             // Increment message count
             _statistics.addCount();
         }
