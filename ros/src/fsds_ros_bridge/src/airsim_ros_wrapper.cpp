@@ -71,9 +71,12 @@ void AirsimROSWrapper::initialize_airsim()
 
 void AirsimROSWrapper::initialize_statistics()
 {
-    // TODO: complete initialization for all instances
     setCarControlsStatistics = ros_bridge::Statistics("setCarControls");
     getGpsDataStatistics = ros_bridge::Statistics("getGpsData");
+    getCarStateStatistics = ros_bridge::Statistics("getCarState");
+    getImuDataStatistics = ros_bridge::Statistics("getImuData");
+    simGetImagesStatistics = ros_bridge::Statistics("simGetImages");
+    getLidarDataStatistics = ros_bridge::Statistics("getLidarData");
     control_cmd_sub_statistics = ros_bridge::Statistics("control_cmd_sub");
     global_gps_pub_statistics = ros_bridge::Statistics("global_gps_pub");
     odom_local_ned_pub_statistics = ros_bridge::Statistics("odom_local_ned_pub");
@@ -488,7 +491,7 @@ void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent &event)
 
             ros::Time curr_ros_time = ros::Time::now();
 
-            // convert airsim car state to ROS msgs 
+            // convert airsim car state to ROS msgs
             fscar_ros.curr_odom_ned = get_odom_msg_from_airsim_state(fscar_ros.curr_car_state);
             fscar_ros.curr_odom_ned.header.frame_id = fscar_ros.vehicle_name;
             fscar_ros.curr_odom_ned.child_frame_id = fscar_ros.odom_frame_id;
@@ -734,14 +737,21 @@ void AirsimROSWrapper::lidar_timer_cb(const ros::TimerEvent &event)
             for (const auto &vehicle_lidar_pair : vehicle_lidar_map_)
             {
                 // TODO: use statistics to time this
-                std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
-                auto lidar_data = airsim_client_lidar_.getLidarData(vehicle_lidar_pair.second, vehicle_lidar_pair.first); // airsim api is imu_name, vehicle_name
-                lck.unlock();
-                sensor_msgs::PointCloud2 lidar_msg = get_lidar_msg_from_airsim(lidar_data); // todo make const ptr msg to avoid copy
-                lidar_msg.header.frame_id = vehicle_lidar_pair.second;                      // sensor frame name. todo add to doc
-                lidar_msg.header.stamp = ros::Time::now();
-                // TODO: add counter
-                lidar_pub_vec_[ctr].publish(lidar_msg);
+                sensor_msgs::PointCloud2 lidar_msg;
+                {
+                    ros_bridge::Timer timer(&getLidarDataStatistics);
+                    std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
+                    auto lidar_data = airsim_client_lidar_.getLidarData(vehicle_lidar_pair.second, vehicle_lidar_pair.first); // airsim api is imu_name, vehicle_name
+                    lck.unlock();
+                    lidar_msg = get_lidar_msg_from_airsim(lidar_data); // todo make const ptr msg to avoid copy
+                    lidar_msg.header.frame_id = vehicle_lidar_pair.second;                      // sensor frame name. todo add to doc
+                    lidar_msg.header.stamp = ros::Time::now();
+                }
+
+                {
+                    ros_bridge::ROSMsgCounter counter(&lidar_pub_vec_statistics);
+                    lidar_pub_vec_[ctr].publish(lidar_msg);
+                }
                 ctr++;
             }
         }
@@ -840,7 +850,6 @@ void AirsimROSWrapper::process_and_publish_img_response(const std::vector<ImageR
 
         // update timestamp of saved cam info msgs
         camera_info_msg_vec_[img_response_idx_internal].header.stamp = curr_ros_time;
-        // TODO: add counter
         {
             ros_bridge::ROSMsgCounter counter(&cam_info_pub_vec_statistics[img_response_idx_internal]);
             cam_info_pub_vec_[img_response_idx_internal].publish(camera_info_msg_vec_[img_response_idx_internal]);
@@ -960,6 +969,10 @@ void AirsimROSWrapper::PrintStatistics()
 
     setCarControlsStatistics.Print();
     getGpsDataStatistics.Print();
+    getCarStateStatistics.Print();
+    getImuDataStatistics.Print();
+    simGetImagesStatistics.Print();
+    getLidarDataStatistics.Print();
     control_cmd_sub_statistics.Print();
     global_gps_pub_statistics.Print();
     odom_local_ned_pub_statistics.Print();
@@ -987,6 +1000,10 @@ void AirsimROSWrapper::ResetStatistics()
 {
     setCarControlsStatistics.Reset();
     getGpsDataStatistics.Reset();
+    getCarStateStatistics.Reset();
+    getImuDataStatistics.Reset();
+    simGetImagesStatistics.Reset();
+    getLidarDataStatistics.Reset();
     control_cmd_sub_statistics.Reset();
     global_gps_pub_statistics.Reset();
     odom_local_ned_pub_statistics.Reset();
