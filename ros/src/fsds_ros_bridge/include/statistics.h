@@ -1,6 +1,7 @@
 #include <chrono>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 namespace ros_bridge
 {
@@ -8,9 +9,9 @@ namespace ros_bridge
     typedef std::chrono::duration<float> Duration;
     class Statistics
     {
-    /* See statistics.md in the docs/ folder for more information about 
+        /* See statistics.md in the docs/ folder for more information about 
     this class and how it is used */
-    
+
     public:
         // Having the default constructor is necessary for the workspace to build!
         Statistics(){};
@@ -19,15 +20,23 @@ namespace ros_bridge
         void Print()
         {
             // print statistics summary to the console
-            std::cout << "-----------------------------------------------------"
+            std::cout << "-----------------------------------------------------\n";
             std::cout << "Printing statistics for: " << _statisticsType << "\n";
-
-            std::cout << "-----------------------------------------------------"
+            if (_rosMsgCount != 0)
+            {
+                std::cout << "ROS msgs/s: " << _rosMsgCount << "\n";
+            }
+            if (!_durationHistory.empty())
+            {
+                float max_latency = *std::max_element(_durationHistory.begin(), _durationHistory.end());
+                std::cout << "Max latency Rpc call: " << max_latency << "\n";
+            }
+            std::cout << "-----------------------------------------------------\n";
         }
 
         void addDurationRecording(const Duration &duration)
         {
-            _durationHistory.emplace_back(duration);
+            _durationHistory.emplace_back(duration.count());
         }
 
         void addCount()
@@ -49,7 +58,7 @@ namespace ros_bridge
     private:
         std::string _statisticsType;
         uint _rosMsgCount;
-        std::vector<Duration> _durationHistory{};
+        std::vector<float> _durationHistory{};
     };
 
     class Timer
