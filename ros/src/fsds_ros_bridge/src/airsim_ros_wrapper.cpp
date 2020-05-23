@@ -992,8 +992,9 @@ void AirsimROSWrapper::ResetStatistics() {
     }
 }
 
-// This callback is executed every 1 second
+// This callback is executed every 1 second // TODO: keep track of the time elapsed between timer events 
 void AirsimROSWrapper::statistics_timer_cb(const ros::TimerEvent &event) {
+    // TODO: set Statistics member variable 
     PrintStatistics();
     ResetStatistics();
 }
