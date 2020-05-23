@@ -69,14 +69,14 @@ void AirsimROSWrapper::initialize_airsim()
     }
 }
 
-void AirsimROSWrapper::initialize_statistics() {
+void AirsimROSWrapper::initialize_statistics()
+{
     // TODO: complete initialization for all instances
     setCarControlsStatistics = ros_bridge::Statistics("setCarControls");
     control_cmd_sub_statistics = ros_bridge::Statistics("control_cmd_sub");
     global_gps_pub_statistics = ros_bridge::Statistics("global_gps_pub");
     odom_local_ned_pub_statistics = ros_bridge::Statistics("odom_local_ned_pub");
 }
-
 
 void AirsimROSWrapper::initialize_ros()
 {
@@ -444,7 +444,7 @@ sensor_msgs::NavSatFix AirsimROSWrapper::get_gps_sensor_msg_from_airsim_geo_poin
 
 void AirsimROSWrapper::car_control_cb(const fsds_ros_bridge::ControlCommand::ConstPtr &msg, const std::string &vehicle_name)
 {
-    ros_bridge::ROSMsgCounter counter(control_cmd_sub_statistics);
+    // ros_bridge::ROSMsgCounter counter(control_cmd_sub_statistics);
 
     CarApiBase::CarControls controls;
     controls.throttle = msg->throttle;
@@ -454,7 +454,7 @@ void AirsimROSWrapper::car_control_cb(const fsds_ros_bridge::ControlCommand::Con
 
     // TODO: time this!
     {
-        ros_bridge::Timer timer(setCarControlsStatistics);
+        // ros_bridge::Timer timer(setCarControlsStatistics);
         std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
         airsim_client_.setCarControls(controls, vehicle_name);
         lck.unlock();
@@ -500,13 +500,16 @@ void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent &event)
 
             // publish to ROS and keep track of incoming messages!
             {
-                ros_bridge::ROSMsgCounter counter(odom_local_ned_pub_statistics);
+                // ros_bridge::ROSMsgCounter counter(odom_local_ned_pub_statistics);
                 fscar_ros.odom_local_ned_pub.publish(fscar_ros.curr_odom_ned);
             }
             publish_odom_tf(fscar_ros.curr_odom_ned);
 
             // TODO: add counter
-            fscar_ros.global_gps_pub.publish(fscar_ros.gps_sensor_msg);
+            {
+                ros_bridge::ROSMsgCounter counter(global_gps_pub_statistics);
+                fscar_ros.global_gps_pub.publish(fscar_ros.gps_sensor_msg);
+            }
         }
 
         // IMUS
@@ -941,60 +944,64 @@ void AirsimROSWrapper::read_params_from_yaml_and_fill_cam_info_msg(const std::st
     }
 }
 
-
 /* 
     STATISTICS
  */
 
-// TODO: it would be nice to avoid code duplication between Print and Reset 
+// TODO: it would be nice to avoid code duplication between Print and Reset
 // functions with templates or something similar
-void AirsimROSWrapper::PrintStatistics() {
-    setCarControlsStatistics.Print();
-    control_cmd_sub_statistics.Print();
+void AirsimROSWrapper::PrintStatistics()
+{
+    // setCarControlsStatistics.Print();
+    // control_cmd_sub_statistics.Print();
     global_gps_pub_statistics.Print();
-    odom_local_ned_pub_statistics.Print();
+    // odom_local_ned_pub_statistics.Print();
 
     // Print camera statistics
-    for (auto cam_info_pub_statistics : cam_info_pub_vec_statistics) {
+    for (auto cam_info_pub_statistics : cam_info_pub_vec_statistics)
+    {
         cam_info_pub_statistics.Print();
     }
 
-    // Print lidar statistics
-    for (auto lidar_pub_statistics : lidar_pub_vec_statistics) {
-        lidar_pub_statistics.Print();
-    }
+    // // Print lidar statistics
+    // for (auto lidar_pub_statistics : lidar_pub_vec_statistics) {
+    //     lidar_pub_statistics.Print();
+    // }
 
-    // Print IMU statistics
-    for (auto imu_pub_statistics : imu_pub_vec_statistics) {
-        imu_pub_statistics.Print();
-    }
+    // // Print IMU statistics
+    // for (auto imu_pub_statistics : imu_pub_vec_statistics) {
+    //     imu_pub_statistics.Print();
+    // }
 }
 
-void AirsimROSWrapper::ResetStatistics() {
-    setCarControlsStatistics.Reset();
-    control_cmd_sub_statistics.Reset();
+void AirsimROSWrapper::ResetStatistics()
+{
+    // setCarControlsStatistics.Reset();
+    // control_cmd_sub_statistics.Reset();
     global_gps_pub_statistics.Reset();
-    odom_local_ned_pub_statistics.Reset();
+    // odom_local_ned_pub_statistics.Reset();
 
     // Reset camera statistics
-    for (auto cam_info_pub_statistics : cam_info_pub_vec_statistics) {
+    for (auto cam_info_pub_statistics : cam_info_pub_vec_statistics)
+    {
         cam_info_pub_statistics.Reset();
     }
 
-    // Reset lidar statistics
-    for (auto lidar_pub_statistics : lidar_pub_vec_statistics) {
-        lidar_pub_statistics.Reset();
-    }
+    // // Reset lidar statistics
+    // for (auto lidar_pub_statistics : lidar_pub_vec_statistics) {
+    //     lidar_pub_statistics.Reset();
+    // }
 
-    // Reset IMU statistics
-    for (auto imu_pub_statistics : imu_pub_vec_statistics) {
-        imu_pub_statistics.Reset();
-    }
+    // // Reset IMU statistics
+    // for (auto imu_pub_statistics : imu_pub_vec_statistics) {
+    //     imu_pub_statistics.Reset();
+    // }
 }
 
-// This callback is executed every 1 second // TODO: keep track of the time elapsed between timer events 
-void AirsimROSWrapper::statistics_timer_cb(const ros::TimerEvent &event) {
-    // TODO: set Statistics member variable 
+// This callback is executed every 1 second // TODO: keep track of the time elapsed between timer events
+void AirsimROSWrapper::statistics_timer_cb(const ros::TimerEvent &event)
+{
+    // TODO: set Statistics member variable
     PrintStatistics();
     ResetStatistics();
 }

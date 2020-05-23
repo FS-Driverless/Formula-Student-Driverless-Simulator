@@ -22,10 +22,10 @@ namespace ros_bridge
             // print statistics summary to the console
             std::cout << "-----------------------------------------------------\n";
             std::cout << "Printing statistics for: " << _statisticsType << "\n";
-            if (_rosMsgCount != 0)
-            {
+            // if (_rosMsgCount != 0)
+            // {
                 std::cout << "ROS msgs/s: " << _rosMsgCount << "\n";
-            }
+            // }
             if (!_durationHistory.empty())
             {
                 float max_latency = *std::max_element(_durationHistory.begin(), _durationHistory.end());
@@ -42,6 +42,7 @@ namespace ros_bridge
         void addCount()
         {
             ++_rosMsgCount;
+            std::cout << "Count incremented to: " << _rosMsgCount << "\n";
         }
 
         // There is probably a better way of resetting the vector which prevents
