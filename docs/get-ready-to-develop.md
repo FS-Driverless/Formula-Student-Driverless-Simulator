@@ -28,7 +28,14 @@ cd UnrealEngine
 ./Setup.sh && ./GenerateProjectFiles.sh && make
 ```
 
-Try to run it by executing `./Engine/Binaries/Linux/UE4Editor`. It should show the editor without errors.
+Now go into UnrealEngine directory and remove line 1171 from file `Engine/Source/Runtime/VulkanRHI/Private/VulkanTexture.cpp`. 
+It should be an assertion like this:
+```
+check(LockMode == RLM_WriteOnly);
+```
+We do not exactly know why this line is causing a crash of Unreal Engine but from our testing, removing it never caused any problems.
+
+Finally, run the unreal engine by executing `./Engine/Binaries/Linux/UE4Editor`. It should launch the editor without errors.
 
 ## Install ROS Melodic
 
