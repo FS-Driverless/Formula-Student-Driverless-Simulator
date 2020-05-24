@@ -41,8 +41,8 @@ $(document).ready(function() {
                 logs.push(res.response);
                 $('.log-window').append(`<p>${res.response}</p>`);
             },
-            error: err => {
-                alert(`Someting went wrong.`)
+            error: res => {
+                alert(res.responseJSON.error);
             }
         });
     });
@@ -55,8 +55,8 @@ $(document).ready(function() {
                 logs.push(res.response);
                 $('.log-window').append(`<p>${res.response}</p>`);
             },
-            error: (xhr, status, err) => {
-                alert(JSON.parse(xhr.responseText));
+            error: res => {
+                alert(res.responseJSON.error);
             }
         });     
     });
@@ -69,8 +69,8 @@ $(document).ready(function() {
                 logs.push(res.response);
                 $('.log-window').append(`<p>${res.response}</p>`);
             },
-            error: err => {
-                alert(`Someting went wrong.\n ${err}`)
+            error: res => {
+                alert(res.responseJSON.error);
             }
         });     
     });

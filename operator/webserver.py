@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from flask import Flask, request, abort, render_template
+from flask import Flask, request, abort, render_template, jsonify
 import subprocess, time, signal, sys, os, errno, json
 from datetime import datetime
 from threading import Timer
@@ -32,7 +32,7 @@ def index():
 def mission_start():
     # Abort if empty request
     if request.json is None or request.json['id'] is None or request.json['mission'] is None:
-        return abort(400)    
+        abort(400, description='Empty request.')    
 
     # Get team config
     teamId = request.json['id']
@@ -71,7 +71,7 @@ def mission_start():
 def mission_stop():
     # Abort if ROS bridge is not running
     if interfaceprocess is None:
-        return abort(400)
+        abort(400, description='No process running.')
 
     # Check if previous process is still running
     if interfaceprocess is not None and interfaceprocess.poll() is None:
@@ -108,17 +108,22 @@ def mission_stop():
 def mission_reset():
     # Reset simulator
     client.reset()
-
-    # Create log message and write to file
     log = '{}: {}'.format(str(datetime.now()), 'Car reset.')
-    logs.append(log)
-    log_file.write(log + '\n')
+
+    if interfaceprocess is not None:
+        # Create log message and write to file
+        logs.append(log)
+        log_file.write(log + '\n')
 
     return {'response': log}
 
 @app.route('/logs', methods=['GET'])
 def get_logs():
     return {'response': logs}
+
+@app.errorhandler(400)
+def bad_request(e):
+    return jsonify(error=str(e)), 400
 
 def referee_state_listener():
     Timer(2.0, referee_state_listener).start()
