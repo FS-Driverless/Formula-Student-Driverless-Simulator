@@ -16,4 +16,4 @@ To start the web server, run the following command in this folder:
 ```bash
 $ python webserver.py
 ```
-By default, the web interface run on `http://localhost:5000`.
+By default, the web interface runs on `http://localhost:5000`.
