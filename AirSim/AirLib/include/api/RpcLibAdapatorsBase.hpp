@@ -422,15 +422,16 @@ public:
             image_type = s.image_type;
         }
 
+
         msr::airlib::ImageCaptureBase::ImageResponse to() const
         {
             msr::airlib::ImageCaptureBase::ImageResponse d;
 
             d.pixels_as_float = pixels_as_float;
 
-            if (!pixels_as_float)
-                d.image_data_uint8->insert(d.image_data_uint8->begin(), image_data_uint8.front(), image_data_uint8.back());
-            else
+            if (!pixels_as_float) {
+                d.image_data_uint8 = std::make_unique<std::vector<uint8_t>>(image_data_uint8);
+            }else
                 d.image_data_float = image_data_float;
 
             d.camera_name = camera_name;

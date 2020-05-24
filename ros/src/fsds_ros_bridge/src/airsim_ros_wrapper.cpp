@@ -271,8 +271,8 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 
 ros::Time AirsimROSWrapper::make_ts(uint64_t unreal_ts) {
     if (first_imu_unreal_ts < 0) {
-        first_imu_unreal_ts = unreal_ts;
         first_imu_ros_ts = ros::Time::now();
+        first_imu_unreal_ts = unreal_ts;
     }
     return  first_imu_ros_ts + ros::Duration( (unreal_ts- first_imu_unreal_ts)/1e9);
 }

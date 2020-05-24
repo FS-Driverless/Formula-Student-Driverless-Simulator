@@ -125,11 +125,12 @@ RpcLibServerBase::RpcLibServerBase(ApiProvider* api_provider, const std::string&
     pimpl_->server.bind("simGetImages", [&](const std::vector<RpcLibAdapatorsBase::ImageRequest>& request_adapter, const std::string& vehicle_name) -> 
         vector<RpcLibAdapatorsBase::ImageResponse> {
             std::vector<ImageCaptureBase::ImageResponse> responses;
-	    for (auto& request : request_adapter)
+	    for (auto& request : request_adapter) {
 	      responses.push_back(ImageCaptureBase::ImageResponse());
+        }
 
-            getVehicleSimApi(vehicle_name)->getImages(RpcLibAdapatorsBase::ImageRequest::to(request_adapter), responses);
-            return RpcLibAdapatorsBase::ImageResponse::from(responses);
+        getVehicleSimApi(vehicle_name)->getImages(RpcLibAdapatorsBase::ImageRequest::to(request_adapter), responses);
+        return RpcLibAdapatorsBase::ImageResponse::from(responses);
     });
     pimpl_->server.bind("simGetImage", [&](const std::string& camera_name, ImageCaptureBase::ImageType type, const std::string& vehicle_name) -> vector<uint8_t> {
         ImageCaptureBase::ImageRequest request(camera_name, type);
