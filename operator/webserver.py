@@ -18,7 +18,7 @@ car_controls = airsim.CarControls()
 ref =  client.getRefereeState()
 
 doo_count = ref.doo_counter
-laps = ref.laps
+lap_times = ref.laps
 logs = []
 
 with open('../config/team_config.json', 'r') as file:
@@ -46,7 +46,10 @@ def mission_start():
 
     # Launch ROS bridge
     global interfaceprocess, log_file
-    interfaceprocess = subprocess.Popen(['roslaunch', 'fsds_ros_bridge', 'fsds_ros_bridge.launch', 'mission:={}'.format(mission)], env=procenv)   
+    interfaceprocess = subprocess.Popen(['roslaunch', 'fsds_ros_bridge', 'fsds_ros_bridge.launch', 'mission:={}'.format(mission)], env=procenv)  
+
+    # Start referee state listener
+    referee_state_listener() 
 
     # Create log message
     log = '{}: {}'.format(str(datetime.now()), 'Mission started.')
@@ -88,6 +91,9 @@ def mission_stop():
         global interfaceprocess
         interfaceprocess = None
 
+    # Stop referee state listener
+    timer.cancel()
+
     # Brake car
     car_controls.brake = 1
     client.setCarControls(car_controls)
@@ -126,22 +132,26 @@ def bad_request(e):
     return jsonify(error=str(e)), 400
 
 def referee_state_listener():
-    Timer(2.0, referee_state_listener).start()
+    global doo_count, lap_times, timer
+    print lap_times
+
+    timer = Timer(2.0, referee_state_listener)
+    timer.start()
     ref = client.getRefereeState()
-    global doo_count, laps
 
     if doo_count != ref.doo_counter:
         doo_count = ref.doo_counter
-        log = '{}: {}. {} {}'.format(str(datetime.now()), 'Cone hit', doo_count, 'DOO cone(s).')
+        log = '{}: {}. {} {}'.format(str(datetime.now()), 'Cone hit', str(doo_count), 'DOO cone(s).')
         logs.append(log)
         log_file.write(log + '\n')
 
-    if laps != ref.laps:
-        laps = ref.laps
-        log = '{}: {} {} {}'.format(str(datetime.now()), 'Lap completed. Completed', laps, 'lap(s).')
+    if len(lap_times) != len(ref.laps):
+        lap_times = ref.laps
+        lap_count = len(lap_times)
+        lap_time = lap_times[-1]
+        log = '{}: {}'.format(str(datetime.now()), 'Lap ' + str(lap_count) + ' completed. Lap time: ' + str(round(lap_time, 3)) + ' s.')
         logs.append(log) 
         log_file.write(log + '\n')
 
 if __name__ == '__main__':
-    referee_state_listener()
     app.run()
