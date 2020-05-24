@@ -14,16 +14,16 @@ We are gathering statistics about:
 - Rpc calls:
     - getGpsData
     - getCarState
-    - getImuData
-    - simGetImages
-    - getLidarData
+    - getImuData (vector)
+    - simGetImages (vector)
+    - getLidarData (vector)
     - setCarControls
 - ROS publishing frequency of the following publishers:
     - odom_local_ned_pub
     - global_gps_pub
-    - cam_info_pub_vec_
-    - lidar_pub_vec_
-    - imu_pub_vec_
+    - cam_pub_vec_ (vector)
+    - lidar_pub_vec_ (vector)
+    - imu_pub_vec_ (vector)
 - ROS callback frequency of the following subscriber(s):
     - control_cmd_sub
 

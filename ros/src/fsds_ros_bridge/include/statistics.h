@@ -37,7 +37,7 @@ namespace ros_bridge
 
         void addDurationRecording(const Duration &duration)
         {
-            std::cout << "[Statistics] adding recording: " << duration.count() << "\n";
+            // std::cout << "[Statistics] adding recording: " << duration.count() << "\n";
             _durationHistory.emplace_back(std::chrono::duration_cast<std::chrono::microseconds>(duration).count());
         }
 

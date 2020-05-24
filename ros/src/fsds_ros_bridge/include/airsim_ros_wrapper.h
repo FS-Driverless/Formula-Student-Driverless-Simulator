@@ -98,18 +98,19 @@ private:
     ros_bridge::Statistics setCarControlsStatistics;
     ros_bridge::Statistics getGpsDataStatistics;
     ros_bridge::Statistics getCarStateStatistics;
-    ros_bridge::Statistics getImuDataStatistics;
-    ros_bridge::Statistics simGetImagesStatistics;
-    ros_bridge::Statistics getLidarDataStatistics;
+    std::vector<ros_bridge::Statistics> getImuDataVecStatistics;
+    std::vector<ros_bridge::Statistics> simGetImagesVecStatistics;
+    std::vector<ros_bridge::Statistics> getLidarDataVecStatistics;
     ros_bridge::Statistics control_cmd_sub_statistics;
     ros_bridge::Statistics global_gps_pub_statistics;
     ros_bridge::Statistics odom_local_ned_pub_statistics;
-    std::vector<ros_bridge::Statistics> cam_info_pub_vec_statistics;
+    std::vector<ros_bridge::Statistics> cam_pub_vec_statistics;
     std::vector<ros_bridge::Statistics> lidar_pub_vec_statistics;
     std::vector<ros_bridge::Statistics> imu_pub_vec_statistics;
     
-    // TODO: create std::vector<Statistics*> which I can use to iterate over all these options 
+    // create std::vector<Statistics*> which I can use to iterate over all these options 
     // and apply common operations such as print, reset
+    std::vector<ros_bridge::Statistics*> statistics_obj_ptr;
 
     // Print all statistics
     void PrintStatistics();
