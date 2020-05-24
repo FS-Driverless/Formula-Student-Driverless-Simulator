@@ -133,17 +133,18 @@ def bad_request(e):
 
 def referee_state_listener():
     global doo_count, lap_times, timer
-    print lap_times
 
-    timer = Timer(2.0, referee_state_listener)
+    timer = Timer(0.5, referee_state_listener)
     timer.start()
     ref = client.getRefereeState()
 
     if doo_count != ref.doo_counter:
+        delta = ref.doo_counter - doo_count
+        for d in range(doo_count, doo_count + delta):
+            log = '{}: {}. {} {}'.format(str(datetime.now()), 'Cone hit', str(d), 'DOO cone(s).')
+            logs.append(log)
+            log_file.write(log + '\n')
         doo_count = ref.doo_counter
-        log = '{}: {}. {} {}'.format(str(datetime.now()), 'Cone hit', str(doo_count), 'DOO cone(s).')
-        logs.append(log)
-        log_file.write(log + '\n')
 
     if len(lap_times) != len(ref.laps):
         lap_times = ref.laps
