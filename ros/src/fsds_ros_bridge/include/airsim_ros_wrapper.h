@@ -110,7 +110,7 @@ private:
     
     // create std::vector<Statistics*> which I can use to iterate over all these options 
     // and apply common operations such as print, reset
-    std::vector<ros_bridge::Statistics*> statistics_obj_ptr;
+    // std::vector<ros_bridge::Statistics*> statistics_obj_ptr;
 
     // Print all statistics
     void PrintStatistics();

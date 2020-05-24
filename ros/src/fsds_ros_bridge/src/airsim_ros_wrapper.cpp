@@ -79,7 +79,7 @@ void AirsimROSWrapper::initialize_statistics()
     odom_local_ned_pub_statistics = ros_bridge::Statistics("odom_local_ned_pub");
 
     // Populate statistics obj vector
-    statistics_obj_ptr = {&setCarControlsStatistics, &getGpsDataStatistics, &getCarStateStatistics, &control_cmd_sub_statistics, &global_gps_pub_statistics, &odom_local_ned_pub_statistics};
+    // statistics_obj_ptr = {&setCarControlsStatistics, &getGpsDataStatistics, &getCarStateStatistics, &control_cmd_sub_statistics, &global_gps_pub_statistics, &odom_local_ned_pub_statistics};
 }
 
 void AirsimROSWrapper::initialize_ros()
@@ -180,7 +180,8 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
                     ros_bridge::Statistics camera_rpc_statistics(curr_camera_name + "_RpcCaller");
                     cam_pub_vec_statistics.push_back(camera_pub_statistics);
                     simGetImagesVecStatistics.push_back(camera_rpc_statistics);
-                    statistics_obj_ptr.insert(statistics_obj_ptr.end(), {&camera_pub_statistics, &camera_rpc_statistics});
+                    // statistics_obj_ptr.push_back(&camera_pub_statistics);
+                    // statistics_obj_ptr.insert(statistics_obj_ptr.end(), {&camera_pub_statistics, &camera_rpc_statistics});
                 }
             }
             // push back pair (vector of image captures, current vehicle name)
@@ -208,7 +209,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
                 imu_pub_vec_.push_back(nh_private_.advertise<sensor_msgs::Imu>(curr_vehicle_name + "/imu/" + sensor_name, 10));
                 imu_pub_vec_statistics.push_back(ros_bridge::Statistics(sensor_name + "_Publisher"));
                 getImuDataVecStatistics.push_back(ros_bridge::Statistics(sensor_name + "_RpcCaller"));
-                statistics_obj_ptr.insert(statistics_obj_ptr.end(), {&imu_pub_vec_statistics.back(), &getImuDataVecStatistics.back()});
+                // statistics_obj_ptr.insert(statistics_obj_ptr.end(), {&imu_pub_vec_statistics.back(), &getImuDataVecStatistics.back()});
                 break;
             }
             case msr::airlib::SensorBase::SensorType::Gps:
@@ -236,7 +237,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
                 lidar_pub_vec_.push_back(nh_private_.advertise<sensor_msgs::PointCloud2>(curr_vehicle_name + "/lidar/" + sensor_name, 10));
                 lidar_pub_vec_statistics.push_back(ros_bridge::Statistics(sensor_name + "_Publisher"));
                 getLidarDataVecStatistics.push_back(ros_bridge::Statistics(sensor_name + "_RpcCaller"));
-                statistics_obj_ptr.insert(statistics_obj_ptr.end(), {&lidar_pub_vec_statistics.back(), &getLidarDataVecStatistics.back()});
+                // statistics_obj_ptr.insert(statistics_obj_ptr.end(), {&lidar_pub_vec_statistics.back(), &getLidarDataVecStatistics.back()});
                 break;
             }
             default:
@@ -715,18 +716,23 @@ void AirsimROSWrapper::img_response_timer_cb(const ros::TimerEvent &event)
     try
     {
         int image_response_idx = 0;
+        int ctr = 0;
         for (const auto &airsim_img_request_vehicle_name_pair : airsim_img_request_vehicle_name_pair_vec_)
         {
-            // TODO: use statistics to time this
-            std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
-            const std::vector<ImageResponse> &img_response = airsim_client_images_.simGetImages(airsim_img_request_vehicle_name_pair.first, airsim_img_request_vehicle_name_pair.second);
-            lck.unlock();
+            std::vector<ImageResponse> img_response;
+            {
+                ros_bridge::Timer timer(&simGetImagesVecStatistics[ctr]);
+                std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
+                img_response = airsim_client_images_.simGetImages(airsim_img_request_vehicle_name_pair.first, airsim_img_request_vehicle_name_pair.second);
+                lck.unlock();
+            }
 
             if (img_response.size() == airsim_img_request_vehicle_name_pair.first.size())
             {
                 process_and_publish_img_response(img_response, image_response_idx, airsim_img_request_vehicle_name_pair.second);
                 image_response_idx += img_response.size();
             }
+            ++ctr;
         }
     }
 
@@ -978,17 +984,97 @@ void AirsimROSWrapper::read_params_from_yaml_and_fill_cam_info_msg(const std::st
 // functions with templates or something similar
 void AirsimROSWrapper::PrintStatistics()
 {
-    for (auto &statistics_obj : statistics_obj_ptr)
+    // This did not work for some reason
+    // for (auto statistics_obj : statistics_obj_ptr)
+    // {
+    //     statistics_obj->Print();
+    // }
+    setCarControlsStatistics.Print();
+    getGpsDataStatistics.Print();
+    getCarStateStatistics.Print();
+    control_cmd_sub_statistics.Print();
+    global_gps_pub_statistics.Print();
+    odom_local_ned_pub_statistics.Print();
+
+    for (auto &getImuDataStatistics : getImuDataVecStatistics)
     {
-        statistics_obj->Print();
+        getImuDataStatistics.Print();
+    }
+
+    for (auto &simGetImagesStatistics : simGetImagesVecStatistics)
+    {
+        simGetImagesStatistics.Print();
+    }
+
+    for (auto &getLidarDataStatistics : getLidarDataVecStatistics)
+    {
+        getLidarDataStatistics.Print();
+    }
+
+    // Reset camera statistics
+    for (auto &cam_info_pub_statistics : cam_pub_vec_statistics)
+    {
+        cam_info_pub_statistics.Print();
+    }
+
+    // Reset lidar statistics
+    for (auto &lidar_pub_statistics : lidar_pub_vec_statistics)
+    {
+        lidar_pub_statistics.Print();
+    }
+
+    // Reset IMU statistics
+    for (auto &imu_pub_statistics : imu_pub_vec_statistics)
+    {
+        imu_pub_statistics.Print();
     }
 }
 
 void AirsimROSWrapper::ResetStatistics()
 {
-    for (auto &statistics_obj : statistics_obj_ptr)
+    // This did not work for some reason
+    // for (auto statistics_obj : statistics_obj_ptr)
+    // {
+    //     statistics_obj->Reset();
+    // }
+    setCarControlsStatistics.Reset();
+    getGpsDataStatistics.Reset();
+    getCarStateStatistics.Reset();
+    control_cmd_sub_statistics.Reset();
+    global_gps_pub_statistics.Reset();
+    odom_local_ned_pub_statistics.Reset();
+
+    for (auto &getImuDataStatistics : getImuDataVecStatistics)
     {
-        statistics_obj->Reset();
+        getImuDataStatistics.Reset();
+    }
+
+    for (auto &simGetImagesStatistics : simGetImagesVecStatistics)
+    {
+        simGetImagesStatistics.Reset();
+    }
+
+    for (auto &getLidarDataStatistics : getLidarDataVecStatistics)
+    {
+        getLidarDataStatistics.Reset();
+    }
+
+    // Reset camera statistics
+    for (auto &cam_info_pub_statistics : cam_pub_vec_statistics)
+    {
+        cam_info_pub_statistics.Reset();
+    }
+
+    // Reset lidar statistics
+    for (auto &lidar_pub_statistics : lidar_pub_vec_statistics)
+    {
+        lidar_pub_statistics.Reset();
+    }
+
+    // Reset IMU statistics
+    for (auto &imu_pub_statistics : imu_pub_vec_statistics)
+    {
+        imu_pub_statistics.Reset();
     }
 }
 
