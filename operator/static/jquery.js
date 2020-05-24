@@ -21,6 +21,12 @@ $(document).ready(function() {
 
     // Start button handler
     $('#start').click(() => {
+        const accessToken = $('access-token').val();
+        if (accessToken === undefined) {
+            alert('Give an access token.');
+            return
+        }
+
         const selectedTeam = $("input:radio[name ='team-select']:checked").val();
         if (selectedTeam === undefined) {
             alert('Select a team.');
@@ -34,7 +40,7 @@ $(document).ready(function() {
         }
 
         $.ajax('mission/start', {
-            data: JSON.stringify({id: selectedTeam, mission: selectedMission}),
+            data: JSON.stringify({id: selectedTeam, mission: selectedMission, access_token: accessToken}),
             contentType: 'application/json',
             type: 'POST',
             success: res => {
@@ -49,7 +55,15 @@ $(document).ready(function() {
 
     // Stop button handler
     $('#stop').click(() => {
+        const accessToken = $('access-token').val();
+        if (accessToken === undefined) {
+            alert('Give an access token.');
+            return
+        }
+
         $.ajax('mission/stop', {
+            data: JSON.stringify({access_token: accessToken}),
+            contentType: 'application/json',
             type: 'POST',
             success: res => {
                 logs.push(res.response);
@@ -63,7 +77,15 @@ $(document).ready(function() {
 
     // Reset button handler
     $('#reset').click(function() {
+        const accessToken = $('access-token').val();
+        if (accessToken === undefined) {
+            alert('Give an access token.');
+            return
+        }
+
         $.ajax('mission/reset', {
+            data: JSON.stringify({access_token: accessToken}),
+            contentType: 'application/json',
             type: 'POST',
             success: function(res) {
                 logs.push(res.response);

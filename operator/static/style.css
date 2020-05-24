@@ -6,7 +6,7 @@ html, body {
 .wrapper-top {
     display: grid;
     grid-template-columns: 25% 25% 25% 25%;
-    padding: 100px
+    padding: 44px 100px 100px 100px
 }
 .wrapper-bottom {
     display: grid;

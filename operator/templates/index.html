@@ -8,16 +8,23 @@
 
     <body> 
         {% block body %}
+        <nav class="navbar navbar-dark bg-primary">
+            <a class="navbar-brand">Formula Student Driverless Simulation Operator</a>
+            <form class="form-inline">
+                <input class="form-control mr-sm-2" id="access-token" placeholder="Access token" aria-label="Access token">
+            </form>
+        </nav>
+        
         <div class="wrapper-top">
             <div class="team-selector">
-                <h3>
+                <h5>
                     Team selector
-                </h3>
+                </h5>
                 <div>
-                    {% for team in team_config %}
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="team-select" id="team{{team.id}}" value="{{team.id}}">
-                        <label class="form-check-label" for="team{{team.id}}">
+                    {% for team in teams %}
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="team-select" id="team{{team.id}}" value="{{team.id}}">
+                        <label class="custom-control-label" for="team{{team.id}}">
                             {{team.name}}
                         </label>
                     </div>
@@ -36,28 +43,28 @@
         </div>
         <div class="wrapper-bottom">
             <div class="mission-selector">
-                <h3>
+                <h5>
                     Mission selector
-                </h3>
+                </h5>
                 <div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mission-select" id="autocross" value="autocross">
-                        <label class="form-check-label" for="autocross">
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="mission-select" id="autocross" value="autocross">
+                        <label class="custom-control-label" for="autocross">
                             Autocross
                         </label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mission-select" id="trackdrive" value="trackdrive">
-                        <label class="form-check-label" for="trackdrive">
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="mission-select" id="trackdrive" value="trackdrive">
+                        <label class="custom-control-label" for="trackdrive">
                             Trackdrive
                         </label>
                     </div>
                 </div>
             </div>
             <div>
-                <h3 class="log-window-title">
+                <h5 class="log-window-title">
                     Simulator logbook
-                </h3>
+                </h5>
                 <div class="log-window"></div>
             </div>
         </div>

@@ -23,13 +23,18 @@ logs = []
 
 with open('../config/team_config.json', 'r') as file:
     team_config = json.load(file)
+    access_token = team_config['access_token']
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html', team_config=team_config, logs=logs)
+    return render_template('index.html', teams=team_config['teams'], logs=logs)
 
 @app.route('/mission/start', methods=['POST'])
 def mission_start():
+    # Abort if access token is incorrect
+    if request.json is not None and request.json['access_token'] != access_token:
+        abort(403, description='Incorrect access token')
+
     # Abort if empty request
     if request.json is None or request.json['id'] is None or request.json['mission'] is None:
         abort(400, description='Empty request.')    
@@ -37,7 +42,7 @@ def mission_start():
     # Get team config
     teamId = request.json['id']
     mission = request.json['mission']
-    for obj in team_config: 
+    for obj in team_config['teams']: 
         if obj['id'] == teamId: team = obj
 
     # Set ROS MASTER
@@ -72,6 +77,10 @@ def mission_start():
 
 @app.route('/mission/stop', methods=['POST'])
 def mission_stop():
+    # Abort if access token is incorrect
+    if request.json is not None and request.json['access_token'] != access_token:
+        abort(403, description='Incorrect access token')
+
     # Abort if ROS bridge is not running
     if interfaceprocess is None:
         abort(400, description='No process running.')
@@ -112,6 +121,10 @@ def mission_stop():
 
 @app.route('/mission/reset', methods=['POST'])
 def mission_reset():
+    # Abort if access token is incorrect
+    if request.json is not None and request.json['access_token'] != access_token:
+        abort(403, description='Incorrect access token')
+
     # Reset simulator
     client.reset()
     log = '{}: {}'.format(str(datetime.now()), 'Car reset.')
@@ -130,6 +143,10 @@ def get_logs():
 @app.errorhandler(400)
 def bad_request(e):
     return jsonify(error=str(e)), 400
+
+@app.errorhandler(403)
+def unauthorized(e):
+    return jsonify(error=str(e)), 403
 
 def referee_state_listener():
     global doo_count, lap_times, timer
