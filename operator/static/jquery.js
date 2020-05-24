@@ -40,6 +40,9 @@ $(document).ready(function() {
             success: res => {
                 logs.push(res.response);
                 $('.log-window').append(`<p>${res.response}</p>`);
+            },
+            error: err => {
+                alert(`Someting went wrong.`)
             }
         });
     });
@@ -51,6 +54,9 @@ $(document).ready(function() {
             success: res => {
                 logs.push(res.response);
                 $('.log-window').append(`<p>${res.response}</p>`);
+            },
+            error: (xhr, status, err) => {
+                alert(JSON.parse(xhr.responseText));
             }
         });     
     });
@@ -62,6 +68,9 @@ $(document).ready(function() {
             success: function(res) {
                 logs.push(res.response);
                 $('.log-window').append(`<p>${res.response}</p>`);
+            },
+            error: err => {
+                alert(`Someting went wrong.\n ${err}`)
             }
         });     
     });
