@@ -36,7 +36,7 @@ to a new Timer class (see below):
 ros_bridge::Statistics rpcCallStatistics = ros_bridge::Statistics("rpcCallName");
 
 { // Enter scope to be timed
-    ros_bridge::Timer timer(rpcCallStatistics); // Start timing
+    ros_bridge::Timer timer(&rpcCallStatistics); // Start timing
 
     // do the Rpc Call
 
@@ -53,7 +53,7 @@ ros_bridge::Statistics pubSubStatistics = ros_bridge::Statistics("pubSubName");;
 // For a publisher:
 {
     // pass persistent Statistics object (by reference)
-    ros_bridge::ROSMsgCounter counter(pubSubStatistics); 
+    ros_bridge::ROSMsgCounter counter(&pubSubStatistics); 
     pubSub.publish(data);
 }
 
@@ -61,7 +61,7 @@ ros_bridge::Statistics pubSubStatistics = ros_bridge::Statistics("pubSubName");;
 
 void callback(msg) {
     // pass persistent Statistics object (by reference)
-    ros_bridge::ROSMsgCounter counter(pubSubStatistics); 
+    ros_bridge::ROSMsgCounter counter(&pubSubStatistics); 
 
     // Do something with msg
 
