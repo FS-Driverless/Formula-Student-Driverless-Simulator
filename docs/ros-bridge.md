@@ -65,3 +65,6 @@ This package contains some useful launch and config files which will help you in
 To open Rviz with [this](../ros/src/fsds_ros_bridge/config/rviz/default.rviz) configuration file, run `roslaunch fsds_ros_bridge rviz.launch`.
 
 To open Multiplot with [this](../ros/src/fsds_ros_bridge/config/multiplot/multiplot.xml) configuration file, run `roslaunch fsds_ros_bridge plot.launch`
+
+## Monitoring
+Performance monitoring of the ROS Bridge is described [here](statistics.md)
