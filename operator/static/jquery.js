@@ -5,8 +5,15 @@ $(document).ready(function() {
     
     // Poll logs from server every 5 seconds
     function pollServer() {
+        const accessToken = $('#access-token').val();
+        if (accessToken === '') {
+            alert('Give an access token.');
+        }
+
         $.ajax('logs', {
-            type: 'GET',
+            data: JSON.stringify({access_token: accessToken}),
+            contentType: 'application/json',
+            type: 'POST',
             success: res => {
                 res.response.forEach(log => {
                     if (!logs.includes(log)) {

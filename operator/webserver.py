@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
 from flask import Flask, request, abort, render_template, jsonify
-import subprocess, time, signal, sys, os, errno, json
+from flask_classful import FlaskView, route
 from datetime import datetime
 from threading import Timer
+import subprocess, time, signal, sys, os, errno, json
 
 import sys
 sys.path.append('../AirSim/PythonClient')
@@ -138,6 +139,10 @@ def mission_reset():
 
 @app.route('/logs', methods=['GET'])
 def get_logs():
+    # Abort if access token is incorrect
+    if request.json is not None and request.json['access_token'] != access_token:
+        abort(403, description='Incorrect access token')
+
     return {'response': logs}
 
 @app.errorhandler(400)
