@@ -157,7 +157,7 @@ def referee_state_listener():
 
     if doo_count != ref.doo_counter:
         delta = ref.doo_counter - doo_count
-        for d in range(doo_count, doo_count + delta):
+        for d in range(doo_count + 1, doo_count + delta + 1):
             log = '{}: {}. {} {}'.format(str(datetime.now()), 'Cone hit', str(d), 'DOO cone(s).')
             logs.append(log)
             log_file.write(log + '\n')
