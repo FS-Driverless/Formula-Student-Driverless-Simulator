@@ -112,7 +112,7 @@ class WebServer(FlaskView):
         # Brake car
         self.car_controls.brake = 1
         self.client.setCarControls(self.car_controls)
-        self.car_controls.brake = 0 #remove brake
+        self.car_controls.brake = 0 # Remove brake
 
         # Create log message
         log = '{}: {}'.format(str(datetime.now()), 'Mission stopped.')
@@ -136,7 +136,8 @@ class WebServer(FlaskView):
             abort(400, description='Empty request.')  
 
         # Reset simulator
-        #self.client.reset()
+        self.client.reset()
+        
         log = '{}: {}'.format(str(datetime.now()), 'Car reset.')
 
         if self.interface_process is not None:
