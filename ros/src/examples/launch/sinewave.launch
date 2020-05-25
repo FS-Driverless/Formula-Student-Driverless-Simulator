@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="examples" type="sinewave.py" name="sinewave_as" required="true" output="screen" />
+</launch>
+
