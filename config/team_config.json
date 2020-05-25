@@ -1,0 +1,21 @@
+{
+    "access_token": "Ka5aajY4MXXFe6ek",
+    "teams": [
+        {
+            "id": "1",
+            "name": "Formula Student Team Delft",
+            "master": "http://localhost:11311 ",
+            "car_settings": {
+                
+            }
+        },
+        {
+            "id": "2",
+            "name": "TUFast",
+            "master": "http://localhost:11312 ",
+            "car_settings": {
+    
+            }
+        }
+    ]
+}

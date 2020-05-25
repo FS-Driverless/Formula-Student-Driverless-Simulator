@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <link rel= "stylesheet" type= "text/css" href="{{ url_for('static',filename='style.css') }}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    </head>
+
+    <body> 
+        {% block body %}
+        <nav class="navbar navbar-dark bg-primary">
+            <a class="navbar-brand">Formula Student Driverless Simulation Operator</a>
+            <form class="form-inline">
+                <input class="form-control mr-sm-2" id="access-token" placeholder="Access token" aria-label="Access token">
+            </form>
+        </nav>
+        
+        <div class="wrapper-top">
+            <div class="team-selector">
+                <h5>
+                    Team selector
+                </h5>
+                <div>
+                    {% for team in teams %}
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="team-select" id="team{{team.id}}" value="{{team.id}}">
+                        <label class="custom-control-label" for="team{{team.id}}">
+                            {{team.name}}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="start-button">
+                <button id="start" type="button" class="btn btn-primary">Send START signal</button>
+            </div>
+            <div class="stop-button">
+                <button id="stop" type="button" class="btn btn-primary">Send STOP signal</button>
+            </div>
+            <div class="reset-button">
+                <button id="reset" type="button" class="btn btn-primary">RESET simulator</button>
+            </div>
+        </div>
+        <div class="wrapper-bottom">
+            <div class="mission-selector">
+                <h5>
+                    Mission selector
+                </h5>
+                <div>
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="mission-select" id="autocross" value="autocross">
+                        <label class="custom-control-label" for="autocross">
+                            Autocross
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="mission-select" id="trackdrive" value="trackdrive">
+                        <label class="custom-control-label" for="trackdrive">
+                            Trackdrive
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h5 class="log-window-title">
+                    Simulator logbook
+                </h5>
+                <div class="log-window"></div>
+            </div>
+        </div>
+        {% endblock %}
+
+        <!-- JS, Popper.js, and jQuery -->
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+        <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+    </body>
+</html>

@@ -1,0 +1,41 @@
+html, body {
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+}
+.wrapper-top {
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    padding: 44px 100px 100px 100px
+}
+.wrapper-bottom {
+    display: grid;
+    grid-template-columns: 25% 75%;
+    padding: 0px 100px 300px 100px;
+    height: 90vh;
+}
+.start-button {
+    margin-top: auto;
+    margin-bottom: auto;
+    text-align: center;
+}
+.stop-button {
+    margin-top: auto;
+    margin-bottom: auto;
+    text-align: center;
+}
+.reset-button {
+    margin-top: auto;
+    margin-bottom: auto;
+    text-align: center;
+}
+.log-window {
+    padding: 10px;
+    border: 1px; 
+    border-style: solid; 
+    height: 60vh;
+    overflow-y: scroll;
+}
+.log-window-title {
+    text-align: center;
+}
