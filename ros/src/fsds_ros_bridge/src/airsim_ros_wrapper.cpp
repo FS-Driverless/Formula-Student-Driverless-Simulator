@@ -666,6 +666,8 @@ void AirsimROSWrapper::img_response_timer_cb(const ros::TimerEvent& event)
             const std::vector<ImageResponse>& img_response = airsim_client_images_.simGetImages(airsim_img_request_vehicle_name_pair.first, airsim_img_request_vehicle_name_pair.second);
             lck.unlock();
 
+            std::cout << "img_response_timer_cb: " << img_response.front().image_data_uint8->size() << std::endl;
+
             if (img_response.size() == airsim_img_request_vehicle_name_pair.first.size()) 
             {
                 process_and_publish_img_response(img_response, image_response_idx, airsim_img_request_vehicle_name_pair.second);
@@ -730,7 +732,17 @@ sensor_msgs::ImagePtr AirsimROSWrapper::get_img_msg_from_response(const ImageRes
                                                                 const std::string frame_id)
 {
     sensor_msgs::ImagePtr img_msg_ptr = boost::make_shared<sensor_msgs::Image>();
-    img_msg_ptr->data = *img_response.image_data_uint8;
+    //img_response.image_data_uint8->data() = std::vector<unsigned char>
+
+    std::cout << "when receiving in get_img_msg_from_response: " << img_response.image_data_uint8->size() << std::endl;
+
+
+    std::vector<unsigned char> v;
+    for(int i = 0; i < img_response.image_data_uint8->size(); i++){
+        v.push_back(i);
+    }
+
+    img_msg_ptr->data = v;
     img_msg_ptr->step = img_response.width * 8; // todo un-hardcode. image_width*num_bytes
     img_msg_ptr->header.stamp = make_ts(img_response.time_stamp);
     img_msg_ptr->header.frame_id = frame_id;
@@ -738,7 +750,7 @@ sensor_msgs::ImagePtr AirsimROSWrapper::get_img_msg_from_response(const ImageRes
     img_msg_ptr->width = img_response.width;
     img_msg_ptr->encoding = "bgra8";
     img_msg_ptr->is_bigendian = 0;
-    std::cout << "pixel points before sending: " << img_response.image_data_uint8->size() << std::endl;
+    std::cout << "pixel points before sending: " << img_msg_ptr->data.size() << std::endl;
     return img_msg_ptr;
 }
 
@@ -790,29 +802,29 @@ void AirsimROSWrapper::process_and_publish_img_response(const std::vector<ImageR
 
         // todo publishing a tf for each capture type seems stupid. but it foolproofs us against render thread's async stuff, I hope. 
         // Ideally, we should loop over cameras and then captures, and publish only one tf.  
-        publish_camera_tf(curr_img_response, curr_ros_time, vehicle_name, curr_img_response.camera_name);
+        // publish_camera_tf(curr_img_response, curr_ros_time, vehicle_name, curr_img_response.camera_name);
 
         // todo simGetCameraInfo is wrong + also it's only for image type -1.  
         // msr::airlib::CameraInfo camera_info = airsim_client_.simGetCameraInfo(curr_img_response.camera_name);
 
         // update timestamp of saved cam info msgs
-        camera_info_msg_vec_[img_response_idx_internal].header.stamp = curr_ros_time;
-        cam_info_pub_vec_[img_response_idx_internal].publish(camera_info_msg_vec_[img_response_idx_internal]);
+        // camera_info_msg_vec_[img_response_idx_internal].header.stamp = curr_ros_time;
+        // cam_info_pub_vec_[img_response_idx_internal].publish(camera_info_msg_vec_[img_response_idx_internal]);
 
         // DepthPlanner / DepthPerspective / DepthVis / DisparityNormalized
-        if (curr_img_response.pixels_as_float)
-        {
-            image_pub_vec_[img_response_idx_internal].publish(get_depth_img_msg_from_response(curr_img_response, 
-                                                    curr_ros_time, 
-                                                    curr_img_response.camera_name + "_optical"));
-        }
-        // Scene / Segmentation / SurfaceNormals / Infrared
-        else
-        {
+        // if (curr_img_response.pixels_as_float)
+        // {
+        //     image_pub_vec_[img_response_idx_internal].publish(get_depth_img_msg_from_response(curr_img_response, 
+        //                                             curr_ros_time, 
+        //                                             curr_img_response.camera_name + "_optical"));
+        // }
+        // // Scene / Segmentation / SurfaceNormals / Infrared
+        // else
+        // {
             image_pub_vec_[img_response_idx_internal].publish(get_img_msg_from_response(curr_img_response, 
                                                     curr_ros_time, 
                                                     curr_img_response.camera_name + "_optical"));
-        }
+        // }
         img_response_idx_internal++;
     }
 

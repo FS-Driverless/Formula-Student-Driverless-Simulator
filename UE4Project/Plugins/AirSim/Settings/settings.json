@@ -54,6 +54,5 @@
       }
     },
     "SubWindows": [
-      {"WindowID": 0, "ImageType": 0, "CameraName": "cam1", "Visible": true}
     ]
 }

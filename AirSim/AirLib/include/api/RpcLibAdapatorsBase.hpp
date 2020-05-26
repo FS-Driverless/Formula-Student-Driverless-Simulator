@@ -453,8 +453,11 @@ public:
             const std::vector<ImageResponse>& response_adapter
         ) {
             std::vector<msr::airlib::ImageCaptureBase::ImageResponse> response;
-            for (const auto& item : response_adapter)
-                response.push_back(item.to());
+            for (const auto& item : response_adapter){
+                msr::airlib::ImageCaptureBase::ImageResponse x = item.to();
+                std::cout << "for inside to: " << x.image_data_uint8->size() << std::endl;
+                response.push_back(x);
+            }
 
             return response;
         }
