@@ -39,6 +39,8 @@ void RenderRequest::RenderThreadScreenshotTask(RenderRequest::RenderResult &resu
 {
     FRHITexture2D *fast_cap_texture = fast_rt_resource_->TextureRHI->GetTexture2D();
     EPixelFormat pixelFormat = fast_cap_texture->GetFormat();
+    // UE_LOG(LogTemp, Warning, TEXT("EPixelFormat: %d"), pixelFormat);
+
     uint32 width = fast_cap_texture->GetSizeX();
     uint32 height = fast_cap_texture->GetSizeY();
     uint32 stride;

@@ -5,12 +5,11 @@
 int main(int argc, char ** argv)
 {
     ros::init(argc, argv, "fsds_ros_bridge");
-    ros::NodeHandle nh;
     ros::NodeHandle nh_private("~");
 
     std::string host_ip = "localhost";
     nh_private.getParam("host_ip", host_ip);
-    AirsimROSWrapper airsim_ros_wrapper(nh, nh_private, host_ip);
+    AirsimROSWrapper airsim_ros_wrapper(nh_private, host_ip);
 
     if (airsim_ros_wrapper.is_used_img_timer_cb_queue_)
     {

@@ -24,8 +24,7 @@ const std::unordered_map<int, std::string> AirsimROSWrapper::image_type_int_to_s
     { 7, "Infrared" }
 };
 
-AirsimROSWrapper::AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, const std::string & host_ip) : 
-    nh_(nh), 
+AirsimROSWrapper::AirsimROSWrapper(const ros::NodeHandle& nh_private, const std::string & host_ip) : 
     nh_private_(nh_private),
     img_async_spinner_(1, &img_timer_cb_queue_), // a thread for image callbacks to be 'spun' by img_async_spinner_ 
     lidar_async_spinner_(1, &lidar_timer_cb_queue_), // same as above, but for lidar
@@ -75,7 +74,6 @@ void AirsimROSWrapper::initialize_ros()
 
     // ros params
     double update_airsim_control_every_n_sec;
-    nh_private_.getParam("is_vulkan", is_vulkan_);
     nh_private_.getParam("update_airsim_control_every_n_sec", update_airsim_control_every_n_sec);
 
     create_ros_pubs_from_settings_json();
@@ -274,7 +272,8 @@ ros::Time AirsimROSWrapper::make_ts(uint64_t unreal_ts) {
         first_imu_ros_ts = ros::Time::now();
         first_imu_unreal_ts = unreal_ts;
     }
-    return  first_imu_ros_ts + ros::Duration( (unreal_ts- first_imu_unreal_ts)/1e9);
+    int64_t diff = unreal_ts - first_imu_unreal_ts;
+    return  first_imu_ros_ts + ros::Duration(diff/1e9);
 }
 
 // todo add reset by vehicle_name API to airlib
@@ -448,9 +447,6 @@ void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent& event)
 {
     try
     {
-        std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
-        std::cout << "DOO COUNTER: " << airsim_client_.getRefereeState().doo_counter << std::endl;
-        lck.unlock();
 
         std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
 
@@ -735,15 +731,14 @@ sensor_msgs::ImagePtr AirsimROSWrapper::get_img_msg_from_response(const ImageRes
 {
     sensor_msgs::ImagePtr img_msg_ptr = boost::make_shared<sensor_msgs::Image>();
     img_msg_ptr->data = *img_response.image_data_uint8;
-    img_msg_ptr->step = img_response.width * 3; // todo un-hardcode. image_width*num_bytes
+    img_msg_ptr->step = img_response.width * 8; // todo un-hardcode. image_width*num_bytes
     img_msg_ptr->header.stamp = make_ts(img_response.time_stamp);
     img_msg_ptr->header.frame_id = frame_id;
     img_msg_ptr->height = img_response.height;
     img_msg_ptr->width = img_response.width;
-    img_msg_ptr->encoding = "bgr8";
-    if (is_vulkan_)
-        img_msg_ptr->encoding = "rgb8";
+    img_msg_ptr->encoding = "bgra8";
     img_msg_ptr->is_bigendian = 0;
+    std::cout << "pixels: " << img_msg_ptr->data.size() << std::endl;
     return img_msg_ptr;
 }
 
