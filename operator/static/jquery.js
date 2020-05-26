@@ -6,23 +6,22 @@ $(document).ready(function() {
     // Poll logs from server every 5 seconds
     function pollServer() {
         const accessToken = $('#access-token').val();
-        if (accessToken === '') {
-            alert('Give an access token.');
-        }
 
-        $.ajax('logs', {
-            data: JSON.stringify({access_token: accessToken}),
-            contentType: 'application/json',
-            type: 'POST',
-            success: res => {
-                res.response.forEach(log => {
-                    if (!logs.includes(log)) {
-                        logs.push(log);
-                        $('.log-window').append(`<p>${log}</p>`);
-                    }
-                });
-            }
-        });
+        if (accessToken) {
+            $.ajax('logs', {
+                data: JSON.stringify({access_token: accessToken}),
+                contentType: 'application/json',
+                type: 'POST',
+                success: res => {
+                    res.response.forEach(log => {
+                        if (!logs.includes(log)) {
+                            logs.push(log);
+                            $('.log-window').append(`<p>${log}</p>`);
+                        }
+                    });
+                }
+            });
+        }
         setTimeout(pollServer, 5000);
     }
     
