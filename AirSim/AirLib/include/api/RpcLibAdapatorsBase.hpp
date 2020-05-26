@@ -444,6 +444,8 @@ public:
             d.height = height;
             d.image_type = image_type;
 
+            std::cout << "pixel points right after decoding: " << d.image_data_uint8->size() << std::endl;
+
             return d;
         }
 

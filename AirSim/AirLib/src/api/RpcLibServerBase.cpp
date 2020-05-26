@@ -137,9 +137,8 @@ RpcLibServerBase::RpcLibServerBase(ApiProvider* api_provider, const std::string&
         ImageCaptureBase::ImageResponse response;
         getVehicleSimApi(vehicle_name)->getImage(request, response);
         // rpclib has a bug with serializing empty vectors, so we return a 1 byte vector instead.
-	if (response.image_data_uint8->size() == 0)
-	    response.image_data_uint8->push_back(0);
-
+        if (response.image_data_uint8->size() == 0)
+            response.image_data_uint8->push_back(0);
         return *response.image_data_uint8;
     });
 

@@ -738,7 +738,7 @@ sensor_msgs::ImagePtr AirsimROSWrapper::get_img_msg_from_response(const ImageRes
     img_msg_ptr->width = img_response.width;
     img_msg_ptr->encoding = "bgra8";
     img_msg_ptr->is_bigendian = 0;
-    std::cout << "pixels: " << img_msg_ptr->data.size() << std::endl;
+    std::cout << "pixel points before sending: " << img_response.image_data_uint8->size() << std::endl;
     return img_msg_ptr;
 }
 

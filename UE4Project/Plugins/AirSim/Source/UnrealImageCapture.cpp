@@ -41,6 +41,7 @@ void UnrealImageCapture::getSceneCaptureImage(const std::string& camera_name, ms
     int width = capture->TextureTarget->SizeX;
     int stride = render_request.latest_result_.stride;
     int bytes = render_request.latest_result_.pixels->size();
+    // UE_LOG(LogTemp, Warning, TEXT("bytes: %d"), bytes);
     int bytes_per_pixel = bytes / (height * width);
     int padded_width = stride / bytes_per_pixel;
 
@@ -49,6 +50,7 @@ void UnrealImageCapture::getSceneCaptureImage(const std::string& camera_name, ms
     response.height = height;
     response.image_type = image_type;
     response.image_data_uint8 = std::move(render_request.latest_result_.pixels);
+    // UE_LOG(LogTemp, Warning, TEXT("response.image_data_uint8: %d"), response.image_data_uint8->size());
 }
 
 bool UnrealImageCapture::getScreenshotScreen(ImageType image_type, std::vector<uint8_t>& compressedPng)
