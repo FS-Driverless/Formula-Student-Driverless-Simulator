@@ -1,149 +1,186 @@
 #!/usr/bin/env python
-
 from flask import Flask, request, abort, render_template, jsonify
 from flask_classful import FlaskView, route
 from datetime import datetime
 from threading import Timer
-import subprocess, time, signal, sys, os, errno, json
-
-import sys
+import subprocess, time, signal, sys, os, errno, json, sys
 sys.path.append('../AirSim/PythonClient')
 import airsim.client as airsim
 
 app = Flask(__name__)
-interfaceprocess = None
 
-client = airsim.CarClient()
-client.confirmConnection()
-car_controls = airsim.CarControls()
-ref =  client.getRefereeState()
+class WebServer(FlaskView):
 
-doo_count = ref.doo_counter
-lap_times = ref.laps
-logs = []
+    interface_process = None
+    timer = None
+    log_file = None
+    logs = []
 
-with open('../config/team_config.json', 'r') as file:
-    team_config = json.load(file)
-    access_token = team_config['access_token']
+    client = airsim.CarClient()
+    client.confirmConnection()
+    car_controls = airsim.CarControls()
 
-@app.route('/', methods=['GET'])
-def index():
-    return render_template('index.html', teams=team_config['teams'], logs=logs)
+    ref =  client.getRefereeState()
+    doo_count = ref.doo_counter
+    lap_times = ref.laps
 
-@app.route('/mission/start', methods=['POST'])
-def mission_start():
-    # Abort if access token is incorrect
-    if request.json is not None and request.json['access_token'] != access_token:
-        abort(403, description='Incorrect access token')
+    def __init__(self):
+        with open('../config/team_config.json', 'r') as file:
+            self.team_config = json.load(file)
+            self.access_token = self.team_config['access_token']
 
-    # Abort if empty request
-    if request.json is None or request.json['id'] is None or request.json['mission'] is None:
-        abort(400, description='Empty request.')    
+    @route('/', methods=['GET'])
+    def index(self):
+        return render_template('index.html', teams=self.team_config['teams'], logs=WebServer.logs)
 
-    # Get team config
-    teamId = request.json['id']
-    mission = request.json['mission']
-    for obj in team_config['teams']: 
-        if obj['id'] == teamId: team = obj
+    @route('/mission/start', methods=['POST'])
+    def mission_start(self):
+        # Abort if access token is incorrect
+        if request.json is not None and request.json['access_token'] != self.access_token:
+            abort(403, description='Incorrect access token')
 
-    # Set ROS MASTER
-    procenv = os.environ.copy()
-    procenv["ROS_MASTER_URI"] = team['master']
+        # Abort if empty request
+        if request.json is None or not all(key in request.json for key in ['id', 'mission', 'access_token']):
+            abort(400, description='Empty request.')    
 
-    # Launch ROS bridge
-    global interfaceprocess, log_file
-    interfaceprocess = subprocess.Popen(['roslaunch', 'fsds_ros_bridge', 'fsds_ros_bridge.launch', 'mission:={}'.format(mission)], env=procenv)  
+        # Get team config
+        teamId = request.json['id']
+        mission = request.json['mission']
+        for obj in self.team_config['teams']: 
+            if obj['id'] == teamId: team = obj
 
-    # Start referee state listener
-    referee_state_listener() 
+        # Set ROS MASTER
+        procenv = os.environ.copy()
+        procenv["ROS_MASTER_URI"] = team['master']
 
-    # Create log message
-    log = '{}: {}'.format(str(datetime.now()), 'Mission started.')
-    logs.append(log)
+        # Launch ROS bridge
+        WebServer.interface_process = subprocess.Popen(['roslaunch', 'fsds_ros_bridge', 'fsds_ros_bridge.launch', 'mission:={}'.format(mission)], env=procenv)  
 
-    # Create log file. Create logs directory if it does not exist
-    filename = 'logs/{}_{}_{}.txt'.format(team['name'].lower().replace(' ', '-'), mission, str(datetime.now().strftime("%d-%m-%Y_%H:%M:%S")))
-    if not os.path.exists(os.path.dirname(filename)):
-        try:
-            os.makedirs(os.path.dirname(filename))
-        except OSError as exc: # Guard against race condition
-            if exc.errno != errno.EEXIST:
-                raise
-    
-    # Write to log file
-    log_file = open(filename, 'w')
-    log_file.write(log + '\n')
+        # Start referee state listener
+        self.referee_state_listener() 
 
-    return {'response': log}
+        # Create log message
+        log = '{}: {}'.format(str(datetime.now()), 'Mission started.')
+        WebServer.logs.append(log)
 
-@app.route('/mission/stop', methods=['POST'])
-def mission_stop():
-    # Abort if access token is incorrect
-    if request.json is not None and request.json['access_token'] != access_token:
-        abort(403, description='Incorrect access token')
+        # Create log file. Create logs directory if it does not exist
+        filename = 'logs/{}_{}_{}.txt'.format(team['name'].lower().replace(' ', '-'), mission, str(datetime.now().strftime("%d-%m-%Y_%H:%M:%S")))
+        if not os.path.exists(os.path.dirname(filename)):
+            try:
+                os.makedirs(os.path.dirname(filename))
+            except OSError as exc: # Guard against race condition
+                if exc.errno != errno.EEXIST:
+                    raise
+        
+        # Write to log file
+        WebServer.log_file = open(filename, 'w')
+        WebServer.log_file.write(log + '\n')
 
-    # Abort if ROS bridge is not running
-    if interfaceprocess is None:
-        abort(400, description='No process running.')
+        return {'response': log}
 
-    # Check if previous process is still running
-    if interfaceprocess is not None and interfaceprocess.poll() is None:
-        # Try to stop it gracefully. SIGINT is the equivilant to doing ctrl-c
-        interfaceprocess.send_signal(signal.SIGINT)
-        time.sleep(3)
-        # Still running?
-        if interfaceprocess.poll() is None:
-            # Kill it with fire
-            interfaceprocess.terminate()
-            # Wait for it to finish
-            interfaceprocess.wait()
+    @route('/mission/stop', methods=['POST'])
+    def mission_stop(self):
+        # Abort if access token is incorrect
+        if request.json is not None and request.json['access_token'] != self.access_token:
+            abort(403, description='Incorrect access token')
 
-        global interfaceprocess
-        interfaceprocess = None
+        # Abort if empty request
+        if request.json is None or 'access_token' not in request.json:
+            abort(400, description='Empty request.')   
 
-    # Stop referee state listener
-    timer.cancel()
+        # Abort if ROS bridge is not running
+        if WebServer.interface_process is None:
+            abort(400, description='No process running.')
 
-    # Brake car
-    car_controls.brake = 1
-    client.setCarControls(car_controls)
-    car_controls.brake = 0 #remove brake
+        # Check if previous process is still running
+        if WebServer.interface_process is not None and WebServer.interface_process.poll() is None:
+            # Try to stop it gracefully. SIGINT is the equivilant to doing ctrl-c
+            WebServer.interface_process.send_signal(signal.SIGINT)
+            time.sleep(3)
+            # Still running?
+            if WebServer.interface_process.poll() is None:
+                # Kill it with fire
+                WebServer.interface_process.terminate()
+                # Wait for it to finish
+                WebServer.interface_process.wait()
 
-    # Create log message
-    log = '{}: {}'.format(str(datetime.now()), 'Mission stopped.')
-    logs.append(log)
-    del logs[:] # Clear logs
+            WebServer.interface_process = None
 
-    # Write logs to file
-    log_file.write(log + '\n')
-    log_file.close()
+        # Stop referee state listener
+        WebServer.timer.cancel()
 
-    return {'response': log}
+        # Brake car
+        WebServer.car_controls.brake = 1
+        WebServer.client.setCarControls(WebServer.car_controls)
+        WebServer.car_controls.brake = 0 # Remove brake
 
-@app.route('/mission/reset', methods=['POST'])
-def mission_reset():
-    # Abort if access token is incorrect
-    if request.json is not None and request.json['access_token'] != access_token:
-        abort(403, description='Incorrect access token')
+        # Create log message
+        log = '{}: {}'.format(str(datetime.now()), 'Mission stopped.')
+        WebServer.logs.append(log)
+        del WebServer.logs[:] # Clear logs
 
-    # Reset simulator
-    client.reset()
-    log = '{}: {}'.format(str(datetime.now()), 'Car reset.')
+        # Write logs to file
+        WebServer.log_file.write(log + '\n')
+        WebServer.log_file.close()
 
-    if interfaceprocess is not None:
-        # Create log message and write to file
-        logs.append(log)
-        log_file.write(log + '\n')
+        return {'response': log}
 
-    return {'response': log}
+    @route('/mission/reset', methods=['POST'])
+    def mission_reset(self):
+        # Abort if access token is incorrect
+        if request.json is not None and request.json['access_token'] != self.access_token:
+            abort(403, description='Incorrect access token')
 
-@app.route('/logs', methods=['GET'])
-def get_logs():
-    # Abort if access token is incorrect
-    if request.json is not None and request.json['access_token'] != access_token:
-        abort(403, description='Incorrect access token')
+        # Abort if empty request
+        if request.json is None or 'access_token' not in request.json:
+            abort(400, description='Empty request.')  
 
-    return {'response': logs}
+        # Reset simulator
+        WebServer.client.reset()
+        
+        log = '{}: {}'.format(str(datetime.now()), 'Car reset.')
+
+        if WebServer.interface_process is not None:
+            # Create log message and write to file
+            WebServer.logs.append(log)
+            WebServer.log_file.write(log + '\n')
+
+        return {'response': log}
+
+    @route('/logs', methods=['POST'])
+    def get_logs(self):
+        # Abort if access token is incorrect
+        if request.json is not None and request.json['access_token'] != self.access_token:
+            abort(403, description='Incorrect access token')
+
+        # Abort if empty request
+        if request.json is None or 'access_token' not in request.json:
+            abort(400, description='Empty request.')  
+
+        return {'response': WebServer.logs}
+
+    def referee_state_listener(self):
+        WebServer.timer = Timer(0.5, self.referee_state_listener)
+        WebServer.timer.start()
+        ref = WebServer.client.getRefereeState()
+
+        if WebServer.doo_count != ref.doo_counter:
+            delta = ref.doo_counter - WebServer.doo_count
+
+            for d in range(WebServer.doo_count + 1, WebServer.doo_count + delta + 1):
+                log = '{}: {}. {} {}'.format(str(datetime.now()), 'Cone hit', str(d), 'DOO cone(s).')
+                WebServer.logs.append(log)
+                WebServer.log_file.write(log + '\n')
+
+            WebServer.doo_count = ref.doo_counter
+
+        if len(WebServer.lap_times) != len(ref.laps):
+            WebServer.lap_times = ref.laps
+            lap_count = len(WebServer.lap_times)
+            lap_time = WebServer.lap_times[-1]
+            log = '{}: {}'.format(str(datetime.now()), 'Lap ' + str(lap_count) + ' completed. Lap time: ' + str(round(lap_time, 3)) + ' s.')
+            WebServer.logs.append(log) 
+            WebServer.log_file.write(log + '\n')
 
 @app.errorhandler(400)
 def bad_request(e):
@@ -153,28 +190,7 @@ def bad_request(e):
 def unauthorized(e):
     return jsonify(error=str(e)), 403
 
-def referee_state_listener():
-    global doo_count, lap_times, timer
-
-    timer = Timer(0.5, referee_state_listener)
-    timer.start()
-    ref = client.getRefereeState()
-
-    if doo_count != ref.doo_counter:
-        delta = ref.doo_counter - doo_count
-        for d in range(doo_count + 1, doo_count + delta + 1):
-            log = '{}: {}. {} {}'.format(str(datetime.now()), 'Cone hit', str(d), 'DOO cone(s).')
-            logs.append(log)
-            log_file.write(log + '\n')
-        doo_count = ref.doo_counter
-
-    if len(lap_times) != len(ref.laps):
-        lap_times = ref.laps
-        lap_count = len(lap_times)
-        lap_time = lap_times[-1]
-        log = '{}: {}'.format(str(datetime.now()), 'Lap ' + str(lap_count) + ' completed. Lap time: ' + str(round(lap_time, 3)) + ' s.')
-        logs.append(log) 
-        log_file.write(log + '\n')
+WebServer.register(app, route_base='/')
 
 if __name__ == '__main__':
     app.run()

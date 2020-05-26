@@ -5,6 +5,7 @@ This folder contains the operator of the simulation. The operator consists of bo
 
 ## Prerequisites
 + [Flask](https://flask.palletsprojects.com/en/1.1.x/) - A Python web application framework.
++ [Flask-Classful](http://flask-classful.teracy.org/) - An extension that adds class based views to Flask
 
 To install all dependencies, run the following command:
 ```bash
