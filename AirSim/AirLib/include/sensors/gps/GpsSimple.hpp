@@ -6,12 +6,13 @@
 
 #include <random>
 #include "common/Common.hpp"
+#include "common/CommonStructs.hpp"
 #include "GpsSimpleParams.hpp"
 #include "GpsBase.hpp"
 #include "common/FirstOrderFilter.hpp"
 #include "common/FrequencyLimiter.hpp"
 #include "common/DelayLine.hpp"
-
+#include "common/EarthUtils.hpp"
 
 namespace msr { namespace airlib {
 
@@ -55,7 +56,6 @@ public: //methods
         if (freq_limiter_.isWaitComplete()) {   //update output
             addOutputToDelayLine(eph_filter.getOutput(), epv_filter.getOutput());
         }
-
         delay_line_.update();
 
         if (freq_limiter_.isWaitComplete())
@@ -74,12 +74,14 @@ public: //methods
         return distribution(generator);
     }
 
-    msr::airlib::GeoPoint addGeoPointNoise(msr::airlib::GeoPoint geo_point, real_T eph, real_T epv)
+    msr::airlib::GeoPoint generateErrors(msr::airlib::GeoPoint geo_point, real_T eph, real_T epv)
     {
-        msr::airlib::GeoPoint geo_point_out=geo_point;
-        geo_point_out.latitude=getGaussianNoise(geo_point.latitude, eph);
-        geo_point_out.longitude=getGaussianNoise(geo_point.longitude, eph);
-        geo_point_out.altitude=getGaussianNoise(geo_point.altitude, epv);
+        HomeGeoPoint geo_point_in = HomeGeoPoint(geo_point);
+        msr::airlib::GeoPoint geo_point_err = EarthUtils::nedToGeodetic(msr::airlib::Vector3r(eph, eph, epv), geo_point_in);
+        msr::airlib::GeoPoint geo_point_out = geo_point;
+        geo_point_out.latitude = getGaussianNoise(geo_point.latitude, (eph/111111));
+        geo_point_out.longitude = getGaussianNoise(geo_point.longitude, (eph/111111));
+        geo_point_out.altitude = getGaussianNoise(geo_point.altitude, epv);
 
         return geo_point_out;
     }
@@ -92,7 +94,12 @@ private:
         
         //GNSS
         output.gnss.time_utc = static_cast<uint64_t>(clock()->nowNanos() / 1.0E3);
-        output.gnss.geo_point = addGeoPointNoise(ground_truth.environment->getState().geo_point, eph, epv); //Update GroundTruth geo_point with added noise
+        if (gpsnoise) {
+            output.gnss.geo_point=generateErrors(ground_truth.environment->getState().geo_point, eph, epv);
+        }
+        else {
+            output.gnss.geo_point=ground_truth.environment->getState().geo_point;
+        }
         output.gnss.eph = eph;
         output.gnss.epv = epv;
         output.gnss.velocity = ground_truth.kinematics->twist.linear;
@@ -111,7 +118,7 @@ private:
 
 private:
     typedef std::normal_distribution<> NormalDistribution;
-
+    bool gpsnoise=true;
     GpsSimpleParams params_;
 
     FirstOrderFilter<real_T> eph_filter, epv_filter;
