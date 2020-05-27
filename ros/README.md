@@ -1,3 +1,5 @@
+![Front picture](../docs/images/fsds_ros_bridge.png)
+
 This is a [ROS Catkin workspace](http://wiki.ros.org/catkin/workspaces). To build it, read [building-ros.md](../docs/building-ros.md`).
 
 This workspace has the following packages:

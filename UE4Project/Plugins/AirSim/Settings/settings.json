@@ -49,8 +49,8 @@
                 "TargetGamma": 1.5
               }
             ],
-            "X": 0.50, "Y": 0, "Z": 0.10,
-            "Pitch": 0, "Roll": 0, "Yaw": 0
+            "X": -0.50, "Y": 0, "Z": -0.7,
+            "Pitch": -10, "Roll": 0, "Yaw": 0
           },
           "front_left_custom": {
             "CaptureSettings": [
@@ -71,7 +71,7 @@
                 "TargetGamma": 1.5
               }
             ],
-            "X": 0.50, "Y": -0.06, "Z": 0.10,
+            "X": 1.0, "Y": -0.06, "Z": -0.20,
             "Pitch": 0.0, "Roll": 0.0, "Yaw": 0.0
           },
           "front_right_custom": {
@@ -85,7 +85,7 @@
                 "TargetGamma": 1.5
               }
             ],
-            "X": 0.50, "Y": 0.06, "Z": 0.10,
+            "X": 1.0, "Y": 0.06, "Z": -0.20,
             "Pitch": 0.0, "Roll": 0.0, "Yaw": 0.0
           }
         },
