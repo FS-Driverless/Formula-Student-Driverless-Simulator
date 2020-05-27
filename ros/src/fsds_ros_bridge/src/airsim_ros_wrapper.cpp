@@ -727,23 +727,23 @@ cv::Mat AirsimROSWrapper::manual_decode_depth(const ImageResponse& img_response)
     return mat;
 }
 
-sensor_msgs::ImagePtr AirsimROSWrapper::get_img_msg_from_response(const ImageResponse& img_response,
+sensor_msgs::ImagePtr AirsimROSWrapper::get_img_msg_from_response(const ImageResponse* img_response,
                                                                 const ros::Time curr_ros_time, 
                                                                 const std::string frame_id)
 {
     sensor_msgs::ImagePtr img_msg_ptr = boost::make_shared<sensor_msgs::Image>();
 
     std::vector<unsigned char> v;
-    for(int i = 0; i < img_response.image_data_uint8->size(); i++){
-        v.push_back(i);
+    for(int i = 0; i < img_response->image_data_uint8->size(); i++){
+        v.push_back((*img_response->image_data_uint8)[i]);
     }
 
     img_msg_ptr->data = v;
-    img_msg_ptr->step = img_response.width * 8; // todo un-hardcode. image_width*num_bytes
-    img_msg_ptr->header.stamp = make_ts(img_response.time_stamp);
+    img_msg_ptr->step = img_response->width * 8; // todo un-hardcode. image_width*num_bytes
+    img_msg_ptr->header.stamp = make_ts(img_response->time_stamp);
     img_msg_ptr->header.frame_id = frame_id;
-    img_msg_ptr->height = img_response.height;
-    img_msg_ptr->width = img_response.width;
+    img_msg_ptr->height = img_response->height;
+    img_msg_ptr->width = img_response->width;
     img_msg_ptr->encoding = "bgra8";
     img_msg_ptr->is_bigendian = 0;
     std::cout << "pixel points before sending: " << img_msg_ptr->data.size() << std::endl;
@@ -818,7 +818,7 @@ void AirsimROSWrapper::process_and_publish_img_response(const std::vector<ImageR
         // // Scene / Segmentation / SurfaceNormals / Infrared
         // else
         // {
-            image_pub_vec_[img_response_idx_internal].publish(get_img_msg_from_response(*curr_img_response, 
+            image_pub_vec_[img_response_idx_internal].publish(get_img_msg_from_response(curr_img_response, 
                                                     curr_ros_time, 
                                                     curr_img_response->camera_name + "_optical"));
         // }

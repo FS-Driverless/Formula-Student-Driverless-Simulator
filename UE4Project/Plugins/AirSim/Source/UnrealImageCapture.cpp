@@ -50,7 +50,7 @@ void UnrealImageCapture::getSceneCaptureImage(const std::string& camera_name, ms
     response.height = height;
     response.image_type = image_type;
     response.image_data_uint8 = std::move(render_request.latest_result_.pixels);
-    // UE_LOG(LogTemp, Warning, TEXT("response.image_data_uint8: %d"), response.image_data_uint8->size());
+    UE_LOG(LogTemp, Warning, TEXT("pixels: %d %d %d %d %d"), (*response.image_data_uint8)[0], (*response.image_data_uint8)[1], (*response.image_data_uint8)[2], (*response.image_data_uint8)[3], (*response.image_data_uint8)[4]);
 }
 
 bool UnrealImageCapture::getScreenshotScreen(ImageType image_type, std::vector<uint8_t>& compressedPng)
