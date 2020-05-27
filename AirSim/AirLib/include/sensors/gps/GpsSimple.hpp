@@ -65,15 +65,34 @@ public: //methods
     //*** End: UpdatableState implementation ***//
 
     virtual ~GpsSimple() = default;
+
+    double getGaussianNoise(const double mean, const double var)
+    {
+        std::normal_distribution<double> distribution(mean, var);
+        long                             seed = std::chrono::system_clock::now().time_since_epoch().count();
+        std::default_random_engine       generator(seed);
+        return distribution(generator);
+    }
+
+    msr::airlib::GeoPoint addGeoPointNoise(msr::airlib::GeoPoint geo_point, real_T eph, real_T epv)
+    {
+        msr::airlib::GeoPoint geo_point_out=geo_point;
+        geo_point_out.latitude=getGaussianNoise(geo_point.latitude, eph);
+        geo_point_out.longitude=getGaussianNoise(geo_point.longitude, eph);
+        geo_point_out.altitude=getGaussianNoise(geo_point.altitude, epv);
+
+        return geo_point_out;
+    }
+
 private:
     void addOutputToDelayLine(real_T eph, real_T epv)
     {
         Output output;
         const GroundTruth& ground_truth = getGroundTruth();
-
+        
         //GNSS
         output.gnss.time_utc = static_cast<uint64_t>(clock()->nowNanos() / 1.0E3);
-        output.gnss.geo_point = ground_truth.environment->getState().geo_point;
+        output.gnss.geo_point = addGeoPointNoise(ground_truth.environment->getState().geo_point, eph, epv); //Update GroundTruth geo_point with added noise
         output.gnss.eph = eph;
         output.gnss.epv = epv;
         output.gnss.velocity = ground_truth.kinematics->twist.linear;
