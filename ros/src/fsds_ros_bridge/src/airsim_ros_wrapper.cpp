@@ -663,10 +663,10 @@ void AirsimROSWrapper::img_response_timer_cb(const ros::TimerEvent& event)
         for (const auto& airsim_img_request_vehicle_name_pair : airsim_img_request_vehicle_name_pair_vec_)
         {
             std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
-            const std::vector<ImageResponse>& img_response = airsim_client_images_.simGetImages(airsim_img_request_vehicle_name_pair.first, airsim_img_request_vehicle_name_pair.second);
+            const std::vector<ImageResponse*>& img_response = airsim_client_images_.simGetImages(airsim_img_request_vehicle_name_pair.first, airsim_img_request_vehicle_name_pair.second);
             lck.unlock();
 
-            std::cout << "img_response_timer_cb: " << img_response.front().image_data_uint8->size() << std::endl;
+            std::cout << "img_response_timer_cb: " << img_response.front()->image_data_uint8->size() << std::endl;
 
             if (img_response.size() == airsim_img_request_vehicle_name_pair.first.size()) 
             {
@@ -732,10 +732,6 @@ sensor_msgs::ImagePtr AirsimROSWrapper::get_img_msg_from_response(const ImageRes
                                                                 const std::string frame_id)
 {
     sensor_msgs::ImagePtr img_msg_ptr = boost::make_shared<sensor_msgs::Image>();
-    //img_response.image_data_uint8->data() = std::vector<unsigned char>
-
-    std::cout << "when receiving in get_img_msg_from_response: " << img_response.image_data_uint8->size() << std::endl;
-
 
     std::vector<unsigned char> v;
     for(int i = 0; i < img_response.image_data_uint8->size(); i++){
@@ -788,29 +784,30 @@ sensor_msgs::CameraInfo AirsimROSWrapper::generate_cam_info(const std::string& c
     return cam_info_msg;
 }
 
-void AirsimROSWrapper::process_and_publish_img_response(const std::vector<ImageResponse>& img_response_vec, const int img_response_idx, const std::string& vehicle_name)
+void AirsimROSWrapper::process_and_publish_img_response(const std::vector<ImageResponse*>& img_response_vec, const int img_response_idx, const std::string& vehicle_name)
 {    
     // todo add option to use airsim time (image_response.TTimePoint) like Gazebo /use_sim_time param
     ros::Time curr_ros_time = ros::Time::now(); 
     int img_response_idx_internal = img_response_idx;
 
-    for (const auto& curr_img_response : img_response_vec)
+    for (const ImageResponse* curr_img_response : img_response_vec)
     {
         // if a render request failed for whatever reason, this img will be empty.
         // Attempting to use a make_ts(0) results in ros::Duration runtime error.
-        if (curr_img_response.time_stamp == 0) continue;
+        if (curr_img_response->time_stamp == 0) continue;
 
         // todo publishing a tf for each capture type seems stupid. but it foolproofs us against render thread's async stuff, I hope. 
         // Ideally, we should loop over cameras and then captures, and publish only one tf.  
-        // publish_camera_tf(curr_img_response, curr_ros_time, vehicle_name, curr_img_response.camera_name);
+        publish_camera_tf(*curr_img_response, curr_ros_time, vehicle_name, curr_img_response->camera_name);
 
         // todo simGetCameraInfo is wrong + also it's only for image type -1.  
-        // msr::airlib::CameraInfo camera_info = airsim_client_.simGetCameraInfo(curr_img_response.camera_name);
+        msr::airlib::CameraInfo camera_info = airsim_client_.simGetCameraInfo(curr_img_response->camera_name);
 
         // update timestamp of saved cam info msgs
-        // camera_info_msg_vec_[img_response_idx_internal].header.stamp = curr_ros_time;
-        // cam_info_pub_vec_[img_response_idx_internal].publish(camera_info_msg_vec_[img_response_idx_internal]);
+        camera_info_msg_vec_[img_response_idx_internal].header.stamp = curr_ros_time;
+        cam_info_pub_vec_[img_response_idx_internal].publish(camera_info_msg_vec_[img_response_idx_internal]);
 
+        //special image types disabled cuz we broke them and are currently not in the business of fixing it.
         // DepthPlanner / DepthPerspective / DepthVis / DisparityNormalized
         // if (curr_img_response.pixels_as_float)
         // {
@@ -821,9 +818,9 @@ void AirsimROSWrapper::process_and_publish_img_response(const std::vector<ImageR
         // // Scene / Segmentation / SurfaceNormals / Infrared
         // else
         // {
-            image_pub_vec_[img_response_idx_internal].publish(get_img_msg_from_response(curr_img_response, 
+            image_pub_vec_[img_response_idx_internal].publish(get_img_msg_from_response(*curr_img_response, 
                                                     curr_ros_time, 
-                                                    curr_img_response.camera_name + "_optical"));
+                                                    curr_img_response->camera_name + "_optical"));
         // }
         img_response_idx_internal++;
     }

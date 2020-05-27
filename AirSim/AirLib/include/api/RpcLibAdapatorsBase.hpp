@@ -423,41 +423,43 @@ public:
         }
 
 
-        msr::airlib::ImageCaptureBase::ImageResponse to() const
+        msr::airlib::ImageCaptureBase::ImageResponse* to() const
         {
-            msr::airlib::ImageCaptureBase::ImageResponse d;
+            msr::airlib::ImageCaptureBase::ImageResponse* d = new msr::airlib::ImageCaptureBase::ImageResponse();
 
-            d.pixels_as_float = pixels_as_float;
+            d->pixels_as_float = pixels_as_float;
 
             if (!pixels_as_float) {
-                d.image_data_uint8 = std::make_unique<std::vector<uint8_t>>(image_data_uint8);
+                d->image_data_uint8 = std::make_unique<std::vector<uint8_t>>(image_data_uint8);
             }else
-                d.image_data_float = image_data_float;
+                d->image_data_float = image_data_float;
 
-            d.camera_name = camera_name;
-            d.camera_position = camera_position.to();
-            d.camera_orientation = camera_orientation.to();
-            d.time_stamp = time_stamp;
-            d.message = message;
-            d.compress = compress;
-            d.width = width;
-            d.height = height;
-            d.image_type = image_type;
+            d->camera_name = camera_name;
+            d->camera_position = camera_position.to();
+            d->camera_orientation = camera_orientation.to();
+            d->time_stamp = time_stamp;
+            d->message = message;
+            d->compress = compress;
+            d->width = width;
+            d->height = height;
+            d->image_type = image_type;
 
-            std::cout << "pixel points right after decoding: " << d.image_data_uint8->size() << std::endl;
+            std::cout << "pixel points right after decoding: " << d->image_data_uint8->size() << std::endl;
 
             return d;
         }
 
-        static std::vector<msr::airlib::ImageCaptureBase::ImageResponse> to(
+        static std::vector<msr::airlib::ImageCaptureBase::ImageResponse*> to(
             const std::vector<ImageResponse>& response_adapter
         ) {
-            std::vector<msr::airlib::ImageCaptureBase::ImageResponse> response;
+            std::vector<msr::airlib::ImageCaptureBase::ImageResponse*> response;
             for (const auto& item : response_adapter){
-                msr::airlib::ImageCaptureBase::ImageResponse x = item.to();
-                std::cout << "for inside to: " << x.image_data_uint8->size() << std::endl;
+                msr::airlib::ImageCaptureBase::ImageResponse* x = item.to();
+                std::cout << "for inside to: " << x->image_data_uint8->size() << std::endl;
                 response.push_back(x);
             }
+
+            std::cout << "size response vector: " << response.size() << std::endl;
 
             return response;
         }

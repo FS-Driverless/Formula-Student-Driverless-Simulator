@@ -224,9 +224,9 @@ void RpcLibClientBase::simSetTraceLine(const std::vector<float>& color_rgba, flo
     pimpl_->client.call("simSetTraceLine", color_rgba, thickness, vehicle_name);
 }
 
-vector<ImageCaptureBase::ImageResponse> RpcLibClientBase::simGetImages(vector<ImageCaptureBase::ImageRequest> request, const std::string& vehicle_name)
+vector<ImageCaptureBase::ImageResponse*> RpcLibClientBase::simGetImages(vector<ImageCaptureBase::ImageRequest> request, const std::string& vehicle_name)
 {
-    const auto& response_adaptor = pimpl_->client.call("simGetImages", 
+    const vector<RpcLibAdapatorsBase::ImageResponse> response_adaptor = pimpl_->client.call("simGetImages", 
         RpcLibAdapatorsBase::ImageRequest::from(request), vehicle_name)
         .as<vector<RpcLibAdapatorsBase::ImageResponse>>();
 
