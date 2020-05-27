@@ -24,7 +24,41 @@ $(document).ready(function() {
         }
         setTimeout(pollServer, 5000);
     }
+
+    // Launch button handler
+    $('#launch').click(() => {
+        const accessToken = $('#access-token').val();
+        if (accessToken === '') {
+            alert('Give an access token.');
+            return
+        }
     
+        const selectedTeam = $("input:radio[name ='team-select']:checked").val();
+        if (selectedTeam === undefined) {
+            alert('Select a team.');
+            return
+        }
+    
+        const selectedMission = $("input:radio[name ='mission-select']:checked").val();
+        if (selectedMission === undefined) {
+            alert('Select a mission.');
+            return
+        }
+    
+        $.ajax('launch/simulator', {
+            data: JSON.stringify({id: selectedTeam, mission: selectedMission, access_token: accessToken}),
+            contentType: 'application/json',
+            type: 'POST',
+            success: res => {
+                logs.push(res.response);
+                $('.log-window').append(`<p>${res.response}</p>`);
+            },
+            error: res => {
+                alert(res.responseJSON.error);
+            }
+        });
+    });
+
     // Start button handler
     $('#start').click(() => {
         const accessToken = $('#access-token').val();

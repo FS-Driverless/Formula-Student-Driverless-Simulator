@@ -11,20 +11,19 @@ app = Flask(__name__)
 
 class WebServer(FlaskView):
 
+    # Class variables are used for variables that can change while the web server is running
+    # This has to do with how flask_classful handles instance variables
+    simulation_process = None
     interface_process = None
     timer = None
     log_file = None
     logs = []
 
-    client = airsim.CarClient()
-    client.confirmConnection()
-    car_controls = airsim.CarControls()
-
-    ref =  client.getRefereeState()
-    doo_count = ref.doo_counter
-    lap_times = ref.laps
+    team = None
+    mission = None
 
     def __init__(self):
+        # Instance variables are used for variables that don't change while the web server is running
         with open('../config/team_config.json', 'r') as file:
             self.team_config = json.load(file)
             self.access_token = self.team_config['access_token']
@@ -32,6 +31,36 @@ class WebServer(FlaskView):
     @route('/', methods=['GET'])
     def index(self):
         return render_template('index.html', teams=self.team_config['teams'], logs=WebServer.logs)
+
+    @route('/launch/simulator', methods=['POST'])
+    def launch_simulator(self):
+        # Abort if access token is incorrect
+        if request.json is not None and request.json['access_token'] != self.access_token:
+            abort(403, description='Incorrect access token')
+
+        # Abort if empty request
+        if request.json is None or not all(key in request.json for key in ['id', 'mission', 'access_token']):
+            abort(400, description='Empty request.')   
+
+        # Abort if ROS bridge is not running
+        if WebServer.simulation_process is not None:
+            abort(400, description='Simulation already running.')
+
+        # Get team config
+        teamId = request.json['id']
+        WebServer.mission = request.json['mission']
+        for obj in self.team_config['teams']: 
+            if obj['id'] == teamId: WebServer.team = obj  
+
+        # Write team specific car settings to settings.json
+        filename = os.path.realpath(os.path.dirname(__file__)) + '/../UE4Project/Plugins/AirSim/Settings/settings.json'
+        with open(filename, 'w') as file:
+            json.dump(WebServer.team['car_settings'], file, sort_keys=True, indent=4, separators=(',', ': '))
+
+        # Launch Unreal Engine simulator
+        WebServer.simulation_process = subprocess.Popen(['./../UE4Project/LinuxNoEditor/Blocks.sh'])   
+
+        return {'response': ''}  
 
     @route('/mission/start', methods=['POST'])
     def mission_start(self):
@@ -41,20 +70,26 @@ class WebServer(FlaskView):
 
         # Abort if empty request
         if request.json is None or not all(key in request.json for key in ['id', 'mission', 'access_token']):
-            abort(400, description='Empty request.')    
+            abort(400, description='Empty request.')   
 
-        # Get team config
-        teamId = request.json['id']
-        mission = request.json['mission']
-        for obj in self.team_config['teams']: 
-            if obj['id'] == teamId: team = obj
+        # Abort if Unreal Engine simulator is not running
+        if WebServer.simulation_process is None:
+            abort(400, description='Simulator not running.') 
+
+        client = airsim.CarClient()
+        client.confirmConnection()
+        car_controls = airsim.CarControls()
+
+        ref =  client.getRefereeState()
+        doo_count = ref.doo_counter
+        lap_times = ref.laps
 
         # Set ROS MASTER
         procenv = os.environ.copy()
-        procenv["ROS_MASTER_URI"] = team['master']
+        procenv["ROS_MASTER_URI"] = WebServer.team['master']
 
         # Launch ROS bridge
-        WebServer.interface_process = subprocess.Popen(['roslaunch', 'fsds_ros_bridge', 'fsds_ros_bridge.launch', 'mission:={}'.format(mission)], env=procenv)  
+        WebServer.interface_process = subprocess.Popen(['roslaunch', 'fsds_ros_bridge', 'fsds_ros_bridge.launch', 'mission:={}'.format(WebServer.mission)], env=procenv)  
 
         # Start referee state listener
         self.referee_state_listener() 
@@ -64,7 +99,7 @@ class WebServer(FlaskView):
         WebServer.logs.append(log)
 
         # Create log file. Create logs directory if it does not exist
-        filename = 'logs/{}_{}_{}.txt'.format(team['name'].lower().replace(' ', '-'), mission, str(datetime.now().strftime("%d-%m-%Y_%H:%M:%S")))
+        filename = 'logs/{}_{}_{}.txt'.format(WebServer.team['name'].lower().replace(' ', '-'), WebServer.mission, str(datetime.now().strftime("%d-%m-%Y_%H:%M:%S")))
         if not os.path.exists(os.path.dirname(filename)):
             try:
                 os.makedirs(os.path.dirname(filename))
