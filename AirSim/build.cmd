@@ -136,8 +136,8 @@ if ERRORLEVEL 1 goto :buildfailed
 )
 
 REM //---------- all our output goes to Unreal/Plugin folder ----------
-if NOT exist ..\UE4Project\Plugins\AirSim\Source mkdir ..\UE4Project\Plugins\AirSim\Source
-robocopy /MIR AirLib ..\UE4Project\Plugins\AirSim\Source  /XD temp *. /njh /njs /ndl /np
+if NOT exist ..\UE4Project\Plugins\AirSim\Source\AirLib mkdir ..\UE4Project\Plugins\AirSim\Source\AirLib
+robocopy /MIR AirLib ..\UE4Project\Plugins\AirSim\Source\AirLib  /XD temp *. /njh /njs /ndl /np
 copy /y AirSim.props ..\UE4Project\Plugins\AirSim\Source
 
 REM //---------- done building ----------
