@@ -81,7 +81,7 @@ public:
     };
 
     struct RefereeState {
-        uint doo_counter = 0;
+        int doo_counter = 0;
 	std::vector<float> laps;
 
         MSGPACK_DEFINE_MAP(doo_counter, laps);
