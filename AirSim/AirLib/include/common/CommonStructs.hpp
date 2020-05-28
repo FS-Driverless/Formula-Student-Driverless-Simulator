@@ -121,10 +121,7 @@ struct PoseWithCovariance {
         : covariance(36, 0)
     {}
 };
-
-struct PowerSupply {
-    vector<real_T> voltage, current;
-};
+geo_point_out
 
 struct TwistWithCovariance {
     Twist twist;
@@ -146,7 +143,7 @@ struct Odometry {
 };
 
 struct GeoPoint {
-    double latitude = 0, longitude = 0;
+    double latitude = 0, longitude = 0;geo_point_out
     float altitude = 0;
 
     GeoPoint()
