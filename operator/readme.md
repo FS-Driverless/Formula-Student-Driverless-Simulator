@@ -1,5 +1,5 @@
 # Operator
-This folder contains the operator of the simulation. The operator consists of both a web interface and a webserver. The operator is meant to be used by Formula Student officials to control and keep track of what is happening in the simulation. From this web interface, the official can select teams and events, start, stop and reset the car and view all logs received by the webserver. All these logs are also stored in log files, in the case that the operator crashes.
+This folder contains the operator of the simulation. The operator consists of both a web interface and a webserver. The operator is meant to be used by Formula Student officials to control and keep track of what is happening in the simulation. From this web interface, the official can launch and exit the simulator, select teams and events, start, stop and reset the car and view all logs received by the webserver. All these logs are also stored in log files, in the case that the operator crashes.
 
 ![Operator](../docs/images/operator.png)
 
