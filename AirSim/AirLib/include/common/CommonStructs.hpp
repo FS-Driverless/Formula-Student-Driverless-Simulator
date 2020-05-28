@@ -121,7 +121,6 @@ struct PoseWithCovariance {
         : covariance(36, 0)
     {}
 };
-geo_point_out
 
 struct TwistWithCovariance {
     Twist twist;
@@ -143,7 +142,7 @@ struct Odometry {
 };
 
 struct GeoPoint {
-    double latitude = 0, longitude = 0;geo_point_out
+    double latitude = 0, longitude = 0;
     float altitude = 0;
 
     GeoPoint()
