@@ -16,10 +16,9 @@
         </nav>
         
         <div class="wrapper-top">
+
             <div class="team-selector">
-                <h5>
-                    Team selector
-                </h5>
+                <h5>Team Selector</h5>
                 <div>
                     {% for team in teams %}
                     <div class="custom-control custom-radio">
@@ -31,23 +30,28 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="launch-simulator-button">
-                <button id="launch" type="button" class="btn btn-primary">LAUNCH simulator</button>
+
+            <div class="column">
+                <h5>Simulation Control</h5>
+                <div class="simulator-launch-exit-button">
+                    <button id="launch-exit" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Starts or stops the Unreal Engine simulator">LAUNCH simulator</button>
+                </div>
+                <div class="reset-button">
+                    <button id="reset" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Resets the car to its original position">RESET simulator</button>
+                </div>
             </div>
-            <div class="start-button">
-                <button id="start" type="button" class="btn btn-primary">Send START signal</button>
-            </div>
-            <div class="stop-button">
-                <button id="stop" type="button" class="btn btn-primary">Send STOP signal</button>
-            </div>
-            <div class="reset-button">
-                <button id="reset" type="button" class="btn btn-primary">RESET simulator</button>
+
+            <div class="column">
+                <h5>Mission Control</h5>
+                <div class="interface-start-stop-button">
+                    <button id="start-stop" type="button" class="btn btn-primary" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Allow or disallow the selected team's AS to control the car">Send START signal</button>
+                </div>
             </div>
         </div>
         <div class="wrapper-bottom">
             <div class="mission-selector">
                 <h5>
-                    Mission selector
+                    Mission Selector
                 </h5>
                 <div>
                     <div class="custom-control custom-radio">
@@ -66,7 +70,7 @@
             </div>
             <div>
                 <h5 class="log-window-title">
-                    Simulator logbook
+                    Simulator Logbook
                 </h5>
                 <div class="log-window"></div>
             </div>

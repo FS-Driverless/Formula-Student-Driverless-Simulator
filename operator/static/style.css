@@ -5,8 +5,9 @@ html, body {
 }
 .wrapper-top {
     display: grid;
-    grid-template-columns: 25% 25% 25% 25%;
-    padding: 44px 100px 100px 100px
+    grid-template-columns: 25% 37.5% 37.5%;
+    padding: 44px 100px 100px 100px;
+    height: 27vh;
 }
 .wrapper-bottom {
     display: grid;
@@ -14,19 +15,16 @@ html, body {
     padding: 0px 100px 300px 100px;
     height: 90vh;
 }
-.start-button {
-    margin-top: auto;
-    margin-bottom: auto;
+[class*="-button"] {
+    margin: auto;
     text-align: center;
+    width: 170px;
+    margin-bottom: 20px;
 }
-.stop-button {
-    margin-top: auto;
-    margin-bottom: auto;
-    text-align: center;
+button {
+    width: 166px;
 }
-.reset-button {
-    margin-top: auto;
-    margin-bottom: auto;
+.column {
     text-align: center;
 }
 .log-window {

@@ -14,13 +14,15 @@ class WebServer(FlaskView):
     # Class variables are used for variables that can change while the web server is running
     # This has to do with how flask_classful handles instance variables
     simulation_process = None
-    interface_process = None
-    timer = None
+    interface_process =  None
     log_file = None
     logs = []
 
     team = None
     mission = None
+    client = None
+    car_controls = None
+    referee_state_timer = None
 
     def __init__(self):
         # Instance variables are used for variables that don't change while the web server is running
@@ -32,7 +34,7 @@ class WebServer(FlaskView):
     def index(self):
         return render_template('index.html', teams=self.team_config['teams'], logs=WebServer.logs)
 
-    @route('/launch/simulator', methods=['POST'])
+    @route('/simulator/launch', methods=['POST'])
     def launch_simulator(self):
         # Abort if access token is incorrect
         if request.json is not None and request.json['access_token'] != self.access_token:
@@ -42,7 +44,7 @@ class WebServer(FlaskView):
         if request.json is None or not all(key in request.json for key in ['id', 'mission', 'access_token']):
             abort(400, description='Empty request.')   
 
-        # Abort if ROS bridge is not running
+        # Abort if simulator is already running
         if WebServer.simulation_process is not None:
             abort(400, description='Simulation already running.')
 
@@ -58,9 +60,73 @@ class WebServer(FlaskView):
             json.dump(WebServer.team['car_settings'], file, sort_keys=True, indent=4, separators=(',', ': '))
 
         # Launch Unreal Engine simulator
-        WebServer.simulation_process = subprocess.Popen(['./../UE4Project/LinuxNoEditor/Blocks.sh'])   
+        WebServer.simulation_process = subprocess.Popen(['./../UE4Project/LinuxNoEditor/Blocks.sh'])  
+        time.sleep(7)
 
-        return {'response': ''}  
+        # Create connection with airsim car client
+        WebServer.client = airsim.CarClient()
+        WebServer.client.confirmConnection()
+        WebServer.car_controls = airsim.CarControls()
+
+        # Get referee state
+        ref =  WebServer.client.getRefereeState()
+        WebServer.doo_count = ref.doo_counter
+        WebServer.lap_times = ref.laps 
+
+        log = '{}: {}'.format(str(datetime.now()), 'Launched simulator. Team: ' + WebServer.team['name'] + '.')
+        return {'response': log}  
+
+    @route('/simulator/exit', methods=['POST'])
+    def exit_simulator(self):
+        # Abort if access token is incorrect
+        if request.json is not None and request.json['access_token'] != self.access_token:
+            abort(403, description='Incorrect access token')
+
+        # Abort if empty request
+        if request.json is None or 'access_token' not in request.json:
+            abort(400, description='Empty request.')   
+
+        # Abort if simulator is not running
+        if WebServer.simulation_process is None:
+            abort(400, description='Simulation not running.')
+
+        if WebServer.interface_process is not None:
+            abort(400, description='Mission still active.')
+    
+        # Close airsim client connection
+        WebServer.client = None
+        WebServer.car_controls = None
+        WebServer.referee_state_timer = None
+
+        # Shutdown simulation processes
+        if WebServer.simulation_process.poll() is None:
+            # Kill process created by simulation_process
+            child_process_id = int(subprocess.check_output(['pidof', 'Blocks']))
+            os.kill(child_process_id, signal.SIGINT)
+
+            # Check if procses has been killed, if so pass, else terminate
+            try:
+                os.kill(child_process_id, 0)
+            except OSError:
+                pass
+            else:
+                os.kill(child_process_id, signal.SIGTERM)
+
+            # Try to stop it gracefully. SIGINT is the equivilant to doing ctrl-c
+            WebServer.simulation_process.send_signal(signal.SIGINT)
+            time.sleep(3)
+            # Still running?
+            if WebServer.simulation_process.poll() is None:
+                # Kill it with fire
+                WebServer.simulation_process.terminate()
+                # Wait for it to finish
+                WebServer.simulation_process.wait()
+                #print WebServer.simulation_process
+
+            WebServer.simulation_process = None
+    
+        log = '{}: {}'.format(str(datetime.now()), 'Exited simulator.')
+        return {'response': log}  
 
     @route('/mission/start', methods=['POST'])
     def mission_start(self):
@@ -69,20 +135,12 @@ class WebServer(FlaskView):
             abort(403, description='Incorrect access token')
 
         # Abort if empty request
-        if request.json is None or not all(key in request.json for key in ['id', 'mission', 'access_token']):
+        if request.json is None or 'access_token' not in request.json:
             abort(400, description='Empty request.')   
 
         # Abort if Unreal Engine simulator is not running
         if WebServer.simulation_process is None:
             abort(400, description='Simulator not running.') 
-
-        client = airsim.CarClient()
-        client.confirmConnection()
-        car_controls = airsim.CarControls()
-
-        ref =  client.getRefereeState()
-        doo_count = ref.doo_counter
-        lap_times = ref.laps
 
         # Set ROS MASTER
         procenv = os.environ.copy()
@@ -95,7 +153,7 @@ class WebServer(FlaskView):
         self.referee_state_listener() 
 
         # Create log message
-        log = '{}: {}'.format(str(datetime.now()), 'Mission started.')
+        log = '{}: {}'.format(str(datetime.now()), 'Mission ' + WebServer.mission + ' started.')
         WebServer.logs.append(log)
 
         # Create log file. Create logs directory if it does not exist
@@ -128,7 +186,7 @@ class WebServer(FlaskView):
             abort(400, description='No process running.')
 
         # Check if previous process is still running
-        if WebServer.interface_process is not None and WebServer.interface_process.poll() is None:
+        if WebServer.interface_process.poll() is None:
             # Try to stop it gracefully. SIGINT is the equivilant to doing ctrl-c
             WebServer.interface_process.send_signal(signal.SIGINT)
             time.sleep(3)
@@ -142,7 +200,7 @@ class WebServer(FlaskView):
             WebServer.interface_process = None
 
         # Stop referee state listener
-        WebServer.timer.cancel()
+        WebServer.referee_state_timer.cancel()
 
         # Brake car
         WebServer.car_controls.brake = 1
@@ -150,7 +208,7 @@ class WebServer(FlaskView):
         WebServer.car_controls.brake = 0 # Remove brake
 
         # Create log message
-        log = '{}: {}'.format(str(datetime.now()), 'Mission stopped.')
+        log = '{}: {}'.format(str(datetime.now()), 'Mission ' + WebServer.mission + ' stopped.')
         WebServer.logs.append(log)
         del WebServer.logs[:] # Clear logs
 
@@ -170,6 +228,9 @@ class WebServer(FlaskView):
         if request.json is None or 'access_token' not in request.json:
             abort(400, description='Empty request.')  
 
+        if WebServer.client is None:
+            abort(400, description='No connection to the AirSim client.')
+
         # Reset simulator
         WebServer.client.reset()
         
@@ -182,8 +243,8 @@ class WebServer(FlaskView):
 
         return {'response': log}
 
-    @route('/logs', methods=['POST'])
-    def get_logs(self):
+    @route('/poll', methods=['POST'])
+    def poll_server_state(self):
         # Abort if access token is incorrect
         if request.json is not None and request.json['access_token'] != self.access_token:
             abort(403, description='Incorrect access token')
@@ -192,18 +253,22 @@ class WebServer(FlaskView):
         if request.json is None or 'access_token' not in request.json:
             abort(400, description='Empty request.')  
 
-        return {'response': WebServer.logs}
+        return {
+            'logs': WebServer.logs,
+            'simulator_state': True if WebServer.simulation_process is not None else False,
+            'interface_state': True if WebServer.interface_process is not None else False
+        }
 
     def referee_state_listener(self):
-        WebServer.timer = Timer(0.5, self.referee_state_listener)
-        WebServer.timer.start()
+        WebServer.referee_state_timer = Timer(0.5, self.referee_state_listener)
+        WebServer.referee_state_timer.start()
         ref = WebServer.client.getRefereeState()
 
         if WebServer.doo_count != ref.doo_counter:
             delta = ref.doo_counter - WebServer.doo_count
 
             for d in range(WebServer.doo_count + 1, WebServer.doo_count + delta + 1):
-                log = '{}: {}. {} {}'.format(str(datetime.now()), 'Cone hit', str(d), 'DOO cone(s).')
+                log = '{}: {}. {} {}'.format(str(datetime.now()), 'Cone hit', str(d), 'cone(s) DOO.')
                 WebServer.logs.append(log)
                 WebServer.log_file.write(log + '\n')
 
