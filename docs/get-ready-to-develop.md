@@ -1,34 +1,25 @@
 # Let's get ready to develop this project
 So you want to make changes to this project, amazing! We always love new developers <3
-Using this tutorial you can set up your local development environment.
+Using this tutorial you can set up your computer to development the simulator. 
+If you just want to run the simulator, you can just follow [this tutorial](get-ready-to-simulate.md)
 
 ## Prerequisites
-To run this project you need quite a good computer with a modern Nvidia video card.
+To run this project you need quite a good windows computer with a modern Nvidia video card.
 To check the video card drivers, run `vulkaninfo`. It should output a bunch of lines without errors.
 
 Also, make sure you have 100GB free disk space. 
-You also need to run **ubuntu 18.04 LTS**. Any other platforms are not supported.
 If your computer does not suffice you can use a remote workstation on Google Cloud Platform.
 Read [this tutorial](gcp-remote-workstation.md) on how to setup your virtual workstation.
 
-We will be compiling all kinds of C++ files and it is important that they are all compiled using the same compiler version. 
-Therefore we will install GCC 8 and set it to use it when `gcc` is called.
-
-```
-sudo apt-get install gcc-8 g++-8
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 700 --slave /usr/bin/g++ g++ /usr/bin/g++-7
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 800 --slave /usr/bin/g++ g++ /usr/bin/g++-8
-```
-
 ## Install Unreal Engine
-We use Unreal Engine 4.24. You can install it anywhere on your computer.
-```
-git clone --depth=1 -b 4.24 https://github.com/EpicGames/UnrealEngine.git
-cd UnrealEngine
-./Setup.sh && ./GenerateProjectFiles.sh && make
-```
+Go to [unrealengine.com](https://www.unrealengine.com/) and download the epic installer.
+You need an account for this.
+Install the epic installer.
 
-Try to run it by executing `./Engine/Binaries/Linux/UE4Editor`. It should show the editor without errors.
+Launch the epic installer and install Unreal Engine 4.25
+
+## Install visual studio 2019
+[Download visual studio 2019 (community edition)](https://visualstudio.microsoft.com/vs/)
 
 ## Install ROS Melodic
 
