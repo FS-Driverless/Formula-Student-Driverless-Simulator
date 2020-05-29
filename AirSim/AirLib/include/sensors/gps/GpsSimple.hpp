@@ -78,7 +78,9 @@ public: //methods
     msr::airlib::GeoPoint generateErrors(msr::airlib::GeoPoint geo_point, real_T eph, real_T epv)
     {
         HomeGeoPoint geo_point_in = HomeGeoPoint(geo_point);
-        msr::airlib::GeoPoint geo_point_err = EarthUtils::nedToGeodetic(msr::airlib::Vector3r(getGaussianNoise(0, eph), getGaussianNoise(0, eph), getGaussianNoise(0, epv)), geo_point_in);
+        float var_h = pow(eph, 2)/18;
+        float var_v = pow(epv, 2)/9;
+        msr::airlib::GeoPoint geo_point_err = EarthUtils::nedToGeodetic(msr::airlib::Vector3r(getGaussianNoise(0, var_h), getGaussianNoise(0,var_h), getGaussianNoise(0, var_h)), geo_point_in);
         msr::airlib::GeoPoint geo_point_out = geo_point;
         geo_point_out.latitude = geo_point_err.latitude;
         geo_point_out.longitude = geo_point_err.longitude;
@@ -96,7 +98,7 @@ private:
         //GNSS
         output.gnss.time_utc = static_cast<uint64_t>(clock()->nowNanos() / 1.0E3);
         output.gnss.velocity = ground_truth.kinematics->twist.linear;
-        if ((gpsnoise) && (sqrt(pow(output.gnss.velocity.x(), 2) + pow(output.gnss.velocity.y(), 2) + pow(output.gnss.velocity.z(), 2))>0.5)) {
+        if (gpsnoise){ // insert bracket before (gpsnoise) when uncommenting && (sqrt(pow(output.gnss.velocity.x(), 2) + pow(output.gnss.velocity.y(), 2) + pow(output.gnss.velocity.z(), 2))>0.5)) {
             output.gnss.geo_point=generateErrors(ground_truth.environment->getState().geo_point, eph, epv);
         }
         else {
