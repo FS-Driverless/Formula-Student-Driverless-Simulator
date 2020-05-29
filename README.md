@@ -42,6 +42,8 @@ If you do not have access to such a computer, you can [set up a remote workstati
 
 To actually setup your computer for development follow [this tutorial](docs/get-ready-to-develop.md).
 
+Read all about how to develop [here](docs/how-to-develop.md).
+
 
 ## Credits
 This project is based on the work of some amazing other open-source projects. 
