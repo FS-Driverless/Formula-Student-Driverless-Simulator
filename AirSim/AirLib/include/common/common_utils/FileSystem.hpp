@@ -12,7 +12,7 @@
 // This defines a default folder name for all the files created by AirLib so they 
 // are all gathered nicely in one place in the user's documents folder.
 #ifndef ProductFolderName
-#define ProductFolderName "Settings" 
+#define ProductFolderName "Driverless-Competition-Simulator" 
 #endif
 
 #ifndef _CRT_SECURE_NO_WARNINGS
@@ -48,13 +48,7 @@ public:
     #endif
     }
 
-    static std::string getUserDocumentsFolder();
-
 	static std::string getExecutableFolder();
-
-    static std::string getAppDataFolder() {
-        return ensureFolder(combine(getUserDocumentsFolder(), ProductFolderName));
-    }
 
     static std::string ensureFolder(const std::string& fullpath) {
         // make sure this directory exists.
@@ -111,10 +105,15 @@ public:
     static std::string getLogFolderPath(bool folder_timestamp)
     {
         std::string logfolder = folder_timestamp ? Utils::to_string(Utils::now()) : "";
-        std::string fullPath = combine(getAppDataFolder(), logfolder);
+        std::string fullPath = combine(combine(getUserHomeFolder(), "AirsimRecordings"), logfolder);
         ensureFolder(fullPath);
 
         return fullPath;
+    }
+
+    static std::string getConfigFilePath()
+    {
+        return combine(getUserHomeFolder(), "Driverless-Competition-Simulator/UE4Project/Plugins/AirSim/Settings/settings.json");
     }
 
     static std::string getLogFileNamePath(const std::string& fullPath, const std::string& prefix, const std::string& suffix, const std::string& extension, 
