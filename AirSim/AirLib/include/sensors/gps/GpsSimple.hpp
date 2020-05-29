@@ -13,6 +13,7 @@
 #include "common/FrequencyLimiter.hpp"
 #include "common/DelayLine.hpp"
 #include "common/EarthUtils.hpp"
+#include "math.h"
 
 namespace msr { namespace airlib {
 
@@ -94,16 +95,16 @@ private:
         
         //GNSS
         output.gnss.time_utc = static_cast<uint64_t>(clock()->nowNanos() / 1.0E3);
-        if (gpsnoise) {
+        output.gnss.velocity = ground_truth.kinematics->twist.linear;
+        if ((gpsnoise) && (sqrt(pow(output.gnss.velocity.x(), 2) + pow(output.gnss.velocity.y(), 2) + pow(output.gnss.velocity.z(), 2))>0.5)) {
             output.gnss.geo_point=generateErrors(ground_truth.environment->getState().geo_point, eph, epv);
         }
         else {
             output.gnss.geo_point=ground_truth.environment->getState().geo_point;
         }
         output.gnss.eph = eph;
-        output.gnss.epv = epv;
-        output.gnss.velocity = ground_truth.kinematics->twist.linear;
         output.is_valid = true;
+        output.gnss.epv = epv;
 
         output.gnss.fix_type =
             output.gnss.eph <= params_.eph_min_3d ? GnssFixType::GNSS_FIX_3D_FIX
