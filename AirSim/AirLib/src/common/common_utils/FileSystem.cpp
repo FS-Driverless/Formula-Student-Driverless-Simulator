@@ -109,3 +109,5 @@ std::string FileSystem::getExecutableFolder() {
 
     return ensureFolder(path);
 }
+
+#endif 

@@ -356,7 +356,7 @@ void ASimHUD::initializeSubWindows()
 
 bool ASimHUD::getSettingsText(std::string &settingsText)
 {
-    return (getSettingsTextFromCommandLine(settingsText) || readSettingsTextFromFile(common_utils::FileSystem::getConfigFilePath()));
+    return (getSettingsTextFromCommandLine(settingsText) || readSettingsTextFromFile(FString(common_utils::FileSystem::getConfigFilePath().c_str()), settingsText));
 }
 
 // Attempts to parse the settings text from the command line
