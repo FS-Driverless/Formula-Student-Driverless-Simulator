@@ -122,6 +122,10 @@ struct PoseWithCovariance {
     {}
 };
 
+struct PowerSupply{
+    vector<real_T> voltage, current;
+};
+
 struct TwistWithCovariance {
     Twist twist;
     vector<real_T> covariance;	//36 elements, 6x6 matrix
