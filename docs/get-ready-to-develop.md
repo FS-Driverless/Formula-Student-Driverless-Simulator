@@ -11,17 +11,32 @@ Also, make sure you have 100GB free disk space.
 If your computer does not suffice you can use a remote workstation on Google Cloud Platform.
 Read [this tutorial](gcp-remote-workstation.md) on how to setup your virtual workstation.
 
-## Install Unreal Engine
+[You should also enable Windows Subsystem for Linux 1](https://docs.microsoft.com/en-us/windows/wsl/install-win10). 
+No need to update to version 2.
+Install ubuntu 18.04 LTS.
+If you are on windows server, enable windows susbsystem for linux in the server manager and [install ubuntu](https://docs.microsoft.com/en-us/windows/wsl/install-on-server#download-a-linux-distribution).
+
+## Install Unreal Engine (Windows)
 Go to [unrealengine.com](https://www.unrealengine.com/) and download the epic installer.
 You need an account for this.
 Install the epic installer.
 
 Launch the epic installer and install Unreal Engine 4.25
 
-## Install visual studio 2019
+## Install visual studio 2019 (Windows)
 [Download visual studio 2019 (community edition)](https://visualstudio.microsoft.com/vs/)
 
-## Install ROS Melodic
+During installation, choose the following components:
+* Desktop development with C++
+* Game development with C++
+* Linux development with C++
+At 'Invidual Components select:
+* C++ CMake tools for Windows
+* Windows 10 SDK 10.0.18.362.0
+* .NET Framework 4.7 SDK
+
+
+## Install ROS Melodic (Ubuntu)
 
 ```
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
@@ -37,49 +52,24 @@ source /opt/ros/melodic/setup.bash
 source ~/Driverless-Competition-Simulator/ros/devel/setup.bash
 ```
 
-## Install the project
+## Clone the project
 
-This repo uses git LFS. So ensure you have LFS installed: `sudo apt-get install git-lfs`. 
-Once git-lfs is downloaded, `git lfs install` must be run.
+In Windows, install [git](https://git-scm.com/download/win) and [git lfs](https://git-lfs.github.com/).
 
-Let's start by cloning this repository in the home directory
+Once both are installed, open git bash and run `git lfs install`.
+
+Now clone the repo in the windows home directory 
 ```
 git clone git@github.com:FS-Online/Driverless-Competition-Simulator.git
 ```
 
-**THE REPO HAS TO BE CLONED IN THE HOME DIRECTORY!**. So the repo location should be `~/Driverless-Competition-Simulator`.
+Go into the cloned repo and run `git config core.fileMode false` to ignore file mode changes.
+
+**THE REPO HAS TO BE CLONED IN THE HOME DIRECTORY!**. So the repo location should be `$HOME/Driverless-Competition-Simulator`.
 Why you ask? Because we couldn't get relative paths in the C++ code to work so now we have hard-coded some paths to the home directory.
 I know yes it is ugly but it works. If you are bothered by it I would welcome you to open a pr with a fix.
 
-
-Now we have to build the AirSim libraries:
+In Ubuntu wsl, create a symlink from `~/Driverless-Competition-Simulator` to `~/Driverless-Competition-Simulator`
 ```
-cd ~/Driverless-Competition-Simulator
-AirSim/setup.sh
-AirSim/build.sh
+ln -s /mnt/c/Users/developer/Driverless-Competition-Simulator ~/Driverless-Competition-Simulator
 ```
-
-To set up the ROS workspace, cd into the `ros` folder and run
-```
-catkin init
-catkin build
-```
-
-Finally, you can launch the FSOnline Unreal Engine Project by running UE4Editor and selecting the `UE4Project/FSOnline.uproject` project.
-To do this in a single command you can run `UE4Editor Driverless-Competition-Simulator/UE4Project/FSOnline.uproject`
-
-Optionally you can make your life easy by add the following line to end of your `~/.bashrc` file:
-```
-alias ue="~/UnrealEngine/Engine/Binaries/Linux/UE4Editor ~/Driverless-Competition-Simulator/UE4Project/FSOnline.uproject"
-```
-Now you can run `ue` to launch Unreal Editor with the FSOnline project.
-
-## Development workflow
-
-If you make changes to the AirSim/AirLib code, you have to run `AirSim/build.sh`.
-This will compile the AirLib into binaries and copy those binaries to the FSOnline UE4 project plugin.
-
-If you make changes to the AirSim plugin (located in `FSOnline/Plugins/AirSim`) then you have to recompile the plugin.
-This is also required if the AirLib binaries have changed.
-To recompile, go into the UE4Editor, go to `Window` -> `Developer tools` -> `Modules`. Search for `AirSim` and click `Recompile`.
-This will recompile and reload the plugin.
