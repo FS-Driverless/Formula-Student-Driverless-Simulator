@@ -1,3 +1,6 @@
+# Formula Student Driverless Simulation
+![Front picture](docs/images/fsds_pretty.png)
+
 This is a Formula Student Driverless Simulation Competition System. (FSDS)
 It will provide a virtual environment where Autonomous Systems from different Formula Student teams can compete in time-trial challenges. 
 The first competition will take place during the driverless event, FS-Online 2020.
@@ -39,6 +42,8 @@ If you do not have access to such a computer, you can [set up a remote workstati
 
 To actually setup your computer for development follow [this tutorial](docs/get-ready-to-develop.md).
 
+Read all about how to develop [here](docs/how-to-develop.md).
+
 
 ## Credits
 This project is based on the work of some amazing other open-source projects. 
@@ -47,6 +52,9 @@ Primarily, [the AirSim project built by Microsoft and many open-source contribut
 Without it, we could have never done this.
 
 Many game assets like the surrounding world are based on assets from the [Formula Student Technion Driverless AirSim fork](https://github.com/FSTDriverless/AirSim). These assets made this project look as cool as it does now.
+
+
+![Closing picture](docs/images/fsds_cam_view.png)
 
 
 ## License

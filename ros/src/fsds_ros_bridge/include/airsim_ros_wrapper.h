@@ -4,8 +4,9 @@ STRICT_MODE_OFF //todo what does this do?
 #define RPCLIB_MSGPACK clmdep_msgpack
 #endif // !RPCLIB_MSGPACK
 #include "rpc/rpc_error.h"
-STRICT_MODE_ON
+    STRICT_MODE_ON
 
+#include "statistics.h"
 #include "airsim_settings_parser.h"
 #include "common/AirSimSettings.hpp"
 #include "common/common_utils/FileSystem.hpp"
@@ -45,9 +46,10 @@ STRICT_MODE_ON
 #include <tf2_ros/transform_listener.h>
 #include <unordered_map>
 // #include "nodelet/nodelet.h"
+#define printVariableNameAndValue(x) std::cout << "The name of variable **" << (#x) << "** and the value of variable is => " << x << "\n"
 
-// todo move airlib typedefs to separate header file?
-typedef msr::airlib::ImageCaptureBase::ImageRequest ImageRequest;
+    // todo move airlib typedefs to separate header file?
+    typedef msr::airlib::ImageCaptureBase::ImageRequest ImageRequest;
 typedef msr::airlib::ImageCaptureBase::ImageResponse ImageResponse;
 typedef msr::airlib::ImageCaptureBase::ImageType ImageType;
 typedef msr::airlib::AirSimSettings::CaptureSetting CaptureSetting;
@@ -60,22 +62,23 @@ struct SimpleMatrix
 {
     int rows;
     int cols;
-    double* data;
+    double *data;
 
-    SimpleMatrix(int rows, int cols, double* data)
+    SimpleMatrix(int rows, int cols, double *data)
         : rows(rows), cols(cols), data(data)
-    {}
+    {
+    }
 };
-
 
 class AirsimROSWrapper
 {
 public:
-    AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, const std::string & host_ip);
-    ~AirsimROSWrapper() {}; 
+    AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, const std::string& host_ip);
+    ~AirsimROSWrapper(){};
 
     void initialize_airsim();
     void initialize_ros();
+    void initialize_statistics();
 
     // std::vector<ros::CallbackQueue> callback_queues_;
     ros::AsyncSpinner img_async_spinner_;
@@ -87,14 +90,43 @@ public:
     int64_t first_imu_unreal_ts = -1;
 
 private:
+    // STATISTICS objects (where possible,
+    // the convention of RpcCall+Statistics
+    // or Pub/Sub name + _statistics
+    // for naming is followed)
+    // These instances need to be initialized elsewhere than where they are declared (ie not here)
+    ros_bridge::Statistics setCarControlsStatistics;
+    ros_bridge::Statistics getGpsDataStatistics;
+    ros_bridge::Statistics getCarStateStatistics;
+    std::vector<ros_bridge::Statistics> getImuDataVecStatistics;
+    std::vector<ros_bridge::Statistics> simGetImagesVecStatistics;
+    std::vector<ros_bridge::Statistics> getLidarDataVecStatistics;
+    ros_bridge::Statistics control_cmd_sub_statistics;
+    ros_bridge::Statistics global_gps_pub_statistics;
+    ros_bridge::Statistics odom_local_ned_pub_statistics;
+    std::vector<ros_bridge::Statistics> cam_pub_vec_statistics;
+    std::vector<ros_bridge::Statistics> lidar_pub_vec_statistics;
+    std::vector<ros_bridge::Statistics> imu_pub_vec_statistics;
+    
+    // create std::vector<Statistics*> which I can use to iterate over all these options 
+    // and apply common operations such as print, reset
+    // std::vector<ros_bridge::Statistics*> statistics_obj_ptr;
+
+    // Print all statistics
+    void PrintStatistics();
+
+    // Reset statistics
+    void ResetStatistics();
+
     /// ROS timer callbacks
     void img_response_timer_cb(const ros::TimerEvent& event); // update images from airsim_client_ every nth sec
-    void car_state_timer_cb(const ros::TimerEvent& event); // update drone state from airsim_client_ every nth sec
-    void car_control_cb(const fsds_ros_bridge::ControlCommand::ConstPtr &msg, const std::string &vehicle_name);
+    void car_state_timer_cb(const ros::TimerEvent& event);    // update drone state from airsim_client_ every nth sec
+    void car_control_cb(const fsds_ros_bridge::ControlCommand::ConstPtr& msg, const std::string& vehicle_name);
     void lidar_timer_cb(const ros::TimerEvent& event);
+    void statistics_timer_cb(const ros::TimerEvent& event);
 
     /// ROS subscriber callbacks
-   
+
     ros::Time make_ts(uint64_t unreal_ts);
     // void set_zero_vel_cmd();
 
@@ -111,7 +143,7 @@ private:
 
     sensor_msgs::ImagePtr get_img_msg_from_response(const ImageResponse& img_response, const ros::Time curr_ros_time, const std::string frame_id);
     sensor_msgs::ImagePtr get_depth_img_msg_from_response(const ImageResponse& img_response, const ros::Time curr_ros_time, const std::string frame_id);
-    
+
     void process_and_publish_img_response(const std::vector<ImageResponse>& img_response_vec, const int img_response_idx, const std::string& vehicle_name);
 
     // methods which parse setting json ang generate ros pubsubsrv
@@ -139,7 +171,6 @@ private:
     void convert_yaml_to_simple_mat(const YAML::Node& node, SimpleMatrix& m) const; // todo ugly
 
 private:
-
     // utility struct for a SINGLE robot
     struct FSCarROS
     {
@@ -157,12 +188,11 @@ private:
         sensor_msgs::NavSatFix gps_sensor_msg;
 
         std::string odom_frame_id;
-        
     };
 
     ros::ServiceServer reset_srvr_;
-    ros::Publisher origin_geo_point_pub_; // home geo coord of drones
-    msr::airlib::GeoPoint origin_geo_point_;// gps coord of unreal origin 
+    ros::Publisher origin_geo_point_pub_;          // home geo coord of drones
+    msr::airlib::GeoPoint origin_geo_point_;       // gps coord of unreal origin
     fsds_ros_bridge::GPSYaw origin_geo_point_msg_; // todo duplicate
 
     std::vector<FSCarROS> fscar_ros_vec_;
@@ -193,7 +223,6 @@ private:
     std::recursive_mutex car_control_mutex_;
     // std::recursive_mutex img_mutex_;
     // std::recursive_mutex lidar_mutex_;
- 
 
     /// ROS tf
     std::string world_frame_id_;
@@ -205,10 +234,11 @@ private:
     ros::Timer airsim_img_response_timer_;
     ros::Timer airsim_control_update_timer_;
     ros::Timer airsim_lidar_update_timer_;
+    ros::Timer statistics_timer_;
 
     typedef std::pair<std::vector<ImageRequest>, std::string> airsim_img_request_vehicle_name_pair;
     std::vector<airsim_img_request_vehicle_name_pair> airsim_img_request_vehicle_name_pair_vec_;
-    std::vector<image_transport::Publisher> image_pub_vec_; 
+    std::vector<image_transport::Publisher> image_pub_vec_;
     std::vector<ros::Publisher> cam_info_pub_vec_;
     std::vector<ros::Publisher> lidar_pub_vec_;
     std::vector<ros::Publisher> imu_pub_vec_;
@@ -221,13 +251,12 @@ private:
     ros::Subscriber gimbal_angle_quat_cmd_sub_;
     ros::Subscriber gimbal_angle_euler_cmd_sub_;
 
-    static constexpr char CAM_YML_NAME[]    = "camera_name";
-    static constexpr char WIDTH_YML_NAME[]  = "image_width";
+    static constexpr char CAM_YML_NAME[] = "camera_name";
+    static constexpr char WIDTH_YML_NAME[] = "image_width";
     static constexpr char HEIGHT_YML_NAME[] = "image_height";
-    static constexpr char K_YML_NAME[]      = "camera_matrix";
-    static constexpr char D_YML_NAME[]      = "distortion_coefficients";
-    static constexpr char R_YML_NAME[]      = "rectification_matrix";
-    static constexpr char P_YML_NAME[]      = "projection_matrix";
+    static constexpr char K_YML_NAME[] = "camera_matrix";
+    static constexpr char D_YML_NAME[] = "distortion_coefficients";
+    static constexpr char R_YML_NAME[] = "rectification_matrix";
+    static constexpr char P_YML_NAME[] = "projection_matrix";
     static constexpr char DMODEL_YML_NAME[] = "distortion_model";
-
 };

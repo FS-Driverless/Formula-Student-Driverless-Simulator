@@ -351,15 +351,12 @@ void ASimHUD::initializeSubWindows()
 
 // Attempts to parse the settings text from one of multiple locations.
 // First, check the command line for settings provided via "-s" or "--settings" arguments
-// Next, check the executable's working directory for the settings file.
-// Finally, check the user's documents folder.
+// Next, check the default settings file location
 // If the settings file cannot be read, throw an exception
 
 bool ASimHUD::getSettingsText(std::string &settingsText)
 {
-    return (getSettingsTextFromCommandLine(settingsText) ||
-            readSettingsTextFromFile(FString(msr::airlib::Settings::getExecutableFullPath("settings.json").c_str()), settingsText) ||
-            readSettingsTextFromFile(FString(msr::airlib::Settings::Settings::getUserDirectoryFullPath("settings.json").c_str()), settingsText));
+    return (getSettingsTextFromCommandLine(settingsText) || readSettingsTextFromFile(FString(common_utils::FileSystem::getConfigFilePath().c_str()), settingsText));
 }
 
 // Attempts to parse the settings text from the command line

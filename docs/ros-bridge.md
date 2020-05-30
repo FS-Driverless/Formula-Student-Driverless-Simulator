@@ -1,5 +1,7 @@
 # FSDS Ros bridge
 
+![In action](images/fsds_ros_bridge.png)
+
 A ROS wrapper over the AirSim C++ **Car** client library. This code is based on the [original AirSim ROS wrapper for the *Multirotor* API](https://github.com/microsoft/AirSim/tree/master/ros/src/airsim_ros_interface) and provides an interface between AirSim + Unreal Engine and your ROS-based autonomous system. 
 
 The fsds_ros_bridge is supposed to be launched pointing at the Autonomous System's ROS master so that it can publish and subscribe to topics within the autonomous system. 
@@ -65,3 +67,6 @@ This package contains some useful launch and config files which will help you in
 To open Rviz with [this](../ros/src/fsds_ros_bridge/config/rviz/default.rviz) configuration file, run `roslaunch fsds_ros_bridge rviz.launch`.
 
 To open Multiplot with [this](../ros/src/fsds_ros_bridge/config/multiplot/multiplot.xml) configuration file, run `roslaunch fsds_ros_bridge plot.launch`
+
+## Monitoring
+Performance monitoring of the ROS Bridge is described [here](statistics.md)
