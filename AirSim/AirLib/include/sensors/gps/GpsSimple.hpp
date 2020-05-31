@@ -69,11 +69,11 @@ public: //methods
 
     virtual ~GpsSimple() = default;
     //generate Gaussian noise 
-    double getGaussianNoise(const double mean, const double var)
+    const float getGaussianNoise(float mean, float var)
     {
-        std::normal_distribution<double> distribution(mean, var);
-        long                             seed = std::chrono::system_clock::now().time_since_epoch().count();
-        std::default_random_engine       generator(seed);
+        std::normal_distribution<float> distribution(mean, var);
+        auto seed = (unsigned int)std::chrono::system_clock::now().time_since_epoch().count();
+        std::default_random_engine generator(seed);
         return distribution(generator);
     }
     //Generate noisy geo_point for moving vehicle
