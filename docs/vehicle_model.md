@@ -2,7 +2,7 @@
 
 One of the most controversial subjects of any competition simulator is the vehicle dynamic model. This is the piece of the simulation that actually changes the state of the vehicle. In building this simulator for the FSOnline competition, our design philosophy was the following:
 
-* **All teams will use the same vehicle dynamic model**. We are well aware that all teams have put effort into developing dynamic models of their own FSCar for controls and simulation purposes. However, we want the FSOnline DV Dynamic event to purely be a battle of autonomous software. Even if this will require teams to tweak their path planning and control algorithms, it will make sure that the winner of this event is truly the team that can take a grey box race car system and push it to its limits the most.
+* **All teams will use the same vehicle dynamic model**. We are well aware that all teams have put effort into developing dynamic models of their own FSCar for controls and simulation purposes. However, we want the FSOnline DV Dynamic event to purely be a battle of autonomous software. Even if this will require teams to tweak their path planning and control algorithms, it will make sure that the winner of this event is truly the team that can take any race car and push it to its limits the most.
 
 * **The dynamic model will have a high enough fidelity such that it is virtually impossible to overfit to it/reverse the plant or run open loop**. This will force teams to use system identification techniques similar to the ones that are used on a real car and no cheating or unfair advantage will be given to any teams.
 
