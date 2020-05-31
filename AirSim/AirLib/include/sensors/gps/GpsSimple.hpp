@@ -118,11 +118,6 @@ private:
         output.is_valid = true;
         output.gnss.epv = epv;
 
-        output.gnss.fix_type =
-            output.gnss.eph <= params_.eph_min_3d ? GnssFixType::GNSS_FIX_3D_FIX
-            : output.gnss.eph <= params_.eph_min_2d ? GnssFixType::GNSS_FIX_2D_FIX
-            : GnssFixType::GNSS_FIX_NO_FIX;
-
         output.time_stamp = clock()->nowNanos();
 
         delay_line_.push_back(output);

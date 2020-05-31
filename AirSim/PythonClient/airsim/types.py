@@ -383,18 +383,11 @@ class MagnetometerData(MsgpackMixin):
     magnetic_field_body = Vector3r()
     magnetic_field_covariance = 0.0
 
-class GnssFixType(MsgpackMixin):
-    GNSS_FIX_NO_FIX = 0
-    GNSS_FIX_TIME_ONLY = 1
-    GNSS_FIX_2D_FIX = 2
-    GNSS_FIX_3D_FIX = 3
-
 class GnssReport(MsgpackMixin):
     geo_point = GeoPoint()
     eph = 0.0
     epv = 0.0
     velocity = Vector3r()
-    fix_type = GnssFixType()
     time_utc = np.uint64(0)
 
 class GpsData(MsgpackMixin):

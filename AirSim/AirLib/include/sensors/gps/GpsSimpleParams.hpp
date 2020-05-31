@@ -13,11 +13,10 @@ struct GpsSimpleParams {
     real_T eph_time_constant = 0.9f, epv_time_constant = 0.9f;
     real_T eph_initial = 100.0f, epv_initial = 100.0f;   //initially fully diluted positions
     real_T eph_final = 0.04f, epv_final = 0.04f;
-    real_T eph_min_3d = 3.0f, eph_min_2d = 4.0f;
 
-    real_T update_latency = 0.2f;    //sec
+    real_T update_latency = 0f;    //sec
     real_T update_frequency = 10;    //Hz
-    real_T startup_delay = 1;        //sec
+    real_T startup_delay = 0;        //sec
 
     void initializeFromSettings(const AirSimSettings::GpsSetting& settings)
     {
