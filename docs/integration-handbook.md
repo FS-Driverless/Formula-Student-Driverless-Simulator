@@ -1,5 +1,6 @@
 # Autonomous System Integration Handbook
 This page describes how to integrate you autonomous system (AS) to the Formula Student Driverless Simulator (FSDS).
+The rules and procedures set out in this document will be used during the FSOnline competition.
 
 ## High level overview
 Your AS is expected to continuously run a ros master.
@@ -68,11 +69,85 @@ To detect a stop, the AS should keep an eye on the GO signal.
 The general rule is: If the AS did not receive a GO signal for 4 seconds the AS can assume the `fsds_ros_bridge` is stopped.
 When this state is detected, the AS can reset itsself and prepare for a next mission.
 
-## Topics
-Which topics to subscribe/publish to? What are the message types?
+## Sensor Suite
+Every team can configure the sensors on their vehicle.
+This configuration is called the sensor suite.
+To ensure the simulation will perform as expected, the sensor suite has some restrictions.
+Here you can read the requirements and restrictions that apply to every sensor.
 
-## Sensors
-which sensors are availble? What are the boundries? Where can we find the specs of these sensors?
+### Camera
+
+Every vehicle can have a maximum of 2 camera sensors. 
+These camera camera(s) can be placed anywhere on the car that would be allowed by FSG 2020 rules. 
+The camera body dimensions are a 4x4x4 cm cube with mounting points at any side except the front facing side.
+
+All camera sensors output uncompressed rgba8 images at 30 fps. 
+You can choose the resolution of the camera(s). 
+In total the camera’s can have 1232450 pixels. 
+Every dimension (width or height) must be at least 240px and no greater than 1600px. 
+The horizontal field of view (FoV) is configurable for each camera and must be at least 30 degrees and not be greater than 90 degrees. 
+The vertical FoV will be automatically calculated using the following formula: `vertical FoV = image height / image width * horizontal FoV`.
+
+The camera's auto exposure, motion blur and gamma settings will be equal for all teams.
+
+
+### Lidar
+A vehicle can have between 0 and 5 lidars.
+The lidar(s) can be placed anywhere on the vehicle that would be allowed by FSG 2020 rules.
+The body dimension of every lidar is a vertical cylinder, 8 cm heigh and 8 cm diameter with mounting points at the top and bottom.
+
+A single lidar can have between 1 and 500 lasers. 
+The lasers are stacked vertically and rotate on the horizontal plane. 
+The lasers are distributed equally to cover the specified vertical field of view.
+
+The vertical field of view is specified by choosing the upper and lower limit in degrees. 
+The lower limit specifies the vertical angle between the horizontal plane of the lidar and the most bottom laser. 
+The upper limit specifies the vertical angle between the horizontal plane of the lidar and most upper laser. 
+
+The horizontal field of view of the lidar is specified with an upper and lower limit in degree as well. 
+The lower limit specifies the counterclockwise angle on a top view from the direction the lidar is pointing towards. 
+The upper limit specifies the clockwise angle on a top view from the direction the lidar is pointing towards. 
+
+For every lidar the rotation speed (hz) and capture frequency (hz) must be chosen. 
+The rotation speed specifies how fast the lasers spin and the capture frequency specifies how often a pointcloud is created.
+
+While rotating, only lasers within the horizontal field of view are captured. 
+
+> For example, a lidar with 190 degrees horizontal field of view, rotating at 10hz with a capture frequency of 20 hz will receive pointclouds covering anything from 10 to 180 degrees of the field of view.
+
+There is no guarantee that the rotation speed and capture frequency stay in sync. 
+You won’t be able to rely on synchronization of rotation speed and capture frequency. 
+A lidar rotating at 5 hz would theoretically have rotated 50 times after 10 seconds but in reality this will be somewhere between 45 and 55 times. 
+
+For every lidar you can specify the resolution: the total number of points collected if the lasers would do a 360 field of view sweep scan. 
+This value is used to calculate the number of points in each laser and the spacing between the points. 
+
+Every lidar capture is limited to collecting 10000 points. 
+The maximum number of points collected during a capture is calculated by dividing the lidar’s resolution by the horizontal field of view.
+
+> For example, a lidar with a 30 degrees horizontal field can have a maximum resolution of 120000.
+
+The total number of points per second is limited to 100000 points.
+
+> For example, a first lidar collects 10000 points per capture at 5 hz, a second lidar collects 8000 points per capture at 5 hz. 
+  This is valid because in total they collect 90000 points per second.
+
+### GPS
+Every vehicle has 1 GPS, it is located at the center core of the vehicle.
+This sensor cannot be removed or moved.
+
+The GPS captures the position of the vehicle in the geodetic reference system, namely longitude [deg], latitude [deg], altitude [m].
+More detailed technical information about the accuracy of the GPS can be found [here](gps.md).
+
+### IMU
+//todo
+
+### Sensor specification
+Write about _how_ to configure your settings.json
+
+## Topics
+Which topics to subscribe/publish to? 
+What are the message types?
 
 ## Deployment
 Google cloud how-to
