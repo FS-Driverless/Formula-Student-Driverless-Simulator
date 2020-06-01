@@ -122,7 +122,7 @@ struct PoseWithCovariance {
     {}
 };
 
-struct PowerSupply {
+struct PowerSupply{
     vector<real_T> voltage, current;
 };
 
