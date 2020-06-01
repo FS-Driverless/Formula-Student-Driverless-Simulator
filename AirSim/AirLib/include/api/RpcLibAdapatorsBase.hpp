@@ -598,10 +598,9 @@ public:
         GeoPoint geo_point;
         msr::airlib::real_T eph = 0.0, epv = 0.0; 
         Vector3r velocity;
-        msr::airlib::GpsBase::GnssFixType fix_type;
         uint64_t time_utc = 0;
 
-        MSGPACK_DEFINE_MAP(geo_point, eph, epv, velocity, fix_type, time_utc);
+        MSGPACK_DEFINE_MAP(geo_point, eph, epv, velocity, time_utc);
 
         GnssReport()
         {}
@@ -612,7 +611,6 @@ public:
             eph = s.eph;
             epv = s.epv;
             velocity = s.velocity;
-            fix_type = s.fix_type;
             time_utc = s.time_utc;
         }
 
@@ -624,7 +622,6 @@ public:
             d.eph = eph;
             d.epv = epv;
             d.velocity = velocity.to();
-            d.fix_type = fix_type;
             d.time_utc = time_utc;
 
             return d;
@@ -764,6 +761,5 @@ public:
 // MSGPACK_ADD_ENUM(msr::airlib::SafetyEval::ObsAvoidanceStrategy);
 MSGPACK_ADD_ENUM(msr::airlib::ImageCaptureBase::ImageType);
 MSGPACK_ADD_ENUM(msr::airlib::WorldSimApiBase::WeatherParameter);
-MSGPACK_ADD_ENUM(msr::airlib::GpsBase::GnssFixType);
 
 #endif
