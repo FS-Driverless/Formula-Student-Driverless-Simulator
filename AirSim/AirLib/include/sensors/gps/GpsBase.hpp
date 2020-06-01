@@ -68,18 +68,10 @@ public: //types
         COVARIANCE_TYPE_KNOWN = 3
     };
 
-    enum GnssFixType : unsigned char {
-        GNSS_FIX_NO_FIX = 0,
-        GNSS_FIX_TIME_ONLY = 1,
-        GNSS_FIX_2D_FIX = 2,
-        GNSS_FIX_3D_FIX = 3
-    };
-
     struct GnssReport {
         GeoPoint geo_point;
         real_T eph, epv;    //GPS HDOP/VDOP horizontal/vertical dilution of position (unitless), 0-100%
         Vector3r velocity;
-        GnssFixType fix_type;
         uint64_t time_utc = 0;
     };
 

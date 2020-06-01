@@ -68,33 +68,6 @@ std::string FileSystem::createDirectory(const std::string& fullPath) {
 }
 
 
-std::string FileSystem::getUserDocumentsFolder() {
-    std::string path;
-#ifdef _WIN32
-    // Windows users can move the Documents folder to any location they want
-    // SHGetFolderPath knows how to find it.
-    wchar_t szPath[MAX_PATH];
-
-    if (0 == SHGetFolderPath(NULL,
-        CSIDL_MYDOCUMENTS | CSIDL_FLAG_CREATE,
-        NULL,
-        0,
-        szPath))
-    {
-        std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-        path = converter.to_bytes(szPath);
-    }
-
-    // fall back in case SHGetFolderPath failed for some reason.
-#endif
-    if (path == "") {
-        path = combine(getUserHomeFolder(), "Driverless-Competition-Simulator/UE4Project/Plugins/AirSim");
-    }
-    return ensureFolder(path);
-}
-
-#endif
-
 std::string FileSystem::getExecutableFolder() {
     std::string path;
 #ifdef _WIN32
@@ -136,3 +109,5 @@ std::string FileSystem::getExecutableFolder() {
 
     return ensureFolder(path);
 }
+
+#endif 

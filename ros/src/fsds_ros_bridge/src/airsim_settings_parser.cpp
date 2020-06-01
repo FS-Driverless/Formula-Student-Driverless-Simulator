@@ -28,7 +28,7 @@ bool AirSimSettingsParser::readSettingsTextFromFile(std::string settingsFilepath
 
 bool AirSimSettingsParser::getSettingsText(std::string& settingsText) 
 {
-    bool success = readSettingsTextFromFile(msr::airlib::Settings::Settings::getUserDirectoryFullPath("settings.json"), settingsText);
+    bool success = readSettingsTextFromFile(common_utils::FileSystem::getConfigFilePath(), settingsText);
     return success;
 }
 
