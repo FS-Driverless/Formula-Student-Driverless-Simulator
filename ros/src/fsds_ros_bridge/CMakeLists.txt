@@ -40,6 +40,7 @@ add_message_files(
   FILES
   GPSYaw.msg
   ControlCommand.msg
+  GreenFlag.msg
 )
 
 add_service_files(

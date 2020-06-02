@@ -17,6 +17,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include <fsds_ros_bridge/GPSYaw.h>
 #include <fsds_ros_bridge/ControlCommand.h>
 #include <fsds_ros_bridge/Reset.h>
+#include <fsds_ros_bridge/GreenFlag.h>
 #include <chrono>
 #include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -124,6 +125,7 @@ private:
     void car_control_cb(const fsds_ros_bridge::ControlCommand::ConstPtr& msg, const std::string& vehicle_name);
     void lidar_timer_cb(const ros::TimerEvent& event);
     void statistics_timer_cb(const ros::TimerEvent& event);
+    void green_flag_timer_cb(const ros::TimerEvent& event);
 
     /// ROS subscriber callbacks
 
@@ -192,6 +194,7 @@ private:
 
     ros::ServiceServer reset_srvr_;
     ros::Publisher origin_geo_point_pub_;          // home geo coord of drones
+    ros::Publisher green_flag_pub;                 // green flag
     msr::airlib::GeoPoint origin_geo_point_;       // gps coord of unreal origin
     fsds_ros_bridge::GPSYaw origin_geo_point_msg_; // todo duplicate
 
@@ -206,6 +209,8 @@ private:
     std::map<std::string, std::string> vehicle_lidar_map_;
     std::vector<geometry_msgs::TransformStamped> static_tf_msg_vec_;
     bool is_vulkan_; // rosparam obtained from launch file. If vulkan is being used, we BGR encoding instead of RGB
+    std::string mission_name_; // rosparam obtained from launch file
+    std::string track_name_; // rosparam obtained from launch file
 
     msr::airlib::CarRpcLibClient airsim_client_;
     msr::airlib::CarRpcLibClient airsim_client_images_;
@@ -235,6 +240,7 @@ private:
     ros::Timer airsim_control_update_timer_;
     ros::Timer airsim_lidar_update_timer_;
     ros::Timer statistics_timer_;
+    ros::Timer green_flag_timer_;
 
     typedef std::pair<std::vector<ImageRequest>, std::string> airsim_img_request_vehicle_name_pair;
     std::vector<airsim_img_request_vehicle_name_pair> airsim_img_request_vehicle_name_pair_vec_;
