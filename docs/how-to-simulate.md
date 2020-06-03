@@ -13,7 +13,7 @@ To check the video card drivers, run `vulkaninfo`. It should output a bunch of l
 ## Launching the simulator
 To launch the simulator, go to [releases](https://github.com/FS-Online/Driverless-Competition-Simulator/releases) and download the latest one.
 
-//todo: figure out where to configure the settings.json
+Create a folder in your **home directory** called **Driverless-Competition-Simulator** and put the contents inside of WindowsNoEditor into this folder. Inside the folder **Driverless-Competition-Simulator** create a file called **settings.json** and copy-paste the contents of the settings.json file at the root of this repository inside. This should get you started with the default sensor configuration, feel free to try your own custom sensor suite! Note that the naming of the sensors will be reflected in the topic names as elaborated [here](ros-bridge.md).
 
 Now launch the ????.exe and a window with a car should popup!
 Try to drive the car around by using the arrowkeys.
