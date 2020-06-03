@@ -96,7 +96,7 @@ The camera's auto exposure, motion blur and gamma settings will be equal for all
 ### Lidar
 A vehicle can have between 0 and 5 lidars.
 The lidar(s) can be placed anywhere on the vehicle that would be allowed by FSG 2020 rules.
-The body dimension of every lidar is a vertical cylinder, 8 cm heigh and 8 cm diameter with mounting points at the top and bottom.
+The body dimension of every lidar is a vertical cylinder, 8 cm height and 8 cm diameter with mounting points at the top and bottom.
 
 A single lidar can have between 1 and 500 lasers. 
 The lasers are stacked vertically and rotate on the horizontal plane. 
@@ -106,7 +106,7 @@ The vertical field of view is specified by choosing the upper and lower limit in
 The lower limit specifies the vertical angle between the horizontal plane of the lidar and the most bottom laser. 
 The upper limit specifies the vertical angle between the horizontal plane of the lidar and most upper laser. 
 
-The horizontal field of view of the lidar is specified with an upper and lower limit in degree as well. 
+The horizontal field of view of the lidar is specified with an upper and lower limit in degree as well. Only points within this FOV will be returned. 
 The lower limit specifies the counterclockwise angle on a top view from the direction the lidar is pointing towards. 
 The upper limit specifies the clockwise angle on a top view from the direction the lidar is pointing towards. 
 
@@ -125,9 +125,9 @@ For every lidar you can specify the resolution: the total number of points colle
 This value is used to calculate the number of points in each laser and the spacing between the points. 
 
 Every lidar capture is limited to collecting 10000 points. 
-The maximum number of points collected during a capture is calculated by dividing the lidar’s resolution by the horizontal field of view.
+The maximum number of points collected during a capture is calculated by dividing the lidar’s resolution by the horizontal field of view fraction.
 
-> For example, a lidar with a 30 degrees horizontal field can have a maximum resolution of 120000.
+> For example, a lidar with a 30 degrees horizontal field (horizontal FOV fraction of 30/360 = 1/12) can have a maximum resolution of 120000.
 
 The total number of points per second is limited to 100000 points.
 
@@ -135,7 +135,7 @@ The total number of points per second is limited to 100000 points.
   This is valid because in total they collect 90000 points per second.
 
 ### GPS
-Every vehicle has 1 GPS, it is located at the center core of the vehicle.
+Every vehicle has 1 GPS, it is located at the center of gravity of the vehicle.
 This sensor cannot be removed or moved.
 
 The GPS captures the position of the vehicle in the geodetic reference system, namely longitude [deg], latitude [deg], altitude [m].
@@ -147,26 +147,26 @@ More detailed technical information about the accuracy of the GPS can be found [
 ### Sensor specification
 Teams are expected to provide their sensor suite as a single AirSim settings.json file.
 Most of the parameters in the settings.json file will be set by the officials to ensure fairness during competition.
-You are allowed to configure the following subset of parameters within the boundries of above rules.
+You are allowed to configure the following subset of parameters within the boundaries of above rules.
 
 * Cameras
-* * camera name
-* * Width, Height
-* * FOV_Degrees
-* * X, Y, Z
-* * Pitch, Roll, Yaw
+  * camera name
+  * Width, Height
+  * FOV_Degrees
+  * X, Y, Z
+  * Pitch, Roll, Yaw
 * Lidars
-* * NumberOfChannels
-* * PointsPerSecond
-* * RotationsPerSecond
-* * HorizontalFOVStart
-* * HorizontalFOVEnd
-* * VerticalFOVUpper
-* * VerticalFOVLower
-* * X, Y, Z
-* * Pitch, Roll, Yaw
+  * NumberOfChannels
+  * PointsPerSecond
+  * RotationsPerSecond
+  * HorizontalFOVStart
+  * HorizontalFOVEnd
+  * VerticalFOVUpper
+  * VerticalFOVLower
+  * X, Y, Z
+  * Pitch, Roll, Yaw
 
-The GPS and Lidar are configured equally for all teams according to the rules in the previous chapter.
+The GPS and IMU are configured equally for all teams according to the rules in the previous chapter.
 
 We recommend to copy the [settings.json in this repository](../settings.json) as a base and configure the cameras and lidar from there on.
 
@@ -175,9 +175,9 @@ To run the simulation, read the [simulation guide](how-to-simulate.md).
 
 ## ROS integration
 Communication between autonomous system and simulator will take place using ROS topics.
-Sensor data will be published by the [ros bridge](ros-bridge.md) and subscred on by the autonomous system.
+Sensor data will be published by the [ros bridge](ros-bridge.md) and received by the autonomous system.
 The autonomous system will publish vehicle setpoints and the ROS bridge will listen for those messages.
-Transforms between sensors also are being published for usage by the autonomous system.
+Static transforms between sensors also are being published for usage by the autonomous system.
 
 ### Sensor topics
 The following topics are made available:
@@ -204,12 +204,12 @@ For every frame sent on `/fsds/CAMERA_NAME` 1 message will be sent on this topic
 - `/fsds/signal/finish`
 
 ### vehicle setpoints
-Publishing on the following topic controlls the vehicle:
+Publishing on the following topic controls the vehicle:
 
 - `/fsds_ros_bridge/VEHICLE_NAME/control_command` [fsds_ros_bridge/ControlCommand](../ros/src/fsds_ros_bridge/msg/ControlCommand.msg)
 
-This message inculdes throttle, steering and brake. 
-Each value is dimensionless and goes from -1 to 1.
+This message includes the dimensionless values throttle, steering and brake. 
+Throttle and brake range from 0 to 1.
 For steering `-1` steers full to the left and `+1` steers full to the right.
 
 
@@ -219,7 +219,7 @@ For steering `-1` steers full to the left and `+1` steers full to the right.
 - `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)
 
 ## 3D vehicle model
-//todo
+//todo: reference vehicle model documentation in the open PR
 This chapter will describe how to change the 3d model of the vehicle and how to provide the 3d model for usage during the competition. 
 At this moment we have no idea how this works sooooo when we figure it out this will be filled in.
 
@@ -228,8 +228,8 @@ A few weeks before competition, each team will receive the ssh credentials to an
 This instance will have 8 vCPU cores, 30 gb memory (configuration n1-standard-8), 1 Nvidia Tesla T4 videocard and 100GB SSD disk.
 The teams must install their autonomous system on this computer.
 
-At competition, a separate google cloud instance will run the simulation software and the ROS bridge. 
-One by one the ROS bridge will connect to the different teams computers an they will do their mission.
+During competition, a separate google cloud instance will run the simulation software and the ROS bridge. 
+One by one the ROS bridge will connect to the different teams computers and they will do their mission.
 
 During the weeks leading up to the competition FSOnline will host multiple testing moments where the autonomous computers will be connected to the simulator and drive a few test laps.
 
