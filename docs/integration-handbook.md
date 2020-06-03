@@ -231,4 +231,4 @@ One by one the ros bridge will connect to the different teams computers an they 
 
 During the weeks leading up to the competition FSOnline will host multiple testing moments where the autonomous computers will be connected to the simulator and drive a few test laps.
 
-More informatoin about the procedure will be added later.
+More information about the procedure will be added later.
