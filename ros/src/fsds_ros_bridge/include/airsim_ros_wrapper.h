@@ -133,10 +133,6 @@ private:
     /// ROS service callbacks
     bool reset_srv_cb(fsds_ros_bridge::Reset::Request& request, fsds_ros_bridge::Reset::Response& response);
 
-    /// ROS tf broadcasters
-    void publish_camera_tf(const ImageResponse& img_response, const ros::Time& ros_time, const std::string& frame_id, const std::string& child_frame_id);
-    void publish_odom_tf(const nav_msgs::Odometry& odom_ned_msg);
-
     /// camera helper methods
     sensor_msgs::CameraInfo generate_cam_info(const std::string& camera_name, const CameraSetting& camera_setting, const CaptureSetting& capture_setting) const;
     cv::Mat manual_decode_depth(const ImageResponse& img_response) const;
@@ -225,7 +221,6 @@ private:
     // std::recursive_mutex lidar_mutex_;
 
     /// ROS tf
-    std::string world_frame_id_;
     tf2_ros::TransformBroadcaster tf_broadcaster_;
     tf2_ros::StaticTransformBroadcaster static_tf_pub_;
     tf2_ros::Buffer tf_buffer_;

@@ -175,7 +175,7 @@ bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const ms
             Vector3r point_v_i = ned_transform_->toLocalNed(hit_result.ImpactPoint);
 
             // tranform to lidar frame
-            point = VectorMath::transformToBodyFrame(point_v_i, lidar_pose + vehicle_pose, true);
+            point = VectorMath::transformToBodyFrame(point_v_i, lidar_pose, true);
 
             // The above should be same as first transforming to vehicle-body frame and then to lidar frame
             //    Vector3r point_v_b = VectorMath::transformToBodyFrame(point_v_i, vehicle_pose, true);
