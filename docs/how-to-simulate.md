@@ -17,10 +17,10 @@ To launch the simulator, go to [releases](https://github.com/FS-Online/Driverles
 Now launch the ????.exe and a window with a car should popup!
 Try to drive the car around by using the arrowkeys.
 
-## Launching the ros bridge
-To connect you autonomous ros system, you have to clone this repository and run the `fsds_ros_bridge` ros node.
+## Launching the ROS bridge
+To connect your autonomous ROS system, you have to clone this repository and run the `fsds_ros_bridge` ROS node.
 
-Most likely, your autonomous system is running on Ubuntu and has already Ros Melodic installed.
+Most likely, your autonomous system is running on Ubuntu and has already ROS Melodic installed.
 If this is not the case, read the relevant install instructions in the [get-ready-to-develop](get-ready-to-develop.md) guide.
 
 Ready? Lets clone the repo **into your home directory**:
@@ -28,6 +28,6 @@ Ready? Lets clone the repo **into your home directory**:
 git clone git@github.com:FS-Online/Driverless-Competition-Simulator.git
 ```
 
-Read about how to build the ros workspace [here](building-ros.md).
+Read about how to build the ROS workspace [here](building-ros.md).
 
 Then, launch the [ros bridge](ros-bridge.md).

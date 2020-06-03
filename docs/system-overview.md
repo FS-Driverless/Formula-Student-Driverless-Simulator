@@ -46,8 +46,8 @@ When the team changes, not only the AS but also the car inside the virtual world
 The sensor suite (sensor types and locations, defined in a custom `settings.json` file) and the car livery (looks of the car) are updated.
 The operator keeps track of these details and passes them along to the virtual world to ensure accurate representation.
 
-When the operator wants to connect an AS to the simulated world, it launches the ros bridge.
-Read more about the ros bridge below.
+When the operator wants to connect an AS to the simulated world, it launches the ROS bridge.
+Read more about the ROS bridge below.
 If the operator wants to disconnect the AS from the simulated world it stops the bridge node and the connections are stopped.
 
 During a mission, the operator keeps polling the world for 'referee state'.
@@ -63,7 +63,7 @@ The logbook is stored on disk so that in the event of a whole system crash we wi
 It is also shown within the referee's web interface.
 
 ## The ROS Bridge
-The ros bridge node connects to the simulated world inside Unreal Engine using AirSim (more on that later).
+The ROS bridge node connects to the simulated world inside Unreal Engine using AirSim (more on that later).
 On the one hand, it requests sensor data and passes it along on ROS topics to the current AS.
 On the other hand, it receives car control commands from the AS and forwards it to the virtual world.
 So it acts as a bridge between the two.
@@ -72,7 +72,7 @@ The node that is launched pointing at the AS's ROS master so that it can publish
 Physically this node runs on the server where the Unreal world is being simulated.
 The node is launched by the operator.
 
-When the operator launches the ros bridge it passes along some mission variables.
+When the operator launches the ROS bridge it passes along some mission variables.
 This includes mission type (trackdrive or autocross) and information about how it can use data collected in previous runs.
 For example, first the AS will receive "autocross on track A" and it knows it cannot use any previous collected information.
 Then it receives "trackdrive on track A" and it knows it can use data collected in the first autocross drive to go faster.
@@ -80,12 +80,12 @@ Then it receives "trackdrive on track A" and it knows it can use data collected 
 It is the responsibilty of the teams to detect when they are 'done'. 
 After the required number of laps, the car has to come to a full stop.
 If the AS wants to store things (like track information), this is the time to wrap those up.
-In case of a successfull run the official will instruct the operator to stop the ros bridge and the AS won't receive sensor data anymore.
-When the official presses the emergency brake, the connection between the ros bridge is stopped immediately and the operator will send one last car setpoint to make the car come to a stop. 
+In case of a successfull run the official will instruct the operator to stop the ROS bridge and the AS won't receive sensor data anymore.
+When the official presses the emergency brake, the connection between the ROS bridge is stopped immediately and the operator will send one last car setpoint to make the car come to a stop. 
 Thers is no 'stop' signal from the simulator to the AS.
 We advise AS to get ready for a new drive when no sensor data is received for 2 seconds.
 
-At this point only ros is supported, at this moment there are no plans to support other technologies.
+At this point only ROS is supported, at this moment there are no plans to support other technologies.
 
 ## The virtual world (Unreal Engine and AirSim)
 
@@ -93,7 +93,7 @@ The actual simulation takes place inside an Unreal Engine 4 world.
 Unreal takes care of the heavy lifting involved with a real-life simulation.
 All physics, lighting and world-building are handled by Unreal.
 
-AirSim is used to connect Unreal with the operator and ros bridge.
+AirSim is used to connect Unreal with the operator and ROS bridge.
 This plugin is added inside the Unreal world and takes control of most of the game logic.
 It receives the sensor suite and simulates the sensors, it moves the car according to trajectory setpoints and exposes an RPC API for external management.
 This RPC API is used by the simulator to interact with the world.

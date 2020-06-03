@@ -1,12 +1,12 @@
-# Building the ros workspace
-This guide describes how to use the ros workspace on an Ubuntu machine.
+# Building the ROS workspace
+This guide describes how to use the ROS workspace on an Ubuntu machine.
 It also works on Windows Subsystem for Linux 1 (WSL1)
 
-If you do not have Ros Melodic installed, read the relevant instructions in the [get-ready-to-develop](get-ready-to-develop.md) guide.
+If you do not have ROS Melodic installed, read the relevant instructions in the [get-ready-to-develop](get-ready-to-develop.md) guide.
 
 Before we can build the workspace, install the workspace c++ library dependencies:
 ```
-sudo apt-get install ros-melodic-tf2-geometry-msgs python-catkin-tools ros-melodic-rqt-multiplot ros-melodic-joy ros-melodic-cv-bridge ros-melodic-image-transport libyaml-cpp-dev
+sudo apt-get install ROS-melodic-tf2-geometry-msgs python-catkin-tools ROS-melodic-rqt-multiplot ROS-melodic-joy ROS-melodic-cv-bridge ROS-melodic-image-transport libyaml-cpp-dev
 ```
 
 Then:

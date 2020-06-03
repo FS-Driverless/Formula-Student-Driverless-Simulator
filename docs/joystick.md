@@ -1,7 +1,7 @@
 # Joystick Controller Node 
 
 If you are interested in driving the car around to gather training data without having to rely on your autonomous system, you can use an XBox controller to do so. 
-Make sure you have [built the ros workspace](building-ros.md).
+Make sure you have [built the ROS workspace](building-ros.md).
 
 Simply run:
 
@@ -40,7 +40,7 @@ $ sudo ls /dev/input/js0
 crwxrwxrwx 1 root 993 13, 0 Nov  8 14:43 /dev/input/js0
 ```
 
-If you get permisison erros you have to give ros more permissions. Run
+If you get permisison erros you have to give ROS more permissions. Run
 ```
 sudo chmod 777 /dev/input/js0
 ```

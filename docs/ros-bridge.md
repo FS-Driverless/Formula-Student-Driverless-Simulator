@@ -1,4 +1,4 @@
-# FSDS Ros bridge
+# FSDS ROS bridge
 
 ![In action](images/fsds_ros_bridge.png)
 
@@ -6,11 +6,11 @@ A ROS wrapper over the AirSim C++ **Car** client library. This code is based on 
 
 The fsds_ros_bridge is supposed to be launched pointing at the Autonomous System's ROS master so that it can publish and subscribe to topics within the autonomous system. 
 Physically this node should run on the airsim simulation server (that is the one that also runs the Unreal) project.
-The node connects to the AirSim plugin, periodically retrieves sensor data (images, lidar, imu, gps) and publishes it on ros topics.
+The node connects to the AirSim plugin, periodically retrieves sensor data (images, lidar, imu, gps) and publishes it on ROS topics.
 It listens for car setpoints on other another and forwards these to the AirSim plugin.
 
 ## Running
-Make sure you have [built the ros workspace](building-ros.md).
+Make sure you have [built the ROS workspace](building-ros.md).
 
 ```
 cd ros

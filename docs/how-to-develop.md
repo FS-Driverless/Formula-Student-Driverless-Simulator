@@ -11,7 +11,7 @@ So we need to compile the AirSim plugin.
 
 ## Compile the AirSim plugin and launch Unreal Engine
 The AirSim plugin sourcode is made up of AirLib (/AirSim/AirLib) and the plugin code (/UE4Project/Plugins/AirSim/Source).
-AirLib is also used by the ros bridge.
+AirLib is also used by the ROS bridge.
 
 First build the AirLib code. Open the _Developer Command Prompt for VS 2019_, go to `Driverless-Competition-Simulator/AirSim` and run
 ```
@@ -35,11 +35,11 @@ Search for `AirSim` and click `Recompile`.
 If you make changes to AirLib you have to run `build.cmd` again.
 
 
-## Ros development
+## ROS development
 
 To set up the ROS workspace, cd into the `ros` folder and run
 ```
 catkin init
 catkin build
 ```
-Now you can [run the ros bridge](ros-bridge.md).
+Now you can [run the ROS bridge](ros-bridge.md).

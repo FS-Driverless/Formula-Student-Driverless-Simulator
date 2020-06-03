@@ -3,8 +3,8 @@ This page describes how to integrate you autonomous system (AS) to the Formula S
 The rules and procedures set out in this document will be used during the FSOnline competition.
 
 ## High level overview
-Your AS is expected to continuously run a ros master.
-The simulator will launch a node ([fsds_ros_bridge](ros-bridge.md)) that connects to your ros system.
+Your AS is expected to continuously run a ROS master.
+The simulator will launch a node ([fsds_ros_bridge](ros-bridge.md)) that connects to your ROS system.
 This node will publish sensordata and listen for vehicle setpoints.
 When the simulation is done, the node is closed and your AS will no longer be able to interact with the simulator.
 [A more in depth explanation of the fsds system can be found here.](system-overview.md)
@@ -17,7 +17,7 @@ Initially, when your AS launches, no simulation is connected.
 The AS must wait for a GO signal before acting.
 
 ### Staging
-At some point your AS will be staged: The vehicle is placed at a staging line prior to the starting line, the `fsds_ros_bridge` node will connect to the ros system.
+At some point your AS will be staged: The vehicle is placed at a staging line prior to the starting line, the `fsds_ros_bridge` node will connect to the ROS system.
 From this point onwards, the AS will receive sensor data and can control the vehicle by publishing vehicle setpoints.
 However, it shouldn't start driving the vehicle just yet!
 
@@ -171,10 +171,10 @@ We reccomand to copy the [settings.json in this repository](/UE4Project/Plugins/
 ## Launching the simulator
 To run the simulation, read the [simulation guide](how-to-simulate.md).
 
-## Ros integration
-Communication between autonomous system and simulator will take place using ros topics.
+## ROS integration
+Communication between autonomous system and simulator will take place using ROS topics.
 Sensordata will be published by the [ros bridge](ros-bridge.md) and subscred on by the autonomous system.
-The autonomous system will publish vehicle setpoints and the ros bridge will listen for those messages.
+The autonomous system will publish vehicle setpoints and the ROS bridge will listen for those messages.
 Transforms between sensors also are being published for usage by the autonomous system.
 
 ### Sensor topics
@@ -226,8 +226,8 @@ A few weeks before competition, each team will receive the ssh credentials to an
 This instance will have 8 vCPU cores, 30 gb memory (configuration n1-standard-8), 1 Nvidia Tesla T4 videocard and 100GB SSD disk.
 The teams must install their autonomous system on this computer.
 
-At competition, a separate google cloud instance will run the simulation software and the ros bridge. 
-One by one the ros bridge will connect to the different teams computers an they will do their mission.
+At competition, a separate google cloud instance will run the simulation software and the ROS bridge. 
+One by one the ROS bridge will connect to the different teams computers an they will do their mission.
 
 During the weeks leading up to the competition FSOnline will host multiple testing moments where the autonomous computers will be connected to the simulator and drive a few test laps.
 

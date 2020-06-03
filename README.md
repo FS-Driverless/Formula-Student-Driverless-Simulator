@@ -1,7 +1,7 @@
 # Formula Student Driverless Simulation
 ![Front picture](docs/images/fsds_pretty.png)
 
-This is a Formula Student Driverless Simulation Competition System. (FSDS)
+This is a Formula Student Driverless Simulation Competition System (FSDS).
 It will provide a virtual environment where Autonomous Systems from different Formula Student teams can compete in time-trial challenges. 
 The first competition will take place during the driverless event, FS-Online 2020.
 
@@ -20,11 +20,11 @@ The AirSim server uses the AirLib shared code (see `/AirSim/AirLib`).
 This is a python project that offers a web gui for officials to control the simulation, stores lap times and chooses what car is currently connected to the world.
 It launches the ASBridge to connect a autonomous system to the Unreal world and stops the bridge when the autonomous system is no longer allowed to control the car.
 
-`/ros` is a ros workspace that contains the `fsds_ros_bridge`. 
+`/ros` is a ROS workspace that contains the `fsds_ros_bridge`. 
 This node can connect 1 autonomous system with the simulated world.
 
 `/AirSim` is a slimmed-down, hard-fork of the [AirSim](https://github.com/microsoft/AirSim) project.
-There is only code located that is shared between operator, ros-bridge and UE4 plugin.
+There is only code located that is shared between operator, ROS-bridge and UE4 plugin.
 When AirSim is compiled, the AirLib binaries are placed within `/UE4Project/Plugins/AirSim/Source/AirLib`.
 
 This repo uses LFS for some large files. All files bigger than 90MB are added to LFS.
