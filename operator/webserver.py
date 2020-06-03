@@ -217,6 +217,7 @@ class WebServer(FlaskView):
         # Create log message
         log = '{}: {}'.format(str(datetime.now()), 'Mission ' + WebServer.mission + ' stopped by ' + request.json['sender'] + '.')
         WebServer.logs.append(log)
+        if request.json['sender'] == 'AS': time.sleep(5) # Wait 5 seconds for web interface to poll server
         del WebServer.logs[:] # Clear logs
 
         # Write logs to file
