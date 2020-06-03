@@ -18,11 +18,11 @@ The AS must wait for a GO signal before acting.
 
 ### Staging
 At some point your AS will be staged: The vehicle is placed at a staging line prior to the starting line, the `fsds_ros_bridge` node will connect to the ros system.
-From this point onwards, the AS will receive sensordata and can controll the vehicle by publishing vehicle setpoints.
+From this point onwards, the AS will receive sensor data and can control the vehicle by publishing vehicle setpoints.
 However, it shouldn't start driving the vehicle just yet!
 
 ### Starting 
-Just like with a phisical FS event, the vehicle must only start driving after a GO signal is received.
+Just like with a physical FS event, the vehicle must only start driving after a GO signal is received.
 The GO signal indicates that the AS must start the mision and that the vehicle should start driving.
 This signal is also known as the 'green flag' signal or 'starting' signal, within this repo we will reference it as 'GO'.
 Within the GO signal, the mission is added. 
@@ -43,7 +43,7 @@ For example, the AS might be requested to do:
 
 The AS must implement the following behaviour:
 * When the AS is requested to do autocross on a track that it has seen before, it must delete any and all data it gathered during all previous runs on this track.
-* When the AS is requested to do trackdrive on a track where it has done a trackdrive previously, it must delete any and all data it gathered during all previous trackdrive runs on this track. However, the data gatherd during the last autocross on this track shouldn't be deleted.
+* When the AS is requested to do trackdrive on a track where it has done a trackdrive previously, it must delete any and all data it gathered during all previous trackdrive runs on this track. However, the data gathered during the last autocross on this track shouldn't be deleted.
 
 An exception to this rule is data recorded with the exclusive intent to analyze the AS's behaviour after the event.
 This includes all files that the AS only writes to but does not read from.
@@ -63,7 +63,7 @@ As such, the simulator will stop the `fsds_ros_bridge` and the AS will no longer
 When the official decides that the run is over it will stop the simulation.
 See the rulebook for a description of when the official does so.
 When the simulation is stopped the `fsds_ros_bridge` is stopped immediatly and and the AS will no longer receive sensor data or be able to control the vehicle.
-The AS will not receive a signal that this happend.
+The AS will not receive a signal that this happened.
 To detect a stop, the AS should keep an eye on the GO signal.
 
 The general rule is: If the AS did not receive a GO signal for 4 seconds the AS can assume the `fsds_ros_bridge` is stopped.
