@@ -1,15 +1,24 @@
-Before being able to use the ros workspace, you will have to follow the steps described [here](get-ready-to-develop.md).
+# Building the ros workspace
+This guide describes how to use the ros workspace on an Ubuntu machine.
+It also works on Windows Subsystem for Linux 1 (WSL1)
 
-You also have to:
+If you do not have Ros Melodic installed, read the relevant instructions in the [get-ready-to-develop](get-ready-to-develop.md) guide.
 
-- Build AirSim. From the root of this repository, run:
+Before we can build the workspace, install the workspace c++ library dependencies:
+```
+sudo apt-get install ros-melodic-tf2-geometry-msgs python-catkin-tools ros-melodic-rqt-multiplot ros-melodic-joy ros-melodic-cv-bridge ros-melodic-image-transport libyaml-cpp-dev
+```
+
+Then:
+
+- Build AirSim shared c++ code. From the root of this repository, run:
 ```
 cd AirSim
 ./setup.sh
 ./build.sh
 ```
-- Build ROS package
 
+- Build ROS package
 ```
 cd ros
 catkin build

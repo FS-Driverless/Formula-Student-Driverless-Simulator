@@ -1,4 +1,3 @@
-
 # GPS
 
 The GPS model in AirSim has been configured to mimic an average GPS receiver used during formula student competitions.

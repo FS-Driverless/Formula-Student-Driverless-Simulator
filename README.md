@@ -29,20 +29,11 @@ When AirSim is compiled, the AirLib binaries are placed within `/UE4Project/Plug
 
 This repo uses LFS for some large files. All files bigger than 90MB are added to LFS.
 
-## Development
+## Running & Development
 
-For developing within this repo you need quite a good computer because Unreal Engine is a heavy baby.
-We highly recommend the following computer specs. You might be able to run with less power but everything will be slower.
-* 8 core 3Ghz CPU
-* 12 GB memory
-* 100GB free SSD storage
-* Recent NVidia card with Vulkan support and 3 GB of memory.
+To run the simulation, read the [simulation guide](docs/how-to-simulate.md).
 
-If you do not have access to such a computer, you can [set up a remote workstation in google cloud](docs/gcp-remote-workstation.md).
-
-To actually setup your computer for development follow [this tutorial](docs/get-ready-to-develop.md).
-
-Read all about how to develop [here](docs/how-to-develop.md).
+To build from source and develop this project, read the [development guide](docs/how-to-develop.md).
 
 
 ## Credits

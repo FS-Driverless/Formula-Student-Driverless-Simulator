@@ -11,7 +11,7 @@ When the simulation is done, the node is closed and your AS will no longer be ab
 
 Integrating your autonomous system with a simulator is a matter of subscribing and publishing to topics and acting accordingly.
 
-## Signals
+## System flow and Signals
 
 Initially, when your AS launches, no simulation is connected.
 The AS must wait for a GO signal before acting.
@@ -78,7 +78,7 @@ Here you can read the requirements and restrictions that apply to every sensor.
 ### Camera
 
 Every vehicle can have a maximum of 2 camera sensors. 
-These camera camera(s) can be placed anywhere on the car that would be allowed by FSG 2020 rules. 
+These camera camera(s) can be placed anywhere on the vehicle that would be allowed by FSG 2020 rules. 
 The camera body dimensions are a 4x4x4 cm cube with mounting points at any side except the front facing side.
 
 All camera sensors output uncompressed rgba8 images at 30 fps. 
@@ -140,14 +140,95 @@ The GPS captures the position of the vehicle in the geodetic reference system, n
 More detailed technical information about the accuracy of the GPS can be found [here](gps.md).
 
 ### IMU
-//todo
+//todo: figure out how IMU works and describe it here.
 
 ### Sensor specification
-Write about _how_ to configure your settings.json
+Teams are expected to provide their sensor suite as a single AirSim settings.json file.
+Most of the parameters in the settings.json file will be set by the officials to ensure fairness during competition.
+You are allowed to configure the following subset of parameters within the boundries of above rules.
 
-## Topics
-Which topics to subscribe/publish to? 
-What are the message types?
+* Cameras
+* * camera name
+* * Width, Height
+* * FOV_Degrees
+* * X, Y, Z
+* * Pitch, Roll, Yaw
+* Lidars
+* * NumberOfChannels
+* * PointsPerSecond
+* * RotationsPerSecond
+* * HorizontalFOVStart
+* * HorizontalFOVEnd
+* * VerticalFOVUpper
+* * VerticalFOVLower
+* * X, Y, Z
+* * Pitch, Roll, Yaw
 
-## Deployment
-Google cloud how-to
+The GPS and Lidar are configured equally for all teams according to the rules in the previous chapter.
+
+We reccomand to copy the [settings.json in this repository](/UE4Project/Plugins/AirSim/Settings/settings.json) as a base and configure the cameras and lidar from there on.
+
+## Launching the simulator
+To run the simulation, read the [simulation guide](how-to-simulate.md).
+
+## Ros integration
+Communication between autonomous system and simulator will take place using ros topics.
+Sensordata will be published by the [ros bridge](ros-bridge.md) and subscred on by the autonomous system.
+The autonomous system will publish vehicle setpoints and the ros bridge will listen for those messages.
+Transforms between sensors also are being published for usage by the autonomous system.
+
+### Sensor topics
+The following topics are made available:
+
+- `/fsds/gps` [sensor_msgs/NavSatFix](https://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html)
+GPS messages. [Read all about the gps model here](gps.md).
+
+- `/fsds/camera/CAMERA_NAME` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)
+One of this topic type will exist for every camera specified in the `settings.json` file.
+On this topic camera frames are published. The format will be bgra8. 
+`CAMERA_NAME` will be replaced by the corresponding in the `Cameras` object in the `settings.json` file.
+
+- `/fsds/camera/CAMERA_NAME/camera_info` [sensor_msgs/CameraInfo](https://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html)
+This topic publishes metadata about the related camera.
+For every frame sent on `/fsds/CAMERA_NAME` 1 message will be sent on this topic.
+
+//todo: imu
+
+### Signal topics
+//todo add when signals are implemented.
+
+- `/fsds/signal/go`
+
+- `/fsds/signal/finish`
+
+### vehicle setpoints
+Publishing on the following topic controlls the vehicle:
+
+- `/fsds_ros_bridge/VEHICLE_NAME/control_command` [fsds_ros_bridge/ControlCommand](../ros/src/fsds_ros_bridge/msg/ControlCommand.msg)
+
+This message inculdes throttle, steering and brake. 
+Each value is dimensionless and goes from -1 to 1.
+For steering `-1` steers full to the left and `+1` steers full to the right.
+
+
+### Transforms
+//todo: We have to figure out how these transforms are working.
+
+- `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)
+
+## 3D vehicle model
+//todo
+This chapter will describe how to change the 3d model of the vehicle and how to provide the 3d model for usage during the competition. 
+At this moment we have no idea how this works sooooo when we figure it out this will be filled in.
+
+## Competition deployment
+A few weeks before competition, each team will receive the ssh credentials to an Ubuntu google cloud instance.
+This instance will have 8 vCPU cores, 30 gb memory (configuration n1-standard-8), 1 Nvidia Tesla T4 videocard and 100GB SSD disk.
+The teams must install their autonomous system on this computer.
+
+At competition, a separate google cloud instance will run the simulation software and the ros bridge. 
+One by one the ros bridge will connect to the different teams computers an they will do their mission.
+
+During the weeks leading up to the competition FSOnline will host multiple testing moments where the autonomous computers will be connected to the simulator and drive a few test laps.
+
+More informatoin about the procedure will be added later.
