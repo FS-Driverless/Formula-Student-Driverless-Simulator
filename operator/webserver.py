@@ -142,6 +142,9 @@ class WebServer(FlaskView):
         if WebServer.simulation_process is None:
             abort(400, description='Simulator not running.') 
 
+        if WebServer.interface_process is not None:
+            abort(400, description='Mission already running.')
+
         # Set ROS MASTER
         procenv = os.environ.copy()
         procenv["ROS_MASTER_URI"] = WebServer.team['master']
@@ -178,8 +181,12 @@ class WebServer(FlaskView):
             abort(403, description='Incorrect access token')
 
         # Abort if empty request
-        if request.json is None or 'access_token' not in request.json:
+        if request.json is None or not all(key in request.json for key in ['sender', 'access_token']):
             abort(400, description='Empty request.')   
+
+        # Abort if Unreal Engine simulator is not running
+        if WebServer.simulation_process is None:
+            abort(400, description='Simulator not running.') 
 
         # Abort if ROS bridge is not running
         if WebServer.interface_process is None:
@@ -208,7 +215,7 @@ class WebServer(FlaskView):
         WebServer.car_controls.brake = 0 # Remove brake
 
         # Create log message
-        log = '{}: {}'.format(str(datetime.now()), 'Mission ' + WebServer.mission + ' stopped.')
+        log = '{}: {}'.format(str(datetime.now()), 'Mission ' + WebServer.mission + ' stopped by ' + request.json['sender'] + '.')
         WebServer.logs.append(log)
         del WebServer.logs[:] # Clear logs
 

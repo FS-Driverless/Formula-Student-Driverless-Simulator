@@ -18,6 +18,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include <fsds_ros_bridge/ControlCommand.h>
 #include <fsds_ros_bridge/Reset.h>
 #include <fsds_ros_bridge/GreenFlag.h>
+#include <fsds_ros_bridge/ASMissionFinished.h>
 #include <chrono>
 #include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -46,6 +47,9 @@ STRICT_MODE_OFF //todo what does this do?
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
 #include <unordered_map>
+#include <fstream>
+#include <jsoncpp/json/json.h>
+#include <curl/curl.h>
 // #include "nodelet/nodelet.h"
 #define printVariableNameAndValue(x) std::cout << "The name of variable **" << (#x) << "** and the value of variable is => " << x << "\n"
 
@@ -128,6 +132,7 @@ private:
     void green_flag_timer_cb(const ros::TimerEvent& event);
 
     /// ROS subscriber callbacks
+    void AS_mission_finished_cb(const fsds_ros_bridge::ASMissionFinished& msg);
 
     ros::Time make_ts(uint64_t unreal_ts);
     // void set_zero_vel_cmd();
@@ -194,7 +199,8 @@ private:
 
     ros::ServiceServer reset_srvr_;
     ros::Publisher origin_geo_point_pub_;          // home geo coord of drones
-    ros::Publisher green_flag_pub;                 // green flag
+    ros::Publisher green_flag_pub_;                // green flag
+    ros::Subscriber AS_mission_finished_sub_;       // AS Mission Finished 
     msr::airlib::GeoPoint origin_geo_point_;       // gps coord of unreal origin
     fsds_ros_bridge::GPSYaw origin_geo_point_msg_; // todo duplicate
 

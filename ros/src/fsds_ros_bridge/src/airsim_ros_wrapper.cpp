@@ -103,7 +103,8 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 {
     // subscribe to control commands on global nodehandle
     origin_geo_point_pub_ = nh_private_.advertise<fsds_ros_bridge::GPSYaw>("origin_geo_point", 10);
-    green_flag_pub = nh_private_.advertise<fsds_ros_bridge::GreenFlag>("green_flag", 1);
+    green_flag_pub_ = nh_private_.advertise<fsds_ros_bridge::GreenFlag>("green_flag", 1);
+    AS_mission_finished_sub_ = nh_private_.subscribe<fsds_ros_bridge::ASMissionFinished>("AS_mission_finished", 1, &AirsimROSWrapper::AS_mission_finished_cb, this);
 
     airsim_img_request_vehicle_name_pair_vec_.clear();
     image_pub_vec_.clear();
@@ -1098,5 +1099,40 @@ void AirsimROSWrapper::green_flag_timer_cb(const ros::TimerEvent &event)
     fsds_ros_bridge::GreenFlag green_flag_msg;
     green_flag_msg.mission = mission_name_;
     green_flag_msg.track = track_name_;
-    green_flag_pub.publish(green_flag_msg);
+    green_flag_pub_.publish(green_flag_msg);
+}
+
+void AirsimROSWrapper::AS_mission_finished_cb(const fsds_ros_bridge::ASMissionFinished& msg)
+{
+    // Get access token from team config
+    std::ifstream file("../../../../config/team_config/json");
+    Json::Reader reader;
+    Json::Value obj;
+    reader.parse(file, obj);
+    std::string access_token = obj["access_token"].asString();
+
+    // Send JSON HTTP POST request
+    CURL *curl;
+    CURLcode res;
+
+    curl_global_init(CURL_GLOBAL_ALL);
+    curl = curl_easy_init();
+
+    std::string json_obj = "{\"access_token\" : \"" + access_token + "\" , \"sender\" : \"AS\" }";
+
+    struct curl_slist *headers = NULL;
+    headers = curl_slist_append(headers, "Accept: application/json");
+    headers = curl_slist_append(headers, "Content-Type: application/json");
+    headers = curl_slist_append(headers, "charsets: utf-8");
+
+    curl_easy_setopt(curl, CURLOPT_URL, "http://localhost:5000/mission/stop");
+    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_obj.c_str());
+
+    res = curl_easy_perform(curl);
+    std::cout << res << std::endl;
+
+    curl_easy_cleanup(curl);
+    curl_global_cleanup();
 }

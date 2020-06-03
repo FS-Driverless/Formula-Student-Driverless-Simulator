@@ -41,6 +41,7 @@ add_message_files(
   GPSYaw.msg
   ControlCommand.msg
   GreenFlag.msg
+  ASMissionFinished.msg
 )
 
 add_service_files(

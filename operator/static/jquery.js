@@ -112,7 +112,7 @@ $(document).ready(function() {
         interfaceIsActive
         ?
         $.ajax('mission/stop', {
-            data: JSON.stringify({access_token: accessToken}),
+            data: JSON.stringify({access_token: accessToken,  sender: 'operator'}),
             contentType: 'application/json',
             type: 'POST',
             success: res => {
