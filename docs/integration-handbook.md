@@ -5,11 +5,13 @@ The rules and procedures set out in this document will be used during the FSOnli
 ## High level overview
 Your AS is expected to continuously run a ROS master.
 The simulator will launch a node ([fsds_ros_bridge](ros-bridge.md)) that connects to your ROS system.
-This node will publish sensordata and listen for vehicle setpoints.
+This node will publish sensor data and listen for vehicle setpoints.
 When the simulation is done, the node is closed and your AS will no longer be able to interact with the simulator.
 [A more in depth explanation of the fsds system can be found here.](system-overview.md)
 
 Integrating your autonomous system with a simulator is a matter of subscribing and publishing to topics and acting accordingly.
+
+*During testing, your AS and the ROS bridge/simulator will probably run on the same machine (your local computer most likely). During the competition however, the AS and the ROS bridge/simulator will be on different machines (cloud servers) and communicate over a local network.*
 
 ## System flow and Signals
 
@@ -67,7 +69,7 @@ The AS will not receive a signal that this happened.
 To detect a stop, the AS should keep an eye on the GO signal.
 
 The general rule is: If the AS did not receive a GO signal for 4 seconds the AS can assume the `fsds_ros_bridge` is stopped.
-When this state is detected, the AS can reset itsself and prepare for a next mission.
+When this state is detected, the AS can reset itself and prepare for a next mission.
 
 ## Sensor Suite
 Every team can configure the sensors on their vehicle.
@@ -173,7 +175,7 @@ To run the simulation, read the [simulation guide](how-to-simulate.md).
 
 ## ROS integration
 Communication between autonomous system and simulator will take place using ROS topics.
-Sensordata will be published by the [ros bridge](ros-bridge.md) and subscred on by the autonomous system.
+Sensor data will be published by the [ros bridge](ros-bridge.md) and subscred on by the autonomous system.
 The autonomous system will publish vehicle setpoints and the ROS bridge will listen for those messages.
 Transforms between sensors also are being published for usage by the autonomous system.
 

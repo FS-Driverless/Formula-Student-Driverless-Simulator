@@ -35,6 +35,9 @@ To **run** the simulation, read the [simulation guide](docs/how-to-simulate.md).
 
 To **build from source and develop** this project, read the [development guide](docs/how-to-develop.md).
 
+## Participants of FSOnline Driverless
+We have written an [integration guide](docs/integration-handbook.md) for getting your autonomous systems connected to this simulator.
+
 
 ## Credits
 This project is based on the work of some amazing other open-source projects. 
