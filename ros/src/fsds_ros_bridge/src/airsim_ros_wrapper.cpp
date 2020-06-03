@@ -127,7 +127,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         vehicle_name_idx_map_[curr_vehicle_name] = idx; // allows fast lookup in command callbacks in case of a lot of cars
 
         FSCarROS fscar_ros;
-        fscar_ros.odom_frame_id = curr_vehicle_name + "/odom_local_ned";
+        fscar_ros.odom_frame_id = "fsds/" + curr_vehicle_name + "/odom_local_ned";
         fscar_ros.vehicle_name = curr_vehicle_name;
         fscar_ros.odom_local_ned_pub = nh_private_.advertise<nav_msgs::Odometry>(curr_vehicle_name + "/odom_local_ned", 10);
         fscar_ros.global_gps_pub = nh_private_.advertise<sensor_msgs::NavSatFix>(curr_vehicle_name + "/global_gps", 10);
@@ -355,7 +355,7 @@ nav_msgs::Odometry AirsimROSWrapper::get_odom_msg_from_airsim_state(const msr::a
 sensor_msgs::PointCloud2 AirsimROSWrapper::get_lidar_msg_from_airsim(const std::string &lidar_name, const msr::airlib::LidarData& lidar_data) const
 {
     sensor_msgs::PointCloud2 lidar_msg;
-    lidar_msg.header.frame_id = lidar_name;
+    lidar_msg.header.frame_id = "fsds/"+lidar_name;
 
     if (lidar_data.point_cloud.size() > 3)
     {
@@ -505,7 +505,7 @@ void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent& event)
                 }
 
                 sensor_msgs::Imu imu_msg = get_imu_msg_from_airsim(imu_data);
-                imu_msg.header.frame_id = vehicle_imu_pair.first;
+                imu_msg.header.frame_id = "fsds/" + vehicle_imu_pair.first;
                 // imu_msg.header.stamp = ros::Time::now();
                 {
                     ros_bridge::ROSMsgCounter counter(&imu_pub_vec_statistics[ctr]);
@@ -606,8 +606,8 @@ void AirsimROSWrapper::append_static_lidar_tf(const std::string& vehicle_name, c
 {
 
     geometry_msgs::TransformStamped lidar_tf_msg;
-    lidar_tf_msg.header.frame_id = vehicle_name;
-    lidar_tf_msg.child_frame_id = lidar_name;
+    lidar_tf_msg.header.frame_id = "fsds/" + vehicle_name;
+    lidar_tf_msg.child_frame_id = "fsds/" + lidar_name;
     lidar_tf_msg.transform.translation.x = lidar_setting.position.x();
     lidar_tf_msg.transform.translation.y = lidar_setting.position.y();
     lidar_tf_msg.transform.translation.z = lidar_setting.position.z();
@@ -624,8 +624,8 @@ void AirsimROSWrapper::append_static_lidar_tf(const std::string& vehicle_name, c
 void AirsimROSWrapper::append_static_camera_tf(const std::string& vehicle_name, const std::string& camera_name, const CameraSetting& camera_setting)
 {
     geometry_msgs::TransformStamped static_cam_tf_body_msg;
-    static_cam_tf_body_msg.header.frame_id = vehicle_name;
-    static_cam_tf_body_msg.child_frame_id = camera_name;
+    static_cam_tf_body_msg.header.frame_id = "fsds/" + vehicle_name;
+    static_cam_tf_body_msg.child_frame_id = "fsds/" + camera_name;
     static_cam_tf_body_msg.transform.translation.x = camera_setting.position.x();
     static_cam_tf_body_msg.transform.translation.y = camera_setting.position.y();
     static_cam_tf_body_msg.transform.translation.z = camera_setting.position.z();
@@ -692,7 +692,7 @@ void AirsimROSWrapper::lidar_timer_cb(const ros::TimerEvent& event)
                     lck.unlock();
                 }
                 lidar_msg = get_lidar_msg_from_airsim(vehicle_lidar_pair.second, lidar_data);     // todo make const ptr msg to avoid copy
-                lidar_msg.header.frame_id = vehicle_lidar_pair.second; // sensor frame name. todo add to doc
+                lidar_msg.header.frame_id = "fsds/" + vehicle_lidar_pair.second; // sensor frame name. todo add to doc
                 lidar_msg.header.stamp = ros::Time::now();
 
                 {
@@ -760,7 +760,7 @@ sensor_msgs::CameraInfo AirsimROSWrapper::generate_cam_info(const std::string& c
                                                             const CaptureSetting& capture_setting) const
 {
     sensor_msgs::CameraInfo cam_info_msg;
-    cam_info_msg.header.frame_id = camera_name + "/" + image_type_int_to_string_map_.at(capture_setting.image_type) + "_optical";
+    cam_info_msg.header.frame_id = "fsds/" + camera_name;
     cam_info_msg.height = capture_setting.height;
     cam_info_msg.width = capture_setting.width;
     float f_x = (capture_setting.width / 2.0) / tan(math_common::deg2rad(capture_setting.fov_degrees / 2.0));
@@ -803,14 +803,14 @@ void AirsimROSWrapper::process_and_publish_img_response(const std::vector<ImageR
         {
             image_pub_vec_[img_response_idx_internal].publish(get_depth_img_msg_from_response(curr_img_response,
                                                                                               curr_ros_time,
-                                                                                              curr_img_response.camera_name + "_optical"));
+                                                                                              "fsds/" + curr_img_response.camera_name));
         }
         // Scene / Segmentation / SurfaceNormals / Infrared
         else
         {
             image_pub_vec_[img_response_idx_internal].publish(get_img_msg_from_response(curr_img_response,
                                                                                         curr_ros_time,
-                                                                                        curr_img_response.camera_name + "_optical"));
+                                                                                        "fsds/" + curr_img_response.camera_name));
         }
         img_response_idx_internal++;
     }
