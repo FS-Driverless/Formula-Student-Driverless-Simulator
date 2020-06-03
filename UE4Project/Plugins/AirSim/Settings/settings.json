@@ -28,8 +28,8 @@
             "Enabled": true,
             "NumberOfChannels": 16,
             "PointsPerSecond": 10000,
-            "X": 10,
-            "Y": 25,
+            "X": 0,
+            "Y": 0,
             "Z": -1,
             "DrawDebugPoints": false
           }
