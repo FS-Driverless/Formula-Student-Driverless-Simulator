@@ -16,16 +16,16 @@ package "Google Cloud" {
             [AirSim plugin]
         }
         [Operator]
-        [ROS-Bridge]
+        [ros-Bridge]
     } 
     
     
     [Operator] --> [AirSim plugin]: Get referee state
-    [ROS-Bridge] --> [AirSim plugin]: Set car control setpoints
-    [ROS-Bridge] <-- [AirSim plugin]: Get Sensor data
+    [ros-Bridge] --> [AirSim plugin]: Set car control setpoints
+    [ros-Bridge] <-- [AirSim plugin]: Get Sensor data
 
-    [AS] -right-> [ROS-Bridge] : Car control setpoints
-    [ROS-Bridge] -left-> [AS] : Sensor data
+    [AS] -right-> [ros-Bridge] : Car control setpoints
+    [ros-Bridge] -left-> [AS] : Sensor data
 }
 
 [Official's browser<size:20><&person></size>] as official

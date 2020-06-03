@@ -2,7 +2,7 @@
 
 ![In action](images/fsds_ros_bridge.png)
 
-A ROS wrapper over the AirSim C++ **Car** client library. This code is based on the [original AirSim ROS wrapper for the *Multirotor* API](https://github.com/microsoft/AirSim/tree/master/ros/src/airsim_ros_interface) and provides an interface between AirSim + Unreal Engine and your ROS-based autonomous system. 
+A ROS wrapper over the AirSim C++ **Car** client library. This code is based on the [original AirSim ROS wrapper for the *Multirotor* API](https://github.com/microsoft/AirSim/tree/master/ros/src/airsim_ros_interface) and provides an interface between AirSim + Unreal Engine and your ros-based autonomous system. 
 
 The fsds_ros_bridge is supposed to be launched pointing at the Autonomous System's ROS master so that it can publish and subscribe to topics within the autonomous system. 
 Physically this node should run on the airsim simulation server (that is the one that also runs the Unreal) project.
@@ -20,7 +20,7 @@ roslaunch fsds_ros_bridge fsds_ros_bridge.launch
 
 ## Publishers
 - `/fsds_ros_bridge/origin_geo_point` [fsds_ros_bridge/GPSYaw](../ros/src/fsds_ros_bridge/msg/GPSYaw.msg)   
-GPS coordinates corresponding to global NED frame. This is set in the airsim's [settings.json](https://microsoft.github.io/AirSim/docs/settings/) file under (located [here](../../../UE4Project/Plugins/AirSim/Settings/settings.json)) the `OriginGeopoint` key. 
+GPS coordinates corresponding to global NED frame. This is set in the airsim's [settings.json](https://microsoft.github.io/AirSim/docs/settings/) file under (located [here](../../../settings.json)) the `OriginGeopoint` key. 
 
 - `/fsds_ros_bridge/VEHICLE_NAME/global_gps` [sensor_msgs/NavSatFix](https://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html)   
 This the current GPS coordinates of the drone in airsim. 
@@ -31,11 +31,11 @@ Odometry in NED frame wrt starting point.  THIS WILL NOT BE STREAMED DURING COMP
 - `/fsds_ros_bridge/VEHICLE_NAME/CAMERA_NAME/IMAGE_TYPE/camera_info` [sensor_msgs/CameraInfo](https://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html)
 
 - `/fsds_ros_bridge/VEHICLE_NAME/CAMERA_NAME/IMAGE_TYPE` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)   
-  RGB or float image depending on image type requested in [settings.json](../UE4Project/Plugins/AirSim/Settings/settings.json).
+  RGB or float image depending on image type requested in [settings.json](../settings.json).
 
 - `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)
 
-where `VEHICLE_NAME`, `CAMERA_NAME` and `IMAGE_TYPE` are extracted from [settings.json](../UE4Project/Plugins/AirSim/Settings/settings.json).
+where `VEHICLE_NAME`, `CAMERA_NAME` and `IMAGE_TYPE` are extracted from [settings.json](../settings.json).
 
 ## Subscribers
 - `/fsds_ros_bridge/VEHICLE_NAME/control_command` [fsds_ros_bridge/ControlCommand](../ros/src/fsds_ros_bridge/msg/ControlCommand.msg) 

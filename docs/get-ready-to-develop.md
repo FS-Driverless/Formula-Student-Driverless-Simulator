@@ -1,7 +1,7 @@
 # Let's get ready to develop this project
-So you want to make changes to this project, amazing! We always love new developers <3
+So you want to make changes to this project, amazing! We always love new developers 💓
 Using this tutorial you can set up your computer to development the simulator. 
-If you just want to run the simulator, you can follow [this guide on how to simulate](how-to-simulate.md)
+*If you just want to run the simulator, you can follow [this guide on how to simulate](how-to-simulate.md).*
 
 ## Prerequisites
 
@@ -42,14 +42,14 @@ At 'Invidual Components select:
 * .NET Framework 4.7 SDK
 
 
-## Install ROS Melodic (Ubuntu)
+## Install ROS Melodic (WSL Ubuntu)
 
 ```
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 curl -sSL 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xC1CF6E31E6BADE8868B172B4F42ED6FBAB17C654' | sudo apt-key add -
 sudo apt update
-sudo apt install ROS-melodic-desktop
+sudo apt install ros-melodic-desktop
 ```
 
 Add the following line to end of your `~/.bashrc` file:

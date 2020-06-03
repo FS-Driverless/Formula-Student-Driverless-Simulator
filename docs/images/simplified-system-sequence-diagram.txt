@@ -4,19 +4,19 @@
 title system sequence diagram
 
 Official->Operator: Start mission x
-Operator->*ROS-Bridge: create
+Operator->*ros-Bridge: create
 
-ROS-Bridge->Autonomous System: start mission x
+ros-Bridge->Autonomous System: start mission x
 loop until finished or stopped
-ROS-Bridge<-UnrealEngine: sensor data
-ROS-Bridge->Autonomous System: sensor data
-ROS-Bridge<-Autonomous System: car setpoints
-ROS-Bridge->UnrealEngine: car setpoints
+ros-Bridge<-UnrealEngine: sensor data
+ros-Bridge->Autonomous System: sensor data
+ros-Bridge<-Autonomous System: car setpoints
+ros-Bridge->UnrealEngine: car setpoints
 end
 
 Official->Operator: Stop mission or mission finished
-Operator->ROS-Bridge: Stop process
-destroy ROS-Bridge
+Operator->ros-Bridge: Stop process
+destroy ros-Bridge
 
 
 Operator->UnrealEngine:get simulation statistics

@@ -24,16 +24,16 @@ It launches the ASBridge to connect a autonomous system to the Unreal world and 
 This node can connect 1 autonomous system with the simulated world.
 
 `/AirSim` is a slimmed-down, hard-fork of the [AirSim](https://github.com/microsoft/AirSim) project.
-There is only code located that is shared between operator, ROS-bridge and UE4 plugin.
+There is only code located that is shared between operator, ros-bridge and UE4 plugin.
 When AirSim is compiled, the AirLib binaries are placed within `/UE4Project/Plugins/AirSim/Source/AirLib`.
 
 This repo uses LFS for some large files. All files bigger than 90MB are added to LFS.
 
 ## Running & Development
 
-To run the simulation, read the [simulation guide](docs/how-to-simulate.md).
+To **run** the simulation, read the [simulation guide](docs/how-to-simulate.md).
 
-To build from source and develop this project, read the [development guide](docs/how-to-develop.md).
+To **build from source and develop** this project, read the [development guide](docs/how-to-develop.md).
 
 
 ## Credits

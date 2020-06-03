@@ -166,7 +166,7 @@ You are allowed to configure the following subset of parameters within the bound
 
 The GPS and Lidar are configured equally for all teams according to the rules in the previous chapter.
 
-We reccomand to copy the [settings.json in this repository](/UE4Project/Plugins/AirSim/Settings/settings.json) as a base and configure the cameras and lidar from there on.
+We recommend to copy the [settings.json in this repository](../settings.json) as a base and configure the cameras and lidar from there on.
 
 ## Launching the simulator
 To run the simulation, read the [simulation guide](how-to-simulate.md).
