@@ -35,7 +35,7 @@ $(document).ready(function() {
                         interfaceIsActive = res.interface_state;
                         interfaceIsActive 
                         ? $('#start-stop').removeClass('btn-primary').addClass('btn-danger').text('Send STOP signal') 
-                        : $('#start-stop').removeClass('btn-danger').addClass('btn-primary').text('Send START signal');
+                        : $('#start-stop').removeClass('btn-danger').addClass('btn-primary').text('Send GO signal');
                     }
                 },
             });
@@ -118,7 +118,7 @@ $(document).ready(function() {
             success: res => {
                 interfaceIsActive = false;
                 logs.push(res.response);
-                $('#start-stop').removeClass('btn-danger').addClass('btn-primary').text('Send START signal');
+                $('#start-stop').removeClass('btn-danger').addClass('btn-primary').text('Send GO signal');
                 $('.log-window').append(`<p>${res.response}</p>`);
             },
             error: res => {

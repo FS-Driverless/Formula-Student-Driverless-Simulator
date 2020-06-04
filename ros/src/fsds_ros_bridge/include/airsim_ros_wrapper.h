@@ -17,8 +17,8 @@ STRICT_MODE_OFF //todo what does this do?
 #include <fsds_ros_bridge/GPSYaw.h>
 #include <fsds_ros_bridge/ControlCommand.h>
 #include <fsds_ros_bridge/Reset.h>
-#include <fsds_ros_bridge/GreenFlag.h>
-#include <fsds_ros_bridge/ASMissionFinished.h>
+#include <fsds_ros_bridge/GoSignal.h>
+#include <fsds_ros_bridge/FinishedSignal.h>
 #include <chrono>
 #include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -129,10 +129,10 @@ private:
     void car_control_cb(const fsds_ros_bridge::ControlCommand::ConstPtr& msg, const std::string& vehicle_name);
     void lidar_timer_cb(const ros::TimerEvent& event);
     void statistics_timer_cb(const ros::TimerEvent& event);
-    void green_flag_timer_cb(const ros::TimerEvent& event);
+    void go_signal_timer_cb(const ros::TimerEvent& event);
 
     /// ROS subscriber callbacks
-    void AS_mission_finished_cb(fsds_ros_bridge::ASMissionFinishedConstPtr msg);
+    void finished_signal_cb(fsds_ros_bridge::FinishedSignalConstPtr msg);
 
     ros::Time make_ts(uint64_t unreal_ts);
     // void set_zero_vel_cmd();
@@ -199,8 +199,8 @@ private:
 
     ros::ServiceServer reset_srvr_;
     ros::Publisher origin_geo_point_pub_;          // home geo coord of drones
-    ros::Publisher green_flag_pub_;                // green flag
-    ros::Subscriber AS_mission_finished_sub_;       // AS Mission Finished 
+    ros::Publisher go_signal_pub_;                 // go signal
+    ros::Subscriber finished_signal_sub_;          // finished signal 
     msr::airlib::GeoPoint origin_geo_point_;       // gps coord of unreal origin
     fsds_ros_bridge::GPSYaw origin_geo_point_msg_; // todo duplicate
 
@@ -246,7 +246,7 @@ private:
     ros::Timer airsim_control_update_timer_;
     ros::Timer airsim_lidar_update_timer_;
     ros::Timer statistics_timer_;
-    ros::Timer green_flag_timer_;
+    ros::Timer go_signal_timer_;
 
     typedef std::pair<std::vector<ImageRequest>, std::string> airsim_img_request_vehicle_name_pair;
     std::vector<airsim_img_request_vehicle_name_pair> airsim_img_request_vehicle_name_pair_vec_;

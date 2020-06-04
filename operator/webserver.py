@@ -147,10 +147,10 @@ class WebServer(FlaskView):
 
         # Set ROS MASTER
         procenv = os.environ.copy()
-        procenv["ROS_MASTER_URI"] = WebServer.team['master']
+        procenv['ROS_MASTER_URI'] = WebServer.team['master']
 
         # Launch ROS bridge
-        WebServer.interface_process = subprocess.Popen(['roslaunch', 'fsds_ros_bridge', 'fsds_ros_bridge.launch', 'mission:={}'.format(WebServer.mission)], env=procenv)  
+        WebServer.interface_process = subprocess.Popen(['roslaunch', 'fsds_ros_bridge', 'fsds_ros_bridge.launch', 'mission_name:='+WebServer.mission, 'access_token:='+self.access_token], env=procenv)  
 
         # Start referee state listener
         self.referee_state_listener() 
@@ -176,7 +176,6 @@ class WebServer(FlaskView):
 
     @route('/mission/stop', methods=['POST'])
     def mission_stop(self):
-        print 'received access token: ', request.json['access_token']
         # Abort if access token is incorrect
         if request.json is not None and request.json['access_token'] != self.access_token:
             abort(403, description='Incorrect access token')

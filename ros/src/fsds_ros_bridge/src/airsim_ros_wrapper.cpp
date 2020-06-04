@@ -95,7 +95,7 @@ void AirsimROSWrapper::initialize_ros()
     create_ros_pubs_from_settings_json();
     airsim_control_update_timer_ = nh_private_.createTimer(ros::Duration(update_airsim_control_every_n_sec), &AirsimROSWrapper::car_state_timer_cb, this);
     statistics_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::statistics_timer_cb, this);
-    green_flag_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::green_flag_timer_cb, this);
+    go_signal_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::go_signal_timer_cb, this);
 }
 
 // XmlRpc::XmlRpcValue can't be const in this case
@@ -103,8 +103,8 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 {
     // subscribe to control commands on global nodehandle
     origin_geo_point_pub_ = nh_private_.advertise<fsds_ros_bridge::GPSYaw>("origin_geo_point", 10);
-    green_flag_pub_ = nh_private_.advertise<fsds_ros_bridge::GreenFlag>("green_flag", 1);
-    AS_mission_finished_sub_ = nh_private_.subscribe("/fsds_ros_bridge/AS_mission_finished", 1, &AirsimROSWrapper::AS_mission_finished_cb, this);
+    go_signal_pub_ = nh_private_.advertise<fsds_ros_bridge::GoSignal>("signal/go", 1);
+    finished_signal_sub_ = nh_private_.subscribe("/fsds_ros_bridge/signal/finished", 1, &AirsimROSWrapper::finished_signal_cb, this);
 
     airsim_img_request_vehicle_name_pair_vec_.clear();
     image_pub_vec_.clear();
@@ -1094,22 +1094,20 @@ void AirsimROSWrapper::statistics_timer_cb(const ros::TimerEvent &event)
 }
 
 // This callback is executed every 1 second
-void AirsimROSWrapper::green_flag_timer_cb(const ros::TimerEvent &event)
+void AirsimROSWrapper::go_signal_timer_cb(const ros::TimerEvent &event)
 {
-    fsds_ros_bridge::GreenFlag green_flag_msg;
-    green_flag_msg.mission = mission_name_;
-    green_flag_msg.track = track_name_;
-    green_flag_pub_.publish(green_flag_msg);
+    fsds_ros_bridge::GoSignal go_signal_msg;
+    go_signal_msg.mission = mission_name_;
+    go_signal_msg.track = track_name_;
+    go_signal_pub_.publish(go_signal_msg);
 }
 
-void AirsimROSWrapper::AS_mission_finished_cb(fsds_ros_bridge::ASMissionFinishedConstPtr msg)
+void AirsimROSWrapper::finished_signal_cb(fsds_ros_bridge::FinishedSignalConstPtr msg)
 {
-    std::ifstream file("../../../../config/team_config.json");
-    Json::Reader reader;
-    Json::Value obj;
-    reader.parse(file, obj);
-    std::string access_token = obj["access_token"].asString();
+    // Get access token
+    std::string access_token (std::getenv("OPERATOR_ACCESS_TOKEN"));
 
+    // Send JSON HTTP POST request
     CURL *curl;
     CURLcode res;
 

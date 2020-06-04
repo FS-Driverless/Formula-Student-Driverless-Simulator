@@ -40,8 +40,8 @@ add_message_files(
   FILES
   GPSYaw.msg
   ControlCommand.msg
-  GreenFlag.msg
-  ASMissionFinished.msg
+  GoSignal.msg
+  FinishedSignal.msg
 )
 
 add_service_files(
