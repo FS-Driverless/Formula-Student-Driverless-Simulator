@@ -176,6 +176,7 @@ class WebServer(FlaskView):
 
     @route('/mission/stop', methods=['POST'])
     def mission_stop(self):
+        print 'received access token: ', request.json['access_token']
         # Abort if access token is incorrect
         if request.json is not None and request.json['access_token'] != self.access_token:
             abort(403, description='Incorrect access token')
