@@ -198,7 +198,7 @@ On this topic, camera frames are published. The format will be bgra8.
 This topic publishes metadata about the related camera.
 For every frame sent on `/fsds/CAMERA_NAME` 1 message will be sent on this topic.
 
-- `??????` [sensor_msgs/Imu](https://docs.ros.org/api/sensor_msgs/html/msg/Imu.html)
+- `/fsds/imu` [sensor_msgs/Imu](https://docs.ros.org/api/sensor_msgs/html/msg/Imu.html)
 IMU messages. [Read all about the IMU model here](imu.md).
 
 ### Signal topics
