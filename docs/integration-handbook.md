@@ -142,7 +142,11 @@ The GPS captures the position of the vehicle in the geodetic reference system, n
 More detailed technical information about the accuracy of the GPS can be found [here](gps.md).
 
 ### IMU
-//todo: figure out how IMU works and describe it here.
+Every vehicle has 1 IMU, it is located at the center of gravity of the vehicle.
+This sensor cannot be removed or moved.
+
+The IMU captures the acceleration, orientation and angular rate of the vehicle in the ?? frame.
+More detailed technical information about the IMU implementation of the IMU can be found [here](imu.md).
 
 ### Sensor specification
 Teams are expected to provide their sensor suite as a single AirSim settings.json file.
@@ -194,7 +198,8 @@ On this topic camera frames are published. The format will be bgra8.
 This topic publishes metadata about the related camera.
 For every frame sent on `/fsds/CAMERA_NAME` 1 message will be sent on this topic.
 
-//todo: imu
+- `??????` [sensor_msgs/Imu](https://docs.ros.org/api/sensor_msgs/html/msg/Imu.html)
+IMU messages. [Read all about the IMU model here](imu.md).
 
 ### Signal topics
 //todo add when signals are implemented.
@@ -217,6 +222,9 @@ For steering `-1` steers full to the left and `+1` steers full to the right.
 //todo: We have to figure out how these transforms are working.
 
 - `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)
+
+## Vehicle dynamic model
+The vehicle dynamic model is a third-party high-fodelity model and will be the same for all teams. More details and information on this choice can be found [here](vehicle_model.md).
 
 ## 3D vehicle model
 //todo: reference vehicle model documentation in the open PR

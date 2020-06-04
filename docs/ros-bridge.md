@@ -35,6 +35,9 @@ Odometry in NED frame wrt starting point.  THIS WILL NOT BE STREAMED DURING COMP
 
 - `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)
 
+- `??????` [sensor_msgs/Imu](https://docs.ros.org/api/sensor_msgs/html/msg/Imu.html)
+IMU messages. [Read all about the IMU model here](imu.md).
+
 where `VEHICLE_NAME`, `CAMERA_NAME` and `IMAGE_TYPE` are extracted from [settings.json](../settings.json).
 
 ## Subscribers
