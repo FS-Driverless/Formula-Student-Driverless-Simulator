@@ -54,10 +54,6 @@ void AirsimROSWrapper::initialize_airsim()
             airsim_client_.enableApiControl(true, vehicle_name); // todo expose as rosservice?
             airsim_client_.armDisarm(true, vehicle_name);        // todo exposes as rosservice?
         }
-
-        origin_geo_point_ = airsim_client_.getHomeGeoPoint("");
-        // todo there's only one global origin geopoint for environment. but airsim API accept a parameter vehicle_name? inside carsimpawnapi.cpp, there's a geopoint being assigned in the constructor. by?
-        origin_geo_point_msg_ = get_gps_msg_from_airsim_geo_point(origin_geo_point_);
     }
     catch (rpc::rpc_error& e)
     {
@@ -72,9 +68,11 @@ void AirsimROSWrapper::initialize_statistics()
     setCarControlsStatistics = ros_bridge::Statistics("setCarControls");
     getGpsDataStatistics = ros_bridge::Statistics("getGpsData");
     getCarStateStatistics = ros_bridge::Statistics("getCarState");
+    getImuStatistics = ros_bridge::Statistics("getImu");
     control_cmd_sub_statistics = ros_bridge::Statistics("control_cmd_sub");
     global_gps_pub_statistics = ros_bridge::Statistics("global_gps_pub");
-    odom_local_ned_pub_statistics = ros_bridge::Statistics("odom_local_ned_pub");
+    odom_pub_statistics = ros_bridge::Statistics("odom_pub");
+    imu_pub_statistics = ros_bridge::Statistics("imu_pub");
 
     // Populate statistics obj vector
     // statistics_obj_ptr = {&setCarControlsStatistics, &getGpsDataStatistics, &getCarStateStatistics, &control_cmd_sub_statistics, &global_gps_pub_statistics, &odom_local_ned_pub_statistics};
@@ -84,32 +82,37 @@ void AirsimROSWrapper::initialize_ros()
 {
 
     // ros params
-    double update_airsim_control_every_n_sec;
+    double update_odom_every_n_sec;
+    double update_gps_every_n_sec;
+    double update_imu_every_n_sec;
+    double publish_static_tf_every_n_sec;
     nh_private_.getParam("is_vulkan", is_vulkan_);
-    nh_private_.getParam("update_airsim_control_every_n_sec", update_airsim_control_every_n_sec);
+    nh_private_.getParam("update_odom_every_n_sec", update_odom_every_n_sec);
+    nh_private_.getParam("update_gps_every_n_sec", update_gps_every_n_sec);
+    nh_private_.getParam("update_imu_every_n_sec", update_imu_every_n_sec);
+    nh_private_.getParam("publish_static_tf_every_n_sec", publish_static_tf_every_n_sec);
 
     create_ros_pubs_from_settings_json();
-    airsim_control_update_timer_ = nh_private_.createTimer(ros::Duration(update_airsim_control_every_n_sec), &AirsimROSWrapper::car_state_timer_cb, this);
+    odom_update_timer_ = nh_private_.createTimer(ros::Duration(update_odom_every_n_sec), &AirsimROSWrapper::odom_cb, this);
+    gps_update_timer_ = nh_private_.createTimer(ros::Duration(update_gps_every_n_sec), &AirsimROSWrapper::gps_timer_cb, this);
+    imu_update_timer_ = nh_private_.createTimer(ros::Duration(update_imu_every_n_sec), &AirsimROSWrapper::imu_timer_cb, this);
+    statictf_timer_ = nh_private_.createTimer(ros::Duration(publish_static_tf_every_n_sec), &AirsimROSWrapper::statictf_cb, this);
+
     statistics_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::statistics_timer_cb, this);
 }
 
 // XmlRpc::XmlRpcValue can't be const in this case
 void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 {
-    // subscribe to control commands on global nodehandle
-    origin_geo_point_pub_ = nh_private_.advertise<fsds_ros_bridge::GPSYaw>("origin_geo_point", 10);
-
     airsim_img_request_vehicle_name_pair_vec_.clear();
     image_pub_vec_.clear();
     cam_info_pub_vec_.clear();
     camera_info_msg_vec_.clear();
     static_tf_msg_vec_.clear();
-    imu_pub_vec_.clear();
     lidar_pub_vec_.clear();
     vehicle_names_.clear(); // todo should eventually support different types of vehicles in a single instance
     // vehicle_setting_vec_.clear();
     // vehicle_imu_map_;
-    fscar_ros_vec_.clear();
     // callback_queues_.clear();
 
     image_transport::ImageTransport image_transporter(nh_private_);
@@ -127,13 +130,13 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         vehicle_name_idx_map_[curr_vehicle_name] = idx; // allows fast lookup in command callbacks in case of a lot of cars
 
         FSCarROS fscar_ros;
-        fscar_ros.odom_frame_id = "fsds/" + curr_vehicle_name + "/odom_local_ned";
         fscar_ros.vehicle_name = curr_vehicle_name;
-        fscar_ros.odom_local_ned_pub = nh_private_.advertise<nav_msgs::Odometry>(curr_vehicle_name + "/odom_local_ned", 10);
+        fscar_ros.odom_pub = nh_private_.advertise<nav_msgs::Odometry>(curr_vehicle_name + "/odom", 10);
         fscar_ros.global_gps_pub = nh_private_.advertise<sensor_msgs::NavSatFix>(curr_vehicle_name + "/global_gps", 10);
+        fscar_ros.imu_pub = nh_private_.advertise<sensor_msgs::Imu>(curr_vehicle_name + "/imu", 10);
         fscar_ros.control_cmd_sub = nh_private_.subscribe<fsds_ros_bridge::ControlCommand>(curr_vehicle_name + "/control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, fscar_ros.vehicle_name));
 
-        fscar_ros_vec_.push_back(fscar_ros);
+        fscar = &fscar_ros;
         idx++;
 
         // iterate over camera map std::map<std::string, CameraSetting> cameras;
@@ -200,13 +203,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
             }
             case msr::airlib::SensorBase::SensorType::Imu:
             {
-                vehicle_imu_map_[curr_vehicle_name] = sensor_name;
-                // todo this is pretty non scalable, refactor airsim and ros api and maintain a vehicle <-> sensor (setting) map
-                std::cout << "Imu" << std::endl;
-                imu_pub_vec_.push_back(nh_private_.advertise<sensor_msgs::Imu>(curr_vehicle_name + "/imu/" + sensor_name, 10));
-                imu_pub_vec_statistics.push_back(ros_bridge::Statistics(sensor_name + "_Publisher"));
-                getImuDataVecStatistics.push_back(ros_bridge::Statistics(sensor_name + "_RpcCaller"));
-                // statistics_obj_ptr.insert(statistics_obj_ptr.end(), {&imu_pub_vec_statistics.back(), &getImuDataVecStatistics.back()});
+                std::cout << "Imu" << std::endl;                
                 break;
             }
             case msr::airlib::SensorBase::SensorType::Gps:
@@ -329,8 +326,6 @@ msr::airlib::Quaternionr AirsimROSWrapper::get_airlib_quat(const tf2::Quaternion
 nav_msgs::Odometry AirsimROSWrapper::get_odom_msg_from_airsim_state(const msr::airlib::CarApiBase::CarState& car_state) const
 {
     nav_msgs::Odometry odom_ned_msg;
-    // odom_ned_msg.header.frame_id = world_frame_id_;
-    // odom_ned_msg.child_frame_id = "/airsim/odom_local_ned"; // todo make param
 
     odom_ned_msg.pose.pose.position.x = car_state.getPosition().x();
     odom_ned_msg.pose.pose.position.y = car_state.getPosition().y();
@@ -398,7 +393,6 @@ sensor_msgs::PointCloud2 AirsimROSWrapper::get_lidar_msg_from_airsim(const std::
 sensor_msgs::Imu AirsimROSWrapper::get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data)
 {
     sensor_msgs::Imu imu_msg;
-    // imu_msg.header.frame_id = "/airsim/odom_local_ned";// todo multiple cars
     imu_msg.orientation.x = imu_data.orientation.x();
     imu_msg.orientation.y = imu_data.orientation.y();
     imu_msg.orientation.z = imu_data.orientation.z();
@@ -459,77 +453,24 @@ void AirsimROSWrapper::car_control_cb(const fsds_ros_bridge::ControlCommand::Con
     }
 }
 
-void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent& event)
+void AirsimROSWrapper::odom_cb(const ros::TimerEvent& event)
 {
     try
     {
-        std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
-
-        // todo this is global origin
-        origin_geo_point_pub_.publish(origin_geo_point_msg_);
-        // iterate over cars
-        for (auto& fscar_ros : fscar_ros_vec_)
+        msr::airlib::CarApiBase::CarState state;
         {
-
-            // get car state from airsim
-            {
-                ros_bridge::Timer timer(&getCarStateStatistics);
-                std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
-                fscar_ros.curr_car_state = airsim_client_.getCarState(fscar_ros.vehicle_name);
-                lck.unlock();
-            }
-
-            {
-                ros_bridge::Timer timer(&getGpsDataStatistics);
-                msr::airlib::GeoPoint gps_location = airsim_client_.getGpsData("Gps", fscar_ros.vehicle_name).gnss.geo_point;
-                fscar_ros.gps_sensor_msg = get_gps_sensor_msg_from_airsim_geo_point(gps_location);
-            }
-            fscar_ros.gps_sensor_msg.header.stamp =  ros::Time::now();
-
-            {
-                ros_bridge::ROSMsgCounter counter(&global_gps_pub_statistics);
-                fscar_ros.global_gps_pub.publish(fscar_ros.gps_sensor_msg);
-            }
+            ros_bridge::Timer timer(&getCarStateStatistics);
+            std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
+            state = airsim_client_.getCarState(fscar->vehicle_name);
+            lck.unlock();
         }
 
-        // IMUS
-        if (imu_pub_vec_.size() > 0)
+        nav_msgs::Odometry message = this->get_odom_msg_from_airsim_state(state);
         {
-            int ctr = 0;
-            for (const auto& vehicle_imu_pair : vehicle_imu_map_)
-            {
-                struct msr::airlib::ImuBase::Output imu_data;
-                {
-                    ros_bridge::Timer timer(&getImuDataVecStatistics[ctr]);
-                    std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
-                    auto imu_data = airsim_client_.getImuData(vehicle_imu_pair.second, vehicle_imu_pair.first);
-                    lck.unlock();
-                }
-
-                sensor_msgs::Imu imu_msg = get_imu_msg_from_airsim(imu_data);
-                imu_msg.header.frame_id = "fsds/" + vehicle_imu_pair.first;
-                // imu_msg.header.stamp = ros::Time::now();
-                {
-                    ros_bridge::ROSMsgCounter counter(&imu_pub_vec_statistics[ctr]);
-                    imu_pub_vec_[ctr].publish(imu_msg);
-                }
-                ctr++;
-            }
-        }
-
-        if (static_tf_msg_vec_.size() > 0)
-        {
-            for (auto& static_tf_msg : static_tf_msg_vec_)
-            {
-                static_tf_msg.header.stamp = ros::Time::now();
-                static_tf_pub_.sendTransform(static_tf_msg);
-            }
-
-            // we've sent these static transforms, so no need to keep sending them
-            static_tf_msg_vec_.clear();
+            ros_bridge::ROSMsgCounter counter(&odom_pub_statistics);
+            fscar->odom_pub.publish(message);
         }
     }
-
     catch (rpc::rpc_error& e)
     {
         std::cout << "error" << std::endl;
@@ -538,6 +479,60 @@ void AirsimROSWrapper::car_state_timer_cb(const ros::TimerEvent& event)
                   << msg << std::endl;
     }
 }
+
+void AirsimROSWrapper::gps_timer_cb(const ros::TimerEvent& event)
+{
+ try 
+ {
+    sensor_msgs::NavSatFix message;
+    {
+        ros_bridge::Timer timer(&getGpsDataStatistics);
+        msr::airlib::GeoPoint gps_location = airsim_client_.getGpsData("Gps", fscar->vehicle_name).gnss.geo_point;
+        message = get_gps_sensor_msg_from_airsim_geo_point(gps_location);
+    }
+    message.header.stamp = ros::Time::now();
+    {
+        ros_bridge::ROSMsgCounter counter(&global_gps_pub_statistics);
+        fscar->global_gps_pub.publish(message);
+    }
+ }
+ catch (rpc::rpc_error& e)
+ {
+    std::cout << "error" << std::endl;
+    std::string msg = e.get_error().as<std::string>();
+    std::cout << "Exception raised by the API:" << std::endl
+              << msg << std::endl;
+ }
+}
+
+void AirsimROSWrapper::imu_timer_cb(const ros::TimerEvent& event)
+{
+    struct msr::airlib::ImuBase::Output imu_data;
+    {
+        ros_bridge::Timer timer(&getImuStatistics);
+        std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
+        auto imu_data = airsim_client_.getImuData("Imu", fscar->vehicle_name);
+        lck.unlock();
+    }
+
+    sensor_msgs::Imu imu_msg = get_imu_msg_from_airsim(imu_data);
+    imu_msg.header.frame_id = "fsds/" + fscar->vehicle_name;
+    // imu_msg.header.stamp = ros::Time::now();
+    {
+        ros_bridge::ROSMsgCounter counter(&imu_pub_statistics);
+        fscar->imu_pub.publish(imu_msg);
+    }
+}
+
+void AirsimROSWrapper::statictf_cb(const ros::TimerEvent& event)
+{
+    for (auto& static_tf_msg : static_tf_msg_vec_)
+    {
+        static_tf_msg.header.stamp = ros::Time::now();
+        static_tf_pub_.sendTransform(static_tf_msg);
+    }
+}
+
 
 // airsim uses nans for zeros in settings.json. we set them to zeros here for handling tfs in ROS
 void AirsimROSWrapper::set_nans_to_zeros_in_pose(VehicleSetting& vehicle_setting) const
@@ -875,15 +870,12 @@ void AirsimROSWrapper::PrintStatistics()
     setCarControlsStatistics.Print();
     getGpsDataStatistics.Print();
     getCarStateStatistics.Print();
+    getImuStatistics.Print();
     control_cmd_sub_statistics.Print();
     global_gps_pub_statistics.Print();
-    odom_local_ned_pub_statistics.Print();
-
-    for (auto &getImuDataStatistics : getImuDataVecStatistics)
-    {
-        getImuDataStatistics.Print();
-    }
-
+    odom_pub_statistics.Print();
+    imu_pub_statistics.Print();
+    
     for (auto &simGetImagesStatistics : simGetImagesVecStatistics)
     {
         simGetImagesStatistics.Print();
@@ -905,12 +897,6 @@ void AirsimROSWrapper::PrintStatistics()
     {
         lidar_pub_statistics.Print();
     }
-
-    // Reset IMU statistics
-    for (auto &imu_pub_statistics : imu_pub_vec_statistics)
-    {
-        imu_pub_statistics.Print();
-    }
 }
 
 void AirsimROSWrapper::ResetStatistics()
@@ -923,14 +909,11 @@ void AirsimROSWrapper::ResetStatistics()
     setCarControlsStatistics.Reset();
     getGpsDataStatistics.Reset();
     getCarStateStatistics.Reset();
+    getImuStatistics.Reset();
     control_cmd_sub_statistics.Reset();
     global_gps_pub_statistics.Reset();
-    odom_local_ned_pub_statistics.Reset();
-
-    for (auto &getImuDataStatistics : getImuDataVecStatistics)
-    {
-        getImuDataStatistics.Reset();
-    }
+    odom_pub_statistics.Reset();
+    imu_pub_statistics.Reset();
 
     for (auto &simGetImagesStatistics : simGetImagesVecStatistics)
     {
@@ -952,12 +935,6 @@ void AirsimROSWrapper::ResetStatistics()
     for (auto &lidar_pub_statistics : lidar_pub_vec_statistics)
     {
         lidar_pub_statistics.Reset();
-    }
-
-    // Reset IMU statistics
-    for (auto &imu_pub_statistics : imu_pub_vec_statistics)
-    {
-        imu_pub_statistics.Reset();
     }
 }
 

@@ -19,21 +19,18 @@ roslaunch fsds_ros_bridge fsds_ros_bridge.launch
 ```
 
 ## Publishers
-- `/fsds_ros_bridge/origin_geo_point` [fsds_ros_bridge/GPSYaw](../ros/src/fsds_ros_bridge/msg/GPSYaw.msg)   
-GPS coordinates corresponding to global NED frame. This is set in the airsim's [settings.json](https://microsoft.github.io/AirSim/docs/settings/) file under (located [here](../../../UE4Project/Plugins/AirSim/Settings/settings.json)) the `OriginGeopoint` key. 
-
 - `/fsds_ros_bridge/VEHICLE_NAME/global_gps` [sensor_msgs/NavSatFix](https://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html)   
 This the current GPS coordinates of the drone in airsim. 
 
-- `/fsds_ros_bridge/VEHICLE_NAME/odom_local_ned` [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)   
-Odometry in NED frame wrt starting point.  THIS WILL NOT BE STREAMED DURING COMPETITION.
+- `/fsds_ros_bridge/VEHICLE_NAME/odom` [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)
+Ground truth car position and orientation in NED frame. THIS WILL NOT BE STREAMED DURING COMPETITION.
 
 - `/fsds_ros_bridge/VEHICLE_NAME/CAMERA_NAME/IMAGE_TYPE/camera_info` [sensor_msgs/CameraInfo](https://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html)
 
 - `/fsds_ros_bridge/VEHICLE_NAME/CAMERA_NAME/IMAGE_TYPE` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)   
   RGB or float image depending on image type requested in [settings.json](../UE4Project/Plugins/AirSim/Settings/settings.json).
 
-- `/fsds_ros_bridge/VEHICLE_NAME/imu/SENSORNAME` [sensor_msgs/Imu](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Imu.html)   
+- `/fsds_ros_bridge/VEHICLE_NAME/imu` [sensor_msgs/Imu](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Imu.html)   
   See [imu.md](imu.md)
 
 - `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)
@@ -66,19 +63,34 @@ Only static transforms within the vehicle are published.
 Transforms to the ground truth are disabled because this would take away the challenge of the competition.
 
 ## Parameters
-- `/fsds_ros_bridge/update_airsim_control_every_n_sec` [double]   
-  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   
-  Default: 0.01 seconds.    
-  Timer callback frequency for updating drone odom and state from airsim, and sending in control commands.    
-  The current RPClib interface to unreal engine maxes out at 50 Hz.   
-  Timer callbacks in ROS run at maximum rate possible, so it's best to not touch this parameter. 
+- `/fsds_ros_bridge/update_gps_every_n_sec` [double]
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
+  Default: 0.1 seconds (10hz).
+  Timer callback frequency for updating and publishing the gps sensordata.
+  This value must be equal or higher to the update frequency of the sensor configured in the settings.json
 
-- `/fsds_ros_bridge/update_airsim_img_response_every_n_sec` [double]   
-  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   
-  Default: 0.01 seconds.    
-  Timer callback frequency for receiving images from all cameras in airsim.    
-  The speed will depend on number of images requested and their resolution.   
-  Timer callbacks in ROS run at maximum rate possible, so it's best to not touch this parameter. 
+- `/fsds_ros_bridge/update_imu_every_n_sec` [double]
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
+  Default: 0.004 seconds (250hz).
+  Timer callback frequency for updating and publishing the imu messages.
+  This value must be equal or higher to the minimual sample rate of the sensor configured in the settings.json
+
+- `/fsds_ros_bridge/update_odom_every_n_sec` [double]
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
+  Default: 0.004 seconds (250hz).
+  Timer callback frequency for updating and publishing the odometry.
+
+- `/fsds_ros_bridge/publish_static_tf_every_n_sec` [double]
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
+  Default: 1 seconds (1 hz).
+  The frequency at which the static transforms are published.
+
+- `/fsds_ros_bridge/update_airsim_img_response_every_n_sec` [double]
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
+  Default: 0.01 seconds.
+  Timer callback frequency for receiving images from all cameras in airsim.
+  The speed will depend on number of images requested and their resolution.
+  Timer callbacks in ROS run at maximum rate possible, so it's best to not touch this parameter.
 
 ## Visualization
 This package contains some useful launch and config files which will help you in visualizing the data being streamed through the above topics.
