@@ -33,14 +33,14 @@ Odometry in NED frame wrt starting point.  THIS WILL NOT BE STREAMED DURING COMP
 - `/fsds_ros_bridge/CAMERA_NAME/IMAGE_TYPE` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)   
   RGB or float image depending on image type requested in [settings.json](../UE4Project/Plugins/AirSim/Settings/settings.json).
 
+- `/fsds_ros_bridge/imu/SENSORNAME` [sensor_msgs/Imu](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Imu.html)   
+  See [imu.md](imu.md)
+
 - `fsds_ros_bridge/signal/go` [fsds_ros_bridge/GOSignal](../ros/src/fsds_ros_bridge/msg/GoSignal.msg)  
   GO signal that is sent every second by the ROS bridge. More info about signal topics can be found in the [integration handbook](integration-handbook.md)
 
 - `fsds_ros_bridge/signal/finished` [fsds_ros_bridge/FinishedSignal](../ros/src/fsds_ros_bridge/msg/FinishedSignal.msg)  
   Finished signal that is sent by the AS to stop the mission. More info about signal topics can be found in the [integration handbook](integration-handbook.md)
-
-- `/fsds_ros_bridge/imu/SENSORNAME` [sensor_msgs/Imu](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Imu.html)   
-  See [imu.md](imu.md)
 
 - `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)
 
