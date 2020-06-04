@@ -164,33 +164,24 @@ bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const ms
             );
         }
 
-        // decide the frame for the point-cloud
-        if (params.data_frame == AirSimSettings::kVehicleInertialFrame) {
-            // current detault behavior; though it is probably not very useful.
-            // not changing the default for now to maintain backwards-compat.
-            point = ned_transform_->toLocalNed(hit_result.ImpactPoint);
-        }
-        else if (params.data_frame == AirSimSettings::kSensorLocalFrame) {
-            // point in vehicle intertial frame
-            Vector3r point_v_i = ned_transform_->toLocalNed(hit_result.ImpactPoint);
 
-            // tranform to lidar frame
-            point = VectorMath::transformToBodyFrame(point_v_i, lidar_pose + vehicle_pose, true);
+        // point in vehicle intertial frame
+        Vector3r point_v_i = ned_transform_->toLocalNed(hit_result.ImpactPoint);
 
-            // The above should be same as first transforming to vehicle-body frame and then to lidar frame
-            //    Vector3r point_v_b = VectorMath::transformToBodyFrame(point_v_i, vehicle_pose, true);
-            //    point = VectorMath::transformToBodyFrame(point_v_b, lidar_pose, true);
+        // tranform to lidar frame
+        point = VectorMath::transformToBodyFrame(point_v_i, lidar_pose + vehicle_pose, true);
 
-            // On the client side, if it is needed to transform this data back to the world frame,
-            // then do the equivalent of following,
-            //     Vector3r point_w = VectorMath::transformToWorldFrame(point, lidar_pose + vehicle_pose, true);
-            // See SimModeBase::drawLidarDebugPoints()
+        // The above should be same as first transforming to vehicle-body frame and then to lidar frame
+        //    Vector3r point_v_b = VectorMath::transformToBodyFrame(point_v_i, vehicle_pose, true);
+        //    point = VectorMath::transformToBodyFrame(point_v_b, lidar_pose, true);
 
-            // TODO: Optimization -- instead of doing this for every point, it should be possible to do this
-            // for the point-cloud together? Need to look into matrix operations to do this together for all points.
-        }
-        else 
-            throw std::runtime_error("Unknown requested data frame");
+        // On the client side, if it is needed to transform this data back to the world frame,
+        // then do the equivalent of following,
+        //     Vector3r point_w = VectorMath::transformToWorldFrame(point, lidar_pose + vehicle_pose, true);
+        // See SimModeBase::drawLidarDebugPoints()
+
+        // TODO: Optimization -- instead of doing this for every point, it should be possible to do this
+        // for the point-cloud together? Need to look into matrix operations to do this together for all points.
 
         return true;
     }
