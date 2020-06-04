@@ -300,7 +300,8 @@ ros::Time AirsimROSWrapper::make_ts(uint64_t unreal_ts)
         first_imu_unreal_ts = unreal_ts;
         first_imu_ros_ts = ros::Time::now();
     }
-    return first_imu_ros_ts + ros::Duration((unreal_ts - first_imu_unreal_ts) / 1e9);
+    int64_t diff = unreal_ts - first_imu_unreal_ts;
+    return  first_imu_ros_ts + ros::Duration(diff/1e9);
 }
 
 // todo add reset by vehicle_name API to airlib
