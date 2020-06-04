@@ -12,7 +12,7 @@ Note that the `team_config.json` file included in this repository is an example 
 
 ## Logs
 Whenever a mission starts, a log file is created in the `/operator/logs` folder. All logs received by the webserver will be written to this log file, as long as the mission is ongoing. All log files are named using the following naming convention:  
-`{team_name}_{mission}_{date}_{time}`
+`{team_name}_{mission}_{date}_{time}.txt`
 
 ## Prerequisites
 + [Flask](https://flask.palletsprojects.com/en/1.1.x/) - A Python web application framework.
