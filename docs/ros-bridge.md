@@ -49,7 +49,8 @@ The contents of this message fill the essential parts of the `msr::airlib::CarAp
 ## Coordinate frames and transforms
 
 The primary frame is the `fsds/FSCar` frame.
-This frame centers the core of the car.
+This frame centers the center of the car.
+The center of the car is the Unreal Engine car pawn position, which in turn is also the center of gravity.
 It is using the NED coordinate system.
 The `fsds/FSCar/enu` frame is the same point, translated to the ENU system.
 Read more about the differences between ENU and NED [here](https://en.wikipedia.org/wiki/Local_tangent_plane_coordinates).
