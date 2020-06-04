@@ -18,8 +18,12 @@ $ pip install -r requirements.txt
 You must have a packaged simulator downloaded.
 The operator will launch the game when instructed by the user via the web gui.
 Go to the [releases](https://github.com/FS-Online/Driverless-Competition-Simulator/releases) and download the latest version.
-Extract the zip to the `/simulator` folder.
-This requires the packaged game (LinuxNoEditor) to be located in the UE4Project folder.
+Extract the zip to the `simulator` folder.
+The result should be that the following file and folders exist inside the `simulator` folder:
+* FSDS.exe
+* FSOnline/
+* Engine/
+The [how-to-develop guide](how-to-develop.md) guide describes how to create an export.
 
 ## Usage
 To start the web server, run the following command in the `operator` folder:
