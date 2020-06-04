@@ -86,8 +86,8 @@ public:
     bool is_used_lidar_timer_cb_queue_;
     bool is_used_img_timer_cb_queue_;
 
-    ros::Time first_imu_ros_ts;
-    int64_t first_imu_unreal_ts = -1;
+    ros::Time first_ros_ts;
+    int64_t first_unreal_ts = -1;
 
 private:
     // STATISTICS objects (where possible,
@@ -170,25 +170,12 @@ private:
     void convert_yaml_to_simple_mat(const YAML::Node& node, SimpleMatrix& m) const; // todo ugly
 
 private:
-    // utility struct for a SINGLE robot
-    struct FSCarROS
-    {
-        std::string vehicle_name;
-
-        ros::Publisher odom_pub;
-        ros::Publisher global_gps_pub;
-        ros::Publisher imu_pub;
-        ros::Subscriber control_cmd_sub;
-    };
-
     ros::ServiceServer reset_srvr_;
 
-    FSCarROS* fscar;
+    std::string vehicle_name;
 
-    std::vector<std::string> vehicle_names_;
-    std::vector<VehicleSetting> vehicle_setting_vec_;
+
     AirSimSettingsParser airsim_settings_parser_;
-    std::unordered_map<std::string, int> vehicle_name_idx_map_;
     static const std::unordered_map<int, std::string> image_type_int_to_string_map_;
     std::map<std::string, std::string> vehicle_lidar_map_;
     std::vector<geometry_msgs::TransformStamped> static_tf_msg_vec_;
@@ -233,11 +220,15 @@ private:
 
     std::vector<sensor_msgs::CameraInfo> camera_info_msg_vec_;
 
-    /// ROS other publishers
+    /// ROS publishers
     ros::Publisher clock_pub_;
+    ros::Publisher odom_pub;
+    ros::Publisher global_gps_pub;
+    ros::Publisher imu_pub;
 
-    ros::Subscriber gimbal_angle_quat_cmd_sub_;
-    ros::Subscriber gimbal_angle_euler_cmd_sub_;
+    /// ROS subscribers
+    ros::Subscriber control_cmd_sub;
+
 
     static constexpr char CAM_YML_NAME[] = "camera_name";
     static constexpr char WIDTH_YML_NAME[] = "image_width";

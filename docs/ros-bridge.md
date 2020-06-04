@@ -85,6 +85,11 @@ Transforms to the ground truth are disabled because this would take away the cha
   Default: 1 seconds (1 hz).
   The frequency at which the static transforms are published.
 
+- `/fsds_ros_bridge/update_lidar_every_n_sec` [double]
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
+  Default: 0.1 seconds (10 hz).
+  The frequency at which the lidar is publshed.
+
 - `/fsds_ros_bridge/update_airsim_img_response_every_n_sec` [double]
   Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
   Default: 0.01 seconds.

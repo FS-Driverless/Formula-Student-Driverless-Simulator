@@ -49,11 +49,8 @@ void AirsimROSWrapper::initialize_airsim()
         airsim_client_images_.confirmConnection();
         airsim_client_lidar_.confirmConnection();
 
-        for (const auto& vehicle_name : vehicle_names_)
-        {
-            airsim_client_.enableApiControl(true, vehicle_name); // todo expose as rosservice?
-            airsim_client_.armDisarm(true, vehicle_name);        // todo exposes as rosservice?
-        }
+        airsim_client_.enableApiControl(true, vehicle_name);
+        airsim_client_.armDisarm(true, vehicle_name); 
     }
     catch (rpc::rpc_error& e)
     {
@@ -110,41 +107,34 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
     camera_info_msg_vec_.clear();
     static_tf_msg_vec_.clear();
     lidar_pub_vec_.clear();
-    vehicle_names_.clear(); // todo should eventually support different types of vehicles in a single instance
-    // vehicle_setting_vec_.clear();
     // vehicle_imu_map_;
     // callback_queues_.clear();
 
     image_transport::ImageTransport image_transporter(nh_private_);
 
-    int idx = 0;
     // iterate over std::map<std::string, std::unique_ptr<VehicleSetting>> vehicles;
     for (const auto& curr_vehicle_elem : msr::airlib::AirSimSettings::singleton().vehicles)
     {
         auto& vehicle_setting = curr_vehicle_elem.second;
         auto curr_vehicle_name = curr_vehicle_elem.first;
-        vehicle_names_.push_back(curr_vehicle_name);
+
+        if(curr_vehicle_name != "FSCar") {
+            throw std::invalid_argument("Only the FSCar vehicle_name is allowed.");
+        }
+
         set_nans_to_zeros_in_pose(*vehicle_setting);
-        // auto vehicle_setting_local = vehicle_setting.get();
 
-        vehicle_name_idx_map_[curr_vehicle_name] = idx; // allows fast lookup in command callbacks in case of a lot of cars
-
-        FSCarROS fscar_ros;
-        fscar_ros.vehicle_name = curr_vehicle_name;
-        fscar_ros.odom_pub = nh_private_.advertise<nav_msgs::Odometry>(curr_vehicle_name + "/odom", 10);
-        fscar_ros.global_gps_pub = nh_private_.advertise<sensor_msgs::NavSatFix>(curr_vehicle_name + "/global_gps", 10);
-        fscar_ros.imu_pub = nh_private_.advertise<sensor_msgs::Imu>(curr_vehicle_name + "/imu", 10);
-        fscar_ros.control_cmd_sub = nh_private_.subscribe<fsds_ros_bridge::ControlCommand>(curr_vehicle_name + "/control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, fscar_ros.vehicle_name));
-
-        fscar = &fscar_ros;
-        idx++;
+        vehicle_name = curr_vehicle_name;
+        odom_pub = nh_private_.advertise<nav_msgs::Odometry>(curr_vehicle_name + "/odom", 10);
+        global_gps_pub = nh_private_.advertise<sensor_msgs::NavSatFix>(curr_vehicle_name + "/global_gps", 10);
+        imu_pub = nh_private_.advertise<sensor_msgs::Imu>(curr_vehicle_name + "/imu", 10);
+        control_cmd_sub = nh_private_.subscribe<fsds_ros_bridge::ControlCommand>(curr_vehicle_name + "/control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, vehicle_name));
 
         // iterate over camera map std::map<std::string, CameraSetting> cameras;
         for (auto& curr_camera_elem : vehicle_setting->cameras)
         {
             auto& camera_setting = curr_camera_elem.second;
             auto& curr_camera_name = curr_camera_elem.first;
-            // vehicle_setting_vec_.push_back(*vehicle_setting.get());
             set_nans_to_zeros_in_pose(*vehicle_setting, camera_setting);
             append_static_camera_tf(curr_vehicle_name, curr_camera_name, camera_setting);
             // camera_setting.gimbal
@@ -289,13 +279,24 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 
 ros::Time AirsimROSWrapper::make_ts(uint64_t unreal_ts)
 {
-    if (first_imu_unreal_ts < 0)
+    if (first_unreal_ts < 0)
     {
-        first_imu_unreal_ts = unreal_ts;
-        first_imu_ros_ts = ros::Time::now();
+        first_unreal_ts = unreal_ts;
+        first_ros_ts = ros::Time::now();
     }
-    int64_t diff = unreal_ts - first_imu_unreal_ts;
-    return  first_imu_ros_ts + ros::Duration(diff/1e9);
+
+    int64_t relative_unreal_ts = unreal_ts - first_unreal_ts;
+
+    int64_t nsec_part = relative_unreal_ts % 1000000000L;
+    int64_t sec_part = relative_unreal_ts / 1000000000L;
+    while (nsec_part < 0) {
+        nsec_part += 1e9L;
+        --sec_part;
+    }
+    if (sec_part > UINT_MAX)
+        throw std::runtime_error("sec_part is out of dual 32-bit range");
+
+    return first_ros_ts + ros::Duration(sec_part, nsec_part);
 }
 
 // todo add reset by vehicle_name API to airlib
@@ -461,14 +462,14 @@ void AirsimROSWrapper::odom_cb(const ros::TimerEvent& event)
         {
             ros_bridge::Timer timer(&getCarStateStatistics);
             std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
-            state = airsim_client_.getCarState(fscar->vehicle_name);
+            state = airsim_client_.getCarState(vehicle_name);
             lck.unlock();
         }
 
         nav_msgs::Odometry message = this->get_odom_msg_from_airsim_state(state);
         {
             ros_bridge::ROSMsgCounter counter(&odom_pub_statistics);
-            fscar->odom_pub.publish(message);
+            odom_pub.publish(message);
         }
     }
     catch (rpc::rpc_error& e)
@@ -487,13 +488,13 @@ void AirsimROSWrapper::gps_timer_cb(const ros::TimerEvent& event)
     sensor_msgs::NavSatFix message;
     {
         ros_bridge::Timer timer(&getGpsDataStatistics);
-        msr::airlib::GeoPoint gps_location = airsim_client_.getGpsData("Gps", fscar->vehicle_name).gnss.geo_point;
+        msr::airlib::GeoPoint gps_location = airsim_client_.getGpsData("Gps", vehicle_name).gnss.geo_point;
         message = get_gps_sensor_msg_from_airsim_geo_point(gps_location);
     }
     message.header.stamp = ros::Time::now();
     {
         ros_bridge::ROSMsgCounter counter(&global_gps_pub_statistics);
-        fscar->global_gps_pub.publish(message);
+        global_gps_pub.publish(message);
     }
  }
  catch (rpc::rpc_error& e)
@@ -511,16 +512,16 @@ void AirsimROSWrapper::imu_timer_cb(const ros::TimerEvent& event)
     {
         ros_bridge::Timer timer(&getImuStatistics);
         std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
-        auto imu_data = airsim_client_.getImuData("Imu", fscar->vehicle_name);
+        auto imu_data = airsim_client_.getImuData("Imu", vehicle_name);
         lck.unlock();
     }
 
     sensor_msgs::Imu imu_msg = get_imu_msg_from_airsim(imu_data);
-    imu_msg.header.frame_id = "fsds/" + fscar->vehicle_name;
+    imu_msg.header.frame_id = "fsds/" + vehicle_name;
     // imu_msg.header.stamp = ros::Time::now();
     {
         ros_bridge::ROSMsgCounter counter(&imu_pub_statistics);
-        fscar->imu_pub.publish(imu_msg);
+        imu_pub.publish(imu_msg);
     }
 }
 
