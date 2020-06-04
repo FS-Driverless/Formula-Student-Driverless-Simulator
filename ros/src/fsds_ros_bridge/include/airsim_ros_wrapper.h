@@ -91,8 +91,8 @@ public:
     bool is_used_lidar_timer_cb_queue_;
     bool is_used_img_timer_cb_queue_;
 
-    ros::Time first_imu_ros_ts;
-    int64_t first_imu_unreal_ts = -1;
+    ros::Time first_ros_ts;
+    int64_t first_unreal_ts = -1;
 
 private:
     // STATISTICS objects (where possible,
@@ -103,15 +103,15 @@ private:
     ros_bridge::Statistics setCarControlsStatistics;
     ros_bridge::Statistics getGpsDataStatistics;
     ros_bridge::Statistics getCarStateStatistics;
-    std::vector<ros_bridge::Statistics> getImuDataVecStatistics;
+    ros_bridge::Statistics getImuStatistics;
     std::vector<ros_bridge::Statistics> simGetImagesVecStatistics;
     std::vector<ros_bridge::Statistics> getLidarDataVecStatistics;
     ros_bridge::Statistics control_cmd_sub_statistics;
     ros_bridge::Statistics global_gps_pub_statistics;
-    ros_bridge::Statistics odom_local_ned_pub_statistics;
+    ros_bridge::Statistics odom_pub_statistics;
     std::vector<ros_bridge::Statistics> cam_pub_vec_statistics;
     std::vector<ros_bridge::Statistics> lidar_pub_vec_statistics;
-    std::vector<ros_bridge::Statistics> imu_pub_vec_statistics;
+    ros_bridge::Statistics imu_pub_statistics;
     
     // create std::vector<Statistics*> which I can use to iterate over all these options 
     // and apply common operations such as print, reset
@@ -125,7 +125,10 @@ private:
 
     /// ROS timer callbacks
     void img_response_timer_cb(const ros::TimerEvent& event); // update images from airsim_client_ every nth sec
-    void car_state_timer_cb(const ros::TimerEvent& event);    // update drone state from airsim_client_ every nth sec
+    void odom_cb(const ros::TimerEvent& event);    // update drone state from airsim_client_ every nth sec
+    void gps_timer_cb(const ros::TimerEvent& event);
+    void imu_timer_cb(const ros::TimerEvent& event);
+    void statictf_cb(const ros::TimerEvent& event);
     void car_control_cb(const fsds_ros_bridge::ControlCommand::ConstPtr& msg, const std::string& vehicle_name);
     void lidar_timer_cb(const ros::TimerEvent& event);
     void statistics_timer_cb(const ros::TimerEvent& event);
@@ -174,40 +177,13 @@ private:
     void convert_yaml_to_simple_mat(const YAML::Node& node, SimpleMatrix& m) const; // todo ugly
 
 private:
-    // utility struct for a SINGLE robot
-    struct FSCarROS
-    {
-        std::string vehicle_name;
-
-        /// All things ROS
-        ros::Publisher odom_local_ned_pub;
-        ros::Publisher global_gps_pub;
-        ros::Subscriber control_cmd_sub;
-
-        /// State
-        msr::airlib::CarApiBase::CarState curr_car_state;
-        // bool in_air_; // todo change to "status" and keep track of this
-        nav_msgs::Odometry curr_odom_ned;
-        sensor_msgs::NavSatFix gps_sensor_msg;
-
-        std::string odom_frame_id;
-    };
-
     ros::ServiceServer reset_srvr_;
-    ros::Publisher origin_geo_point_pub_;          // home geo coord of drones
-    ros::Publisher go_signal_pub_;                 // go signal
-    ros::Subscriber finished_signal_sub_;          // finished signal 
-    msr::airlib::GeoPoint origin_geo_point_;       // gps coord of unreal origin
-    fsds_ros_bridge::GPSYaw origin_geo_point_msg_; // todo duplicate
 
-    std::vector<FSCarROS> fscar_ros_vec_;
+    std::string vehicle_name;
 
-    std::vector<std::string> vehicle_names_;
-    std::vector<VehicleSetting> vehicle_setting_vec_;
+
     AirSimSettingsParser airsim_settings_parser_;
-    std::unordered_map<std::string, int> vehicle_name_idx_map_;
     static const std::unordered_map<int, std::string> image_type_int_to_string_map_;
-    std::map<std::string, std::string> vehicle_imu_map_;
     std::map<std::string, std::string> vehicle_lidar_map_;
     std::vector<geometry_msgs::TransformStamped> static_tf_msg_vec_;
     bool is_vulkan_; // rosparam obtained from launch file. If vulkan is being used, we BGR encoding instead of RGB
@@ -238,25 +214,33 @@ private:
 
     /// ROS Timers.
     ros::Timer airsim_img_response_timer_;
-    ros::Timer airsim_control_update_timer_;
+    ros::Timer odom_update_timer_;
+    ros::Timer gps_update_timer_;
+    ros::Timer imu_update_timer_;
     ros::Timer airsim_lidar_update_timer_;
     ros::Timer statistics_timer_;
     ros::Timer go_signal_timer_;
+    ros::Timer statictf_timer_;
 
     typedef std::pair<std::vector<ImageRequest>, std::string> airsim_img_request_vehicle_name_pair;
     std::vector<airsim_img_request_vehicle_name_pair> airsim_img_request_vehicle_name_pair_vec_;
     std::vector<image_transport::Publisher> image_pub_vec_;
     std::vector<ros::Publisher> cam_info_pub_vec_;
     std::vector<ros::Publisher> lidar_pub_vec_;
-    std::vector<ros::Publisher> imu_pub_vec_;
 
     std::vector<sensor_msgs::CameraInfo> camera_info_msg_vec_;
 
-    /// ROS other publishers
+    /// ROS publishers
     ros::Publisher clock_pub_;
+    ros::Publisher odom_pub;
+    ros::Publisher global_gps_pub;
+    ros::Publisher imu_pub;
+    ros::Publisher go_signal_pub_;
+    
+    /// ROS subscribers
+    ros::Subscriber control_cmd_sub;
+    ros::Subscriber finished_signal_sub_;
 
-    ros::Subscriber gimbal_angle_quat_cmd_sub_;
-    ros::Subscriber gimbal_angle_euler_cmd_sub_;
 
     static constexpr char CAM_YML_NAME[] = "camera_name";
     static constexpr char WIDTH_YML_NAME[] = "image_width";
