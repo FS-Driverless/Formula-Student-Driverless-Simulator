@@ -13,7 +13,12 @@ To check the video card drivers, run `vulkaninfo`. It should output a bunch of l
 ## Launching the simulator
 To launch the simulator, go to [releases](https://github.com/FS-Online/Driverless-Competition-Simulator/releases) and download the latest one.
 
-*If you are only planning to drive around with your keyboard in this simulation and don't want to use the ROS client with it then you do not have to clone this repo*. Instead, you should create a folder in your **home directory** called **Driverless-Competition-Simulator** and put the contents inside of WindowsNoEditor into this folder. Inside the folder **Driverless-Competition-Simulator** create a file called **settings.json** and copy-paste the contents of the settings.json file at the root of this repository inside. This should get you started with the default sensor configuration, feel free to try your own custom sensor suite! Note that the naming of the sensors will be reflected in the topic names as elaborated [here](ros-bridge.md).
+Before you start, you have to create the folder and file `Driverless-Competition-Simulator/settings.json` in your home directory.
+This file contains the sensor configuration of the car.
+You should create a folder in your **home directory** called `Driverless-Competition-Simulator`. 
+Inside the folder `Driverless-Competition-Simulator` create a file called `settings.json` and copy-paste the contents of the settings.json file at the root of this repository inside.
+This should get you started with the default sensor configuration, feel free to try your own custom sensor suite.
+Note that the naming of the sensors will be reflected in the topic names as elaborated [here](ros-bridge.md).
 
 Now launch the ????.exe and a window with a car should popup!
 Try to drive the car around by using the arrowkeys.
@@ -22,12 +27,14 @@ Try to drive the car around by using the arrowkeys.
 To connect your autonomous ROS system, you have to clone this repository and run the `fsds_ros_bridge` ROS node.
 
 Most likely, your autonomous system is running on Ubuntu and has already ROS Melodic installed.
-If this is not the case, read the relevant install instructions in the [get-ready-to-develop](get-ready-to-develop.md) guide.
+If this is not the case, read the relevant install instructions in the [get-ready-to-develop](get-ready-to-develop.md) guide that will help you get the requried software installed.
 
 Ready? Lets clone the repo **into your home directory**:
 ```
 git clone git@github.com:FS-Online/Driverless-Competition-Simulator.git
 ```
+The repository will be placed in `~/Driverless-Competition-Simulator`.
+If this folder already exists as a result of the previous step, you can get your settings.json out, delete the folder and after cloning the repo place the settings.json file back.
 
 Read about how to build the ROS workspace [here](building-ros.md).
 
