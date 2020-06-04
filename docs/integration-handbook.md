@@ -1,17 +1,17 @@
 # Autonomous System Integration Handbook
-This page describes how to integrate you autonomous system (AS) to the Formula Student Driverless Simulator (FSDS).
+This page describes how to integrate your autonomous system (AS) to the Formula Student Driverless Simulator (FSDS).
 The rules and procedures set out in this document will be used during the FSOnline competition.
 
-## High level overview
+## High-level overview
 Your AS is expected to continuously run a ROS master.
 The simulator will launch a node ([fsds_ros_bridge](ros-bridge.md)) that connects to your ROS system.
 This node will publish sensor data and listen for vehicle setpoints.
 When the simulation is done, the node is closed and your AS will no longer be able to interact with the simulator.
-[A more in depth explanation of the fsds system can be found here.](system-overview.md)
+[A more in-depth explanation of the FSDS system can be found here.](system-overview.md)
 
 Integrating your autonomous system with a simulator is a matter of subscribing and publishing to topics and acting accordingly.
 
-*During testing, your AS and the ROS bridge/simulator will probably run on the same machine (your local computer most likely). During the competition however, the AS and the ROS bridge/simulator will be on different machines (cloud servers) and communicate over a local network.*
+*During testing, your AS and the ROS bridge/simulator will probably run on the same machine (your local computer most likely). However, during the competition, the AS and the ROS bridge/simulator will be on different machines (cloud servers) and communicate over a local network.*
 
 ## System flow and Signals
 
@@ -19,20 +19,20 @@ Initially, when your AS launches, no simulation is connected.
 The AS must wait for a GO signal before acting.
 
 ### Staging
-At some point your AS will be staged: The vehicle is placed at a staging line prior to the starting line, the `fsds_ros_bridge` node will connect to the ROS system.
+At some point, your AS will be staged: The vehicle is placed at a staging line prior to the starting line, the `fsds_ros_bridge` node will connect to the ROS system.
 From this point onwards, the AS will receive sensor data and can control the vehicle by publishing vehicle setpoints.
 However, it shouldn't start driving the vehicle just yet!
 
 ### Starting 
 Just like with a physical FS event, the vehicle must only start driving after a GO signal is received.
-The GO signal indicates that the AS must start the mision and that the vehicle should start driving.
-This signal is also known as the 'green flag' signal or 'starting' signal, within this repo we will reference it as 'GO'.
-Within the GO signal, the mission is added. 
+The GO signal indicates that the AS must start the mission and that the vehicle should start driving.
+This signal is also known as the 'green flag' signal or 'starting' signal. Within this repo, we will reference it as 'GO'.
+Within the GO signal, the mission and track are added. 
 Currently, `autocross` and `trackdrive` are the supported missions.
 
-In autocross the vehicle has to complete a single lap on an unknown track.
-On the trackdrive the vehicle has to finish 10 laps on a track it has previously seen.
-During competition, on each track, every AS will do an autocross mission before an trackdrive mission.
+In autocross, the vehicle has to complete a single lap on an unknown track.
+On the trackdrive, the vehicle has to finish 10 laps on a track it has previously seen.
+During the competition, on each track, every AS will do an autocross mission before a trackdrive mission.
 It can occur that multiple autocross runs on different tracks take place before going to autocross.
 It can also happen that multiple autocross runs take place on the same track.
 For example, the AS might be requested to do:
@@ -50,10 +50,10 @@ The AS must implement the following behaviour:
 An exception to this rule is data recorded with the exclusive intent to analyze the AS's behaviour after the event.
 This includes all files that the AS only writes to but does not read from.
 
-To make the AS aware of which track it is driving, the GO signal includes a unique identifier of the upcomming track.
+To make the AS aware of which track it is driving, the GO signal includes a unique identifier of the upcoming track.
 
-After the initial GO signal, the signal is continously re-sent 1 Hz to ensure it arrives at the team's AS.
-The timestamp of all consecutive GO signals are equal to the first one.
+After the initial GO signal, the signal is continuously re-sent at 1 Hz to ensure it arrives at the team's AS.
+The timestamp of all consecutive GO signals is equal to the first one.
 
 ### Finishing
 There are two ways to conclude a run: finishing or stopping.
@@ -64,12 +64,12 @@ As such, the simulator will stop the `fsds_ros_bridge` and the AS will no longer
 
 When the official decides that the run is over it will stop the simulation.
 See the rulebook for a description of when the official does so.
-When the simulation is stopped the `fsds_ros_bridge` is stopped immediatly and and the AS will no longer receive sensor data or be able to control the vehicle.
+When the simulation is stopped the `fsds_ros_bridge` is stopped immediately and the AS will no longer receive sensor data or be able to control the vehicle.
 The AS will not receive a signal that this happened.
 To detect a stop, the AS should keep an eye on the GO signal.
 
 The general rule is: If the AS did not receive a GO signal for 4 seconds the AS can assume the `fsds_ros_bridge` is stopped.
-When this state is detected, the AS can reset itself and prepare for a next mission.
+When this state is detected, the AS can reset itself and prepare for the next mission.
 
 ## Sensor Suite
 Every team can configure the sensors on their vehicle.
@@ -80,12 +80,12 @@ Here you can read the requirements and restrictions that apply to every sensor.
 ### Camera
 
 Every vehicle can have a maximum of 2 camera sensors. 
-These camera camera(s) can be placed anywhere on the vehicle that would be allowed by FSG 2020 rules. 
-The camera body dimensions are a 4x4x4 cm cube with mounting points at any side except the front facing side.
+These camera(s) can be placed anywhere on the vehicle that would be allowed by FSG 2020 rules. 
+The camera body dimensions are a 4x4x4 cm cube with mounting points at any side except the front-facing side.
 
-All camera sensors output uncompressed rgba8 images at 30 fps. 
+All camera sensors output uncompressed RGBA8 images at 30 FPS. 
 You can choose the resolution of the camera(s). 
-In total the camera’s can have 1232450 pixels. 
+In total, the camera’s can have 1232450 pixels. 
 Every dimension (width or height) must be at least 240px and no greater than 1600px. 
 The horizontal field of view (FoV) is configurable for each camera and must be at least 30 degrees and not be greater than 90 degrees. 
 The vertical FoV will be automatically calculated using the following formula: `vertical FoV = image height / image width * horizontal FoV`.
@@ -110,18 +110,18 @@ The horizontal field of view of the lidar is specified with an upper and lower l
 The lower limit specifies the counterclockwise angle on a top view from the direction the lidar is pointing towards. 
 The upper limit specifies the clockwise angle on a top view from the direction the lidar is pointing towards. 
 
-For every lidar the rotation speed (hz) and capture frequency (hz) must be chosen. 
-The rotation speed specifies how fast the lasers spin and the capture frequency specifies how often a pointcloud is created.
+For every lidar, the rotation speed (Hz) and capture frequency (Hz) must be chosen. 
+The rotation speed specifies how fast the lasers spin and the capture frequency specifies how often a point cloud is created.
 
 While rotating, only lasers within the horizontal field of view are captured. 
 
-> For example, a lidar with 190 degrees horizontal field of view, rotating at 10hz with a capture frequency of 20 hz will receive pointclouds covering anything from 10 to 180 degrees of the field of view.
+> For example, a lidar with 190 degrees horizontal field of view, rotating at 10hz with a capture frequency of 20 Hz will receive point clouds covering anything from 10 to 180 degrees of the field of view.
 
 There is no guarantee that the rotation speed and capture frequency stay in sync. 
 You won’t be able to rely on synchronization of rotation speed and capture frequency. 
-A lidar rotating at 5 hz would theoretically have rotated 50 times after 10 seconds but in reality this will be somewhere between 45 and 55 times. 
+A lidar rotating at 5 Hz would theoretically have rotated 50 times after 10 seconds but in reality, this will be somewhere between 45 and 55 times. 
 
-For every lidar you can specify the resolution: the total number of points collected if the lasers would do a 360 field of view sweep scan. 
+For every lidar, you can specify the resolution: the total number of points collected if the lasers would do a 360 field of view sweep scan. 
 This value is used to calculate the number of points in each laser and the spacing between the points. 
 
 Every lidar capture is limited to collecting 10000 points. 
@@ -135,14 +135,14 @@ The total number of points per second is limited to 100000 points.
   This is valid because in total they collect 90000 points per second.
 
 ### GPS
-Every vehicle has 1 GPS, it is located at the center of gravity of the vehicle.
+Every vehicle has 1 GPS, it is located at the centre of gravity of the vehicle.
 This sensor cannot be removed or moved.
 
 The GPS captures the position of the vehicle in the geodetic reference system, namely longitude [deg], latitude [deg], altitude [m].
 More detailed technical information about the accuracy of the GPS can be found [here](gps.md).
 
 ### IMU
-Every vehicle has 1 IMU, it is located at the center of gravity of the vehicle.
+Every vehicle has 1 IMU, it is located at the centre of gravity of the vehicle.
 This sensor cannot be removed or moved.
 
 The IMU captures the acceleration, orientation and angular rate of the vehicle in the ?? frame.
@@ -151,7 +151,7 @@ More detailed technical information about the IMU implementation of the IMU can 
 ### Sensor specification
 Teams are expected to provide their sensor suite as a single AirSim settings.json file.
 Most of the parameters in the settings.json file will be set by the officials to ensure fairness during competition.
-You are allowed to configure the following subset of parameters within the boundaries of above rules.
+You are allowed to configure the following subset of parameters within the boundaries of the above rules.
 
 * Cameras
   * camera name
@@ -172,13 +172,13 @@ You are allowed to configure the following subset of parameters within the bound
 
 The GPS and IMU are configured equally for all teams according to the rules in the previous chapter.
 
-We recommend to copy the [settings.json in this repository](../settings.json) as a base and configure the cameras and lidar from there on.
+We recommend to copy the [settings.json in this repository](../settings.json) as a base and configure the cameras and lidar from thereon.
 
 ## Launching the simulator
 To run the simulation, read the [simulation guide](how-to-simulate.md).
 
 ## ROS integration
-Communication between autonomous system and simulator will take place using ROS topics.
+Communication between the autonomous system and simulator will take place using ROS topics.
 Sensor data will be published by the [ros bridge](ros-bridge.md) and received by the autonomous system.
 The autonomous system will publish vehicle setpoints and the ROS bridge will listen for those messages.
 Static transforms between sensors also are being published for usage by the autonomous system.
@@ -191,7 +191,7 @@ GPS messages. [Read all about the gps model here](gps.md).
 
 - `/fsds/camera/CAMERA_NAME` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)
 One of this topic type will exist for every camera specified in the `settings.json` file.
-On this topic camera frames are published. The format will be bgra8. 
+On this topic, camera frames are published. The format will be bgra8. 
 `CAMERA_NAME` will be replaced by the corresponding in the `Cameras` object in the `settings.json` file.
 
 - `/fsds/camera/CAMERA_NAME/camera_info` [sensor_msgs/CameraInfo](https://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html)
@@ -202,16 +202,18 @@ For every frame sent on `/fsds/CAMERA_NAME` 1 message will be sent on this topic
 IMU messages. [Read all about the IMU model here](imu.md).
 
 ### Signal topics
-//todo add when signals are implemented.
+The following topics indicate the beginning and the end of the mission:
 
-- `/fsds/signal/go`
+- `/fsds/signal/go` [fsds_ros_bridge/GoSignal](../ros/src/fsds_ros_bridge/msg/GoSignal.msg)  
+  GO signal that is sent every second by the ROS bridge. The car is only allowed to drive once this message has been received. If no GO signal is received for more than 4 seconds, the AS can assume that `fsds_ros_bridge` has been shut down. This message also includes the mission type and track.
 
-- `/fsds/signal/finish`
+- `/fsds/signal/finished` [fsds_ros_bridge/FinishedSignal](../ros/src/fsds_ros_bridge/msg/FinishedSignal.msg)  
+  Finished signal that is sent by the AS to stop the mission. The `fsds_ros_bridge` will shut down when this message is received.
 
-### vehicle setpoints
+### Vehicle setpoints
 Publishing on the following topic controls the vehicle:
 
-- `/fsds_ros_bridge/VEHICLE_NAME/control_command` [fsds_ros_bridge/ControlCommand](../ros/src/fsds_ros_bridge/msg/ControlCommand.msg)
+- `/fsds_ros_bridge/control_command` [fsds_ros_bridge/ControlCommand](../ros/src/fsds_ros_bridge/msg/ControlCommand.msg)
 
 This message includes the dimensionless values throttle, steering and brake. 
 Throttle and brake range from 0 to 1.
@@ -232,13 +234,13 @@ This chapter will describe how to change the 3d model of the vehicle and how to 
 At this moment we have no idea how this works sooooo when we figure it out this will be filled in.
 
 ## Competition deployment
-A few weeks before competition, each team will receive the ssh credentials to an Ubuntu google cloud instance.
-This instance will have 8 vCPU cores, 30 gb memory (configuration n1-standard-8), 1 Nvidia Tesla T4 videocard and 100GB SSD disk.
+A few weeks before the competition, each team will receive the ssh credentials to an Ubuntu google cloud instance.
+This instance will have 8 vCPU cores, 30 GB memory (configuration n1-standard-8), 1 Nvidia Tesla T4 video card and 100GB SSD disk.
 The teams must install their autonomous system on this computer.
 
-During competition, a separate google cloud instance will run the simulation software and the ROS bridge. 
-One by one the ROS bridge will connect to the different teams computers and they will do their mission.
+During the competition, a separate google cloud instance will run the simulation software and the ROS bridge. 
+One by one the ROS bridge will connect to the different teams' computers and they will do their mission.
 
-During the weeks leading up to the competition FSOnline will host multiple testing moments where the autonomous computers will be connected to the simulator and drive a few test laps.
+During the weeks leading up to the competition, FSOnline will host multiple testing moments where the autonomous computers will be connected to the simulator and drive a few test laps.
 
 More information about the procedure will be added later.
