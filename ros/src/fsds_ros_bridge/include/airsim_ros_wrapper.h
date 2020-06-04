@@ -133,10 +133,6 @@ private:
     /// ROS service callbacks
     bool reset_srv_cb(fsds_ros_bridge::Reset::Request& request, fsds_ros_bridge::Reset::Response& response);
 
-    /// ROS tf broadcasters
-    void publish_camera_tf(const ImageResponse& img_response, const ros::Time& ros_time, const std::string& frame_id, const std::string& child_frame_id);
-    void publish_odom_tf(const nav_msgs::Odometry& odom_ned_msg);
-
     /// camera helper methods
     sensor_msgs::CameraInfo generate_cam_info(const std::string& camera_name, const CameraSetting& camera_setting, const CaptureSetting& capture_setting) const;
     cv::Mat manual_decode_depth(const ImageResponse& img_response) const;
@@ -164,7 +160,7 @@ private:
     fsds_ros_bridge::GPSYaw get_gps_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
     sensor_msgs::NavSatFix get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
     sensor_msgs::Imu get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data);
-    sensor_msgs::PointCloud2 get_lidar_msg_from_airsim(const msr::airlib::LidarData& lidar_data) const;
+    sensor_msgs::PointCloud2 get_lidar_msg_from_airsim(const std::string &lidar_name, const msr::airlib::LidarData& lidar_data) const;
 
     // not used anymore, but can be useful in future with an unreal camera calibration environment
     void read_params_from_yaml_and_fill_cam_info_msg(const std::string& file_name, sensor_msgs::CameraInfo& cam_info) const;
@@ -225,7 +221,6 @@ private:
     // std::recursive_mutex lidar_mutex_;
 
     /// ROS tf
-    std::string world_frame_id_;
     tf2_ros::TransformBroadcaster tf_broadcaster_;
     tf2_ros::StaticTransformBroadcaster static_tf_pub_;
     tf2_ros::Buffer tf_buffer_;
