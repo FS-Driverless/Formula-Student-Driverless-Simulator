@@ -22,23 +22,29 @@ roslaunch fsds_ros_bridge fsds_ros_bridge.launch
 - `/fsds_ros_bridge/origin_geo_point` [fsds_ros_bridge/GPSYaw](../ros/src/fsds_ros_bridge/msg/GPSYaw.msg)   
 GPS coordinates corresponding to global NED frame. This is set in the airsim's [settings.json](https://microsoft.github.io/AirSim/docs/settings/) file under (located [here](../../../UE4Project/Plugins/AirSim/Settings/settings.json)) the `OriginGeopoint` key. 
 
-- `/fsds_ros_bridge/VEHICLE_NAME/global_gps` [sensor_msgs/NavSatFix](https://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html)   
+- `/fsds_ros_bridge/global_gps` [sensor_msgs/NavSatFix](https://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html)   
 This the current GPS coordinates of the drone in airsim. 
 
-- `/fsds_ros_bridge/VEHICLE_NAME/odom_local_ned` [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)   
+- `/fsds_ros_bridge/odom_local_ned` [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)   
 Odometry in NED frame wrt starting point.  THIS WILL NOT BE STREAMED DURING COMPETITION.
 
-- `/fsds_ros_bridge/VEHICLE_NAME/CAMERA_NAME/IMAGE_TYPE/camera_info` [sensor_msgs/CameraInfo](https://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html)
+- `/fsds_ros_bridge/CAMERA_NAME/IMAGE_TYPE/camera_info` [sensor_msgs/CameraInfo](https://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html)
 
-- `/fsds_ros_bridge/VEHICLE_NAME/CAMERA_NAME/IMAGE_TYPE` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)   
+- `/fsds_ros_bridge/CAMERA_NAME/IMAGE_TYPE` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)   
   RGB or float image depending on image type requested in [settings.json](../UE4Project/Plugins/AirSim/Settings/settings.json).
 
-- `/fsds_ros_bridge/VEHICLE_NAME/imu/SENSORNAME` [sensor_msgs/Imu](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Imu.html)   
+- `/fsds_ros_bridge/imu/SENSORNAME` [sensor_msgs/Imu](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Imu.html)   
   See [imu.md](imu.md)
+
+- `fsds_ros_bridge/signal/go` [fsds_ros_bridge/GOSignal](../ros/src/fsds_ros_bridge/msg/GoSignal.msg)  
+  GO signal that is sent every second by the ROS bridge. More info about signal topics can be found in the [integration handbook](integration-handbook.md)
+
+- `fsds_ros_bridge/signal/finished` [fsds_ros_bridge/FinishedSignal](../ros/src/fsds_ros_bridge/msg/FinishedSignal.msg)  
+  Finished signal that is sent by the AS to stop the mission. More info about signal topics can be found in the [integration handbook](integration-handbook.md)
 
 - `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)
 
-where `VEHICLE_NAME`, `CAMERA_NAME` and `IMAGE_TYPE` are extracted from [settings.json](../UE4Project/Plugins/AirSim/Settings/settings.json).
+where `CAMERA_NAME` and `IMAGE_TYPE` are extracted from [settings.json](../UE4Project/Plugins/AirSim/Settings/settings.json).
 
 ## Subscribers
 - `/fsds_ros_bridge/VEHICLE_NAME/control_command` [fsds_ros_bridge/ControlCommand](../ros/src/fsds_ros_bridge/msg/ControlCommand.msg) 
