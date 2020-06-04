@@ -33,6 +33,9 @@ Odometry in NED frame wrt starting point.  THIS WILL NOT BE STREAMED DURING COMP
 - `/fsds_ros_bridge/VEHICLE_NAME/CAMERA_NAME/IMAGE_TYPE` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)   
   RGB or float image depending on image type requested in [settings.json](../UE4Project/Plugins/AirSim/Settings/settings.json).
 
+- `/fsds_ros_bridge/VEHICLE_NAME/imu/SENSORNAME` [sensor_msgs/Imu](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Imu.html)   
+  See [imu.md](imu.md)
+
 - `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)
 
 where `VEHICLE_NAME`, `CAMERA_NAME` and `IMAGE_TYPE` are extracted from [settings.json](../UE4Project/Plugins/AirSim/Settings/settings.json).
@@ -45,6 +48,22 @@ The contents of this message fill the essential parts of the `msr::airlib::CarAp
 
 - `/fsds_ros_bridge/reset` [fsds_ros_bridge/Reset](../ros/src/fsds_ros_bridge/srv/Empty.html)
  Resets car to start location.
+
+## Coordinate frames and transforms
+
+The primary frame is the `fsds/FSCar` frame.
+This frame centers the center of the car.
+The center of the car is the Unreal Engine car pawn position, which in turn is also the center of gravity.
+It is using the NED coordinate system.
+The `fsds/FSCar/enu` frame is the same point, translated to the ENU system.
+Read more about the differences between ENU and NED [here](https://en.wikipedia.org/wiki/Local_tangent_plane_coordinates).
+
+The ros bridge regularly publishes static transforms between the `fsds/FSCar` frame and each of the cameras and lidars.
+Naming of these frames is `fsds/SENSORNAME`.
+For example, a lidar named `Example` will publish it's points in the `fsds/Example` frame.
+
+Only static transforms within the vehicle are published.
+Transforms to the ground truth are disabled because this would take away the challenge of the competition.
 
 ## Parameters
 - `/fsds_ros_bridge/update_airsim_control_every_n_sec` [double]   

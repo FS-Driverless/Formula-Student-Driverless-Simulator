@@ -64,7 +64,7 @@ Now chek the /fsds_ros_bridge/FSCar/control_command topic and you should see val
 You can debug the input values from the joy driver by checking the `/joy` topic.
 
 ## Subscribers:
-- `/joy` [sensor_msgs/Joy](https://github.com/microsoft/AirSim/tree/master/ros/src/fsds_ros_bridge/msg/GPSYaw.msg)   
+- `/joy` [sensor_msgs/Joy](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Joy.html)   
   Listens to joystick input which is then mapped to the control command msg. The mapping should feel intuitive but in case something is unclear, it is described in detail [here](../ros/src/fsds_ros_bridge/src/joystick.cpp) 
 
 ## Publishers:
