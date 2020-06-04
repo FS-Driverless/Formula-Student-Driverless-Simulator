@@ -6,15 +6,15 @@
 
 ![Operator](images/operator.png)
 
-# Team config
+## Team config
 The operator uses the `team_config.json` file located in the `/config` folder to load all team specific configuration settings into the simulator. This includes the name of each team and their car settings. Whenever the simulation is started via the operator's web interface, the selected team's car settings are written to the `settings.json` file located in the main folder of the repository. This allows the operator to quickly switch between teams during competition. The contents of the `team_config.json` file are also used to dynamically load the team selector buttons.  
 Note that the `team_config.json` file included in this repository is an example file. The `team_config.json` used during competition will be confidential. 
 
-# Logs
+## Logs
 Whenever a mission starts, a log file is created in the `/operator/logs` folder. All logs received by the webserver will be written to this log file, as long as the mission is ongoing. All log files are named using the following naming convention:  
 `{team_name}_{mission}_{date}_{time}`
 
-# Prerequisites
+## Prerequisites
 + [Flask](https://flask.palletsprojects.com/en/1.1.x/) - A Python web application framework.
 + [Flask-Classful](http://flask-classful.teracy.org/) - An extension that adds class based views to Flask
 
@@ -33,7 +33,7 @@ The result should be that the following file and folders exist inside the `simul
 * Engine/
 The [how-to-develop guide](how-to-develop.md) guide describes how to create an export.
 
-# Usage
+## Usage
 To start the web server, run the following command in the `/operator` folder:
 ```bash
 $ python webserver.py
