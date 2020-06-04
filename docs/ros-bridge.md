@@ -33,6 +33,9 @@ Odometry in NED frame wrt starting point.  THIS WILL NOT BE STREAMED DURING COMP
 - `/fsds_ros_bridge/VEHICLE_NAME/CAMERA_NAME/IMAGE_TYPE` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)   
   RGB or float image depending on image type requested in [settings.json](../UE4Project/Plugins/AirSim/Settings/settings.json).
 
+- `/fsds_ros_bridge/VEHICLE_NAME/imu/SENSORNAME` [sensor_msgs/Imu](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Imu.html)   
+  See [imu.md](imu.md)
+
 - `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)
 
 where `VEHICLE_NAME`, `CAMERA_NAME` and `IMAGE_TYPE` are extracted from [settings.json](../UE4Project/Plugins/AirSim/Settings/settings.json).
