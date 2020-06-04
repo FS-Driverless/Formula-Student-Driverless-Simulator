@@ -104,7 +104,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
     // subscribe to control commands on global nodehandle
     origin_geo_point_pub_ = nh_private_.advertise<fsds_ros_bridge::GPSYaw>("origin_geo_point", 10);
     green_flag_pub_ = nh_private_.advertise<fsds_ros_bridge::GreenFlag>("green_flag", 1);
-    AS_mission_finished_sub_ = nh_private_.subscribe<fsds_ros_bridge::ASMissionFinished>("AS_mission_finished", 1, &AirsimROSWrapper::AS_mission_finished_cb, this);
+    nh_private_.subscribe<fsds_ros_bridge::ASMissionFinishedConstPtr>("AS_mission_finished", 1, &AirsimROSWrapper::AS_mission_finished_cb, this);
 
     airsim_img_request_vehicle_name_pair_vec_.clear();
     image_pub_vec_.clear();
@@ -1102,7 +1102,7 @@ void AirsimROSWrapper::green_flag_timer_cb(const ros::TimerEvent &event)
     green_flag_pub_.publish(green_flag_msg);
 }
 
-void AirsimROSWrapper::AS_mission_finished_cb(const fsds_ros_bridge::ASMissionFinished& msg)
+void AirsimROSWrapper::AS_mission_finished_cb(fsds_ros_bridge::ASMissionFinishedConstPtr msg)
 {
     // Get access token from team config
     std::ifstream file("../../../../config/team_config/json");

@@ -132,7 +132,7 @@ private:
     void green_flag_timer_cb(const ros::TimerEvent& event);
 
     /// ROS subscriber callbacks
-    void AS_mission_finished_cb(const fsds_ros_bridge::ASMissionFinished& msg);
+    void AS_mission_finished_cb(fsds_ros_bridge::ASMissionFinishedConstPtr msg);
 
     ros::Time make_ts(uint64_t unreal_ts);
     // void set_zero_vel_cmd();
