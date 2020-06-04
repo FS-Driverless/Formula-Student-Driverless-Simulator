@@ -4,12 +4,15 @@ from flask_classful import FlaskView, route
 from datetime import datetime
 from threading import Timer
 import subprocess, time, signal, sys, os, errno, json, sys
-sys.path.append('../AirSim/PythonClient')
+sys.path.append('..\AirSim\PythonClient')
 import airsim.client as airsim
 
 app = Flask(__name__)
 
 class WebServer(FlaskView):
+
+    # Do not create http endpoints for the following methods
+    excluded_methods = ['referee_state_listener']
 
     # Class variables are used for variables that can change while the web server is running
     # This has to do with how flask_classful handles instance variables
@@ -60,7 +63,7 @@ class WebServer(FlaskView):
             json.dump(WebServer.team['car_settings'], file, sort_keys=True, indent=4, separators=(',', ': '))
 
         # Launch Unreal Engine simulator
-        WebServer.simulation_process = subprocess.Popen(['./../UE4Project/LinuxNoEditor/Blocks.sh'])  
+        WebServer.simulation_process = subprocess.Popen(['../simulator/FSDS.exe'])  
         time.sleep(7)
 
         # Create connection with airsim car client
@@ -150,7 +153,7 @@ class WebServer(FlaskView):
         procenv['ROS_MASTER_URI'] = WebServer.team['master']
 
         # Launch ROS bridge
-        WebServer.interface_process = subprocess.Popen(['roslaunch', 'fsds_ros_bridge', 'fsds_ros_bridge.launch', 'mission_name:='+WebServer.mission, 'access_token:='+self.access_token], env=procenv)  
+        WebServer.interface_process = subprocess.Popen('ubuntu1804 run source /opt/ros/melodic/setup.bash; source ~/Driverless-Competition-Simulator/ros/devel/setup.bash; roslaunch fsds_ros_bridge fsds_ros_bridge.launch mission_name:='+WebServer.mission+' access_token:='+self.access_token)
 
         # Start referee state listener
         self.referee_state_listener() 
