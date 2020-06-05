@@ -78,6 +78,7 @@ To ensure the simulation will perform as expected, the sensor suite has some res
 Here you can read the requirements and restrictions that apply to every sensor.
 
 ### Camera
+**A this moment camera's are a bit broken. You can use the camera's but the framerate and topic names might change. See #43 and #85.**
 
 Every vehicle can have a maximum of 2 camera sensors. 
 These camera(s) can be placed anywhere on the vehicle that would be allowed by FSG 2020 rules. 
