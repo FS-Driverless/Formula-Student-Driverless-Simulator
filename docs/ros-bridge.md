@@ -19,30 +19,54 @@ roslaunch fsds_ros_bridge fsds_ros_bridge.launch
 ```
 
 ## Publishers
-- `/fsds/VEHICLE_NAME/global_gps` [sensor_msgs/NavSatFix](https://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html)   
-This the current GPS coordinates of the drone in airsim. 
+- `/fsds/gps` [sensor_msgs/NavSatFix](https://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html)   
+This the current GPS coordinates of the drone in airsim published at 10hz
+[Read all about the gps simulation model here.](gps.md)
+Data is in the `fsds/FSCar` frame.
 
-- `/fsds/VEHICLE_NAME/odom` [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)
+- `/fsds/imu` [sensor_msgs/Imu](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Imu.html)   
+Velocity, orientation and acceleratoin information at 250hz.
+[Read all about the IMU model here.](imu.md)
+Data is in the `fsds/FSCar` frame.
+
+- `/fsds/odom` [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)
 Ground truth car position and orientation in NED frame. THIS WILL NOT BE STREAMED DURING COMPETITION.
 
-- `/fsds/VEHICLE_NAME/CAMERA_NAME/IMAGE_TYPE/camera_info` [sensor_msgs/CameraInfo](https://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html)
+- `/fsds/CAMERA_NAME/IMAGE_TYPE` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)   
+One of this topic type will exist for every camera specified in the `settings.json` file.
+On this topic, camera frames are published. The format will be bgra8. 
+`CAMERA_NAME` will be replaced by the corresponding in the `Cameras` object in the `settings.json` file.
+`IMAGE_TYPE` is determand by the `SensorType` field. 
+When choosing 0, it will be 'Scene'.
 
-- `/fsds/VEHICLE_NAME/CAMERA_NAME/IMAGE_TYPE` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)   
-  RGB or float image depending on image type requested in [settings.json](../settings.json).
+- `/fsds/CAMERA_NAME/IMAGE_TYPE/camera_info` [sensor_msgs/CameraInfo](https://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html)
+This topic publishes metadata about the related camera.
+For every frame sent on `/fsds/CAMERA_NAME` 1 message will be sent on this topic.
 
-- `/fsds/VEHICLE_NAME/imu` [sensor_msgs/Imu](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Imu.html)   
-  See [imu.md](imu.md)
+- `/fsds/lidar/LIDARNAME` [sensor_msgs/PointCloud](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/PointCloud.html)
+Publishes the lidar points for each lidar sensor.
+All points are in the `fsds/LIDARNAME` frame.
+Transformations between the `fsds/LIDARNAME` and `fsds/FSCar` frame are being published regularly.
 
 - `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)
+See 'Coordinate frames and transforms'
 
-- `/fsds/imu` [sensor_msgs/Imu](https://docs.ros.org/api/sensor_msgs/html/msg/Imu.html)
-IMU messages. [Read all about the IMU model here](imu.md).
-
-where `VEHICLE_NAME`, `CAMERA_NAME` and `IMAGE_TYPE` are extracted from [settings.json](../settings.json).
+- `/fsds/signal/go` [fsds_ros_bridge/GoSignal](../ros/src/fsds_ros_bridge/msg/GoSignal.msg)  
+GO signal that is sent every second by the ROS bridge. The car is only allowed to drive once this message has been received. 
+If no GO signal is received for more than 4 seconds, the AS can assume that `fsds_ros_bridge` has been shut down.
+This message also includes the mission type and track.
 
 ## Subscribers
-- `/fsds/VEHICLE_NAME/control_command` [fsds_ros_bridge/ControlCommand](../ros/src/fsds/msg/ControlCommand.msg) 
-The contents of this message fill the essential parts of the `msr::airlib::CarApiBase::CarControl` struct. This is the only way to control the car when the airsim ROS client is connected (keyboard will no longer work!).
+- `/fsds/control_command` [fsds_ros_bridge/ControlCommand](../ros/src/fsds/msg/ControlCommand.msg) 
+This message includes the dimensionless values throttle, steering and brake. 
+Throttle and brake range from 0 to 1.
+For steering `-1` steers full to the left and `+1` steers full to the right.
+The contents of this message fill the essential parts of the `msr::airlib::CarApiBase::CarControl` struct. 
+This is the only way to control the car when the airsim ROS client is connected (keyboard will no longer work!).
+
+- `/fsds/signal/finished` [fsds_ros_bridge/FinishedSignal](../ros/src/fsds_ros_bridge/msg/FinishedSignal.msg)  
+Finished signal that is sent by the AS to stop the mission.
+The ros bridge will forward the signal to the operator which in turn will stop the ros bridge and finish the run.
 
 ## Services
 

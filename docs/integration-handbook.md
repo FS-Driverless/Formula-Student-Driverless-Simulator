@@ -145,7 +145,7 @@ More detailed technical information about the accuracy of the GPS can be found [
 Every vehicle has 1 IMU, it is located at the centre of gravity of the vehicle.
 This sensor cannot be removed or moved.
 
-The IMU captures the acceleration, orientation and angular rate of the vehicle in the ?? frame.
+The IMU captures the acceleration, orientation and angular rate of the vehicle.
 More detailed technical information about the IMU implementation of the IMU can be found [here](imu.md).
 
 ### Sensor specification
@@ -183,53 +183,36 @@ Sensor data will be published by the [ros bridge](ros-bridge.md) and received by
 The autonomous system will publish vehicle setpoints and the ROS bridge will listen for those messages.
 Static transforms between sensors also are being published for usage by the autonomous system.
 
-### Sensor topics
-The following topics are made available:
+### Topics
 
-- `/fsds/gps` [sensor_msgs/NavSatFix](https://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html)
-GPS messages. [Read all about the gps model here](gps.md).
+The AS can subscribe to the following sensor topics:
 
-- `/fsds/camera/CAMERA_NAME` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)
-One of this topic type will exist for every camera specified in the `settings.json` file.
-On this topic, camera frames are published. The format will be bgra8. 
-`CAMERA_NAME` will be replaced by the corresponding in the `Cameras` object in the `settings.json` file.
+- `/fsds/gps`
+- `/fsds/imu`
+- `/fsds/camera/CAMERA_NAME`
+- `/fsds/camera/CAMERA_NAME/camera_info`
+- `/fsds/lidar/LIDAR_NAME`
 
-- `/fsds/camera/CAMERA_NAME/camera_info` [sensor_msgs/CameraInfo](https://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html)
-This topic publishes metadata about the related camera.
-For every frame sent on `/fsds/CAMERA_NAME` 1 message will be sent on this topic.
+The AS will receive the GO signal on the following topic:
 
-- `/fsds/imu` [sensor_msgs/Imu](https://docs.ros.org/api/sensor_msgs/html/msg/Imu.html)
-IMU messages. [Read all about the IMU model here](imu.md).
+- `/fsds/signal/go`
 
-### Signal topics
-The following topics indicate the beginning and the end of the mission:
+And it AS can publish the FINISHED on this topic:
 
-- `/fsds/signal/go` [fsds_ros_bridge/GoSignal](../ros/src/fsds_ros_bridge/msg/GoSignal.msg)  
-  GO signal that is sent every second by the ROS bridge. The car is only allowed to drive once this message has been received. If no GO signal is received for more than 4 seconds, the AS can assume that `fsds_ros_bridge` has been shut down. This message also includes the mission type and track.
+- `/fsds/signal/finished`
 
-- `/fsds/signal/finished` [fsds_ros_bridge/FinishedSignal](../ros/src/fsds_ros_bridge/msg/FinishedSignal.msg)  
-  Finished signal that is sent by the AS to stop the mission. The `fsds_ros_bridge` will shut down when this message is received.
+The AS must publish vehicle control commands on this topic:
 
-### Vehicle setpoints
-Publishing on the following topic controls the vehicle:
+- `/fsds/control_command`
 
-- `/fsds_ros_bridge/control_command` [fsds_ros_bridge/ControlCommand](../ros/src/fsds_ros_bridge/msg/ControlCommand.msg)
-
-This message includes the dimensionless values throttle, steering and brake. 
-Throttle and brake range from 0 to 1.
-For steering `-1` steers full to the left and `+1` steers full to the right.
-
-
-### Transforms
-//todo: We have to figure out how these transforms are working.
-
-- `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)
+Read more about the techincal detalis of these topics in the [ros-bridge documentation](ros-bridge.md)
 
 ## Vehicle dynamic model
-The vehicle dynamic model is a third-party high-fodelity model and will be the same for all teams. More details and information on this choice can be found [here](vehicle_model.md).
+The vehicle dynamic model is a third-party high-fodelity model and will be the same for all teams. 
+More details and information on this choice can be found [here](vehicle_model.md).
 
 ## 3D vehicle model
-//todo: reference vehicle model documentation in the open PR
+//todo
 This chapter will describe how to change the 3d model of the vehicle and how to provide the 3d model for usage during the competition. 
 At this moment we have no idea how this works sooooo when we figure it out this will be filled in.
 
