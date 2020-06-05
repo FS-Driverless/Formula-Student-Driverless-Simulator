@@ -34,7 +34,7 @@ Ready? Lets clone the repo **into your home directory**:
 git clone git@github.com:FS-Online/Driverless-Competition-Simulator.git
 ```
 The repository will be placed in `~/Driverless-Competition-Simulator`.
-If this folder already exists as a result of the previous step, you can get your settings.json out, delete the folder and after cloning the repo place the settings.json file back.
+If this folder already exists as a result of the previous step, you can get your settings.json out, delete the folder (or rename it to something like UEProject or UESim) and after cloning the repo place the settings.json file back (this time inside the root of the repository where the default settings.json lives).
 
 Read about how to build the ROS workspace [here](building-ros.md).
 
