@@ -20,24 +20,27 @@ roslaunch fsds_ros_bridge fsds_ros_bridge.launch
 
 ## Publishers
 
-- `/fsds_ros_bridge/global_gps` [sensor_msgs/NavSatFix](https://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html)   
+- `/fsds/global_gps` [sensor_msgs/NavSatFix](https://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html)   
 This the current GPS coordinates of the drone in airsim. 
 
-- `/fsds_ros_bridge/VEHICLE_NAME/odom` [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)
+- `/fsds/odom` [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)
 Ground truth car position and orientation in NED frame. THIS WILL NOT BE STREAMED DURING COMPETITION.
 
-- `/fsds_ros_bridge/CAMERA_NAME/IMAGE_TYPE/camera_info` [sensor_msgs/CameraInfo](https://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html)
+- `/fsds/CAMERA_NAME/IMAGE_TYPE/camera_info` [sensor_msgs/CameraInfo](https://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html)
 
-- `/fsds_ros_bridge/CAMERA_NAME/IMAGE_TYPE` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)   
+- `/fsds/CAMERA_NAME/IMAGE_TYPE` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)   
   RGB or float image depending on image type requested in [settings.json](../UE4Project/Plugins/AirSim/Settings/settings.json).
 
-- `/fsds_ros_bridge/imu` [sensor_msgs/Imu](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Imu.html)   
+- `/fsds/imu` [sensor_msgs/Imu](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Imu.html)   
   See [imu.md](imu.md)
 
-- `fsds_ros_bridge/signal/go` [fsds_ros_bridge/GOSignal](../ros/src/fsds_ros_bridge/msg/GoSignal.msg)  
+- `/fsds/lidar/LIDARNAME` [sensor_msgs/PointCloud](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/PointCloud.html).   
+  Publishes the lidar points for each lidar sensor.
+
+- `/fsds/signal/go` [fsds_ros_bridge/GOSignal](../ros/src/fsds_ros_bridge/msg/GoSignal.msg)  
   GO signal that is sent every second by the ROS bridge. More info about signal topics can be found in the [integration handbook](integration-handbook.md)
 
-- `fsds_ros_bridge/signal/finished` [fsds_ros_bridge/FinishedSignal](../ros/src/fsds_ros_bridge/msg/FinishedSignal.msg)  
+- `/fsds/signal/finished` [fsds_ros_bridge/FinishedSignal](../ros/src/fsds_ros_bridge/msg/FinishedSignal.msg)  
   Finished signal that is sent by the AS to stop the mission. More info about signal topics can be found in the [integration handbook](integration-handbook.md)
 
 - `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)
@@ -45,12 +48,12 @@ Ground truth car position and orientation in NED frame. THIS WILL NOT BE STREAME
 where `CAMERA_NAME` and `IMAGE_TYPE` are extracted from [settings.json](../UE4Project/Plugins/AirSim/Settings/settings.json).
 
 ## Subscribers
-- `/fsds_ros_bridge/VEHICLE_NAME/control_command` [fsds_ros_bridge/ControlCommand](../ros/src/fsds_ros_bridge/msg/ControlCommand.msg) 
+- `/fsds/control_command` [fsds_ros_bridge/ControlCommand](../ros/src/fsds_ros_bridge/msg/ControlCommand.msg) 
 The contents of this message fill the essential parts of the `msr::airlib::CarApiBase::CarControl` struct. This is the only way to control the car when the airsim ROS client is connected (keyboard will no longer work!).
 
 ## Services
 
-- `/fsds_ros_bridge/reset` [fsds_ros_bridge/Reset](../ros/src/fsds_ros_bridge/srv/Empty.html)
+- `/fsds/reset` [fsds_ros_bridge/Reset](../ros/src/fsds_ros_bridge/srv/Empty.html)
  Resets car to start location.
 
 ## Coordinate frames and transforms
@@ -70,34 +73,34 @@ Only static transforms within the vehicle are published.
 Transforms to the ground truth are disabled because this would take away the challenge of the competition.
 
 ## Parameters
-- `/fsds_ros_bridge/update_gps_every_n_sec` [double]
+- `/fsds/ros_bridge/update_gps_every_n_sec` [double]
   Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
   Default: 0.1 seconds (10hz).
   Timer callback frequency for updating and publishing the gps sensordata.
   This value must be equal or higher to the update frequency of the sensor configured in the settings.json
 
-- `/fsds_ros_bridge/update_imu_every_n_sec` [double]
+- `/fsds/ros_bridge/update_imu_every_n_sec` [double]
   Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
   Default: 0.004 seconds (250hz).
   Timer callback frequency for updating and publishing the imu messages.
   This value must be equal or higher to the minimual sample rate of the sensor configured in the settings.json
 
-- `/fsds_ros_bridge/update_odom_every_n_sec` [double]
+- `/fsds/ros_bridge/update_odom_every_n_sec` [double]
   Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
   Default: 0.004 seconds (250hz).
   Timer callback frequency for updating and publishing the odometry.
 
-- `/fsds_ros_bridge/publish_static_tf_every_n_sec` [double]
+- `/fsds/ros_bridge/publish_static_tf_every_n_sec` [double]
   Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
   Default: 1 seconds (1 hz).
   The frequency at which the static transforms are published.
 
-- `/fsds_ros_bridge/update_lidar_every_n_sec` [double]
+- `/fsds/ros_bridge/update_lidar_every_n_sec` [double]
   Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
   Default: 0.1 seconds (10 hz).
   The frequency at which the lidar is publshed.
 
-- `/fsds_ros_bridge/update_airsim_img_response_every_n_sec` [double]
+- `/fsds/ros_bridge/update_airsim_img_response_every_n_sec` [double]
   Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
   Default: 0.01 seconds.
   Timer callback frequency for receiving images from all cameras in airsim.

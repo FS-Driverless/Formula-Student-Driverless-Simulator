@@ -22,11 +22,10 @@ Whenever a mission starts, a log file is created in the `/operator/logs` folder.
 ## Prerequisites
 
 The operator only works on windows with wsl.
-The operator and unreal engine simulator will run in Windows, the ros bridge will run in wsl.
+The operator and unreal engine simulator will run in Windows, the ros bridge will be launched from the operator inside wsl.
 Before we start you must build the ros workspace in wsl and clone the repo in windows.
 
 + [Flask](https://flask.palletsprojects.com/en/1.1.x/) - A Python web application framework.
-+ [Flask-Classful](http://flask-classful.teracy.org/) - An extension that adds class based views to Flask
 
 To install all dependencies, run the following command inside the `/operator` folder:
 ```bash

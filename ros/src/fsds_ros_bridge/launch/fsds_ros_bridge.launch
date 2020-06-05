@@ -5,7 +5,7 @@
 	<arg name="track_name" default="A"/>
 	<arg name="access_token" default=""/>
 
-	<node name="fsds_ros_bridge" pkg="fsds_ros_bridge" type="fsds_ros_bridge" output="screen">
+	<node name="ros_bridge" pkg="fsds_ros_bridge" type="fsds_ros_bridge" output="screen" ns="fsds">
 		<!-- ROS timer rates. Note that timer callback will be processed at maximum possible rate, upperbounded by the following ROS params -->
 		<param name="is_vulkan" type="bool" value="false" />
 		<param name="update_odom_every_n_sec" type="double" value="0.004" />
