@@ -9,19 +9,18 @@ import airsim.client as airsim
 
 class Operator:
 
-    simulation_process = None
-    interface_process =  None
-    log_file = None
-    logs = []
-
-    team = None
-    mission = None
-    client = None
-    car_controls = None
-    referee_state_timer = None
-
     def __init__(self):
-        # Instance variables are used for variables that don't change while the web server is running
+        self.simulation_process = None
+        self.interface_process =  None
+        self.log_file = None
+        self.logs = []
+
+        self.team = None
+        self.mission = None
+        self.client = None
+        self.car_controls = None
+        self.referee_state_timer = None
+
         with open('../config/team_config.json', 'r') as file:
             self.team_config = json.load(file)
             self.access_token = self.team_config['access_token']
