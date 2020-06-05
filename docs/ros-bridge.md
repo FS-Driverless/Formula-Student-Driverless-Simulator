@@ -20,7 +20,7 @@ roslaunch fsds_ros_bridge fsds_ros_bridge.launch
 
 ## Publishers
 
-- `/fsds/global_gps` [sensor_msgs/NavSatFix](https://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html)   
+- `/fsds/gps` [sensor_msgs/NavSatFix](https://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html)   
 This the current GPS coordinates of the drone in airsim. 
 
 - `/fsds/odom` [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)
