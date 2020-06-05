@@ -33,7 +33,7 @@ Currently, `autocross` and `trackdrive` are the supported missions.
 In autocross, the vehicle has to complete a single lap on an unknown track.
 On the trackdrive, the vehicle has to finish 10 laps on a track it has previously seen.
 During the competition, on each track, every AS will do an autocross mission before a trackdrive mission.
-It can occur that multiple autocross runs on different tracks take place before going to autocross.
+It can occur that multiple autocross runs on different tracks take place before going to trackdrive.
 It can also happen that multiple autocross runs take place on the same track.
 For example, the AS might be requested to do:
 1. autocross on track A

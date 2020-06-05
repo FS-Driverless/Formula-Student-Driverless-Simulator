@@ -20,7 +20,7 @@ Inside the folder `Driverless-Competition-Simulator` create a file called `setti
 This should get you started with the default sensor configuration, feel free to try your own custom sensor suite.
 Note that the naming of the sensors will be reflected in the topic names as elaborated [here](ros-bridge.md).
 
-Now launch the ????.exe and a window with a car should popup!
+Now launch FSDS.exe and a window with a car should popup!
 Try to drive the car around by using the arrowkeys.
 
 ## Launching the ROS bridge
