@@ -1,2 +1,4 @@
 .vscode/
 operator/logs/
+simulator/
+!simulator/readme.md

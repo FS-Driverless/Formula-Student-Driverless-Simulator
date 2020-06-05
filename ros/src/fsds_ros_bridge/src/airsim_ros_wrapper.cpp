@@ -84,6 +84,8 @@ void AirsimROSWrapper::initialize_ros()
     double update_imu_every_n_sec;
     double publish_static_tf_every_n_sec;
     nh_private_.getParam("is_vulkan", is_vulkan_);
+    nh_private_.getParam("mission_name", mission_name_);
+    nh_private_.getParam("track_name", track_name_);
     nh_private_.getParam("update_odom_every_n_sec", update_odom_every_n_sec);
     nh_private_.getParam("update_gps_every_n_sec", update_gps_every_n_sec);
     nh_private_.getParam("update_imu_every_n_sec", update_imu_every_n_sec);
@@ -96,11 +98,15 @@ void AirsimROSWrapper::initialize_ros()
     statictf_timer_ = nh_private_.createTimer(ros::Duration(publish_static_tf_every_n_sec), &AirsimROSWrapper::statictf_cb, this);
 
     statistics_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::statistics_timer_cb, this);
+    go_signal_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::go_signal_timer_cb, this);
 }
 
 // XmlRpc::XmlRpcValue can't be const in this case
 void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 {
+    go_signal_pub_ = nh_.advertise<fsds_ros_bridge::GoSignal>("signal/go", 1);
+    finished_signal_sub_ = nh_.subscribe("signal/finished", 1, &AirsimROSWrapper::finished_signal_cb, this);
+
     airsim_img_request_vehicle_name_pair_vec_.clear();
     image_pub_vec_.clear();
     cam_info_pub_vec_.clear();
@@ -110,7 +116,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
     // vehicle_imu_map_;
     // callback_queues_.clear();
 
-    image_transport::ImageTransport image_transporter(nh_private_);
+    image_transport::ImageTransport image_transporter(nh_);
 
     // iterate over std::map<std::string, std::unique_ptr<VehicleSetting>> vehicles;
     for (const auto& curr_vehicle_elem : msr::airlib::AirSimSettings::singleton().vehicles)
@@ -125,10 +131,10 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         set_nans_to_zeros_in_pose(*vehicle_setting);
 
         vehicle_name = curr_vehicle_name;
-        odom_pub = nh_private_.advertise<nav_msgs::Odometry>(curr_vehicle_name + "/odom", 10);
-        global_gps_pub = nh_private_.advertise<sensor_msgs::NavSatFix>(curr_vehicle_name + "/global_gps", 10);
-        imu_pub = nh_private_.advertise<sensor_msgs::Imu>(curr_vehicle_name + "/imu", 10);
-        control_cmd_sub = nh_private_.subscribe<fsds_ros_bridge::ControlCommand>(curr_vehicle_name + "/control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, vehicle_name));
+        odom_pub = nh_.advertise<nav_msgs::Odometry>("odom", 10);
+        global_gps_pub = nh_.advertise<sensor_msgs::NavSatFix>("gps", 10);
+        imu_pub = nh_.advertise<sensor_msgs::Imu>("imu", 10);
+        control_cmd_sub = nh_.subscribe<fsds_ros_bridge::ControlCommand>("control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, vehicle_name));
 
         // iterate over camera map std::map<std::string, CameraSetting> cameras;
         for (auto& curr_camera_elem : vehicle_setting->cameras)
@@ -162,8 +168,8 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
                         current_image_request_vec.push_back(ImageRequest(curr_camera_name, curr_image_type, true));
                     }
 
-                    image_pub_vec_.push_back(image_transporter.advertise(curr_vehicle_name + "/" + curr_camera_name + "/" + image_type_int_to_string_map_.at(capture_setting.image_type), 1));
-                    cam_info_pub_vec_.push_back(nh_private_.advertise<sensor_msgs::CameraInfo>(curr_vehicle_name + "/" + curr_camera_name + "/" + image_type_int_to_string_map_.at(capture_setting.image_type) + "/camera_info", 10));
+                    image_pub_vec_.push_back(image_transporter.advertise(curr_camera_name + "/" + image_type_int_to_string_map_.at(capture_setting.image_type), 1));
+                    cam_info_pub_vec_.push_back(nh_private_.advertise<sensor_msgs::CameraInfo>(curr_camera_name + "/" + image_type_int_to_string_map_.at(capture_setting.image_type) + "/camera_info", 10));
                     camera_info_msg_vec_.push_back(generate_cam_info(curr_camera_name, camera_setting, capture_setting));
                     // Fill statistics vector here as well using curr_camera_name
                     ros_bridge::Statistics camera_pub_statistics(curr_camera_name + "_Publisher");
@@ -218,7 +224,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
                 set_nans_to_zeros_in_pose(*vehicle_setting, lidar_setting);
                 append_static_lidar_tf(curr_vehicle_name, sensor_name, lidar_setting); // todo is there a more readable way to down-cast?
                 vehicle_lidar_map_[curr_vehicle_name] = sensor_name;                   // non scalable
-                lidar_pub_vec_.push_back(nh_private_.advertise<sensor_msgs::PointCloud2>(curr_vehicle_name + "/lidar/" + sensor_name, 10));
+                lidar_pub_vec_.push_back(nh_.advertise<sensor_msgs::PointCloud2>("lidar/" + sensor_name, 10));
                 lidar_pub_vec_statistics.push_back(ros_bridge::Statistics(sensor_name + "_Publisher"));
                 getLidarDataVecStatistics.push_back(ros_bridge::Statistics(sensor_name + "_RpcCaller"));
                 // statistics_obj_ptr.insert(statistics_obj_ptr.end(), {&lidar_pub_vec_statistics.back(), &getLidarDataVecStatistics.back()});
@@ -233,7 +239,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
     }
 
     // todo add per vehicle reset in AirLib API
-    reset_srvr_ = nh_private_.advertiseService("reset", &AirsimROSWrapper::reset_srv_cb, this);
+    reset_srvr_ = nh_.advertiseService("reset", &AirsimROSWrapper::reset_srv_cb, this);
 
     // todo mimic gazebo's /use_sim_time feature which publishes airsim's clock time..via an rpc call?!
     // clock_pub_ = nh_private_.advertise<rosgraph_msgs::Clock>("clock", 10);
@@ -947,4 +953,44 @@ void AirsimROSWrapper::statistics_timer_cb(const ros::TimerEvent &event)
     // ros_bridge::Statistics::SetTimeElapsed((double)(time_elapsed*std::pow(10, -9))); // convert back to seconds
     PrintStatistics();
     ResetStatistics();
+}
+
+// This callback is executed every 1 second
+void AirsimROSWrapper::go_signal_timer_cb(const ros::TimerEvent &event)
+{
+    fsds_ros_bridge::GoSignal go_signal_msg;
+    go_signal_msg.mission = mission_name_;
+    go_signal_msg.track = track_name_;
+    go_signal_pub_.publish(go_signal_msg);
+}
+
+void AirsimROSWrapper::finished_signal_cb(fsds_ros_bridge::FinishedSignalConstPtr msg)
+{
+    // Get access token
+    std::string access_token (std::getenv("OPERATOR_ACCESS_TOKEN"));
+
+    // Send JSON HTTP POST request
+    CURL *curl;
+    CURLcode res;
+
+    curl_global_init(CURL_GLOBAL_ALL);
+    curl = curl_easy_init();
+
+    std::string json_obj = "{\"access_token\" : \"" + access_token + "\" , \"sender\" : \"AS\" }";
+
+    struct curl_slist *headers = NULL;
+    headers = curl_slist_append(headers, "Accept: application/json");
+    headers = curl_slist_append(headers, "Content-Type: application/json");
+    headers = curl_slist_append(headers, "charsets: utf-8");
+
+    curl_easy_setopt(curl, CURLOPT_URL, "http://localhost:5000/mission/stop");
+    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_obj.c_str());
+
+    res = curl_easy_perform(curl);
+    std::cout << res << std::endl;
+
+    curl_easy_cleanup(curl);
+    curl_global_cleanup();
 }

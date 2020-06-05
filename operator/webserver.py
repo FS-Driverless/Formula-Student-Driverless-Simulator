@@ -1,175 +1,297 @@
 #!/usr/bin/env python
-
 from flask import Flask, request, abort, render_template, jsonify
-import subprocess, time, signal, sys, os, errno, json
 from datetime import datetime
 from threading import Timer
-
-import sys
-sys.path.append('../AirSim/PythonClient')
+import subprocess, time, signal, sys, os, errno, json, sys
+sys.path.append('..\AirSim\PythonClient')
 import airsim.client as airsim
 
-app = Flask(__name__)
-interfaceprocess = None
 
-client = airsim.CarClient()
-client.confirmConnection()
-car_controls = airsim.CarControls()
-ref =  client.getRefereeState()
+class Operator:
 
-doo_count = ref.doo_counter
-lap_times = ref.laps
-logs = []
+    def __init__(self):
+        self.simulation_process = None
+        self.interface_process =  None
+        self.log_file = None
+        self.logs = []
 
-with open('../config/team_config.json', 'r') as file:
-    team_config = json.load(file)
-    access_token = team_config['access_token']
+        self.team = None
+        self.mission = None
+        self.client = None
+        self.car_controls = None
+        self.referee_state_timer = None
 
-@app.route('/', methods=['GET'])
-def index():
-    return render_template('index.html', teams=team_config['teams'], logs=logs)
+        with open('../config/team_config.json', 'r') as file:
+            self.team_config = json.load(file)
+            self.access_token = self.team_config['access_token']
 
-@app.route('/mission/start', methods=['POST'])
-def mission_start():
-    # Abort if access token is incorrect
-    if request.json is not None and request.json['access_token'] != access_token:
-        abort(403, description='Incorrect access token')
+    def index(self):
+        return render_template('index.html', teams=self.team_config['teams'], logs=self.logs)
 
-    # Abort if empty request
-    if request.json is None or request.json['id'] is None or request.json['mission'] is None:
-        abort(400, description='Empty request.')    
+    def launch_simulator(self):
+        # Abort if empty request
+        if request.json is None or not all(key in request.json for key in ['id', 'mission', 'access_token']):
+            abort(400, description='Empty request.')   
 
-    # Get team config
-    teamId = request.json['id']
-    mission = request.json['mission']
-    for obj in team_config['teams']: 
-        if obj['id'] == teamId: team = obj
+        # Abort if access token is incorrect
+        if request.json['access_token'] != self.access_token:
+            abort(403, description='Incorrect access token')
 
-    # Set ROS MASTER
-    procenv = os.environ.copy()
-    procenv["ROS_MASTER_URI"] = team['master']
+        # Abort if simulator is already running
+        if self.simulation_process is not None:
+            abort(400, description='Simulation already running.')
 
-    # Launch ROS bridge
-    global interfaceprocess, log_file
-    interfaceprocess = subprocess.Popen(['roslaunch', 'fsds_ros_bridge', 'fsds_ros_bridge.launch', 'mission:={}'.format(mission)], env=procenv)  
+        # Get team config
+        teamId = request.json['id']
+        self.mission = request.json['mission']
+        for obj in self.team_config['teams']: 
+            if obj['id'] == teamId: self.team = obj  
 
-    # Start referee state listener
-    referee_state_listener() 
+        # Write team specific car settings to settings.json
+        filename = os.path.realpath(os.path.dirname(__file__)) + '/../UE4Project/Plugins/AirSim/Settings/settings.json'
+        with open(filename, 'w') as file:
+            json.dump(self.team['car_settings'], file, sort_keys=True, indent=4, separators=(',', ': '))
 
-    # Create log message
-    log = '{}: {}'.format(str(datetime.now()), 'Mission started.')
-    logs.append(log)
+        # Launch Unreal Engine simulator
+        self.simulation_process = subprocess.Popen(['../simulator/FSDS.exe'], creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
+        time.sleep(7)
 
-    # Create log file. Create logs directory if it does not exist
-    filename = 'logs/{}_{}_{}.txt'.format(team['name'].lower().replace(' ', '-'), mission, str(datetime.now().strftime("%d-%m-%Y_%H:%M:%S")))
-    if not os.path.exists(os.path.dirname(filename)):
-        try:
-            os.makedirs(os.path.dirname(filename))
-        except OSError as exc: # Guard against race condition
-            if exc.errno != errno.EEXIST:
-                raise
+        # Create connection with airsim car client
+        self.client = airsim.CarClient()
+        self.client.confirmConnection()
+        self.car_controls = airsim.CarControls()
+
+        # Get referee state
+        ref =  self.client.getRefereeState()
+        self.doo_count = ref.doo_counter
+        self.lap_times = ref.laps 
+
+        log = '{}: {}'.format(str(datetime.now()), 'Launched simulator. Team: ' + self.team['name'] + '.')
+        return {'response': log}  
+
+    def exit_simulator(self):
+        # Abort if empty request
+        if request.json is None or 'access_token' not in request.json:
+            abort(400, description='Empty request.')  
+
+        # Abort if access token is incorrect
+        if request.json['access_token'] != self.access_token:
+            abort(403, description='Incorrect access token')
+
+        # Abort if simulator is not running
+        if self.simulation_process is None:
+            abort(400, description='Simulation not running.')
+
+        if self.interface_process is not None:
+            abort(400, description='Mission still active.')
     
-    # Write to log file
-    log_file = open(filename, 'w')
-    log_file.write(log + '\n')
+        # Close airsim client connection
+        print("Closing clients")
+        self.client = None
+        self.car_controls = None
+        self.referee_state_timer = None
 
-    return {'response': log}
+        # Shutdown simulation processes
+        if self.simulation_process.poll() is None:
+            # Kill process created by simulation_process
+            os.system("taskkill /im Blocks* /F")
 
-@app.route('/mission/stop', methods=['POST'])
-def mission_stop():
-    # Abort if access token is incorrect
-    if request.json is not None and request.json['access_token'] != access_token:
-        abort(403, description='Incorrect access token')
+            # Try to stop it gracefully.
+            os.kill(self.simulation_process.pid, signal.CTRL_BREAK_EVENT)
+            time.sleep(3)
+            # Still running?
+            if self.simulation_process.poll() is None:
+                # Kill it with fire
+                self.simulation_process.terminate()
+                # Wait for it to finish
+                self.simulation_process.wait()
+                #print self.simulation_process
 
-    # Abort if ROS bridge is not running
-    if interfaceprocess is None:
-        abort(400, description='No process running.')
+            self.simulation_process = None
+    
+        log = '{}: {}'.format(str(datetime.now()), 'Exited simulator.')
+        return {'response': log}  
 
-    # Check if previous process is still running
-    if interfaceprocess is not None and interfaceprocess.poll() is None:
-        # Try to stop it gracefully. SIGINT is the equivilant to doing ctrl-c
-        interfaceprocess.send_signal(signal.SIGINT)
-        time.sleep(3)
-        # Still running?
-        if interfaceprocess.poll() is None:
-            # Kill it with fire
-            interfaceprocess.terminate()
-            # Wait for it to finish
-            interfaceprocess.wait()
+    
+    def mission_start(self):
+        # Abort if empty request
+        if request.json is None or 'access_token' not in request.json:
+            abort(400, description='Empty request.')   
 
-        global interfaceprocess
-        interfaceprocess = None
+        # Abort if access token is incorrect
+        if request.json['access_token'] != self.access_token:
+            abort(403, description='Incorrect access token') 
 
-    # Stop referee state listener
-    timer.cancel()
+        # Abort if Unreal Engine simulator is not running
+        if self.simulation_process is None:
+            abort(400, description='Simulator not running.') 
 
-    # Brake car
-    car_controls.brake = 1
-    client.setCarControls(car_controls)
-    car_controls.brake = 0 #remove brake
+        if self.interface_process is not None:
+            abort(400, description='Mission already running.')
 
-    # Create log message
-    log = '{}: {}'.format(str(datetime.now()), 'Mission stopped.')
-    logs.append(log)
-    del logs[:] # Clear logs
+        # Set ROS MASTER
+        procenv = os.environ.copy()
+        procenv['ROS_MASTER_URI'] = self.team['master']
 
-    # Write logs to file
-    log_file.write(log + '\n')
-    log_file.close()
+        # Launch ROS bridge
+        self.interface_process = subprocess.Popen('ubuntu1804 run source /opt/ros/melodic/setup.bash; source ~/Driverless-Competition-Simulator/ros/devel/setup.bash; roslaunch fsds_ros_bridge fsds_ros_bridge.launch mission_name:='+self.mission+' access_token:='+self.access_token, creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
 
-    return {'response': log}
+        # Start referee state listener
+        self.referee_state_listener() 
 
-@app.route('/mission/reset', methods=['POST'])
-def mission_reset():
-    # Abort if access token is incorrect
-    if request.json is not None and request.json['access_token'] != access_token:
-        abort(403, description='Incorrect access token')
+        # Create log message
+        log = '{}: {}'.format(str(datetime.now()), 'Mission ' + self.mission + ' started.')
+        self.logs.append(log)
 
-    # Reset simulator
-    client.reset()
-    log = '{}: {}'.format(str(datetime.now()), 'Car reset.')
+        # Create log file. Create logs directory if it does not exist
+        filename = 'logs/{}_{}_{}.txt'.format(self.team['name'].lower().replace(' ', '-'), self.mission, str(datetime.now().strftime("%d-%m-%Y_%Hh%Mm%Ss")))
+        if not os.path.exists(os.path.dirname(filename)):
+            try:
+                os.makedirs(os.path.dirname(filename))
+            except OSError as exc: # Guard against race condition
+                if exc.errno != errno.EEXIST:
+                    raise
+        
+        # Write to log file
+        self.log_file = open(filename, 'w')
+        self.log_file.write(log + '\n')
 
-    if interfaceprocess is not None:
-        # Create log message and write to file
-        logs.append(log)
-        log_file.write(log + '\n')
+        return {'response': log}
 
-    return {'response': log}
+    def mission_stop(self):
+        # Abort if empty request
+        if request.json is None or not all(key in request.json for key in ['sender', 'access_token']):
+            abort(400, description='Empty request.')   
 
-@app.route('/logs', methods=['GET'])
-def get_logs():
-    return {'response': logs}
+        # Abort if access token is incorrect
+        if request.json['access_token'] != self.access_token:
+            abort(403, description='Incorrect access token')
 
-@app.errorhandler(400)
-def bad_request(e):
-    return jsonify(error=str(e)), 400
+        # Abort if Unreal Engine simulator is not running
+        if self.simulation_process is None:
+            abort(400, description='Simulator not running.') 
 
-@app.errorhandler(403)
-def unauthorized(e):
-    return jsonify(error=str(e)), 403
+        # Abort if ROS bridge is not running
+        if self.interface_process is None:
+            abort(400, description='No process running.')
 
-def referee_state_listener():
-    global doo_count, lap_times, timer
+        # Check if previous process is still running
+        if self.interface_process.poll() is None:
+            # Try to stop it gracefully.
+            os.kill(self.interface_process.pid, signal.CTRL_BREAK_EVENT)
+            time.sleep(3)
+            # Still running?
+            if self.interface_process.poll() is None:
+                # Kill it with fire
+                self.interface_process.terminate()
+                # Wait for it to finish
+                self.interface_process.wait()
 
-    timer = Timer(0.5, referee_state_listener)
-    timer.start()
-    ref = client.getRefereeState()
+            self.interface_process = None
 
-    if doo_count != ref.doo_counter:
-        delta = ref.doo_counter - doo_count
-        for d in range(doo_count + 1, doo_count + delta + 1):
-            log = '{}: {}. {} {}'.format(str(datetime.now()), 'Cone hit', str(d), 'DOO cone(s).')
-            logs.append(log)
-            log_file.write(log + '\n')
-        doo_count = ref.doo_counter
+        # Stop referee state listener
+        self.referee_state_timer.cancel()
 
-    if len(lap_times) != len(ref.laps):
-        lap_times = ref.laps
-        lap_count = len(lap_times)
-        lap_time = lap_times[-1]
-        log = '{}: {}'.format(str(datetime.now()), 'Lap ' + str(lap_count) + ' completed. Lap time: ' + str(round(lap_time, 3)) + ' s.')
-        logs.append(log) 
-        log_file.write(log + '\n')
+        # Brake car
+        self.car_controls.brake = 1
+        self.client.setCarControls(self.car_controls)
+        self.car_controls.brake = 0 # Remove brake
+
+        # Create log message
+        log = '{}: {}'.format(str(datetime.now()), 'Mission ' + self.mission + ' stopped by ' + request.json['sender'] + '.')
+        self.logs.append(log)
+        if request.json['sender'] == 'AS': time.sleep(5) # Wait 5 seconds for web interface to poll server
+        del self.logs[:] # Clear logs
+
+        # Write logs to file
+        self.log_file.write(log + '\n')
+        self.log_file.close()
+        self.log_file = None
+
+        return {'response': log}
+
+    def mission_reset(self):
+        # Abort if empty request
+        if request.json is None or 'access_token' not in request.json:
+            abort(400, description='Empty request.')  
+
+        # Abort if access token is incorrect
+        if request.json['access_token'] != self.access_token:
+            abort(403, description='Incorrect access token')
+
+        if self.client is None:
+            abort(400, description='No connection to the AirSim client.')
+
+        # Reset simulator
+        self.client.reset()
+        
+        log = '{}: {}'.format(str(datetime.now()), 'Car reset.')
+
+        if self.interface_process is not None:
+            # Create log message and write to file
+            self.logs.append(log)
+            self.log_file.write(log + '\n')
+
+        return {'response': log}
+
+    def poll_server_state(self):
+        # Abort if empty request
+        if request.json is None or 'access_token' not in request.json:
+            abort(400, description='Empty request.') 
+
+        # Abort if access token is incorrect
+        if request.json['access_token'] != self.access_token:
+            abort(403, description='Incorrect access token') 
+
+        return {
+            'logs': self.logs,
+            'simulator_state': True if self.simulation_process is not None else False,
+            'interface_state': True if self.interface_process is not None else False
+        }
+
+    def referee_state_listener(self):
+        self.referee_state_timer = Timer(0.5, self.referee_state_listener)
+        self.referee_state_timer.start()
+        ref = self.client.getRefereeState()
+
+        if self.doo_count != ref.doo_counter:
+            delta = ref.doo_counter - self.doo_count
+
+            for d in range(self.doo_count + 1, self.doo_count + delta + 1):
+                log = '{}: {}. {} {}'.format(str(datetime.now()), 'Cone hit', str(d), 'cone(s) DOO.')
+                self.logs.append(log)
+                self.log_file.write(log + '\n')
+
+            self.doo_count = ref.doo_counter
+
+        if len(self.lap_times) != len(ref.laps):
+            self.lap_times = ref.laps
+            lap_count = len(self.lap_times)
+            lap_time = self.lap_times[-1]
+            log = '{}: {}'.format(str(datetime.now()), 'Lap ' + str(lap_count) + ' completed. Lap time: ' + str(round(lap_time, 3)) + ' s.')
+            self.logs.append(log) 
+            self.log_file.write(log + '\n')
+
 
 if __name__ == '__main__':
+    operator = Operator()
+
+    app = Flask(__name__)
+
+    @app.errorhandler(400)
+    def bad_request(e):
+        return jsonify(error=str(e)), 400
+
+    @app.errorhandler(403)
+    def unauthorized(e):
+        return jsonify(error=str(e)), 403
+
+    app.add_url_rule('/', 'index', operator.index)
+    app.add_url_rule('/simulator/launch', 'launch', operator.launch_simulator, methods=['POST'])
+    app.add_url_rule('/simulator/exit', 'exit', operator.exit_simulator, methods=['POST'])
+    app.add_url_rule('/mission/start', 'mission_start', operator.mission_start, methods=['POST'])
+    app.add_url_rule('/mission/stop', 'mission_stop', operator.mission_stop, methods=['POST'])
+    app.add_url_rule('/mission/reset', 'mission_reset', operator.mission_reset, methods=['POST'])
+    app.add_url_rule('/poll', 'poll', operator.poll_server_state, methods=['POST'])
+
     app.run()

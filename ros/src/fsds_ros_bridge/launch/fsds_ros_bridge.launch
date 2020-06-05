@@ -1,9 +1,11 @@
 <launch>
 
 	<arg name="host" default="localhost" />
-	<arg name="mission" default="trackdrive"/>
+	<arg name="mission_name" default="trackdrive"/>
+	<arg name="track_name" default="A"/>
+	<arg name="access_token" default=""/>
 
-	<node name="fsds_ros_bridge" pkg="fsds_ros_bridge" type="fsds_ros_bridge" output="screen">
+	<node name="ros_bridge" pkg="fsds_ros_bridge" type="fsds_ros_bridge" output="screen" ns="fsds">
 		<!-- ROS timer rates. Note that timer callback will be processed at maximum possible rate, upperbounded by the following ROS params -->
 		<param name="is_vulkan" type="bool" value="false" />
 		<param name="update_odom_every_n_sec" type="double" value="0.004" />
@@ -13,7 +15,9 @@
 		<param name="update_airsim_img_response_every_n_sec" type="double" value="0.05" /> 
 		<param name="update_lidar_every_n_sec" type="double" value="0.1" />
 		<param name="host_ip" type="string" value="$(arg host)" />
-		<param name="mission_name" type="string" value="$(arg mission)"/>
+		<param name="mission_name" type="string" value="$(arg mission_name)"/>
+		<param name="track_name" type="string" value="$(arg track_name)"/>
+		<env name="OPERATOR_ACCESS_TOKEN" value="$(arg access_token)"/>
 	</node>
 
 	<!-- Static transforms -->
