@@ -67,20 +67,20 @@ See 'Coordinate frames and transforms'
 
 
 ## Subscribers
-- `/fsds/control_command` [fsds_ros_bridge/ControlCommand]((https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/ControlCommand.msg) 
+- `/fsds/control_command` [fsds_ros_bridge/ControlCommand](https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/ControlCommand.msg) 
 This message includes the dimensionless values throttle, steering and brake. 
 Throttle and brake range from 0 to 1.
 For steering `-1` steers full to the left and `+1` steers full to the right.
 The contents of this message fill the essential parts of the `msr::airlib::CarApiBase::CarControl` struct. 
 This is the only way to control the car when the airsim ROS client is connected (keyboard will no longer work!).
 
-- `/fsds/signal/finished` [fsds_ros_bridge/FinishedSignal]((https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/FinishedSignal.msg)  
+- `/fsds/signal/finished` [fsds_ros_bridge/FinishedSignal](https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/FinishedSignal.msg)  
 Finished signal that is sent by the AS to stop the mission.
 The ros bridge will forward the signal to the operator which in turn will stop the ros bridge and finish the run.
 
 ## Services
 
-- `/fsds/reset` [fsds_ros_bridge/Reset]((https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/srv/Reset.srv)
+- `/fsds/reset` [fsds_ros_bridge/Reset](https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/srv/Reset.srv)
  Resets car to start location.
 
 ## Coordinate frames and transforms
