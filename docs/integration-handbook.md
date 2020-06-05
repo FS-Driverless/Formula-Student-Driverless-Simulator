@@ -173,7 +173,7 @@ You are allowed to configure the following subset of parameters within the bound
 
 The GPS and IMU are configured equally for all teams according to the rules in the previous chapter.
 
-We recommend to copy the [settings.json in this repository](../settings.json) as a base and configure the cameras and lidar from thereon.
+We recommend to copy the settings.json in this repository as a base and configure the cameras and lidar from thereon.
 
 ## Launching the simulator
 To run the simulation, read the [simulation guide](how-to-simulate.md).

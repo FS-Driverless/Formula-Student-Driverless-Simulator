@@ -1,4 +1,12 @@
 .vscode/
 operator/logs/
+
+# mkdocs expects a README.md placed in the docs/ folder as the primary page. Since this is just a copy it shoudn't be committed.
+docs/README.md
+
+# Inside the simulator folder the compiled version of the UE4Project will be placed which shouldn't be committed.
 simulator/
 !simulator/readme.md
+
+# compiled mkdocs html
+site

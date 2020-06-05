@@ -1,6 +1,6 @@
 # ROS Bridge Monitoring
 
-ROS Bridge and Rpc performance monitoring is done by the [Statistics](../ros/src/fsds_ros_bridge/include/statistics.h) class. This class is used by the `AirsimROSWrapper` class to monitor 
+ROS Bridge and Rpc performance monitoring is done by the  Statistics (/ros/src/fsds_ros_bridge/include/statistics.h) class. This class is used by the `AirsimROSWrapper` class to monitor 
 latency of rpc calls as well as the frequency of ceratain topics in the ROS network. The statistics
 gathered by the methods of this class and temporarily stored by private 
 class members will be printed live at about 1Hz. This will be useful 
