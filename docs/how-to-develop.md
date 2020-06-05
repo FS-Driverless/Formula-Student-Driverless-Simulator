@@ -43,4 +43,14 @@ To set up the ROS workspace, cd into the `ros` folder and run
 catkin init
 catkin build
 ```
-Now you can [run the ROS bridge](ros-bridge.md).
+Now you can [run the ros bridge](ros-bridge.md).
+
+
+## Export the Unreal Engine project for release
+1. Open the UE4Project in the Unreal Editor
+3. Ensure 'File' -> 'Package Project' -> 'Build configuration' is set to 'Shipping,
+2. Choose 'File' -> 'Package Project' -> 'Windows (64 bit)'
+3. Select any folder on your computer.
+4. Wait until it finishes.
+5. Go into the `WindowsNoEditor` folder and rename `Blocks.exe` to `FSDS.exe`
+6. Zip all files and upload to github release!

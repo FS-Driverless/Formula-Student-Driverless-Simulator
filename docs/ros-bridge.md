@@ -48,6 +48,15 @@ Publishes the lidar points for each lidar sensor.
 All points are in the `fsds/LIDARNAME` frame.
 Transformations between the `fsds/LIDARNAME` and `fsds/FSCar` frame are being published regularly.
 
+- `/fsds/lidar/LIDARNAME` [sensor_msgs/PointCloud](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/PointCloud.html).   
+  Publishes the lidar points for each lidar sensor.
+
+- `/fsds/signal/go` [fsds_ros_bridge/GOSignal](../ros/src/fsds_ros_bridge/msg/GoSignal.msg)  
+  GO signal that is sent every second by the ROS bridge. More info about signal topics can be found in the [integration handbook](integration-handbook.md)
+
+- `/fsds/signal/finished` [fsds_ros_bridge/FinishedSignal](../ros/src/fsds_ros_bridge/msg/FinishedSignal.msg)  
+  Finished signal that is sent by the AS to stop the mission. More info about signal topics can be found in the [integration handbook](integration-handbook.md)
+
 - `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)
 See 'Coordinate frames and transforms'
 
@@ -57,7 +66,7 @@ If no GO signal is received for more than 4 seconds, the AS can assume that `fsd
 This message also includes the mission type and track.
 
 ## Subscribers
-- `/fsds/control_command` [fsds_ros_bridge/ControlCommand](../ros/src/fsds/msg/ControlCommand.msg) 
+- `/fsds/control_command` [fsds_ros_bridge/ControlCommand](../ros/src/fsds_ros_bridge/msg/ControlCommand.msg) 
 This message includes the dimensionless values throttle, steering and brake. 
 Throttle and brake range from 0 to 1.
 For steering `-1` steers full to the left and `+1` steers full to the right.
@@ -70,7 +79,7 @@ The ros bridge will forward the signal to the operator which in turn will stop t
 
 ## Services
 
-- `/fsds/reset` [fsds_ros_bridge/Reset](../ros/src/fsds/srv/Empty.html)
+- `/fsds/reset` [fsds_ros_bridge/Reset](../ros/src/fsds_ros_bridge/srv/Empty.html)
  Resets car to start location.
 
 ## Coordinate frames and transforms
@@ -90,35 +99,35 @@ Only static transforms within the vehicle are published.
 Transforms to the ground truth are disabled because this would take away the challenge of the competition.
 
 ## Parameters
-- `/fsds/update_gps_every_n_sec` [double]
-  Set in: `$(fsds_ros_bridge)/launch/fsds.launch`
+- `/fsds/ros_bridge/update_gps_every_n_sec` [double]
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
   Default: 0.1 seconds (10hz).
   Timer callback frequency for updating and publishing the gps sensordata.
   This value must be equal or higher to the update frequency of the sensor configured in the settings.json
 
-- `/fsds/update_imu_every_n_sec` [double]
-  Set in: `$(fsds_ros_bridge)/launch/fsds.launch`
+- `/fsds/ros_bridge/update_imu_every_n_sec` [double]
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
   Default: 0.004 seconds (250hz).
   Timer callback frequency for updating and publishing the imu messages.
   This value must be equal or higher to the minimual sample rate of the sensor configured in the settings.json
 
-- `/fsds/update_odom_every_n_sec` [double]
-  Set in: `$(fsds_ros_bridge)/launch/fsds.launch`
+- `/fsds/ros_bridge/update_odom_every_n_sec` [double]
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
   Default: 0.004 seconds (250hz).
   Timer callback frequency for updating and publishing the odometry.
 
-- `/fsds/publish_static_tf_every_n_sec` [double]
-  Set in: `$(fsds_ros_bridge)/launch/fsds.launch`
+- `/fsds/ros_bridge/publish_static_tf_every_n_sec` [double]
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
   Default: 1 seconds (1 hz).
   The frequency at which the static transforms are published.
 
-- `/fsds/update_lidar_every_n_sec` [double]
-  Set in: `$(fsds_ros_bridge)/launch/fsds.launch`
+- `/fsds/ros_bridge/update_lidar_every_n_sec` [double]
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
   Default: 0.1 seconds (10 hz).
   The frequency at which the lidar is publshed.
 
-- `/fsds/update_airsim_img_response_every_n_sec` [double]
-  Set in: `$(fsds_ros_bridge)/launch/fsds.launch`
+- `/fsds/ros_bridge/update_airsim_img_response_every_n_sec` [double]
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
   Default: 0.01 seconds.
   Timer callback frequency for receiving images from all cameras in airsim.
   The speed will depend on number of images requested and their resolution.

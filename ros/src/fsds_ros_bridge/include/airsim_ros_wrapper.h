@@ -17,6 +17,8 @@ STRICT_MODE_OFF //todo what does this do?
 #include <fsds_ros_bridge/GPSYaw.h>
 #include <fsds_ros_bridge/ControlCommand.h>
 #include <fsds_ros_bridge/Reset.h>
+#include <fsds_ros_bridge/GoSignal.h>
+#include <fsds_ros_bridge/FinishedSignal.h>
 #include <chrono>
 #include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -45,6 +47,8 @@ STRICT_MODE_OFF //todo what does this do?
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
 #include <unordered_map>
+#include <fstream>
+#include <curl/curl.h>
 // #include "nodelet/nodelet.h"
 #define printVariableNameAndValue(x) std::cout << "The name of variable **" << (#x) << "** and the value of variable is => " << x << "\n"
 
@@ -127,8 +131,10 @@ private:
     void car_control_cb(const fsds_ros_bridge::ControlCommand::ConstPtr& msg, const std::string& vehicle_name);
     void lidar_timer_cb(const ros::TimerEvent& event);
     void statistics_timer_cb(const ros::TimerEvent& event);
+    void go_signal_timer_cb(const ros::TimerEvent& event);
 
     /// ROS subscriber callbacks
+    void finished_signal_cb(fsds_ros_bridge::FinishedSignalConstPtr msg);
 
     ros::Time make_ts(uint64_t unreal_ts);
     // void set_zero_vel_cmd();
@@ -180,6 +186,8 @@ private:
     std::map<std::string, std::string> vehicle_lidar_map_;
     std::vector<geometry_msgs::TransformStamped> static_tf_msg_vec_;
     bool is_vulkan_; // rosparam obtained from launch file. If vulkan is being used, we BGR encoding instead of RGB
+    std::string mission_name_; // rosparam obtained from launch file
+    std::string track_name_; // rosparam obtained from launch file
 
     msr::airlib::CarRpcLibClient airsim_client_;
     msr::airlib::CarRpcLibClient airsim_client_images_;
@@ -210,6 +218,7 @@ private:
     ros::Timer imu_update_timer_;
     ros::Timer airsim_lidar_update_timer_;
     ros::Timer statistics_timer_;
+    ros::Timer go_signal_timer_;
     ros::Timer statictf_timer_;
 
     typedef std::pair<std::vector<ImageRequest>, std::string> airsim_img_request_vehicle_name_pair;
@@ -225,9 +234,11 @@ private:
     ros::Publisher odom_pub;
     ros::Publisher global_gps_pub;
     ros::Publisher imu_pub;
-
+    ros::Publisher go_signal_pub_;
+    
     /// ROS subscribers
     ros::Subscriber control_cmd_sub;
+    ros::Subscriber finished_signal_sub_;
 
 
     static constexpr char CAM_YML_NAME[] = "camera_name";

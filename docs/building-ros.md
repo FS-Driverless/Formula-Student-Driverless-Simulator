@@ -6,7 +6,7 @@ If you do not have ROS Melodic installed, read the relevant instructions in the 
 
 Before we can build the workspace, install the workspace c++ library dependencies:
 ```
-sudo apt-get install ros-melodic-tf2-geometry-msgs python-catkin-tools ros-melodic-rqt-multiplot ros-melodic-joy ros-melodic-cv-bridge ros-melodic-image-transport libyaml-cpp-dev
+sudo apt-get install ros-melodic-tf2-geometry-msgs python-catkin-tools ros-melodic-rqt-multiplot ros-melodic-joy ros-melodic-cv-bridge ros-melodic-image-transport libyaml-cpp-dev libcurl4-openssl-dev
 ```
 
 Then:
