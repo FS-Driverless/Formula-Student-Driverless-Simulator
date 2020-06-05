@@ -154,22 +154,22 @@ Teams are expected to provide their sensor suite as a single AirSim settings.jso
 Most of the parameters in the settings.json file will be set by the officials to ensure fairness during competition.
 You are allowed to configure the following subset of parameters within the boundaries of the above rules.
 
-* Cameras
-  * camera name
-  * Width, Height
-  * FOV_Degrees
-  * X, Y, Z
-  * Pitch, Roll, Yaw
+* Cameras   
+   * camera name
+   * Width, Height
+   * FOV_Degrees
+   * X, Y, Z
+   * Pitch, Roll, Yaw
 * Lidars
-  * NumberOfChannels
-  * PointsPerSecond
-  * RotationsPerSecond
-  * HorizontalFOVStart
-  * HorizontalFOVEnd
-  * VerticalFOVUpper
-  * VerticalFOVLower
-  * X, Y, Z
-  * Pitch, Roll, Yaw
+   * NumberOfChannels
+   * PointsPerSecond
+   * RotationsPerSecond
+   * HorizontalFOVStart
+   * HorizontalFOVEnd
+   * VerticalFOVUpper
+   * VerticalFOVLower
+   * X, Y, Z
+   * Pitch, Roll, Yaw
 
 The GPS and IMU are configured equally for all teams according to the rules in the previous chapter.
 

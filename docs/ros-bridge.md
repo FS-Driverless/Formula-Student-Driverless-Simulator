@@ -29,7 +29,7 @@ Velocity, orientation and acceleratoin information at 250hz.
 [Read all about the IMU model here.](imu.md)
 Data is in the `fsds/FSCar` frame.
 
-- `/fsds/odom` [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)
+- `/fsds/odom` [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)   
 Ground truth car position and orientation in NED frame. THIS WILL NOT BE STREAMED DURING COMPETITION.
 
 - `/fsds/CAMERA_NAME/IMAGE_TYPE` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)   
@@ -39,11 +39,11 @@ On this topic, camera frames are published. The format will be bgra8.
 `IMAGE_TYPE` is determand by the `SensorType` field. 
 When choosing 0, it will be 'Scene'.
 
-- `/fsds/CAMERA_NAME/IMAGE_TYPE/camera_info` [sensor_msgs/CameraInfo](https://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html)
+- `/fsds/CAMERA_NAME/IMAGE_TYPE/camera_info` [sensor_msgs/CameraInfo](https://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html)   
 This topic publishes metadata about the related camera.
 For every frame sent on `/fsds/CAMERA_NAME` 1 message will be sent on this topic.
 
-- `/fsds/lidar/LIDARNAME` [sensor_msgs/PointCloud](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/PointCloud.html)
+- `/fsds/lidar/LIDARNAME` [sensor_msgs/PointCloud](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/PointCloud.html)   
 Publishes the lidar points for each lidar sensor.
 All points are in the `fsds/LIDARNAME` frame.
 Transformations between the `fsds/LIDARNAME` and `fsds/FSCar` frame are being published regularly.
@@ -51,36 +51,36 @@ Transformations between the `fsds/LIDARNAME` and `fsds/FSCar` frame are being pu
 - `/fsds/lidar/LIDARNAME` [sensor_msgs/PointCloud](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/PointCloud.html).   
   Publishes the lidar points for each lidar sensor.
 
-- `/fsds/signal/go` [fsds_ros_bridge/GoSignal](https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/GoSignal.msg)  
+- `/fsds/signal/go` [fsds_ros_bridge/GoSignal](https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/GoSignal.msg)   
 GO signal that is sent every second by the ROS bridge.
 The car is only allowed to drive once this message has been received. 
 If no GO signal is received for more than 4 seconds, the AS can assume that `fsds_ros_bridge` has been shut down.
 This message also includes the mission type and track.
 More info about signal topics can be found in the [integration handbook](integration-handbook.md)
 
-- `/fsds/signal/finished` [fsds_ros_bridge/FinishedSignal](https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/FinishedSignal.msg)  
+- `/fsds/signal/finished` [fsds_ros_bridge/FinishedSignal](https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/FinishedSignal.msg)   
 Finished signal that is sent by the AS to stop the mission. More info about signal topics can be found in the [integration handbook](integration-handbook.md)
 
-- `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)
+- `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)   
 See 'Coordinate frames and transforms'
 
 
 
 ## Subscribers
-- `/fsds/control_command` [fsds_ros_bridge/ControlCommand](https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/ControlCommand.msg) 
+- `/fsds/control_command` [fsds_ros_bridge/ControlCommand](https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/ControlCommand.msg)   
 This message includes the dimensionless values throttle, steering and brake. 
 Throttle and brake range from 0 to 1.
 For steering `-1` steers full to the left and `+1` steers full to the right.
 The contents of this message fill the essential parts of the `msr::airlib::CarApiBase::CarControl` struct. 
 This is the only way to control the car when the airsim ROS client is connected (keyboard will no longer work!).
 
-- `/fsds/signal/finished` [fsds_ros_bridge/FinishedSignal](https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/FinishedSignal.msg)  
+- `/fsds/signal/finished` [fsds_ros_bridge/FinishedSignal](https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/FinishedSignal.msg)   
 Finished signal that is sent by the AS to stop the mission.
 The ros bridge will forward the signal to the operator which in turn will stop the ros bridge and finish the run.
 
 ## Services
 
-- `/fsds/reset` [fsds_ros_bridge/Reset](https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/srv/Reset.srv)
+- `/fsds/reset` [fsds_ros_bridge/Reset](https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/srv/Reset.srv)   
  Resets car to start location.
 
 ## Coordinate frames and transforms
@@ -100,36 +100,36 @@ Only static transforms within the vehicle are published.
 Transforms to the ground truth are disabled because this would take away the challenge of the competition.
 
 ## Parameters
-- `/fsds/ros_bridge/update_gps_every_n_sec` [double]
-  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
-  Default: 0.1 seconds (10hz).
+- `/fsds/ros_bridge/update_gps_every_n_sec` [double]   
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   
+  Default: 0.1 seconds (10hz).   
   Timer callback frequency for updating and publishing the gps sensordata.
   This value must be equal or higher to the update frequency of the sensor configured in the settings.json
 
-- `/fsds/ros_bridge/update_imu_every_n_sec` [double]
-  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
-  Default: 0.004 seconds (250hz).
-  Timer callback frequency for updating and publishing the imu messages.
+- `/fsds/ros_bridge/update_imu_every_n_sec` [double]   
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   
+  Default: 0.004 seconds (250hz).   
+  Timer callback frequency for updating and publishing the imu messages.   
   This value must be equal or higher to the minimual sample rate of the sensor configured in the settings.json
 
-- `/fsds/ros_bridge/update_odom_every_n_sec` [double]
-  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
-  Default: 0.004 seconds (250hz).
+- `/fsds/ros_bridge/update_odom_every_n_sec` [double]   
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   
+  Default: 0.004 seconds (250hz).   
   Timer callback frequency for updating and publishing the odometry.
 
-- `/fsds/ros_bridge/publish_static_tf_every_n_sec` [double]
-  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
-  Default: 1 seconds (1 hz).
+- `/fsds/ros_bridge/publish_static_tf_every_n_sec` [double]   
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   
+  Default: 1 seconds (1 hz).   
   The frequency at which the static transforms are published.
 
-- `/fsds/ros_bridge/update_lidar_every_n_sec` [double]
-  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
-  Default: 0.1 seconds (10 hz).
+- `/fsds/ros_bridge/update_lidar_every_n_sec` [double]   
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   
+  Default: 0.1 seconds (10 hz).   
   The frequency at which the lidar is publshed.
 
-- `/fsds/ros_bridge/update_airsim_img_response_every_n_sec` [double]
-  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
-  Default: 0.01 seconds.
+- `/fsds/ros_bridge/update_airsim_img_response_every_n_sec` [double]   
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   
+  Default: 0.01 seconds.   
   Timer callback frequency for receiving images from all cameras in airsim.
   The speed will depend on number of images requested and their resolution.
   Timer callbacks in ROS run at maximum rate possible, so it's best to not touch this parameter.
