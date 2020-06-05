@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="None">
+  
+  
+  <link rel="shortcut icon" href="img/favicon.ico">
+  <title>Formula Student Driverless Simulator</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Home";
+    var mkdocs_page_input_path = "README.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> Formula Student Driverless Simulator</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href=".">Home</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#repo-overview">Repo Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#running-development">Running &amp; Development</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#participants-of-fsonline-driverless">Participants of FSOnline Driverless</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#credits">Credits</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#license">License</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Introduction</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="system-overview/">System overview</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="integration-handbook/">Integration handbook</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Usage & Development</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="how-to-simulate/">How to simulate</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="get-ready-to-develop/">Setup your development environment</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="how-to-develop/">How to develop the FSDS project</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="building-ros/">Build your ros workspace</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="gcp-remote-workstation/">Google cloud remote workstation</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Vehicle & Sensors</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="vehicle_model/">Vehicle model</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="imu/">IMU</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="gps/">GPS</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">#tech madness</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="ros-bridge/">ROS Bridge</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="statistics/">ROS Bridge statistics</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="joystick/">Joystick</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="operator/">Operator</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">Formula Student Driverless Simulator</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Home</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="formula-student-driverless-simulation">Formula Student Driverless Simulation</h1>
+<p><img alt="Front picture" src="images/fsds_pretty.png" /></p>
+<p>This is a Formula Student Driverless Simulation Competition System (FSDS).
+It will provide a virtual environment where Autonomous Systems from different Formula Student teams can compete in time-trial challenges. 
+The first competition will take place during the driverless event, FS-Online 2020.</p>
+<p>FSDS is brought to you by your friends at Formula Student Team Delft, MIT Driverless and FSEast.</p>
+<p>You can read all about how FSDS works in this <a href="docs/system-overview.md">systems overview document</a></p>
+<h2 id="repo-overview">Repo Overview</h2>
+<p><code>/UE4Project</code> is the Unreal Engine 4 project.
+In here you will find everything that runs inside Unreal Engine.
+This includes the world, all assets and the AirSim server.
+The AirSim server uses the AirLib shared code (see <code>/AirSim/AirLib</code>).</p>
+<p><code>/operator</code> is the simulation control system. 
+This is a python project that offers a web gui for officials to control the simulation, stores lap times and chooses what car is currently connected to the world.
+It launches the ASBridge to connect a autonomous system to the Unreal world and stops the bridge when the autonomous system is no longer allowed to control the car.</p>
+<p><code>/ros</code> is a ROS workspace that contains the <code>fsds_ros_bridge</code>. 
+This node can connect 1 autonomous system with the simulated world.</p>
+<p><code>/AirSim</code> is a slimmed-down, hard-fork of the <a href="https://github.com/microsoft/AirSim">AirSim</a> project.
+There is only code located that is shared between operator, ros-bridge and UE4 plugin.
+When AirSim is compiled, the AirLib binaries are placed within <code>/UE4Project/Plugins/AirSim/Source/AirLib</code>.</p>
+<p>This repo uses LFS for some large files. All files bigger than 90MB are added to LFS.</p>
+<h2 id="running-development">Running &amp; Development</h2>
+<p>To <strong>run</strong> the simulation, read the <a href="how-to-simulate/">simulation guide</a>.</p>
+<p>To <strong>build from source and develop</strong> this project, read the <a href="how-to-develop/">development guide</a>.</p>
+<h2 id="participants-of-fsonline-driverless">Participants of FSOnline Driverless</h2>
+<p>We have written an <a href="integration-handbook/">integration guide</a> for getting your autonomous systems connected to this simulator.</p>
+<h2 id="credits">Credits</h2>
+<p>This project is based on the work of some amazing other open-source projects. </p>
+<p>Primarily, <a href="https://github.com/microsoft/AirSim">the AirSim project built by Microsoft and many open-source contributors</a>. 
+Without it, we could have never done this.</p>
+<p>Many game assets like the surrounding world are based on assets from the <a href="https://github.com/FSTDriverless/AirSim">Formula Student Technion Driverless AirSim fork</a>. These assets made this project look as cool as it does now.</p>
+<p><img alt="Closing picture" src="images/fsds_cam_view.png" /></p>
+<h2 id="license">License</h2>
+<p>Copyright (C) 2020 Formula Driverless Competition Simulator Contributors</p>
+<p>This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="system-overview/" class="btn btn-neutral float-right" title="System overview">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+      
+        <span style="margin-left: 15px"><a href="system-overview/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme.js" defer></script>
+      <script src="search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.1.2
+Build Date UTC : 2020-06-05 18:51:58.654609+00:00
+-->
