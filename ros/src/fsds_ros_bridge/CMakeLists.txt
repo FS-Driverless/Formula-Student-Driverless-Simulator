@@ -81,10 +81,6 @@ add_executable(fsds_ros_bridge src/fsds_ros_bridge.cpp)
 target_link_libraries(fsds_ros_bridge airsim_ros ${catkin_LIBRARIES} AirLib)
 
 find_package( PkgConfig REQUIRED)
-pkg_check_modules( jsoncpp REQUIRED jsoncpp )
-target_link_libraries(fsds_ros_bridge ${jsoncpp_LIBRARIES})
-
-find_package( PkgConfig REQUIRED)
 pkg_check_modules( libcurl REQUIRED libcurl )
 target_link_libraries(fsds_ros_bridge ${libcurl_LIBRARIES})
 

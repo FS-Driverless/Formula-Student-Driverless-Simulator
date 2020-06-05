@@ -48,7 +48,6 @@ STRICT_MODE_OFF //todo what does this do?
 #include <tf2_ros/transform_listener.h>
 #include <unordered_map>
 #include <fstream>
-#include <jsoncpp/json/json.h>
 #include <curl/curl.h>
 // #include "nodelet/nodelet.h"
 #define printVariableNameAndValue(x) std::cout << "The name of variable **" << (#x) << "** and the value of variable is => " << x << "\n"
