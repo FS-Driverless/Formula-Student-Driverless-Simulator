@@ -1,5 +1,5 @@
 # Let's get ready to run the simulation
-*Interested in building the project from source and contributing to the simulator? Check out the [development guide](docs/how-to-develop.md)*
+*Interested in building the project from source and contributing to the simulator? Check out the [development guide](how-to-develop.md)*
 
 To run the simulation smoothly you need quite a fast windows computer with a modern videocard.
 Minimally you will need:

@@ -1,5 +1,5 @@
 # How to develop this project
-*Just looking to run the simulation and not interested in development of the simulator? Get started faster with the [simulation guide](docs/how-to-simulate.md).*
+*Just looking to run the simulation and not interested in development of the simulator? Get started faster with the [simulation guide](how-to-simulate.md).*
 
 This guide describes how to work on this project.
 Before you continue reading, make sure you have finished the [get-ready-to-develop](get-ready-to-develop.md) guide.

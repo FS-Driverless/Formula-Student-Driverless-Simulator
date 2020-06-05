@@ -1,0 +1,24 @@
+site_name: Formula Student Driverless Simulator
+theme: readthedocs
+site_description: A virtual world where Autonomous Systems from different Formula Student teams can compete in time-trial challenges
+
+nav:
+  - "Home": "README.md"
+  - "Introduction":
+    - "System overview": "system-overview.md"
+    - "Integration handbook": "integration-handbook.md"
+  - "Usage & Development":
+    - "How to simulate": "how-to-simulate.md"
+    - "Setup your development environment": "get-ready-to-develop.md" 
+    - "How to develop the FSDS project": "how-to-develop.md"
+    - "Build your ros workspace": "building-ros.md"
+    - "Google cloud remote workstation": "gcp-remote-workstation.md" 
+  - "Vehicle & Sensors":
+    - "Vehicle model": "vehicle_model.md"
+    - "IMU": "imu.md"
+    - "GPS": "gps.md"
+  - "#tech madness":
+    - "ROS Bridge": "ros-bridge.md"
+    - "ROS Bridge statistics": "statistics.md"
+    - "Joystick": "joystick.md"
+    - "Operator": "operator.md"
