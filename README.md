@@ -1,7 +1,7 @@
 # Formula Student Driverless Simulation
 ![Front picture](docs/images/fsds_pretty.png)
 
-[Read the docs here.](https://fs-online.github.io/Driverless-Competition-Simulator/)
+[Read the docs here.](https://fs-online.github.io/Formula-Student-Driverless-Simulator/)
 
 This is a Formula Student Driverless Simulation Competition System (FSDS).
 It will provide a virtual environment where Autonomous Systems from different Formula Student teams can compete in time-trial challenges. 

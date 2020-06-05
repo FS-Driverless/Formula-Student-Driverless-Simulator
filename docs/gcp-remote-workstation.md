@@ -1,6 +1,6 @@
 # How to deploy a remote workstation on Google Cloud Platform
 
-In this tutorial we create an gcp instance that is configured for running and developing the Driverless-Competition-Simulator. 
+In this tutorial we create an gcp instance that is configured for running and developing the Formula-Student-Driverless-Simulator. 
 
 ## 1. Create a new instance and configure ports
 

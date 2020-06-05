@@ -55,7 +55,7 @@ sudo apt install ros-melodic-desktop
 Add the following line to end of your `~/.bashrc` file:
 ```
 source /opt/ros/melodic/setup.bash
-source ~/Driverless-Competition-Simulator/ros/devel/setup.bash
+source ~/Formula-Student-Driverless-Simulator/ros/devel/setup.bash
 ```
 
 ### Gui applications from WSL Ubuntu in Windows
@@ -75,18 +75,18 @@ Once both are installed, open git bash and run `git lfs install`.
 
 Now clone the repo in the windows home directory 
 ```
-git clone git@github.com:FS-Online/Driverless-Competition-Simulator.git
+git clone git@github.com:FS-Online/Formula-Student-Driverless-Simulator.git
 ```
 
 Go into the cloned repo and run `git config core.fileMode false` to ignore file mode changes.
 
-**THE REPO HAS TO BE CLONED IN THE HOME DIRECTORY!**. So the repo location should be `$HOME/Driverless-Competition-Simulator`.
+**THE REPO HAS TO BE CLONED IN THE HOME DIRECTORY!**. So the repo location should be `$HOME/Formula-Student-Driverless-Simulator`.
 Why you ask? Because we couldn't get relative paths in the C++ code to work so now we have hard-coded some paths to the home directory.
 I know yes it is ugly but it works. If you are bothered by it I would welcome you to open a pr with a fix.
 
-In Ubuntu wsl, create a symlink from `~/Driverless-Competition-Simulator` to `~/Driverless-Competition-Simulator`
+In Ubuntu wsl, create a symlink from `~/Formula-Student-Driverless-Simulator` to `~/Formula-Student-Driverless-Simulator`
 ```
-ln -s /mnt/c/Users/developer/Driverless-Competition-Simulator ~/Driverless-Competition-Simulator
+ln -s /mnt/c/Users/developer/Formula-Student-Driverless-Simulator ~/Formula-Student-Driverless-Simulator
 ```
 
 ## What's next?

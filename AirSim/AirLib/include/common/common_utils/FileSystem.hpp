@@ -12,7 +12,7 @@
 // This defines a default folder name for all the files created by AirLib so they 
 // are all gathered nicely in one place in the user's documents folder.
 #ifndef ProductFolderName
-#define ProductFolderName "Driverless-Competition-Simulator" 
+#define ProductFolderName "Formula-Student-Driverless-Simulator" 
 #endif
 
 #ifndef _CRT_SECURE_NO_WARNINGS
@@ -113,7 +113,7 @@ public:
 
     static std::string getConfigFilePath()
     {
-        return combine(getUserHomeFolder(), "Driverless-Competition-Simulator/settings.json");
+        return combine(getUserHomeFolder(), "Formula-Student-Driverless-Simulator/settings.json");
     }
 
     static std::string getLogFileNamePath(const std::string& fullPath, const std::string& prefix, const std::string& suffix, const std::string& extension, 

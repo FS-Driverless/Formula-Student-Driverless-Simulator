@@ -11,12 +11,12 @@ Minimally you will need:
 To check the video card drivers, run `vulkaninfo`. It should output a bunch of lines without errors.
 
 ## Launching the simulator
-To launch the simulator, go to [releases](https://github.com/FS-Online/Driverless-Competition-Simulator/releases) and download the latest one.
+To launch the simulator, go to [releases](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/releases) and download the latest one.
 
-Before you start, you have to create the folder and file `Driverless-Competition-Simulator/settings.json` in your home directory.
+Before you start, you have to create the folder and file `Formula-Student-Driverless-Simulator/settings.json` in your home directory.
 This file contains the sensor configuration of the car.
-You should create a folder in your **home directory** called `Driverless-Competition-Simulator`. 
-Inside the folder `Driverless-Competition-Simulator` create a file called `settings.json` and copy-paste the contents of the settings.json file at the root of this repository inside.
+You should create a folder in your **home directory** called `Formula-Student-Driverless-Simulator`. 
+Inside the folder `Formula-Student-Driverless-Simulator` create a file called `settings.json` and copy-paste the contents of the settings.json file at the root of this repository inside.
 This should get you started with the default sensor configuration, feel free to try your own custom sensor suite.
 Note that the naming of the sensors will be reflected in the topic names as elaborated [here](ros-bridge.md).
 
@@ -31,9 +31,9 @@ If this is not the case, read the relevant install instructions in the [get-read
 
 Ready? Lets clone the repo **into your home directory**:
 ```
-git clone git@github.com:FS-Online/Driverless-Competition-Simulator.git
+git clone git@github.com:FS-Online/Formula-Student-Driverless-Simulator.git
 ```
-The repository will be placed in `~/Driverless-Competition-Simulator`.
+The repository will be placed in `~/Formula-Student-Driverless-Simulator`.
 If this folder already exists as a result of the previous step, you can get your settings.json out, delete the folder (or rename it to something like UEProject or UESim) and after cloning the repo place the settings.json file back (this time inside the root of the repository where the default settings.json lives).
 
 Read about how to build the ROS workspace [here](building-ros.md).
