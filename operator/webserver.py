@@ -48,7 +48,7 @@ class Operator:
             if obj['id'] == teamId: self.team = obj  
 
         # Write team specific car settings to settings.json
-        filename = os.path.realpath(os.path.dirname(__file__)) + '/../UE4Project/Plugins/AirSim/Settings/settings.json'
+        filename = os.path.realpath(os.path.dirname(__file__)) + '/../settings.json'
         with open(filename, 'w') as file:
             json.dump(self.team['car_settings'], file, sort_keys=True, indent=4, separators=(',', ': '))
 

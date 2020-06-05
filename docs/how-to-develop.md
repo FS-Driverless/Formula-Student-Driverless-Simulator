@@ -1,4 +1,5 @@
 # How to develop this project
+*Just looking to run the simulation and not interested in development of the simulator? Get started faster with the [simulation guide](docs/how-to-simulate.md).*
 
 This guide describes how to work on this project.
 Before you continue reading, make sure you have finished the [get-ready-to-develop](get-ready-to-develop.md) guide.
@@ -11,7 +12,7 @@ So we need to compile the AirSim plugin.
 
 ## Compile the AirSim plugin and launch Unreal Engine
 The AirSim plugin sourcode is made up of AirLib (/AirSim/AirLib) and the plugin code (/UE4Project/Plugins/AirSim/Source).
-AirLib is also used by the ros bridge.
+AirLib is also used by the ROS bridge.
 
 First build the AirLib code. Open the _Developer Command Prompt for VS 2019_, go to `Driverless-Competition-Simulator/AirSim` and run
 ```
@@ -35,7 +36,7 @@ Search for `AirSim` and click `Recompile`.
 If you make changes to AirLib you have to run `build.cmd` again.
 
 
-## Ros development
+## ROS development
 
 To set up the ROS workspace, cd into the `ros` folder and run
 ```

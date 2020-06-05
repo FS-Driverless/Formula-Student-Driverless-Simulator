@@ -113,7 +113,7 @@ public:
 
     static std::string getConfigFilePath()
     {
-        return combine(getUserHomeFolder(), "Driverless-Competition-Simulator/UE4Project/Plugins/AirSim/Settings/settings.json");
+        return combine(getUserHomeFolder(), "Driverless-Competition-Simulator/settings.json");
     }
 
     static std::string getLogFileNamePath(const std::string& fullPath, const std::string& prefix, const std::string& suffix, const std::string& extension, 

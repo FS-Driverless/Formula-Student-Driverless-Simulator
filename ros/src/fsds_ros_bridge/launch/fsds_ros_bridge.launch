@@ -7,6 +7,7 @@
 
 	<node name="ros_bridge" pkg="fsds_ros_bridge" type="fsds_ros_bridge" output="screen" ns="fsds">
 		<!-- ROS timer rates. Note that timer callback will be processed at maximum possible rate, upperbounded by the following ROS params -->
+		<!-- TODO: it would be cleaner and easier to read if we could set frequencies instead of time intervals  -->
 		<param name="is_vulkan" type="bool" value="false" />
 		<param name="update_odom_every_n_sec" type="double" value="0.004" />
 		<param name="update_imu_every_n_sec" type="double" value="0.004" /> 

@@ -103,12 +103,12 @@ namespace ros_bridge
 
         ~ROSMsgCounter()
         {
-            // std::cout << "[RosMsgCounter] Incrementing count of object " << _statistics <<  "\n";
+            // std::cout << "[ROSMsgCounter] Incrementing count of object " << _statistics <<  "\n";
 
             // Increment message count
             _statistics->addCount();
 
-            // std::cout << "[RosMsgCounter] Count: " << _statistics->getCount() << "\n";
+            // std::cout << "[ROSMsgCounter] Count: " << _statistics->getCount() << "\n";
         }
 
     private:
