@@ -220,7 +220,7 @@ See 'Coordinate frames and transforms'</p>
 <h2 id="subscribers">Subscribers</h2>
 <ul>
 <li>
-<p><code>/fsds/control_command</code> [fsds_ros_bridge/ControlCommand]((https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/ControlCommand.msg) 
+<p><code>/fsds/control_command</code> <a href="https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/ControlCommand.msg">fsds_ros_bridge/ControlCommand</a> 
 This message includes the dimensionless values throttle, steering and brake. 
 Throttle and brake range from 0 to 1.
 For steering <code>-1</code> steers full to the left and <code>+1</code> steers full to the right.
@@ -228,14 +228,14 @@ The contents of this message fill the essential parts of the <code>msr::airlib::
 This is the only way to control the car when the airsim ROS client is connected (keyboard will no longer work!).</p>
 </li>
 <li>
-<p><code>/fsds/signal/finished</code> [fsds_ros_bridge/FinishedSignal]((https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/FinishedSignal.msg)<br />
+<p><code>/fsds/signal/finished</code> <a href="https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/FinishedSignal.msg">fsds_ros_bridge/FinishedSignal</a><br />
 Finished signal that is sent by the AS to stop the mission.
 The ros bridge will forward the signal to the operator which in turn will stop the ros bridge and finish the run.</p>
 </li>
 </ul>
 <h2 id="services">Services</h2>
 <ul>
-<li><code>/fsds/reset</code> [fsds_ros_bridge/Reset]((https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/srv/Reset.srv)
+<li><code>/fsds/reset</code> <a href="https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/srv/Reset.srv">fsds_ros_bridge/Reset</a>
  Resets car to start location.</li>
 </ul>
 <h2 id="coordinate-frames-and-transforms">Coordinate frames and transforms</h2>
