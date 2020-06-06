@@ -145,12 +145,12 @@ So we need to compile the AirSim plugin.</p>
 <h2 id="compile-the-airsim-plugin-and-launch-unreal-engine">Compile the AirSim plugin and launch Unreal Engine</h2>
 <p>The AirSim plugin sourcode is made up of AirLib (/AirSim/AirLib) and the plugin code (/UE4Project/Plugins/AirSim/Source).
 AirLib is also used by the ROS bridge.</p>
-<p>First build the AirLib code. Open the <em>Developer Command Prompt for VS 2019</em>, go to <code>Driverless-Competition-Simulator/AirSim</code> and run</p>
+<p>First build the AirLib code. Open the <em>Developer Command Prompt for VS 2019</em>, go to <code>Formula-Student-Driverless-Simulator/AirSim</code> and run</p>
 <pre><code>build.cmd
 </code></pre>
 
 <p>The first time this takes quite a while. Go walk around a bit, maybe start playing <a href="https://factoryidle.com/">factoryidle</a>. </p>
-<p>After it is finished, launch unreal engine and open the project file <code>Driverless-Competition-Simulator/UE4Project/FSOnline.uproject</code></p>
+<p>After it is finished, launch unreal engine and open the project file <code>Formula-Student-Driverless-Simulator/UE4Project/FSOnline.uproject</code></p>
 <p>It might show an error like 'This project was made with a different version of the Unreal Engine'. In that case select <code>more options</code> and <code>skip conversion</code>.</p>
 <p>When asked to rebuild the 'Blocks' and 'AirSim' modules, choose 'Yes'.
 This is the step where the plugin part of AirSim is compiled.</p>

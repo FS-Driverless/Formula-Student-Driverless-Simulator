@@ -143,11 +143,11 @@ Minimally you will need:
 * Recent NVidia card with Vulkan support and 3 GB of memory.</p>
 <p>To check the video card drivers, run <code>vulkaninfo</code>. It should output a bunch of lines without errors.</p>
 <h2 id="launching-the-simulator">Launching the simulator</h2>
-<p>To launch the simulator, go to <a href="https://github.com/FS-Online/Driverless-Competition-Simulator/releases">releases</a> and download the latest one.</p>
-<p>Before you start, you have to create the folder and file <code>Driverless-Competition-Simulator/settings.json</code> in your home directory.
+<p>To launch the simulator, go to <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/releases">releases</a> and download the latest one.</p>
+<p>Before you start, you have to create the folder and file <code>Formula-Student-Driverless-Simulator/settings.json</code> in your home directory.
 This file contains the sensor configuration of the car.
-You should create a folder in your <strong>home directory</strong> called <code>Driverless-Competition-Simulator</code>. 
-Inside the folder <code>Driverless-Competition-Simulator</code> create a file called <code>settings.json</code> and copy-paste the contents of the settings.json file at the root of this repository inside.
+You should create a folder in your <strong>home directory</strong> called <code>Formula-Student-Driverless-Simulator</code>. 
+Inside the folder <code>Formula-Student-Driverless-Simulator</code> create a file called <code>settings.json</code> and copy-paste the contents of the settings.json file at the root of this repository inside.
 This should get you started with the default sensor configuration, feel free to try your own custom sensor suite.
 Note that the naming of the sensors will be reflected in the topic names as elaborated <a href="../ros-bridge/">here</a>.</p>
 <p>Now launch FSDS.exe and a window with a car should popup!
@@ -157,10 +157,10 @@ Try to drive the car around by using the arrowkeys.</p>
 <p>Most likely, your autonomous system is running on Ubuntu and has already ROS Melodic installed.
 If this is not the case, read the relevant install instructions in the <a href="../get-ready-to-develop/">get-ready-to-develop</a> guide that will help you get the requried software installed.</p>
 <p>Ready? Lets clone the repo <strong>into your home directory</strong>:</p>
-<pre><code>git clone git@github.com:FS-Online/Driverless-Competition-Simulator.git
+<pre><code>git clone git@github.com:FS-Online/Formula-Student-Driverless-Simulator.git
 </code></pre>
 
-<p>The repository will be placed in <code>~/Driverless-Competition-Simulator</code>.
+<p>The repository will be placed in <code>~/Formula-Student-Driverless-Simulator</code>.
 If this folder already exists as a result of the previous step, you can get your settings.json out, delete the folder (or rename it to something like UEProject or UESim) and after cloning the repo place the settings.json file back (this time inside the root of the repository where the default settings.json lives).</p>
 <p>Read about how to build the ROS workspace <a href="../building-ros/">here</a>.</p>
 <p>Then, launch the <a href="../ros-bridge/">ros bridge</a>.</p>

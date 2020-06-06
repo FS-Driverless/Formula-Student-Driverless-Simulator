@@ -201,7 +201,7 @@ Transformations between the <code>fsds/LIDARNAME</code> and <code>fsds/FSCar</co
   Publishes the lidar points for each lidar sensor.</p>
 </li>
 <li>
-<p><code>/fsds/signal/go</code> <a href="https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/GoSignal.msg">fsds_ros_bridge/GoSignal</a> <br />
+<p><code>/fsds/signal/go</code> <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/GoSignal.msg">fsds_ros_bridge/GoSignal</a> <br />
 GO signal that is sent every second by the ROS bridge.
 The car is only allowed to drive once this message has been received. 
 If no GO signal is received for more than 4 seconds, the AS can assume that <code>fsds_ros_bridge</code> has been shut down.
@@ -209,7 +209,7 @@ This message also includes the mission type and track.
 More info about signal topics can be found in the <a href="../integration-handbook/">integration handbook</a></p>
 </li>
 <li>
-<p><code>/fsds/signal/finished</code> <a href="https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/FinishedSignal.msg">fsds_ros_bridge/FinishedSignal</a> <br />
+<p><code>/fsds/signal/finished</code> <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/FinishedSignal.msg">fsds_ros_bridge/FinishedSignal</a> <br />
 Finished signal that is sent by the AS to stop the mission. More info about signal topics can be found in the <a href="../integration-handbook/">integration handbook</a></p>
 </li>
 <li>
@@ -220,7 +220,7 @@ See 'Coordinate frames and transforms'</p>
 <h2 id="subscribers">Subscribers</h2>
 <ul>
 <li>
-<p><code>/fsds/control_command</code> <a href="https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/ControlCommand.msg">fsds_ros_bridge/ControlCommand</a> <br />
+<p><code>/fsds/control_command</code> <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/ControlCommand.msg">fsds_ros_bridge/ControlCommand</a> <br />
 This message includes the dimensionless values throttle, steering and brake. 
 Throttle and brake range from 0 to 1.
 For steering <code>-1</code> steers full to the left and <code>+1</code> steers full to the right.
@@ -228,14 +228,14 @@ The contents of this message fill the essential parts of the <code>msr::airlib::
 This is the only way to control the car when the airsim ROS client is connected (keyboard will no longer work!).</p>
 </li>
 <li>
-<p><code>/fsds/signal/finished</code> <a href="https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/FinishedSignal.msg">fsds_ros_bridge/FinishedSignal</a> <br />
+<p><code>/fsds/signal/finished</code> <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/FinishedSignal.msg">fsds_ros_bridge/FinishedSignal</a> <br />
 Finished signal that is sent by the AS to stop the mission.
 The ros bridge will forward the signal to the operator which in turn will stop the ros bridge and finish the run.</p>
 </li>
 </ul>
 <h2 id="services">Services</h2>
 <ul>
-<li><code>/fsds/reset</code> <a href="https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/srv/Reset.srv">fsds_ros_bridge/Reset</a> <br />
+<li><code>/fsds/reset</code> <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/srv/Reset.srv">fsds_ros_bridge/Reset</a> <br />
  Resets car to start location.</li>
 </ul>
 <h2 id="coordinate-frames-and-transforms">Coordinate frames and transforms</h2>
@@ -295,8 +295,8 @@ Transforms to the ground truth are disabled because this would take away the cha
 </ul>
 <h2 id="visualization">Visualization</h2>
 <p>This package contains some useful launch and config files which will help you in visualizing the data being streamed through the above topics.</p>
-<p>To open Rviz with <a href="https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/config/rviz/default.rviz">this</a> configuration file, run <code>roslaunch fsds_ros_bridge rviz.launch</code>.</p>
-<p>To open Multiplot with <a href="https://github.com/FS-Online/Driverless-Competition-Simulator/blob/master/ros/src/fsds_ros_bridge/config/multiplot/multiplot.xml">this</a> configuration file, run <code>roslaunch fsds_ros_bridge plot.launch</code></p>
+<p>To open Rviz with <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/config/rviz/default.rviz">this</a> configuration file, run <code>roslaunch fsds_ros_bridge rviz.launch</code>.</p>
+<p>To open Multiplot with <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/config/multiplot/multiplot.xml">this</a> configuration file, run <code>roslaunch fsds_ros_bridge plot.launch</code></p>
 <h2 id="monitoring">Monitoring</h2>
 <p>Performance monitoring of the ROS Bridge is described <a href="../statistics/">here</a></p>
               

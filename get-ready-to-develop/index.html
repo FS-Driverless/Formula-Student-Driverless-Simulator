@@ -188,7 +188,7 @@ sudo apt install ros-melodic-desktop
 
 <p>Add the following line to end of your <code>~/.bashrc</code> file:</p>
 <pre><code>source /opt/ros/melodic/setup.bash
-source ~/Driverless-Competition-Simulator/ros/devel/setup.bash
+source ~/Formula-Student-Driverless-Simulator/ros/devel/setup.bash
 </code></pre>
 
 <h3 id="gui-applications-from-wsl-ubuntu-in-windows">Gui applications from WSL Ubuntu in Windows</h3>
@@ -203,15 +203,15 @@ You can even add <code>export DISPLAY=:0</code> to your <code>~/.bashrc</code> t
 <p>In Windows, install <a href="https://git-scm.com/download/win">git</a> and <a href="https://git-lfs.github.com/">git lfs</a>.</p>
 <p>Once both are installed, open git bash and run <code>git lfs install</code>.</p>
 <p>Now clone the repo in the windows home directory </p>
-<pre><code>git clone git@github.com:FS-Online/Driverless-Competition-Simulator.git
+<pre><code>git clone git@github.com:FS-Online/Formula-Student-Driverless-Simulator.git
 </code></pre>
 
 <p>Go into the cloned repo and run <code>git config core.fileMode false</code> to ignore file mode changes.</p>
-<p><strong>THE REPO HAS TO BE CLONED IN THE HOME DIRECTORY!</strong>. So the repo location should be <code>$HOME/Driverless-Competition-Simulator</code>.
+<p><strong>THE REPO HAS TO BE CLONED IN THE HOME DIRECTORY!</strong>. So the repo location should be <code>$HOME/Formula-Student-Driverless-Simulator</code>.
 Why you ask? Because we couldn't get relative paths in the C++ code to work so now we have hard-coded some paths to the home directory.
 I know yes it is ugly but it works. If you are bothered by it I would welcome you to open a pr with a fix.</p>
-<p>In Ubuntu wsl, create a symlink from <code>~/Driverless-Competition-Simulator</code> to <code>~/Driverless-Competition-Simulator</code></p>
-<pre><code>ln -s /mnt/c/Users/developer/Driverless-Competition-Simulator ~/Driverless-Competition-Simulator
+<p>In Ubuntu wsl, create a symlink from <code>~/Formula-Student-Driverless-Simulator</code> to <code>~/Formula-Student-Driverless-Simulator</code></p>
+<pre><code>ln -s /mnt/c/Users/developer/Formula-Student-Driverless-Simulator ~/Formula-Student-Driverless-Simulator
 </code></pre>
 
 <h2 id="whats-next">What's next?</h2>
