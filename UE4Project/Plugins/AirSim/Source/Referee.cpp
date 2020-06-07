@@ -41,8 +41,7 @@ int32 AReferee::LapCompleted(float lapTime)
 }
 
 float AReferee::AppendCone(FTransform transform) {
-	float x = transform.getTranslation().X;
-	UE_LOG(x);
+	float x = transform.GetTranslation().X;
 	std::cout << "----------------------------" << std::endl;
 	std::cout << x << std::endl;
 	std::cout << "----------------------------" << std::endl;
