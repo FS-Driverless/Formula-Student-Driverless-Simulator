@@ -39,3 +39,7 @@ int32 AReferee::LapCompleted(float lapTime)
 	state.laps.push_back(lapTime);
 	return state.laps.size();
 }
+
+void AReferee::AppendCone(FTransform transform) {
+	return;
+}
