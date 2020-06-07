@@ -40,6 +40,12 @@ int32 AReferee::LapCompleted(float lapTime)
 	return state.laps.size();
 }
 
-void AReferee::AppendCone(FTransform transform) {
-	return;
+float AReferee::AppendCone(FTransform transform) {
+	float x = transform.getTranslation().X;
+	UE_LOG(x);
+	std::cout << "----------------------------" << std::endl;
+	std::cout << x << std::endl;
+	std::cout << "----------------------------" << std::endl;
+
+	return x;
 }
