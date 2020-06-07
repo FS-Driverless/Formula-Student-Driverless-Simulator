@@ -87,15 +87,37 @@ public:
         }
     };
 
+    // Some utility structs for passing around cones and positions
+
+    enum ConeColor {
+        Yellow,
+        Blue,
+        OrangeLarge,
+        OrangeSmall
+    };
+
+    struct Point2D {
+        float x;
+        float y;
+    }
+
+    struct Cone {
+        Point2D location;
+        ConeColor color;
+    };
+
     struct RefereeState {
         int doo_counter = 0;
-	std::vector<float> laps;
+	    std::vector<float> laps;
+        std::vector<Cone> cones;
+        Point2D car_start_location;
 
         RefereeState() 
         {
         }
 
-        RefereeState(const int &doo_counter_val, const std::vector<float> &laps_val) : doo_counter(doo_counter_val), laps(laps_val)
+        RefereeState(const int &doo_counter_val, const std::vector<float> &laps_val, const std::vector<Cone> &cone_list, const Point2D &car_origin) 
+        : doo_counter(doo_counter_val), laps(laps_val), cones(cone_list), car_start_location(car_origin)
         {
         }
 
