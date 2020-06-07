@@ -113,7 +113,7 @@ public:
 
     static std::string getConfigFilePath()
     {
-        return combine(getUserHomeFolder(), "Formula-Student-Driverless-Simulator/settings.json");
+        return combine(combine(getUserHomeFolder(), "Formula-Student-Driverless-Simulator"), "settings.json");
     }
 
     static std::string getLogFileNamePath(const std::string& fullPath, const std::string& prefix, const std::string& suffix, const std::string& extension, 
