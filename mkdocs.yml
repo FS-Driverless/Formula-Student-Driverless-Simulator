@@ -1,6 +1,10 @@
 site_name: Formula Student Driverless Simulator
 theme: readthedocs
 site_description: A virtual world where Autonomous Systems from different Formula Student teams can compete in time-trial challenges
+repo_name: FS-Online/Formula-Student-Driverless-Simulator
+repo_url: https://github.com/FS-Online/Formula-Student-Driverless-Simulator
+edit_uri: 
+copyright: GPLv2
 
 nav:
   - "Home": "README.md"
@@ -22,3 +26,7 @@ nav:
     - "ROS Bridge statistics": "statistics.md"
     - "Joystick": "joystick.md"
     - "Operator": "operator.md"
+extra_css:
+  - css\version-select.css
+extra_javascript:
+  - js\version-select.js

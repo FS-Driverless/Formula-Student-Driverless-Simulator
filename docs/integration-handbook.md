@@ -36,6 +36,7 @@ During the competition, on each track, every AS will do an autocross mission bef
 It can occur that multiple autocross runs on different tracks take place before going to trackdrive.
 It can also happen that multiple autocross runs take place on the same track.
 For example, the AS might be requested to do:
+
 1. autocross on track A
 2. autocross on track B
 3. trackdrive on track A
@@ -155,21 +156,21 @@ Most of the parameters in the settings.json file will be set by the officials to
 You are allowed to configure the following subset of parameters within the boundaries of the above rules.
 
 * Cameras   
-   * camera name
-   * Width, Height
-   * FOV_Degrees
-   * X, Y, Z
-   * Pitch, Roll, Yaw
+ *  * camera name
+ *  * Width, Height
+ *  * FOV_Degrees
+ *  * X, Y, Z
+ *  * Pitch, Roll, Yaw
 * Lidars
-   * NumberOfChannels
-   * PointsPerSecond
-   * RotationsPerSecond
-   * HorizontalFOVStart
-   * HorizontalFOVEnd
-   * VerticalFOVUpper
-   * VerticalFOVLower
-   * X, Y, Z
-   * Pitch, Roll, Yaw
+ *  * NumberOfChannels
+ *  * PointsPerSecond
+ *  * RotationsPerSecond
+ *  * HorizontalFOVStart
+ *  * HorizontalFOVEnd
+ *  * VerticalFOVUpper
+ *  * VerticalFOVLower
+ *  * X, Y, Z
+ *  * Pitch, Roll, Yaw
 
 The GPS and IMU are configured equally for all teams according to the rules in the previous chapter.
 
