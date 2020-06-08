@@ -35,7 +35,7 @@ public:
 	int32 LapCompleted(float lapTime);
 
 	UFUNCTION(BlueprintCallable, Category="Referee")
-	float AppendCone(FTransform cone);
+	void AppendCone(FTransform cone);
 
 	UFUNCTION(BlueprintCallable, Category="Referee")
 	void LoadStartPos(FVector pos);
