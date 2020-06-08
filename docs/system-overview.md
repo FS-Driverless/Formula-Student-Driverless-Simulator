@@ -26,7 +26,7 @@ When the simulation is finished, the ROS node will disconnect from the AS's ROS 
 During the competition, the teams will not be allowed to access their ASs.
 All remote access to the environments will be cut off completely.
 So every AS must be able to run multiple missions without human interference.
-To let the simulation know what is expected from it, the simulator will send mission control messages a few seconds before the event start.
+To let the simulation know what is expected from it, the simulator will send signal messages a few seconds before the event start.
 These messages contain information about the mission (trackdrive, autocross, etc).
 When the AS receives a mission message it can expect to receive sensor data shortly after.
 Since the lap timer for all events start whenever the car crosses the start-line, the ASs can take all the time they need to launch their relevant algorithms for the mission (within a reasonable time).
@@ -62,6 +62,10 @@ It gives a timeline of everything that happened to always go back afterwards and
 The logbook is stored on disk so that in the event of a whole system crash we will still have the logbook.
 It is also shown within the referee's web interface.
 
+You can run the simulation stack yourself perfectly fine without the operator.
+The operator is just a tool for officials to easely manage the competition.
+[Read more about how to run the simulation here.](how-to-simulate.md)
+
 ## The ROS Bridge
 The ROS bridge node connects to the simulated world inside Unreal Engine using AirSim (more on that later).
 On the one hand, it requests sensor data and passes it along on ROS topics to the current AS.
@@ -83,7 +87,6 @@ If the AS wants to store things (like track information), this is the time to wr
 In case of a successfull run the official will instruct the operator to stop the ROS bridge and the AS won't receive sensor data anymore.
 When the official presses the emergency brake, the connection between the ROS bridge is stopped immediately and the operator will send one last car setpoint to make the car come to a stop. 
 Thers is no 'stop' signal from the simulator to the AS.
-We advise AS to get ready for a new drive when no sensor data is received for 2 seconds.
 
 At this point only ROS is supported, at this moment there are no plans to support other technologies.
 

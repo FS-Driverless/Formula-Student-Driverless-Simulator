@@ -18,5 +18,5 @@ Currently the eph is set to **4 cm**.
 This noise, however, is only added if the measured velocity is above an arbitrarily chosen threshold (currently 0.1m/s). 
 To velocities below that, this additional inaccuracy is not introduced to avoid “jumpy” positions during standstill of the vehicle. 
 
-See [GpsSimple.hpp](/AirSim/AirLib/include/sensors/gps/GpsSimple.hpp) and [GpsSimpleParams.hpp](/AirSim/AirLib/include/sensors/gps/GpsSimpleParams.hpp) for the implementation of the gps model.
+See GpsSimple.hpp (/AirSim/AirLib/include/sensors/gps/GpsSimple.hpp) and [GpsSimpleParams.hpp](/AirSim/AirLib/include/sensors/gps/GpsSimpleParams.hpp) for the implementation of the gps model.
 
