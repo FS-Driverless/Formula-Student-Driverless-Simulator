@@ -8,12 +8,14 @@ We assume you are familiar with google cloud configurations.
 Create a new instance in the region of your choice.
 
 Minimum requirements are:
+
 * 12 vCPU
 * 24GB memory
 * Any NVIDIA GPU
 * 150GB Disk
 
 Recommended specs are:
+
 * 16 vCPU
 * 32GB memory
 * 1 NVIDIA Tesla P100
@@ -40,6 +42,7 @@ sudo apt-get install remmina
 ```
 
 Launch Remmina, add a new connection. Set
+
 * Server to the ip of the instance
 * username to the name you entered when setting the password
 * password to the password you created before

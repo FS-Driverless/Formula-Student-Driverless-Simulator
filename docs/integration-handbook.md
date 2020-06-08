@@ -45,6 +45,7 @@ For example, the AS might be requested to do:
 6. trackdrive on track C
 
 The AS must implement the following behaviour:
+
 * When the AS is requested to do autocross on a track that it has seen before, it must delete any and all data it gathered during all previous runs on this track.
 * When the AS is requested to do trackdrive on a track where it has done a trackdrive previously, it must delete any and all data it gathered during all previous trackdrive runs on this track. However, the data gathered during the last autocross on this track shouldn't be deleted.
 
