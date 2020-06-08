@@ -121,9 +121,9 @@ public:
 
         msr::airlib::CarApiBase::RefereeState to() const
         {
-            msr::airlib::CarApiBase::Point2D initial_position;
-            initial_position.x = initial_position.x;
-            initial_position.y = initial_position.y;
+            msr::airlib::CarApiBase::Point2D initial_position_api_base;
+            initial_position_api_base.x = initial_position.x;
+            initial_position_api_base.y = initial_position.y;
             std::vector<msr::airlib::CarApiBase::Cone> cones_api_base;
             for (size_t i = 0; i < cones.size(); i++) {
                 msr::airlib::CarApiBase::Cone cone_api_base;
@@ -132,7 +132,7 @@ public:
                 cone_api_base.color = cones[i].color;
                 cones_api_base.push_back(cone_api_base);
             }
-            return msr::airlib::CarApiBase::RefereeState(doo_counter, laps, cones_api_base, initial_position);
+            return msr::airlib::CarApiBase::RefereeState(doo_counter, laps, cones_api_base, initial_position_api_base);
         }
 
     };
