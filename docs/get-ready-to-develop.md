@@ -40,6 +40,7 @@ During installation, choose the following components:
 * Linux development with C++
 
 At 'Invidual Components select:
+
 * C++ CMake tools for Windows
 * Windows 10 SDK 10.0.18.362.0
 * .NET Framework 4.7 SDK
