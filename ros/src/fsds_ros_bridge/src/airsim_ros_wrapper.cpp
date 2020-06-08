@@ -91,6 +91,9 @@ void AirsimROSWrapper::initialize_ros()
     nh_private_.getParam("update_imu_every_n_sec", update_imu_every_n_sec);
     nh_private_.getParam("publish_static_tf_every_n_sec", publish_static_tf_every_n_sec);
 
+    // Get car initial position
+    car_start_pos = airsim_client_.getRefereeState().car_start_location;
+
     create_ros_pubs_from_settings_json();
     odom_update_timer_ = nh_private_.createTimer(ros::Duration(update_odom_every_n_sec), &AirsimROSWrapper::odom_cb, this);
     gps_update_timer_ = nh_private_.createTimer(ros::Duration(update_gps_every_n_sec), &AirsimROSWrapper::gps_timer_cb, this);
@@ -98,6 +101,7 @@ void AirsimROSWrapper::initialize_ros()
     statictf_timer_ = nh_private_.createTimer(ros::Duration(publish_static_tf_every_n_sec), &AirsimROSWrapper::statictf_cb, this);
 
     statistics_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::statistics_timer_cb, this);
+    track_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::track_timer_cb, this);
     go_signal_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::go_signal_timer_cb, this);
 }
 
@@ -134,6 +138,9 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         odom_pub = nh_.advertise<nav_msgs::Odometry>("odom", 10);
         global_gps_pub = nh_.advertise<sensor_msgs::NavSatFix>("gps", 10);
         imu_pub = nh_.advertise<sensor_msgs::Imu>("imu", 10);
+        // TODO: remove track publisher at competition
+        track_pub = nh_.advertise<fsds_ros_bridge::Track>("track", 10);
+
         control_cmd_sub = nh_.subscribe<fsds_ros_bridge::ControlCommand>("control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, vehicle_name));
 
         // iterate over camera map std::map<std::string, CameraSetting> cameras;
@@ -538,6 +545,30 @@ void AirsimROSWrapper::statictf_cb(const ros::TimerEvent& event)
         static_tf_msg.header.stamp = ros::Time::now();
         static_tf_pub_.sendTransform(static_tf_msg);
     }
+}
+
+void AirsimROSWrapper::track_timer_cb(const ros::TimerEvent& event) {
+    CarApiBase::RefereeState state = airsim_client_.getRefereeState();
+    fsds_ros_bridge::Track track;
+    for (const auto& cone : state.cones) {
+        fsds_ros_bridge::TrackObject cone_object;
+        cone_object.location.x = cone.location.x - car_start_pos.x;
+        cone_object.location.y = cone.location.y - car_start_pos.y;
+        if (cone.color == CarApiBase::ConeColor::Yellow) {
+            cone_object.color = fsds_ros_bridge::TrackObject::YELLOW;
+        } else if (cone.color == CarApiBase::ConeColor::Blue) {
+            cone_object.color = fsds_ros_bridge::TrackObject::BLUE;
+        } else if (cone.color == CarApiBase::ConeColor::OrangeLarge) {
+            cone_object.color = fsds_ros_bridge::TrackObject::ORANGE_BIG;
+        } else if (cone.color == CarApiBase::ConeColor::OrangeSmall) {
+            cone_object.color = fsds_ros_bridge::TrackObject::ORANGE_SMALL;
+        } else if (cone.color == CarApiBase::ConeColor::Unknown) {
+            cone_object.color = fsds_ros_bridge::TrackObject::UNKNOWN;
+        }
+        track.track.push_back(cone_object);
+    }
+
+    track_pub.publish(track);
 }
 
 

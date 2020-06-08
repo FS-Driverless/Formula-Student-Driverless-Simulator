@@ -19,6 +19,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include <fsds_ros_bridge/Reset.h>
 #include <fsds_ros_bridge/GoSignal.h>
 #include <fsds_ros_bridge/FinishedSignal.h>
+#include <fsds_ros_bridge/Track.h>
 #include <chrono>
 #include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -131,6 +132,7 @@ private:
     void car_control_cb(const fsds_ros_bridge::ControlCommand::ConstPtr& msg, const std::string& vehicle_name);
     void lidar_timer_cb(const ros::TimerEvent& event);
     void statistics_timer_cb(const ros::TimerEvent& event);
+    void track_timer_cb(const ros::TimerEvent& event); // Just in case this is a changing track at some point
     void go_signal_timer_cb(const ros::TimerEvent& event);
 
     /// ROS subscriber callbacks
@@ -179,6 +181,7 @@ private:
     ros::ServiceServer reset_srvr_;
 
     std::string vehicle_name;
+    CarApiBase::Point2D car_start_pos; // In Unreal coordinates
 
 
     AirSimSettingsParser airsim_settings_parser_;
@@ -218,6 +221,7 @@ private:
     ros::Timer imu_update_timer_;
     ros::Timer airsim_lidar_update_timer_;
     ros::Timer statistics_timer_;
+    ros::Timer track_timer_;
     ros::Timer go_signal_timer_;
     ros::Timer statictf_timer_;
 
@@ -234,6 +238,7 @@ private:
     ros::Publisher odom_pub;
     ros::Publisher global_gps_pub;
     ros::Publisher imu_pub;
+    ros::Publisher track_pub;
     ros::Publisher go_signal_pub_;
     
     /// ROS subscribers
