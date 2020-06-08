@@ -80,6 +80,9 @@ target_link_libraries(airsim_ros ${catkin_LIBRARIES} yaml-cpp AirLib airsim_sett
 add_executable(fsds_ros_bridge src/fsds_ros_bridge.cpp)
 target_link_libraries(fsds_ros_bridge airsim_ros ${catkin_LIBRARIES} AirLib)
 
+add_executable(fsds_ros_bridge_camera src/fsds_ros_bridge_camera.cpp)
+target_link_libraries(fsds_ros_bridge_camera ${catkin_LIBRARIES} AirLib)
+
 find_package( PkgConfig REQUIRED)
 pkg_check_modules( libcurl REQUIRED libcurl )
 target_link_libraries(fsds_ros_bridge ${libcurl_LIBRARIES})
