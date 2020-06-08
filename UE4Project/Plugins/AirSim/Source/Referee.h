@@ -36,4 +36,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Referee")
 	float AppendCone(FTransform cone);
+
+	UFUNCTION(BlueprintCallable, Category="Referee")
+	void LoadStartPos(FVector pos);
 };

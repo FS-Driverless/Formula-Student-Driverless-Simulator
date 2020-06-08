@@ -93,7 +93,8 @@ public:
         Yellow,
         Blue,
         OrangeLarge,
-        OrangeSmall
+        OrangeSmall,
+        Unknown
     };
 
     struct Point2D {

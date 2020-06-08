@@ -41,10 +41,25 @@ int32 AReferee::LapCompleted(float lapTime)
 }
 
 float AReferee::AppendCone(FTransform transform) {
-	float x = transform.GetTranslation().X;
+	msr::airlib::CarApiBase::Cone cone;
+	cone.location.x = transform.GetTranslation().X;
+	cone.location.y = transform.GetTranslation().Y;
+	cone.color = msr::airlib::CarApiBase::ConeColor::Unknown;
+	state.cones.push_back(cone);
 	std::cout << "----------------------------" << std::endl;
-	std::cout << x << std::endl;
+	std::cout << cone.location.x << std::endl;
 	std::cout << "----------------------------" << std::endl;
 
-	return x;
+	return cone.location.x;
+}
+
+void AReferee::LoadStartPos(FVector pos) {
+	msr::airlib::CarApiBase::Point2D point;
+	point.x = pos.X;
+	point.y = pos.Y;
+	state.car_start_location = point;
+	std::cout << "----------------------------" << std::endl;
+	std::cout << point.y << std::endl;
+	std::cout << "----------------------------" << std::endl;
+
 }
