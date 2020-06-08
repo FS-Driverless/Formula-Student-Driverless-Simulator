@@ -117,15 +117,16 @@ public:
         {
         }
 
-        RefereeState(const int &doo_counter_val, const std::vector<float> &laps_val) 
-        : doo_counter(doo_counter_val), laps(laps_val)
+        RefereeState(const int &doo_counter_val, const std::vector<float> &laps_val, const std::vector<Cone> &cones, const Point2D &init_pos) 
+        : doo_counter(doo_counter_val), laps(laps_val), cones(cones), car_start_location(init_pos)
         {
+            // Cone example;
+            // example.color = ConeColor::Blue;
+            // example.location.x = 1;
+            // example.location.y = 2;
+            // cones.push_back(example);
         }
 
-        // RefereeState(const int &doo_counter_val, const std::vector<float> &laps_val, const std::vector<Cone> &cone_list, const Point2D &car_origin) 
-        // : doo_counter(doo_counter_val), laps(laps_val), cones(cone_list), car_start_location(car_origin)
-        // {
-        // }
 
     };
 

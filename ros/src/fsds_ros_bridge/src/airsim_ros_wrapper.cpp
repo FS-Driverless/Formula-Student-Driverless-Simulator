@@ -93,6 +93,11 @@ void AirsimROSWrapper::initialize_ros()
 
     // Get car initial position
     car_start_pos = airsim_client_.getRefereeState().car_start_location;
+    std::cout << "-------------------------------" << std::endl;
+    std::cout << "CAR START POS: x = " << car_start_pos.x << std::endl;
+    std::cout << "CAR START POS: y = " << car_start_pos.y << std::endl;
+    std::cout << "-------------------------------" << std::endl;
+    
 
     create_ros_pubs_from_settings_json();
     odom_update_timer_ = nh_private_.createTimer(ros::Duration(update_odom_every_n_sec), &AirsimROSWrapper::odom_cb, this);
@@ -552,6 +557,10 @@ void AirsimROSWrapper::track_timer_cb(const ros::TimerEvent& event) {
     fsds_ros_bridge::Track track;
     for (const auto& cone : state.cones) {
         fsds_ros_bridge::TrackObject cone_object;
+        std::cout << "-------------------------------" << std::endl;
+        std::cout << "CONE POS: x = " << cone.location.x << std::endl;
+        std::cout << "CONE POS: y = " << cone.location.y << std::endl;
+        std::cout << "-------------------------------" << std::endl;
         cone_object.location.x = cone.location.x - car_start_pos.x;
         cone_object.location.y = cone.location.y - car_start_pos.y;
         if (cone.color == CarApiBase::ConeColor::Yellow) {
