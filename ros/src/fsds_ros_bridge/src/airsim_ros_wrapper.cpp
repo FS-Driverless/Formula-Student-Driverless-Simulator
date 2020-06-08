@@ -75,6 +75,72 @@ void AirsimROSWrapper::initialize_statistics()
     // statistics_obj_ptr = {&setCarControlsStatistics, &getGpsDataStatistics, &getCarStateStatistics, &control_cmd_sub_statistics, &global_gps_pub_statistics, &odom_local_ned_pub_statistics};
 }
 
+void AirsimROSWrapper::publish_track() {
+    
+    CarApiBase::RefereeState state = airsim_client_.getRefereeState();
+    // Get car initial position
+    car_start_pos = state.car_start_location;
+    std::cout << "-------------------------------" << std::endl;
+    std::cout << "CAR START POS: x = " << car_start_pos.x << std::endl;
+    std::cout << "CAR START POS: y = " << car_start_pos.y << std::endl;
+    std::cout << "-------------------------------" << std::endl;
+
+    fsds_ros_bridge::Track track;
+    visualization_msgs::MarkerArray cone_markers;
+    uint32_t cone_id = 0;
+    for (const auto& cone : state.cones) {
+        fsds_ros_bridge::TrackObject cone_object;
+        // std::cout << "-------------------------------" << std::endl;
+        // std::cout << "CONE POS: x = " << cone.location.x << std::endl;
+        // std::cout << "CONE POS: y = " << cone.location.y << std::endl;
+        // std::cout << "-------------------------------" << std::endl;
+        cone_object.location.x = cone.location.x != 0 ? (cone.location.x - car_start_pos.x)*0.01 : 0;
+        cone_object.location.y = cone.location.y != 0 ? (cone.location.y - car_start_pos.y)*0.01 : 0;
+        if (cone.color == CarApiBase::ConeColor::Yellow) {
+            cone_object.color = fsds_ros_bridge::TrackObject::YELLOW;
+        } else if (cone.color == CarApiBase::ConeColor::Blue) {
+            cone_object.color = fsds_ros_bridge::TrackObject::BLUE;
+        } else if (cone.color == CarApiBase::ConeColor::OrangeLarge) {
+            cone_object.color = fsds_ros_bridge::TrackObject::ORANGE_BIG;
+        } else if (cone.color == CarApiBase::ConeColor::OrangeSmall) {
+            cone_object.color = fsds_ros_bridge::TrackObject::ORANGE_SMALL;
+        } else if (cone.color == CarApiBase::ConeColor::Unknown) {
+            cone_object.color = fsds_ros_bridge::TrackObject::UNKNOWN;
+        }
+        track.track.push_back(cone_object);
+        
+        // Fill Marker
+        visualization_msgs::Marker cone_marker;
+        cone_marker.header.frame_id = "fsds/FSCar";
+        cone_marker.header.stamp = ros::Time::now();
+        cone_marker.lifetime = ros::Duration();
+        cone_marker.id = cone_id;
+        cone_marker.type = visualization_msgs::Marker::SPHERE;
+        cone_marker.action = visualization_msgs::Marker::ADD;
+        cone_marker.pose.position.x = cone_object.location.x;
+        cone_marker.pose.position.y = cone_object.location.y;
+        cone_marker.pose.position.z = 0;
+        cone_marker.pose.orientation.x = 0.0;
+        cone_marker.pose.orientation.y = 0.0;
+        cone_marker.pose.orientation.z = 0.0;
+        cone_marker.pose.orientation.w = 1.0;
+        cone_marker.scale.x = 1.0;
+        cone_marker.scale.y = 1.0;
+        cone_marker.scale.z = 1.0;
+        cone_marker.color.a = 1.0;  // Don't forget to set the alpha!
+        cone_marker.color.r = 1.0;
+        cone_marker.color.g = 1.0;
+        cone_marker.color.b = 0.0;
+
+        ++cone_id;
+
+        cone_markers.markers.push_back(cone_marker);
+    }
+
+    track_pub.publish(track);
+    viz_track_pub.publish(cone_markers);
+}
+
 void AirsimROSWrapper::initialize_ros()
 {
 
@@ -90,13 +156,6 @@ void AirsimROSWrapper::initialize_ros()
     nh_private_.getParam("update_gps_every_n_sec", update_gps_every_n_sec);
     nh_private_.getParam("update_imu_every_n_sec", update_imu_every_n_sec);
     nh_private_.getParam("publish_static_tf_every_n_sec", publish_static_tf_every_n_sec);
-
-    // Get car initial position
-    car_start_pos = airsim_client_.getRefereeState().car_start_location;
-    std::cout << "-------------------------------" << std::endl;
-    std::cout << "CAR START POS: x = " << car_start_pos.x << std::endl;
-    std::cout << "CAR START POS: y = " << car_start_pos.y << std::endl;
-    std::cout << "-------------------------------" << std::endl;
     
 
     create_ros_pubs_from_settings_json();
@@ -106,8 +165,10 @@ void AirsimROSWrapper::initialize_ros()
     statictf_timer_ = nh_private_.createTimer(ros::Duration(publish_static_tf_every_n_sec), &AirsimROSWrapper::statictf_cb, this);
 
     statistics_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::statistics_timer_cb, this);
-    track_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::track_timer_cb, this);
+    // track_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::track_timer_cb, this);
     go_signal_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::go_signal_timer_cb, this);
+
+    publish_track();
 }
 
 // XmlRpc::XmlRpcValue can't be const in this case
@@ -144,7 +205,8 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         global_gps_pub = nh_.advertise<sensor_msgs::NavSatFix>("gps", 10);
         imu_pub = nh_.advertise<sensor_msgs::Imu>("imu", 10);
         // TODO: remove track publisher at competition
-        track_pub = nh_.advertise<fsds_ros_bridge::Track>("track", 10);
+        track_pub = nh_.advertise<fsds_ros_bridge::Track>("track", 10, true);
+        viz_track_pub = nh_.advertise<visualization_msgs::MarkerArray>("viz/track", 1, true);
 
         control_cmd_sub = nh_.subscribe<fsds_ros_bridge::ControlCommand>("control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, vehicle_name));
 
@@ -552,33 +614,34 @@ void AirsimROSWrapper::statictf_cb(const ros::TimerEvent& event)
     }
 }
 
-void AirsimROSWrapper::track_timer_cb(const ros::TimerEvent& event) {
-    CarApiBase::RefereeState state = airsim_client_.getRefereeState();
-    fsds_ros_bridge::Track track;
-    for (const auto& cone : state.cones) {
-        fsds_ros_bridge::TrackObject cone_object;
-        std::cout << "-------------------------------" << std::endl;
-        std::cout << "CONE POS: x = " << cone.location.x << std::endl;
-        std::cout << "CONE POS: y = " << cone.location.y << std::endl;
-        std::cout << "-------------------------------" << std::endl;
-        cone_object.location.x = cone.location.x - car_start_pos.x;
-        cone_object.location.y = cone.location.y - car_start_pos.y;
-        if (cone.color == CarApiBase::ConeColor::Yellow) {
-            cone_object.color = fsds_ros_bridge::TrackObject::YELLOW;
-        } else if (cone.color == CarApiBase::ConeColor::Blue) {
-            cone_object.color = fsds_ros_bridge::TrackObject::BLUE;
-        } else if (cone.color == CarApiBase::ConeColor::OrangeLarge) {
-            cone_object.color = fsds_ros_bridge::TrackObject::ORANGE_BIG;
-        } else if (cone.color == CarApiBase::ConeColor::OrangeSmall) {
-            cone_object.color = fsds_ros_bridge::TrackObject::ORANGE_SMALL;
-        } else if (cone.color == CarApiBase::ConeColor::Unknown) {
-            cone_object.color = fsds_ros_bridge::TrackObject::UNKNOWN;
-        }
-        track.track.push_back(cone_object);
-    }
+// Leave just in case we plan to publish the track dynamically (so that moved cones are updated)
+// void AirsimROSWrapper::track_timer_cb(const ros::TimerEvent& event) {
+//     CarApiBase::RefereeState state = airsim_client_.getRefereeState();
+//     fsds_ros_bridge::Track track;
+//     for (const auto& cone : state.cones) {
+//         fsds_ros_bridge::TrackObject cone_object;
+//         // std::cout << "-------------------------------" << std::endl;
+//         // std::cout << "CONE POS: x = " << cone.location.x << std::endl;
+//         // std::cout << "CONE POS: y = " << cone.location.y << std::endl;
+//         // std::cout << "-------------------------------" << std::endl;
+//         cone_object.location.x = cone.location.x != 0 ? cone.location.x - car_start_pos.x : 0;
+//         cone_object.location.y = cone.location.x != 0 ? cone.location.y - car_start_pos.y : 0;
+//         if (cone.color == CarApiBase::ConeColor::Yellow) {
+//             cone_object.color = fsds_ros_bridge::TrackObject::YELLOW;
+//         } else if (cone.color == CarApiBase::ConeColor::Blue) {
+//             cone_object.color = fsds_ros_bridge::TrackObject::BLUE;
+//         } else if (cone.color == CarApiBase::ConeColor::OrangeLarge) {
+//             cone_object.color = fsds_ros_bridge::TrackObject::ORANGE_BIG;
+//         } else if (cone.color == CarApiBase::ConeColor::OrangeSmall) {
+//             cone_object.color = fsds_ros_bridge::TrackObject::ORANGE_SMALL;
+//         } else if (cone.color == CarApiBase::ConeColor::Unknown) {
+//             cone_object.color = fsds_ros_bridge::TrackObject::UNKNOWN;
+//         }
+//         track.track.push_back(cone_object);
+//     }
 
-    track_pub.publish(track);
-}
+//     track_pub.publish(track);
+// }
 
 
 // airsim uses nans for zeros in settings.json. we set them to zeros here for handling tfs in ROS

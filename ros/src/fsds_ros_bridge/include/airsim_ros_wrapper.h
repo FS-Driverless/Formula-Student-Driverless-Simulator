@@ -26,6 +26,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include <geometry_msgs/TransformStamped.h>
 #include <geometry_msgs/Twist.h>
 #include <image_transport/image_transport.h>
+#include <visualization_msgs/MarkerArray.h>
 #include <iostream>
 #include <math.h>
 #include <math_common.h>
@@ -83,6 +84,7 @@ public:
 
     void initialize_airsim();
     void initialize_ros();
+    void publish_track();
     void initialize_statistics();
 
     // std::vector<ros::CallbackQueue> callback_queues_;
@@ -132,7 +134,7 @@ private:
     void car_control_cb(const fsds_ros_bridge::ControlCommand::ConstPtr& msg, const std::string& vehicle_name);
     void lidar_timer_cb(const ros::TimerEvent& event);
     void statistics_timer_cb(const ros::TimerEvent& event);
-    void track_timer_cb(const ros::TimerEvent& event); // Just in case this is a changing track at some point
+    // void track_timer_cb(const ros::TimerEvent& event); // Just in case this is a changing track at some point
     void go_signal_timer_cb(const ros::TimerEvent& event);
 
     /// ROS subscriber callbacks
@@ -239,6 +241,7 @@ private:
     ros::Publisher global_gps_pub;
     ros::Publisher imu_pub;
     ros::Publisher track_pub;
+    ros::Publisher viz_track_pub;
     ros::Publisher go_signal_pub_;
     
     /// ROS subscribers
