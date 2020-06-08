@@ -153,17 +153,21 @@
 <h2 id="1-create-a-new-instance-and-configure-ports">1. Create a new instance and configure ports</h2>
 <p>We assume you are familiar with google cloud configurations.
 Create a new instance in the region of your choice.</p>
-<p>Minimum requirements are:
-* 12 vCPU
-* 24GB memory
-* Any NVIDIA GPU
-* 150GB Disk</p>
-<p>Recommended specs are:
-* 16 vCPU
-* 32GB memory
-* 1 NVIDIA Tesla P100
-* 300GB SSD Disk
-* CPU platform Sandy Bridge</p>
+<p>Minimum requirements are:</p>
+<ul>
+<li>12 vCPU</li>
+<li>24GB memory</li>
+<li>Any NVIDIA GPU</li>
+<li>150GB Disk</li>
+</ul>
+<p>Recommended specs are:</p>
+<ul>
+<li>16 vCPU</li>
+<li>32GB memory</li>
+<li>1 NVIDIA Tesla P100</li>
+<li>300GB SSD Disk</li>
+<li>CPU platform Sandy Bridge</li>
+</ul>
 <p>Do not enable NVIDIA GRID</p>
 <p>Choose Windows Server 2019 Datacenter</p>
 <p>Check 'Attach display device' and 'enable NVidia Grid'</p>
@@ -175,11 +179,13 @@ Create a new instance in the region of your choice.</p>
 <pre><code>sudo apt-get install remmina
 </code></pre>
 
-<p>Launch Remmina, add a new connection. Set
-* Server to the ip of the instance
-* username to the name you entered when setting the password
-* password to the password you created before
-* Color depth to `High color (16 bpp)</p>
+<p>Launch Remmina, add a new connection. Set</p>
+<ul>
+<li>Server to the ip of the instance</li>
+<li>username to the name you entered when setting the password</li>
+<li>password to the password you created before</li>
+<li>Color depth to `High color (16 bpp)</li>
+</ul>
 <h3 id="from-windows">From Windows</h3>
 <p>Click the little arrow next to the 'RDP' button and click 'Download the RDP file'. 
 Double click on the downloaded file. 

@@ -210,9 +210,11 @@ For example, the AS might be requested to do:</p>
 <li>autocross on track C (re-run)</li>
 <li>trackdrive on track C</li>
 </ol>
-<p>The AS must implement the following behaviour:
-* When the AS is requested to do autocross on a track that it has seen before, it must delete any and all data it gathered during all previous runs on this track.
-* When the AS is requested to do trackdrive on a track where it has done a trackdrive previously, it must delete any and all data it gathered during all previous trackdrive runs on this track. However, the data gathered during the last autocross on this track shouldn't be deleted.</p>
+<p>The AS must implement the following behaviour:</p>
+<ul>
+<li>When the AS is requested to do autocross on a track that it has seen before, it must delete any and all data it gathered during all previous runs on this track.</li>
+<li>When the AS is requested to do trackdrive on a track where it has done a trackdrive previously, it must delete any and all data it gathered during all previous trackdrive runs on this track. However, the data gathered during the last autocross on this track shouldn't be deleted.</li>
+</ul>
 <p>An exception to this rule is data recorded with the exclusive intent to analyze the AS's behaviour after the event.
 This includes all files that the AS only writes to but does not read from.</p>
 <p>To make the AS aware of which track it is driving, the GO signal includes a unique identifier of the upcoming track.</p>
