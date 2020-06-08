@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Integration handbook - Formula Student Driverless Simulator</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="../css/version-select.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Integration handbook";
+    var mkdocs_page_input_path = "integration-handbook.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Formula Student Driverless Simulator</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="" href="../README.md">Home</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Introduction</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="../system-overview/">System overview</a>
+                    </li>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Integration handbook</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#high-level-overview">High-level overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#system-flow-and-signals">System flow and Signals</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#staging">Staging</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#starting">Starting</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#finishing">Finishing</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#sensor-suite">Sensor Suite</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#camera">Camera</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#lidar">Lidar</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#gps">GPS</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#imu">IMU</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#sensor-specification">Sensor specification</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#launching-the-simulator">Launching the simulator</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#ros-integration">ROS integration</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#topics">Topics</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#vehicle-dynamic-model">Vehicle dynamic model</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3d-vehicle-model">3D vehicle model</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#competition-deployment">Competition deployment</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Usage & Development</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../how-to-simulate/">How to simulate</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../get-ready-to-develop/">Setup your development environment</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../how-to-develop/">How to develop the FSDS project</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../building-ros/">Build your ros workspace</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../gcp-remote-workstation/">Google cloud remote workstation</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Vehicle & Sensors</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../vehicle_model/">Vehicle model</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../imu/">IMU</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../gps/">GPS</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">#tech madness</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../ros-bridge/">ROS Bridge</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../statistics/">ROS Bridge statistics</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../joystick/">Joystick</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../operator/">Operator</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Formula Student Driverless Simulator</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Introduction &raquo;</li>
+        
+      
+    
+    <li>Integration handbook</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="autonomous-system-integration-handbook">Autonomous System Integration Handbook</h1>
+<p>This page describes how to integrate your autonomous system (AS) to the Formula Student Driverless Simulator (FSDS).
+The rules and procedures set out in this document will be used during the FSOnline competition.</p>
+<h2 id="high-level-overview">High-level overview</h2>
+<p>Your AS is expected to continuously run a ROS master.
+The simulator will launch a node (<a href="../ros-bridge/">fsds_ros_bridge</a>) that connects to your ROS system.
+This node will publish sensor data and listen for vehicle setpoints.
+When the simulation is done, the node is closed and your AS will no longer be able to interact with the simulator.
+<a href="../system-overview/">A more in-depth explanation of the FSDS system can be found here.</a></p>
+<p>Integrating your autonomous system with a simulator is a matter of subscribing and publishing to topics and acting accordingly.</p>
+<p><em>During testing, your AS and the ROS bridge/simulator will probably run on the same machine (your local computer most likely). However, during the competition, the AS and the ROS bridge/simulator will be on different machines (cloud servers) and communicate over a local network.</em></p>
+<h2 id="system-flow-and-signals">System flow and Signals</h2>
+<p>Initially, when your AS launches, no simulation is connected.
+The AS must wait for a GO signal before acting.</p>
+<h3 id="staging">Staging</h3>
+<p>At some point, your AS will be staged: The vehicle is placed at a staging line prior to the starting line, the <code>fsds_ros_bridge</code> node will connect to the ROS system.
+From this point onwards, the AS will receive sensor data and can control the vehicle by publishing vehicle setpoints.
+However, it shouldn't start driving the vehicle just yet!</p>
+<h3 id="starting">Starting</h3>
+<p>Just like with a physical FS event, the vehicle must only start driving after a GO signal is received.
+The GO signal indicates that the AS must start the mission and that the vehicle should start driving.
+This signal is also known as the 'green flag' signal or 'starting' signal. Within this repo, we will reference it as 'GO'.
+Within the GO signal, the mission and track are added. 
+Currently, <code>autocross</code> and <code>trackdrive</code> are the supported missions.</p>
+<p>In autocross, the vehicle has to complete a single lap on an unknown track.
+On the trackdrive, the vehicle has to finish 10 laps on a track it has previously seen.
+During the competition, on each track, every AS will do an autocross mission before a trackdrive mission.
+It can occur that multiple autocross runs on different tracks take place before going to trackdrive.
+It can also happen that multiple autocross runs take place on the same track.
+For example, the AS might be requested to do:</p>
+<ol>
+<li>autocross on track A</li>
+<li>autocross on track B</li>
+<li>trackdrive on track A</li>
+<li>autocross on track C</li>
+<li>autocross on track C (re-run)</li>
+<li>trackdrive on track C</li>
+</ol>
+<p>The AS must implement the following behaviour:
+* When the AS is requested to do autocross on a track that it has seen before, it must delete any and all data it gathered during all previous runs on this track.
+* When the AS is requested to do trackdrive on a track where it has done a trackdrive previously, it must delete any and all data it gathered during all previous trackdrive runs on this track. However, the data gathered during the last autocross on this track shouldn't be deleted.</p>
+<p>An exception to this rule is data recorded with the exclusive intent to analyze the AS's behaviour after the event.
+This includes all files that the AS only writes to but does not read from.</p>
+<p>To make the AS aware of which track it is driving, the GO signal includes a unique identifier of the upcoming track.</p>
+<p>After the initial GO signal, the signal is continuously re-sent at 1 Hz to ensure it arrives at the team's AS.
+The timestamp of all consecutive GO signals is equal to the first one.</p>
+<h3 id="finishing">Finishing</h3>
+<p>There are two ways to conclude a run: finishing or stopping.</p>
+<p>When the autonomous system feels it concluded it's run, it should send a FINISHED signal.
+The FINISHED signal tells the simulator that the AS no longer wants to control the vehicle.
+As such, the simulator will stop the <code>fsds_ros_bridge</code> and the AS will no longer receive sensor data or be able to control the vehicle.</p>
+<p>When the official decides that the run is over it will stop the simulation.
+See the rulebook for a description of when the official does so.
+When the simulation is stopped the <code>fsds_ros_bridge</code> is stopped immediately and the AS will no longer receive sensor data or be able to control the vehicle.
+The AS will not receive a signal that this happened.
+To detect a stop, the AS should keep an eye on the GO signal.</p>
+<p>The general rule is: If the AS did not receive a GO signal for 4 seconds the AS can assume the <code>fsds_ros_bridge</code> is stopped.
+When this state is detected, the AS can reset itself and prepare for the next mission.</p>
+<h2 id="sensor-suite">Sensor Suite</h2>
+<p>Every team can configure the sensors on their vehicle.
+This configuration is called the sensor suite.
+To ensure the simulation will perform as expected, the sensor suite has some restrictions.
+Here you can read the requirements and restrictions that apply to every sensor.</p>
+<h3 id="camera">Camera</h3>
+<p><strong>A this moment camera's are a bit broken. You can use the camera's but the framerate and topic names might change. See #43 and #85.</strong></p>
+<p>Every vehicle can have a maximum of 2 camera sensors. 
+These camera(s) can be placed anywhere on the vehicle that would be allowed by FSG 2020 rules. 
+The camera body dimensions are a 4x4x4 cm cube with mounting points at any side except the front-facing side.</p>
+<p>All camera sensors output uncompressed RGBA8 images at 30 FPS. 
+You can choose the resolution of the camera(s). 
+In total, the camera’s can have 1232450 pixels. 
+Every dimension (width or height) must be at least 240px and no greater than 1600px. 
+The horizontal field of view (FoV) is configurable for each camera and must be at least 30 degrees and not be greater than 90 degrees. 
+The vertical FoV will be automatically calculated using the following formula: <code>vertical FoV = image height / image width * horizontal FoV</code>.</p>
+<p>The camera's auto exposure, motion blur and gamma settings will be equal for all teams.</p>
+<h3 id="lidar">Lidar</h3>
+<p>A vehicle can have between 0 and 5 lidars.
+The lidar(s) can be placed anywhere on the vehicle that would be allowed by FSG 2020 rules.
+The body dimension of every lidar is a vertical cylinder, 8 cm height and 8 cm diameter with mounting points at the top and bottom.</p>
+<p>A single lidar can have between 1 and 500 lasers. 
+The lasers are stacked vertically and rotate on the horizontal plane. 
+The lasers are distributed equally to cover the specified vertical field of view.</p>
+<p>The vertical field of view is specified by choosing the upper and lower limit in degrees. 
+The lower limit specifies the vertical angle between the horizontal plane of the lidar and the most bottom laser. 
+The upper limit specifies the vertical angle between the horizontal plane of the lidar and most upper laser. </p>
+<p>The horizontal field of view of the lidar is specified with an upper and lower limit in degree as well. Only points within this FOV will be returned. 
+The lower limit specifies the counterclockwise angle on a top view from the direction the lidar is pointing towards. 
+The upper limit specifies the clockwise angle on a top view from the direction the lidar is pointing towards. </p>
+<p>For every lidar, the rotation speed (Hz) and capture frequency (Hz) must be chosen. 
+The rotation speed specifies how fast the lasers spin and the capture frequency specifies how often a point cloud is created.</p>
+<p>While rotating, only lasers within the horizontal field of view are captured. </p>
+<blockquote>
+<p>For example, a lidar with 190 degrees horizontal field of view, rotating at 10hz with a capture frequency of 20 Hz will receive point clouds covering anything from 10 to 180 degrees of the field of view.</p>
+</blockquote>
+<p>There is no guarantee that the rotation speed and capture frequency stay in sync. 
+You won’t be able to rely on synchronization of rotation speed and capture frequency. 
+A lidar rotating at 5 Hz would theoretically have rotated 50 times after 10 seconds but in reality, this will be somewhere between 45 and 55 times. </p>
+<p>For every lidar, you can specify the resolution: the total number of points collected if the lasers would do a 360 field of view sweep scan. 
+This value is used to calculate the number of points in each laser and the spacing between the points. </p>
+<p>Every lidar capture is limited to collecting 10000 points. 
+The maximum number of points collected during a capture is calculated by dividing the lidar’s resolution by the horizontal field of view fraction.</p>
+<blockquote>
+<p>For example, a lidar with a 30 degrees horizontal field (horizontal FOV fraction of 30/360 = 1/12) can have a maximum resolution of 120000.</p>
+</blockquote>
+<p>The total number of points per second is limited to 100000 points.</p>
+<blockquote>
+<p>For example, a first lidar collects 10000 points per capture at 5 hz, a second lidar collects 8000 points per capture at 5 hz. 
+  This is valid because in total they collect 90000 points per second.</p>
+</blockquote>
+<h3 id="gps">GPS</h3>
+<p>Every vehicle has 1 GPS, it is located at the centre of gravity of the vehicle.
+This sensor cannot be removed or moved.</p>
+<p>The GPS captures the position of the vehicle in the geodetic reference system, namely longitude [deg], latitude [deg], altitude [m].
+More detailed technical information about the accuracy of the GPS can be found <a href="../gps/">here</a>.</p>
+<h3 id="imu">IMU</h3>
+<p>Every vehicle has 1 IMU, it is located at the centre of gravity of the vehicle.
+This sensor cannot be removed or moved.</p>
+<p>The IMU captures the acceleration, orientation and angular rate of the vehicle.
+More detailed technical information about the IMU implementation of the IMU can be found <a href="../imu/">here</a>.</p>
+<h3 id="sensor-specification">Sensor specification</h3>
+<p>Teams are expected to provide their sensor suite as a single AirSim settings.json file.
+Most of the parameters in the settings.json file will be set by the officials to ensure fairness during competition.
+You are allowed to configure the following subset of parameters within the boundaries of the above rules.</p>
+<ul>
+<li>Cameras   </li>
+<li>
+<ul>
+<li>camera name</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>Width, Height</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>FOV_Degrees</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>X, Y, Z</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>Pitch, Roll, Yaw</li>
+</ul>
+</li>
+<li>Lidars</li>
+<li>
+<ul>
+<li>NumberOfChannels</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>PointsPerSecond</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>RotationsPerSecond</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>HorizontalFOVStart</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>HorizontalFOVEnd</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>VerticalFOVUpper</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>VerticalFOVLower</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>X, Y, Z</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>Pitch, Roll, Yaw</li>
+</ul>
+</li>
+</ul>
+<p>The GPS and IMU are configured equally for all teams according to the rules in the previous chapter.</p>
+<p>We recommend to copy the settings.json in this repository as a base and configure the cameras and lidar from thereon.</p>
+<h2 id="launching-the-simulator">Launching the simulator</h2>
+<p>To run the simulation, read the <a href="../how-to-simulate/">simulation guide</a>.</p>
+<h2 id="ros-integration">ROS integration</h2>
+<p>Communication between the autonomous system and simulator will take place using ROS topics.
+Sensor data will be published by the <a href="../ros-bridge/">ros bridge</a> and received by the autonomous system.
+The autonomous system will publish vehicle setpoints and the ROS bridge will listen for those messages.
+Static transforms between sensors also are being published for usage by the autonomous system.</p>
+<h3 id="topics">Topics</h3>
+<p>The AS can subscribe to the following sensor topics:</p>
+<ul>
+<li><code>/fsds/gps</code></li>
+<li><code>/fsds/imu</code></li>
+<li><code>/fsds/camera/CAMERA_NAME</code></li>
+<li><code>/fsds/camera/CAMERA_NAME/camera_info</code></li>
+<li><code>/fsds/lidar/LIDAR_NAME</code></li>
+</ul>
+<p>The AS will receive the GO signal on the following topic:</p>
+<ul>
+<li><code>/fsds/signal/go</code></li>
+</ul>
+<p>And it AS can publish the FINISHED on this topic:</p>
+<ul>
+<li><code>/fsds/signal/finished</code></li>
+</ul>
+<p>The AS must publish vehicle control commands on this topic:</p>
+<ul>
+<li><code>/fsds/control_command</code></li>
+</ul>
+<p>Read more about the techincal detalis of these topics in the <a href="../ros-bridge/">ros-bridge documentation</a></p>
+<h2 id="vehicle-dynamic-model">Vehicle dynamic model</h2>
+<p>The vehicle dynamic model is a third-party high-fodelity model and will be the same for all teams. 
+More details and information on this choice can be found <a href="../vehicle_model/">here</a>.</p>
+<h2 id="3d-vehicle-model">3D vehicle model</h2>
+<p>//todo
+This chapter will describe how to change the 3d model of the vehicle and how to provide the 3d model for usage during the competition. 
+At this moment we have no idea how this works sooooo when we figure it out this will be filled in.</p>
+<h2 id="competition-deployment">Competition deployment</h2>
+<p>A few weeks before the competition, each team will receive the ssh credentials to an Ubuntu google cloud instance.
+This instance will have 8 vCPU cores, 30 GB memory (configuration n1-standard-8), 1 Nvidia Tesla T4 video card and 100GB SSD disk.
+The teams must install their autonomous system on this computer.</p>
+<p>During the competition, a separate google cloud instance will run the simulation software and the ROS bridge. 
+One by one the ROS bridge will connect to the different teams' computers and they will do their mission.</p>
+<p>During the weeks leading up to the competition, FSOnline will host multiple testing moments where the autonomous computers will be connected to the simulator and drive a few test laps.</p>
+<p>More information about the procedure will be added later.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../how-to-simulate/" class="btn btn-neutral float-right" title="How to simulate">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../system-overview/" class="btn btn-neutral" title="System overview"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../system-overview/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../how-to-simulate/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/version-select.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
