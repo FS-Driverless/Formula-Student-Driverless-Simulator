@@ -59,6 +59,7 @@ void AReferee::LoadStartPos(FVector pos) {
 	point.y = pos.Y;
 	state.car_start_location = point;
 	std::cout << "----------------------------" << std::endl;
+	std::cout << "START POSITION" << std::endl;
 	std::cout << point.y << std::endl;
 	std::cout << "----------------------------" << std::endl;
 
