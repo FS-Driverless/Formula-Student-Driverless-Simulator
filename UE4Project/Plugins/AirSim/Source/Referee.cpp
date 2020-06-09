@@ -46,9 +46,6 @@ void AReferee::AppendYellowCone(FTransform transform) {
 	cone.location.y = transform.GetTranslation().Y;
 	cone.color = msr::airlib::CarApiBase::ConeColor::Yellow;
 	state.cones.push_back(cone);
-	std::cout << "----------------------------" << std::endl;
-	std::cout << "Yellow cone x location: " << cone.location.x << std::endl;
-	std::cout << "----------------------------" << std::endl;
 }
 
 void AReferee::AppendBlueCone(FTransform transform) {
@@ -57,9 +54,6 @@ void AReferee::AppendBlueCone(FTransform transform) {
 	cone.location.y = transform.GetTranslation().Y;
 	cone.color = msr::airlib::CarApiBase::ConeColor::Blue;
 	state.cones.push_back(cone);
-	std::cout << "----------------------------" << std::endl;
-	std::cout << "Blue cone x location: " << cone.location.x << std::endl;
-	std::cout << "----------------------------" << std::endl;
 }
 
 void AReferee::LoadStartPos(FVector pos) {
@@ -67,9 +61,4 @@ void AReferee::LoadStartPos(FVector pos) {
 	point.x = pos.X;
 	point.y = pos.Y;
 	state.car_start_location = point;
-	std::cout << "----------------------------" << std::endl;
-	std::cout << "START POSITION" << std::endl;
-	std::cout << point.y << std::endl;
-	std::cout << "----------------------------" << std::endl;
-
 }

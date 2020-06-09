@@ -134,7 +134,6 @@ private:
     void car_control_cb(const fsds_ros_bridge::ControlCommand::ConstPtr& msg, const std::string& vehicle_name);
     void lidar_timer_cb(const ros::TimerEvent& event);
     void statistics_timer_cb(const ros::TimerEvent& event);
-    // void track_timer_cb(const ros::TimerEvent& event); // Just in case this is a changing track at some point
     void go_signal_timer_cb(const ros::TimerEvent& event);
 
     /// ROS subscriber callbacks
@@ -223,7 +222,6 @@ private:
     ros::Timer imu_update_timer_;
     ros::Timer airsim_lidar_update_timer_;
     ros::Timer statistics_timer_;
-    ros::Timer track_timer_;
     ros::Timer go_signal_timer_;
     ros::Timer statictf_timer_;
 
