@@ -115,19 +115,11 @@ void RpcLibClientBase::confirmConnection()
 {
     ClockBase* clock = ClockFactory::get();
 
-    // make sure we can talk to the DroneServer
-    //std::cout << "Contacting DroneServer..." << std::flush;
-    //command_context.client.ping();
-    //std::cout << "DroneServer is responding." << std::endl;
-
-    std::cout << "Waiting for connection - " << std::flush;
-    const TTimeDelta pause_time = 1;
-    while (getConnectionState() != RpcLibClientBase::ConnectionState::Connected)
+    std::cout << "Waiting for connection - " << std::endl;
+    if (getConnectionState() != RpcLibClientBase::ConnectionState::Connected)
     {
-        std::cout << "X" << std::flush;
-        clock->sleep_for(pause_time); 
+        throw std::runtime_error("Failed connecting to rps client (airsim). Is the simulator running?");
     }
-    std::cout << std::endl << "Connected!" << std::endl;
 
     auto server_ver = getServerVersion();
     auto client_ver = getClientVersion();
@@ -145,8 +137,11 @@ void RpcLibClientBase::confirmConnection()
         std::cerr << std::endl << ver_info << std::endl;
         std::cerr << std::endl << "AirSim client is of older version and not supported by this server. Please upgrade!" << std::endl;
     }
-    else
-        std::cout << std::endl << ver_info << std::endl;
+    // do not print this in ok scenario because nobody wants to see it.
+    // else
+    //     std::cout << std::endl << ver_info << std::endl;
+    
+    std::cout << "Connected to the simulator!" << std::endl;
 }
 
 bool RpcLibClientBase::armDisarm(bool arm, const std::string& vehicle_name)
