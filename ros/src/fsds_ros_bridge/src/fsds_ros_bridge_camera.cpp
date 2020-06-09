@@ -20,6 +20,8 @@ typedef msr::airlib::ImageCaptureBase::ImageRequest ImageRequest;
 typedef msr::airlib::ImageCaptureBase::ImageResponse ImageResponse;
 typedef msr::airlib::ImageCaptureBase::ImageType ImageType;
 
+// number of seconds to record frames before printing fps
+const int FPS_WINDOW = 3;
 
 msr::airlib::CarRpcLibClient* airsim_api;
 ros::Publisher image_pub;
@@ -28,6 +30,7 @@ ros_bridge::Statistics fps_statistic;
 // settings
 std::string camera_name = "";
 double max_framerate = 0.0;
+std::string host_ip = "localhost";
 
 ros::Time make_ts(uint64_t unreal_ts)
 {
@@ -68,7 +71,7 @@ void doImageUpdate(const ros::TimerEvent&)
 
 void printFps(const ros::TimerEvent&)
 {
-    std::cout << "Average FPS: " << fps_statistic.getCount() << std::endl;
+    std::cout << "Average FPS: " << (fps_statistic.getCount()/FPS_WINDOW) << std::endl;
     fps_statistic.Reset();
 }
 
@@ -80,6 +83,7 @@ int main(int argc, char ** argv)
     // load settings
     nh.param<std::string>("camera_name", camera_name, "");
     nh.param<double>("max_framerate", max_framerate, 0.0);
+    nh.param<std::string>("host_ip", host_ip, "localhost");
 
     if(camera_name == "") {
         std::cout << "camera_name unset." << std::endl;
@@ -94,7 +98,7 @@ int main(int argc, char ** argv)
     fps_statistic = ros_bridge::Statistics("fps");
 
     // ready airsim connection
-    msr::airlib::CarRpcLibClient client;
+    msr::airlib::CarRpcLibClient client(host_ip);
     airsim_api = &client;
 
     try {
@@ -111,7 +115,7 @@ int main(int argc, char ** argv)
 
     // start the loop
     ros::Timer imageTimer = nh.createTimer(ros::Duration(1/max_framerate), doImageUpdate);
-    ros::Timer fpsTimer = nh.createTimer(ros::Duration(5), printFps);
+    ros::Timer fpsTimer = nh.createTimer(ros::Duration(FPS_WINDOW), printFps);
     ros::spin();
     return 0;
 } 
