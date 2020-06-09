@@ -196,9 +196,9 @@ The AS can subscribe to the following sensor topics:
 
 During **testing**, the following ground truth topics will also be available:
 
-- `/fsds/testing/odom`
-- `/fsds/testing/track`
-- `/fsds/testing/viz/track`
+- `/fsds/for_testing/odom`
+- `/fsds/for_testing/track`
+- `/fsds/for_testing/viz/track`
 
 These two topics should allow you to run autonomously without a finished perception and state estimation pipeline.
 

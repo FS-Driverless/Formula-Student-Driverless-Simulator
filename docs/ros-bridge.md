@@ -29,7 +29,7 @@ Velocity, orientation and acceleratoin information at 250hz.
 [Read all about the IMU model here.](imu.md)
 Data is in the `fsds/FSCar` frame.
 
-- `/fsds/testing/odom` [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)   
+- `/fsds/for_testing/odom` [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)   
 Ground truth car position and orientation in NED frame. THIS WILL NOT BE STREAMED DURING COMPETITION.
 
 - `/fsds/track` [fsds_ros_bridge/Track](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/Track.msg)   
