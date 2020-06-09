@@ -2,7 +2,7 @@ import roslaunch
 from os.path import expanduser
 import json 
 
-CAMERA_MAX_FRAMERATE = 30
+CAMERA_FRAMERATE = 30
 
 settings = {}
 
@@ -17,7 +17,7 @@ for cameraname in settings['Vehicles']['FSCar']['Cameras']:
             'fsds_ros_bridge', 'fsds_ros_bridge_camera',
             namespace="fsds/camera", name=cameraname,
             required=True, output='screen',
-            args='_camera_name:='+cameraname+' _max_framerate:='+str(CAMERA_MAX_FRAMERATE))
+            args='_camera_name:='+cameraname+' _framerate:='+str(CAMERA_FRAMERATE))
     launch.launch(cameranode)
 
 try:

@@ -1,16 +1,10 @@
 #include "common/common_utils/StrictMode.hpp"
-STRICT_MODE_OFF //Ignore errors inside the rpc package
-#ifndef RPCLIB_MSGPACK
-#define RPCLIB_MSGPACK clmdep_msgpack
-#endif // !RPCLIB_MSGPACK
-#include "rpc/rpc_error.h"
-    STRICT_MODE_ON
-
 #include "ros/ros.h"
 #include <ros/console.h>
 #include <ros/spinner.h>
 #include <sensor_msgs/Image.h>
 #include "common/AirSimSettings.hpp"
+#include "common/Common.hpp"
 #include "vehicles/car/api/CarRpcLibClient.hpp"
 #include "statistics.h"
 
@@ -29,7 +23,7 @@ ros_bridge::Statistics fps_statistic;
 
 // settings
 std::string camera_name = "";
-double max_framerate = 0.0;
+double framerate = 0.0;
 std::string host_ip = "localhost";
 
 ros::Time make_ts(uint64_t unreal_ts)
@@ -86,15 +80,15 @@ int main(int argc, char ** argv)
 
     // load settings
     nh.param<std::string>("camera_name", camera_name, "");
-    nh.param<double>("max_framerate", max_framerate, 0.0);
+    nh.param<double>("framerate", framerate, 0.0);
     nh.param<std::string>("host_ip", host_ip, "localhost");
 
     if(camera_name == "") {
         std::cout << logprefix() << "camera_name unset." << std::endl;
         return 1;
     }
-    if(max_framerate == 0) {
-        std::cout << logprefix() << "max_framerate unset." << std::endl;
+    if(framerate == 0) {
+        std::cout << logprefix() << "framerate unset." << std::endl;
         return 1;
     }
 
@@ -102,13 +96,13 @@ int main(int argc, char ** argv)
     fps_statistic = ros_bridge::Statistics("fps");
 
     // ready airsim connection
-    msr::airlib::CarRpcLibClient client(host_ip);
+    msr::airlib::CarRpcLibClient client(host_ip, RpcLibPort, 5);
     airsim_api = &client;
 
     try {
         airsim_api->confirmConnection();
-    } catch (rpc::rpc_error& e) {
-        std::string msg = e.get_error().as<std::string>();
+    } catch (const std::exception &e) {
+        std::string msg = e.what();
         std::cout << logprefix() << "Exception raised by the API, something went wrong." << std::endl
                   << msg << std::endl;
         return 1;
@@ -118,7 +112,7 @@ int main(int argc, char ** argv)
     image_pub = nh.advertise<sensor_msgs::Image>("/fsds/camera/" + camera_name, 1);
 
     // start the loop
-    ros::Timer imageTimer = nh.createTimer(ros::Duration(1/max_framerate), doImageUpdate);
+    ros::Timer imageTimer = nh.createTimer(ros::Duration(1/framerate), doImageUpdate);
     ros::Timer fpsTimer = nh.createTimer(ros::Duration(FPS_WINDOW), printFps);
     ros::spin();
     return 0;
