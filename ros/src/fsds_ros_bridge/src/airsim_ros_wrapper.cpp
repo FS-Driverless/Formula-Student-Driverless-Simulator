@@ -60,7 +60,6 @@ void AirsimROSWrapper::initialize_ros()
     double update_gps_every_n_sec;
     double update_imu_every_n_sec;
     double publish_static_tf_every_n_sec;
-    nh_private_.getParam("is_vulkan", is_vulkan_);
     nh_private_.getParam("mission_name", mission_name_);
     nh_private_.getParam("track_name", track_name_);
     nh_private_.getParam("update_odom_every_n_sec", update_odom_every_n_sec);

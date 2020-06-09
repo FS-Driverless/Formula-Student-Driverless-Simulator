@@ -127,13 +127,6 @@ Transforms to the ground truth are disabled because this would take away the cha
   Default: 0.1 seconds (10 hz).   
   The frequency at which the lidar is publshed.
 
-- `/fsds/ros_bridge/update_airsim_img_response_every_n_sec` [double]   
-  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   
-  Default: 0.01 seconds.   
-  Timer callback frequency for receiving images from all cameras in airsim.
-  The speed will depend on number of images requested and their resolution.
-  Timer callbacks in ROS run at maximum rate possible, so it's best to not touch this parameter.
-
 ## Visualization
 This package contains some useful launch and config files which will help you in visualizing the data being streamed through the above topics.
 

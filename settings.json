@@ -1,5 +1,5 @@
 {
-    "SeeDocsAt": "https://github.com/Microsoft/AirSim/blob/master/docs/settings.md",
+    "SeeDocsAt": "https://fs-online.github.io/Formula-Student-Driverless-Simulator/",
     "SettingsVersion": 1.2,
     "SimMode": "Car",
     "ViewMode": "SpringArmChase",
@@ -38,7 +38,6 @@
           "cam1": {
             "CaptureSettings": [
               {
-                "PublishToRos": 1,
                 "ImageType": 0,
                 "Width": 785,
                 "Height": 785,
@@ -55,7 +54,6 @@
           "cam2": {
             "CaptureSettings": [
               {
-                "PublishToRos": 1,
                 "ImageType": 0,
                 "Width": 785,
                 "Height": 785,
