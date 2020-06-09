@@ -40,14 +40,25 @@ int32 AReferee::LapCompleted(float lapTime)
 	return state.laps.size();
 }
 
-void AReferee::AppendCone(FTransform transform) {
+void AReferee::AppendYellowCone(FTransform transform) {
 	msr::airlib::CarApiBase::Cone cone;
 	cone.location.x = transform.GetTranslation().X;
 	cone.location.y = transform.GetTranslation().Y;
 	cone.color = msr::airlib::CarApiBase::ConeColor::Yellow;
 	state.cones.push_back(cone);
 	std::cout << "----------------------------" << std::endl;
-	std::cout << cone.location.x << std::endl;
+	std::cout << "Yellow cone x location: " << cone.location.x << std::endl;
+	std::cout << "----------------------------" << std::endl;
+}
+
+void AReferee::AppendBlueCone(FTransform transform) {
+	msr::airlib::CarApiBase::Cone cone;
+	cone.location.x = transform.GetTranslation().X;
+	cone.location.y = transform.GetTranslation().Y;
+	cone.color = msr::airlib::CarApiBase::ConeColor::Blue;
+	state.cones.push_back(cone);
+	std::cout << "----------------------------" << std::endl;
+	std::cout << "Blue cone x location: " << cone.location.x << std::endl;
 	std::cout << "----------------------------" << std::endl;
 }
 
