@@ -9,10 +9,10 @@ STRICT_MODE_OFF //Ignore errors inside the rpc package
 #include "ros/ros.h"
 #include <ros/console.h>
 #include <ros/spinner.h>
-#include <image_transport/image_transport.h>
+#include <sensor_msgs/Image.h>
 #include "common/AirSimSettings.hpp"
 #include "vehicles/car/api/CarRpcLibClient.hpp"
-#include <chrono> 
+#include "statistics.h"
 
 
 
@@ -20,92 +20,82 @@ typedef msr::airlib::ImageCaptureBase::ImageRequest ImageRequest;
 typedef msr::airlib::ImageCaptureBase::ImageResponse ImageResponse;
 typedef msr::airlib::ImageCaptureBase::ImageType ImageType;
 
-using namespace std::chrono; 
-
 
 msr::airlib::CarRpcLibClient* airsim_api;
-image_transport::ImageTransport* image_transporter;
-image_transport::Publisher* image_pub;
+ros::Publisher image_pub;
+ros_bridge::Statistics fps_statistic;
 
+// settings
 std::string camera_name = "";
-
-ros::Time first_ros_ts;
-int64_t first_unreal_ts = -1;
+double max_framerate = 0.0;
 
 ros::Time make_ts(uint64_t unreal_ts)
 {
-    if (first_unreal_ts < 0)
-    {
-        first_unreal_ts = unreal_ts;
-        first_ros_ts = ros::Time::now();
-    }
-    return first_ros_ts + ros::Duration((unreal_ts - first_unreal_ts) / 1e9);
+   // unreal timestamp is a unix nanosecond timestamp
+   // Ros also uses unix timestamps, as long as it is not running in simulated time mode.
+   // For now we are not supporting simulated time.
+   ros::Time out;
+   return out.fromNSec(unreal_ts);
 }
-
-auto last = high_resolution_clock::now(); 
-
-std::vector<unsigned char> v(4928400);
 
 void doImageUpdate(const ros::TimerEvent&)
 {
-    auto now = high_resolution_clock::now(); 
-    auto duration = duration_cast<microseconds>(now - last); 
-    std::cout << "w" << duration.count() << "\n";
-    last = now; 
-   
-
+    // We are using simGetImages instead of simGetImage because the latter does not return image dimention information.
     std::vector<ImageRequest> req;
     req.push_back(ImageRequest(camera_name, ImageType::Scene, false, false));
-    std::vector<ImageResponse> img_response = airsim_api->simGetImages(req, "FSCar");
+    std::vector<ImageResponse> img_responses = airsim_api->simGetImages(req, "FSCar");
 
     // if a render request failed for whatever reason, this img will be empty.
-    // Attempting to use a make_ts(0) results in ros::Duration runtime error.
-    if (img_response.size() == 0 || img_response[0].time_stamp == 0)
+    if (img_responses.size() == 0 || img_responses[0].time_stamp == 0)
         return;
 
-    ImageResponse curr_img_response = img_response[0];
-
-    now = high_resolution_clock::now(); 
-    duration = duration_cast<microseconds>(now - last); 
-    std::cout << "r" << duration.count() << "\n";
-    last = now;
-
-
-    // todo: publish tf
+    ImageResponse img_response = img_responses[0];
 
     sensor_msgs::ImagePtr img_msg = boost::make_shared<sensor_msgs::Image>();
 
-    img_msg->data = curr_img_response.image_data_uint8;
-    img_msg->step = curr_img_response.width * 8; // image_width * num_bytes
-    img_msg->header.stamp = make_ts(curr_img_response.time_stamp);
-    img_msg->header.frame_id = camera_name+"_optical";
-    img_msg->height = curr_img_response.height;
-    img_msg->width = curr_img_response.width;
+    img_msg->data = img_response.image_data_uint8;
+    img_msg->height = img_response.height;
+    img_msg->width = img_response.width;
+    img_msg->step = img_response.width * 8; // image_width * num_bytes
     img_msg->encoding = "rgb8";
     img_msg->is_bigendian = 0;
+    img_msg->header.stamp = make_ts(img_response.time_stamp);
+    img_msg->header.frame_id = "/fsds/camera/"+camera_name;
+    
+    image_pub.publish(img_msg);
+    fps_statistic.addCount();
+}
 
-    image_pub->publish(img_msg);
-
-    now = high_resolution_clock::now(); 
-    duration = duration_cast<microseconds>(now - last); 
-    std::cout << "p" << duration.count() << "\n";
-    last = now;
+void printFps(const ros::TimerEvent&)
+{
+    std::cout << "Average FPS: " << fps_statistic.getCount() << std::endl;
+    fps_statistic.Reset();
 }
 
 int main(int argc, char ** argv)
 {
     ros::init(argc, argv, "fsds_ros_bridge_camera", ros::init_options::AnonymousName);
     ros::NodeHandle nh("~");
-    
-    image_transporter = new image_transport::ImageTransport(nh);
 
-    nh.param<std::string>("camera_name", camera_name, "front_right_custom");
+    // load settings
+    nh.param<std::string>("camera_name", camera_name, "");
+    nh.param<double>("max_framerate", max_framerate, 0.0);
+
+    if(camera_name == "") {
+        std::cout << "camera_name unset." << std::endl;
+        return 1;
+    }
+    if(max_framerate == 0) {
+        std::cout << "max_framerate unset." << std::endl;
+        return 1;
+    }
+
+    // initialize fps counter
+    fps_statistic = ros_bridge::Statistics("fps");
+
+    // ready airsim connection
     msr::airlib::CarRpcLibClient client;
     airsim_api = &client;
-
-    auto p = image_transporter->advertise("/fsds/camera/" + camera_name, 1);
-    image_pub = &p;
-
 
     try {
         airsim_api->confirmConnection();
@@ -113,10 +103,15 @@ int main(int argc, char ** argv)
         std::string msg = e.get_error().as<std::string>();
         std::cout << "Exception raised by the API, something went wrong." << std::endl
                   << msg << std::endl;
+        return 1;
     }
 
-    //60hz
-    ros::Timer timer = nh.createTimer(ros::Duration(0.016), doImageUpdate);
+    // ready topic
+    image_pub = nh.advertise<sensor_msgs::Image>("/fsds/camera/" + camera_name, 1);
+
+    // start the loop
+    ros::Timer imageTimer = nh.createTimer(ros::Duration(1/max_framerate), doImageUpdate);
+    ros::Timer fpsTimer = nh.createTimer(ros::Duration(5), printFps);
     ros::spin();
     return 0;
 } 
