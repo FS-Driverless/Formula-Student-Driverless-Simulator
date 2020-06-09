@@ -32,6 +32,9 @@ Data is in the `fsds/FSCar` frame.
 - `/fsds/odom` [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)   
 Ground truth car position and orientation in NED frame. THIS WILL NOT BE STREAMED DURING COMPETITION.
 
+- `/fsds/track` [fsds_ros_bridge/Track](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/Track.msg)   
+Ground truth cone position and color wrt starting location of the car. THIS WILL NOT BE STREAMED DURING COMPETITION.
+
 - `/fsds/CAMERA_NAME/IMAGE_TYPE` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)   
 One of this topic type will exist for every camera specified in the `settings.json` file.
 On this topic, camera frames are published. The format will be bgra8. 

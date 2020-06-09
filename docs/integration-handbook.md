@@ -194,6 +194,13 @@ The AS can subscribe to the following sensor topics:
 - `/fsds/camera/CAMERA_NAME/camera_info`
 - `/fsds/lidar/LIDAR_NAME`
 
+During testing, the following ground truth topics will also be available:
+
+- `/fsds/odom`
+- `/fsds/track`
+
+These two topics should allow you to run autonomously without a finished perception and state estimation pipeline.
+
 The AS will receive the GO signal on the following topic:
 
 - `/fsds/signal/go`
@@ -207,6 +214,8 @@ The AS must publish vehicle control commands on this topic:
 - `/fsds/control_command`
 
 Read more about the techincal detalis of these topics in the [ros-bridge documentation](ros-bridge.md)
+
+
 
 ## Vehicle dynamic model
 The vehicle dynamic model is a third-party high-fodelity model and will be the same for all teams. 
