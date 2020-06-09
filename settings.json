@@ -35,7 +35,40 @@
           }
         },
         "Cameras": {
-
+          "cam1": {
+            "CaptureSettings": [
+              {
+                "PublishToRos": 1,
+                "ImageType": 0,
+                "Width": 785,
+                "Height": 785,
+                "FOV_Degrees": 90
+              }
+            ],
+            "X": 1.0,
+            "Y": 0.06,
+            "Z": -2.20,
+            "Pitch": 0.0,
+            "Roll": 0.0,
+            "Yaw": 180
+          },
+          "cam2": {
+            "CaptureSettings": [
+              {
+                "PublishToRos": 1,
+                "ImageType": 0,
+                "Width": 785,
+                "Height": 785,
+                "FOV_Degrees": 90
+              }
+            ],
+            "X": 1.0,
+            "Y": 0.06,
+            "Z": -2.20,
+            "Pitch": 0.0,
+            "Roll": 0.0,
+            "Yaw": 0.0
+          }
         },
         "X": 2, "Y": 0, "Z": 0,
         "Pitch": 0, "Roll": 0, "Yaw": 0
