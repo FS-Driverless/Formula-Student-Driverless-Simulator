@@ -94,8 +94,8 @@ void AirsimROSWrapper::publish_track() {
         // std::cout << "CONE POS: x = " << cone.location.x << std::endl;
         // std::cout << "CONE POS: y = " << cone.location.y << std::endl;
         // std::cout << "-------------------------------" << std::endl;
-        cone_object.location.x = cone.location.x != 0 ? (-cone.location.x + car_start_pos.x)*0.01 : 0;
-        cone_object.location.y = cone.location.y != 0 ? (-cone.location.y + car_start_pos.y)*0.01 : 0;
+        cone_object.location.x = cone.location.x != 0 ? (cone.location.x - car_start_pos.x)*0.01 : 0;
+        cone_object.location.y = cone.location.y != 0 ? (cone.location.y - car_start_pos.y)*0.01 : 0;
         if (cone.color == CarApiBase::ConeColor::Yellow) {
             cone_object.color = fsds_ros_bridge::TrackObject::YELLOW;
         } else if (cone.color == CarApiBase::ConeColor::Blue) {
@@ -111,6 +111,7 @@ void AirsimROSWrapper::publish_track() {
         
         // Fill Marker
         visualization_msgs::Marker cone_marker;
+        // Note that because choosing this NED frame, Rviz will display a map which is flipped wrt the real map 
         cone_marker.header.frame_id = "fsds/FSCar";
         cone_marker.header.stamp = ros::Time::now();
         cone_marker.lifetime = ros::Duration();
