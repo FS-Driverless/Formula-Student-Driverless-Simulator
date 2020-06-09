@@ -194,10 +194,11 @@ The AS can subscribe to the following sensor topics:
 - `/fsds/camera/CAMERA_NAME/camera_info`
 - `/fsds/lidar/LIDAR_NAME`
 
-During testing, the following ground truth topics will also be available:
+During **testing**, the following ground truth topics will also be available:
 
-- `/fsds/odom`
-- `/fsds/track`
+- `/fsds/testing/odom`
+- `/fsds/testing/track`
+- `/fsds/testing/viz/track`
 
 These two topics should allow you to run autonomously without a finished perception and state estimation pipeline.
 
