@@ -41,6 +41,10 @@ ros::Time make_ts(uint64_t unreal_ts)
    return out.fromNSec(unreal_ts);
 }
 
+std::string logprefix() {
+    return "[cambridge " + camera_name + "] ";
+}
+
 void doImageUpdate(const ros::TimerEvent&)
 {
     // We are using simGetImages instead of simGetImage because the latter does not return image dimention information.
@@ -71,13 +75,13 @@ void doImageUpdate(const ros::TimerEvent&)
 
 void printFps(const ros::TimerEvent&)
 {
-    std::cout << "Average FPS: " << (fps_statistic.getCount()/FPS_WINDOW) << std::endl;
+    std::cout << logprefix() << "Average FPS: " << (fps_statistic.getCount()/FPS_WINDOW) << std::endl;
     fps_statistic.Reset();
 }
 
 int main(int argc, char ** argv)
 {
-    ros::init(argc, argv, "fsds_ros_bridge_camera", ros::init_options::AnonymousName);
+    ros::init(argc, argv, "fsds_ros_bridge_camera");
     ros::NodeHandle nh("~");
 
     // load settings
@@ -86,11 +90,11 @@ int main(int argc, char ** argv)
     nh.param<std::string>("host_ip", host_ip, "localhost");
 
     if(camera_name == "") {
-        std::cout << "camera_name unset." << std::endl;
+        std::cout << logprefix() << "camera_name unset." << std::endl;
         return 1;
     }
     if(max_framerate == 0) {
-        std::cout << "max_framerate unset." << std::endl;
+        std::cout << logprefix() << "max_framerate unset." << std::endl;
         return 1;
     }
 
@@ -105,7 +109,7 @@ int main(int argc, char ** argv)
         airsim_api->confirmConnection();
     } catch (rpc::rpc_error& e) {
         std::string msg = e.get_error().as<std::string>();
-        std::cout << "Exception raised by the API, something went wrong." << std::endl
+        std::cout << logprefix() << "Exception raised by the API, something went wrong." << std::endl
                   << msg << std::endl;
         return 1;
     }
