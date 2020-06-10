@@ -34,7 +34,8 @@ Ground truth car position and orientation in NED frame. THIS WILL NOT BE STREAME
 
 - `/fsds/testing_only/track` [fsds_ros_bridge/Track](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/Track.msg)   
 Ground truth cone position and color with respect to the starting location of the car. THIS WILL NOT BE STREAMED DURING COMPETITION.
-Currently this only publishes the cones that are part of the track spline. Any cones placed manually in the world are not published here.
+Currently this only publishes the *initial position* of cones that are part of the track spline. Any cones placed manually in the world are not published here.
+Additionally, the track is published once and the message is latched (meaning it is always available for a newly created subscriber). 
 
 - `/fsds/CAMERA_NAME/IMAGE_TYPE` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)   
 One of this topic type will exist for every camera specified in the `settings.json` file.
