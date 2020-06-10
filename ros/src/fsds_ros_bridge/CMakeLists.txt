@@ -36,13 +36,6 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_ros
 )
 
-add_message_files(
-  FILES
-  GPSYaw.msg
-  ControlCommand.msg
-  GoSignal.msg
-  FinishedSignal.msg
-)
 
 add_service_files(
   FILES
