@@ -5,20 +5,27 @@
 	<arg name="track_name" default="A"/>
 	<arg name="access_token" default=""/>
 
-	<node name="ros_bridge" pkg="fsds_ros_bridge" type="fsds_ros_bridge" output="screen" ns="fsds">
-		<!-- ROS timer rates. Note that timer callback will be processed at maximum possible rate, upperbounded by the following ROS params -->
-		<!-- TODO: it would be cleaner and easier to read if we could set frequencies instead of time intervals  -->
-		<param name="update_odom_every_n_sec" type="double" value="0.004" />
-		<param name="update_imu_every_n_sec" type="double" value="0.004" /> 
-		<param name="update_gps_every_n_sec" type="double" value="0.1" />
-		<param name="publish_static_tf_every_n_sec" type="double" value="1" />
-		<param name="update_lidar_every_n_sec" type="double" value="0.1" />
-		<param name="host_ip" type="string" value="$(arg host)" />
-		<param name="mission_name" type="string" value="$(arg mission_name)"/>
-		<param name="track_name" type="string" value="$(arg track_name)"/>
-		<env name="OPERATOR_ACCESS_TOKEN" value="$(arg access_token)"/>
-	</node>
+	<group ns="fsds">
 
-	<!-- Static transforms -->
-	<include file="$(find fsds_ros_bridge)/launch/static_transforms.launch"/>
+		<node name="ros_bridge" pkg="fsds_ros_bridge" type="fsds_ros_bridge" output="screen" required="true" >
+			<!-- ROS timer rates. Note that timer callback will be processed at maximum possible rate, upperbounded by the following ROS params -->
+			<!-- TODO: it would be cleaner and easier to read if we could set frequencies instead of time intervals  -->
+			<param name="update_odom_every_n_sec" type="double" value="0.004" />
+			<param name="update_imu_every_n_sec" type="double" value="0.004" /> 
+			<param name="update_gps_every_n_sec" type="double" value="0.1" />
+			<param name="publish_static_tf_every_n_sec" type="double" value="1" />
+			<param name="update_lidar_every_n_sec" type="double" value="0.1" />
+			
+			<param name="host_ip" type="string" value="$(arg host)" />
+			<param name="mission_name" type="string" value="$(arg mission_name)"/>
+			<param name="track_name" type="string" value="$(arg track_name)"/>
+			<env name="OPERATOR_ACCESS_TOKEN" value="$(arg access_token)"/>
+		</node>
+
+		<node pkg="fsds_ros_bridge" name="cameralauncher" type="cameralauncher.py" output="screen"  required="true"/>
+
+		<!-- Static transforms -->
+		<include file="$(find fsds_ros_bridge)/launch/static_transforms.launch"/>
+
+	</group>
 </launch>

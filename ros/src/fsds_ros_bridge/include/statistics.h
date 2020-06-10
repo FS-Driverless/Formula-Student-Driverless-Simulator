@@ -20,19 +20,16 @@ namespace ros_bridge
         void Print()
         {
             // print statistics summary to the console
-            std::cout << "-----------------------------------------------------\n";
-            std::cout << "Printing statistics for: " << _statisticsType << "\n";
             if (_rosMsgCount != 0)
             {
                 double ros_msg_hz = _time_elapsed == 0.0f ? 1 : _rosMsgCount/_time_elapsed;
-                std::cout << "ROS msgs/s: " << ros_msg_hz << "\n";
+                std::cout << _statisticsType << " msgs/s: " << ros_msg_hz << "\n";
             }
             if (!_durationHistory.empty())
             {
                 float max_latency = *std::max_element(_durationHistory.begin(), _durationHistory.end());
-                std::cout << "Max latency Rpc call: " << max_latency << "us\n";
+                std::cout <<  _statisticsType <<  " rpc max latency: " << max_latency << "us\n";
             }
-            std::cout << "-----------------------------------------------------\n";
         }
 
         void addDurationRecording(const Duration &duration)
