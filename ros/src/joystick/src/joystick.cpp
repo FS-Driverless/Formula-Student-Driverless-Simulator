@@ -5,7 +5,7 @@
 #include "iostream"
 
 #include <sensor_msgs/Joy.h>
-#include <fsds_ros_bridge/ControlCommand.h>
+#include <fs_msgs/ControlCommand.h>
 
 // acceleration (in m/s²) sent to TrajectorySetpoints when the gas, right trigger, is fully pressed.
 #define MAXTHROTTLE 0.6
@@ -47,7 +47,7 @@ inline bool FileExists(const std::string &devicefilename)
 
 void SendMaxBreak()
 {
-  fsds_ros_bridge::ControlCommand cmd = fsds_ros_bridge::ControlCommand();
+  fs_msgs::ControlCommand cmd = fs_msgs::ControlCommand();
   cmd.header.stamp = ros::Time::now();
   cmd.throttle = 0;
   cmd.steering = PREVIOUS_STEERANGLE;
@@ -111,7 +111,7 @@ void JoyCallback(const sensor_msgs::Joy &joystickmsg)
     }
   }
 
-  fsds_ros_bridge::ControlCommand cmd = fsds_ros_bridge::ControlCommand();
+  fs_msgs::ControlCommand cmd = fs_msgs::ControlCommand();
 
   bool boost_button_pressed = joystickmsg.buttons[1] != 0;
   float max_acceleration = -1;
@@ -174,7 +174,7 @@ int main(
   ros::init(argc, argv, ros::this_node::getName());
   ros::NodeHandle node_handle;
   node_handle.getParam("/joy/dev", JOYSTICK_PATH);
-  CONTROL_PUBLISHER = node_handle.advertise<fsds_ros_bridge::ControlCommand>(
+  CONTROL_PUBLISHER = node_handle.advertise<fs_msgs::ControlCommand>(
       "/fsds_ros_bridge/FSCar/control_command", 1);
   // we only care about the last message so queue size set to 1 deletes any older messages.
   JOY_SUBSCRIBER = node_handle.subscribe("/joy", 1, JoyCallback);

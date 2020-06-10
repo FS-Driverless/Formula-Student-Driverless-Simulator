@@ -104,7 +104,7 @@ void AirsimROSWrapper::initialize_ros()
 // XmlRpc::XmlRpcValue can't be const in this case
 void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 {
-    go_signal_pub_ = nh_.advertise<fsds_ros_bridge::GoSignal>("signal/go", 1);
+    go_signal_pub_ = nh_.advertise<fs_msgs::GoSignal>("signal/go", 1);
     finished_signal_sub_ = nh_.subscribe("signal/finished", 1, &AirsimROSWrapper::finished_signal_cb, this);
 
     airsim_img_request_vehicle_name_pair_vec_.clear();
@@ -134,7 +134,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         odom_pub = nh_.advertise<nav_msgs::Odometry>("odom", 10);
         global_gps_pub = nh_.advertise<sensor_msgs::NavSatFix>("gps", 10);
         imu_pub = nh_.advertise<sensor_msgs::Imu>("imu", 10);
-        control_cmd_sub = nh_.subscribe<fsds_ros_bridge::ControlCommand>("control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, vehicle_name));
+        control_cmd_sub = nh_.subscribe<fs_msgs::ControlCommand>("control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, vehicle_name));
 
         // iterate over camera map std::map<std::string, CameraSetting> cameras;
         for (auto& curr_camera_elem : vehicle_setting->cameras)
@@ -433,7 +433,7 @@ sensor_msgs::NavSatFix AirsimROSWrapper::get_gps_sensor_msg_from_airsim_geo_poin
     return gps_msg;
 }
 
-void AirsimROSWrapper::car_control_cb(const fsds_ros_bridge::ControlCommand::ConstPtr& msg, const std::string& vehicle_name)
+void AirsimROSWrapper::car_control_cb(const fs_msgs::ControlCommand::ConstPtr& msg, const std::string& vehicle_name)
 {
     ros_bridge::ROSMsgCounter counter(&control_cmd_sub_statistics);
 
@@ -950,13 +950,13 @@ void AirsimROSWrapper::statistics_timer_cb(const ros::TimerEvent &event)
 // This callback is executed every 1 second
 void AirsimROSWrapper::go_signal_timer_cb(const ros::TimerEvent &event)
 {
-    fsds_ros_bridge::GoSignal go_signal_msg;
+    fs_msgs::GoSignal go_signal_msg;
     go_signal_msg.mission = mission_name_;
     go_signal_msg.track = track_name_;
     go_signal_pub_.publish(go_signal_msg);
 }
 
-void AirsimROSWrapper::finished_signal_cb(fsds_ros_bridge::FinishedSignalConstPtr msg)
+void AirsimROSWrapper::finished_signal_cb(fs_msgs::FinishedSignalConstPtr msg)
 {
     // Get access token
     std::string access_token (std::getenv("OPERATOR_ACCESS_TOKEN"));

@@ -4,10 +4,10 @@ project(joystick)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   joy
-  fsds_ros_bridge
+  fs_msgs
 )
 catkin_package(
-  CATKIN_DEPENDS roscpp joy fsds_ros_bridge
+  CATKIN_DEPENDS roscpp joy fs_msgs
 )
 
 include_directories(

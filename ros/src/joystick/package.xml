@@ -11,11 +11,11 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>roscpp</build_depend>
-  <build_depend>fsds_ros_bridge</build_depend>
+  <build_depend>fs_msgs</build_depend>
   <build_depend>joy</build_depend>
 
   <exec_depend>roscpp</exec_depend>
   <exec_depend>joy</exec_depend>
-  <exec_depend>fsds_ros_bridge</exec_depend>
+  <exec_depend>fs_msgs</exec_depend>
 
 </package>
