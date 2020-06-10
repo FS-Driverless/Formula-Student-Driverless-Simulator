@@ -101,7 +101,7 @@ public:
         std::vector<Cone> cones;
         Point2D initial_position;
 
-        MSGPACK_DEFINE_MAP(doo_counter, laps, cones, initial_position, initial_position);
+        MSGPACK_DEFINE_MAP(doo_counter, laps, cones, initial_position);
 
         RefereeState() {}
         RefereeState(const msr::airlib::CarApiBase::RefereeState& s) {
