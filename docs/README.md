@@ -13,3 +13,5 @@ In any case, here are a few suggestions for newcomers.
 ## Participating in FS-Online 2020?
 Participants of the FS-Online 2020 virtual event should start by reading the [system overview](system-overview.md) and [integration handbook](integration-handbook.md).
 Next, follow the steps in [the simulation guide](how-to-simulate.md) to get your simulation up and running.
+
+![Front picture](images/fsds_pretty.png)
