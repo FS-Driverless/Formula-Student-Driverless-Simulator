@@ -85,19 +85,19 @@ void AirsimROSWrapper::publish_track() {
     visualization_msgs::MarkerArray cone_markers;
     uint32_t cone_id = 0;
     for (const auto& cone : state.cones) {
-        fsds_ros_bridge::TrackObject cone_object;
+        fsds_ros_bridge::Cone cone_object;
         cone_object.location.x = cone.location.x != 0 ? (cone.location.x - car_start_pos.x)*0.01 : 0;
         cone_object.location.y = cone.location.y != 0 ? (cone.location.y - car_start_pos.y)*0.01 : 0;
         if (cone.color == CarApiBase::ConeColor::Yellow) {
-            cone_object.color = fsds_ros_bridge::TrackObject::YELLOW;
+            cone_object.color = fsds_ros_bridge::Cone::YELLOW;
         } else if (cone.color == CarApiBase::ConeColor::Blue) {
-            cone_object.color = fsds_ros_bridge::TrackObject::BLUE;
+            cone_object.color = fsds_ros_bridge::Cone::BLUE;
         } else if (cone.color == CarApiBase::ConeColor::OrangeLarge) {
-            cone_object.color = fsds_ros_bridge::TrackObject::ORANGE_BIG;
+            cone_object.color = fsds_ros_bridge::Cone::ORANGE_BIG;
         } else if (cone.color == CarApiBase::ConeColor::OrangeSmall) {
-            cone_object.color = fsds_ros_bridge::TrackObject::ORANGE_SMALL;
+            cone_object.color = fsds_ros_bridge::Cone::ORANGE_SMALL;
         } else if (cone.color == CarApiBase::ConeColor::Unknown) {
-            cone_object.color = fsds_ros_bridge::TrackObject::UNKNOWN;
+            cone_object.color = fsds_ros_bridge::Cone::UNKNOWN;
         }
         track.track.push_back(cone_object);
         

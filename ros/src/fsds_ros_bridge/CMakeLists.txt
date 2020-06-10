@@ -40,7 +40,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   Track.msg
-  TrackObject.msg
+  Cone.msg
   GPSYaw.msg
   ControlCommand.msg
   GoSignal.msg
