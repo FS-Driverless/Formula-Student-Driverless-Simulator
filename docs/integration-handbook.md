@@ -198,7 +198,6 @@ During **testing**, the following ground truth topics will also be available:
 
 - `/fsds/testing_only/odom`
 - `/fsds/testing_only/track`
-- `/fsds/testing_only/viz/track`
 
 These two topics should allow you to run autonomously without a finished perception and state estimation pipeline.
 

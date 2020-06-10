@@ -82,8 +82,6 @@ void AirsimROSWrapper::publish_track() {
     car_start_pos = state.car_start_location;
 
     fsds_ros_bridge::Track track;
-    visualization_msgs::MarkerArray cone_markers;
-    uint32_t cone_id = 0;
     for (const auto& cone : state.cones) {
         fsds_ros_bridge::Cone cone_object;
         cone_object.location.x = cone.location.x != 0 ? (cone.location.x - car_start_pos.x)*0.01 : 0;
@@ -100,45 +98,10 @@ void AirsimROSWrapper::publish_track() {
             cone_object.color = fsds_ros_bridge::Cone::UNKNOWN;
         }
         track.track.push_back(cone_object);
-        
-        // Fill Marker
-        visualization_msgs::Marker cone_marker;
-        // Note that because choosing this NED frame, Rviz will display a map which is flipped wrt the real map 
-        cone_marker.header.frame_id = "fsds/FSCar";
-        cone_marker.header.stamp = ros::Time::now();
-        cone_marker.lifetime = ros::Duration();
-        cone_marker.id = cone_id;
-        cone_marker.type = visualization_msgs::Marker::SPHERE;
-        cone_marker.action = visualization_msgs::Marker::ADD;
-        cone_marker.pose.position.x = cone_object.location.x;
-        cone_marker.pose.position.y = cone_object.location.y;
-        cone_marker.pose.position.z = 0;
-        cone_marker.pose.orientation.x = 0.0;
-        cone_marker.pose.orientation.y = 0.0;
-        cone_marker.pose.orientation.z = 0.0;
-        cone_marker.pose.orientation.w = 1.0;
-        cone_marker.scale.x = 1.0;
-        cone_marker.scale.y = 1.0;
-        cone_marker.scale.z = 1.0;
-        if (cone.color == CarApiBase::ConeColor::Blue) {
-            cone_marker.color.r = 0.0;
-            cone_marker.color.g = 0.0;
-            cone_marker.color.b = 1.0;
 
-        } else if (cone.color == CarApiBase::ConeColor::Yellow) {
-            cone_marker.color.r = 1.0;
-            cone_marker.color.g = 1.0;
-            cone_marker.color.b = 0.0;
-        }
-        cone_marker.color.a = 1.0;  // Don't forget to set the alpha!
-
-        ++cone_id;
-
-        cone_markers.markers.push_back(cone_marker);
     }
 
     track_pub.publish(track);
-    viz_track_pub.publish(cone_markers);
 }
 
 void AirsimROSWrapper::initialize_ros()
@@ -205,7 +168,6 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         imu_pub = nh_.advertise<sensor_msgs::Imu>("imu", 10);
         // TODO: remove track publisher at competition
         track_pub = nh_.advertise<fsds_ros_bridge::Track>("testing_only/track", 10, true);
-        viz_track_pub = nh_.advertise<visualization_msgs::MarkerArray>("testing_only/viz/track", 1, true);
 
         control_cmd_sub = nh_.subscribe<fsds_ros_bridge::ControlCommand>("control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, vehicle_name));
 

@@ -26,7 +26,6 @@ STRICT_MODE_OFF //todo what does this do?
 #include <geometry_msgs/TransformStamped.h>
 #include <geometry_msgs/Twist.h>
 #include <image_transport/image_transport.h>
-#include <visualization_msgs/MarkerArray.h>
 #include <iostream>
 #include <math.h>
 #include <math_common.h>
@@ -239,7 +238,6 @@ private:
     ros::Publisher global_gps_pub;
     ros::Publisher imu_pub;
     ros::Publisher track_pub;
-    ros::Publisher viz_track_pub;
     ros::Publisher go_signal_pub_;
     
     /// ROS subscribers
