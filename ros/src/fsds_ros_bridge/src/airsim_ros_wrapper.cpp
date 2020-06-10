@@ -200,12 +200,12 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         set_nans_to_zeros_in_pose(*vehicle_setting);
 
         vehicle_name = curr_vehicle_name;
-        odom_pub = nh_.advertise<nav_msgs::Odometry>("for_testing/odom", 10);
+        odom_pub = nh_.advertise<nav_msgs::Odometry>("testing_only/odom", 10);
         global_gps_pub = nh_.advertise<sensor_msgs::NavSatFix>("gps", 10);
         imu_pub = nh_.advertise<sensor_msgs::Imu>("imu", 10);
         // TODO: remove track publisher at competition
-        track_pub = nh_.advertise<fsds_ros_bridge::Track>("for_testing/track", 10, true);
-        viz_track_pub = nh_.advertise<visualization_msgs::MarkerArray>("for_testing/viz/track", 1, true);
+        track_pub = nh_.advertise<fsds_ros_bridge::Track>("testing_only/track", 10, true);
+        viz_track_pub = nh_.advertise<visualization_msgs::MarkerArray>("testing_only/viz/track", 1, true);
 
         control_cmd_sub = nh_.subscribe<fsds_ros_bridge::ControlCommand>("control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, vehicle_name));
 
