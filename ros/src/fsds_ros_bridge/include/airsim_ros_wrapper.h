@@ -18,7 +18,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include <fsds_ros_bridge/Reset.h>
 #include <fs_msgs/GoSignal.h>
 #include <fs_msgs/FinishedSignal.h>
-#include <fsds_ros_bridge/Track.h>
+#include <fs_msgs/Track.h>
 #include <chrono>
 #include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/PoseStamped.h>

@@ -81,21 +81,21 @@ void AirsimROSWrapper::publish_track() {
     // Get car initial position
     car_start_pos = state.car_start_location;
 
-    fsds_ros_bridge::Track track;
+    fs_msgs::Track track;
     for (const auto& cone : state.cones) {
-        fsds_ros_bridge::Cone cone_object;
+        fs_msgs::Cone cone_object;
         cone_object.location.x = cone.location.x != 0 ? (cone.location.x - car_start_pos.x)*0.01 : 0;
         cone_object.location.y = cone.location.y != 0 ? (cone.location.y - car_start_pos.y)*0.01 : 0;
         if (cone.color == CarApiBase::ConeColor::Yellow) {
-            cone_object.color = fsds_ros_bridge::Cone::YELLOW;
+            cone_object.color = fs_msgs::Cone::YELLOW;
         } else if (cone.color == CarApiBase::ConeColor::Blue) {
-            cone_object.color = fsds_ros_bridge::Cone::BLUE;
+            cone_object.color = fs_msgs::Cone::BLUE;
         } else if (cone.color == CarApiBase::ConeColor::OrangeLarge) {
-            cone_object.color = fsds_ros_bridge::Cone::ORANGE_BIG;
+            cone_object.color = fs_msgs::Cone::ORANGE_BIG;
         } else if (cone.color == CarApiBase::ConeColor::OrangeSmall) {
-            cone_object.color = fsds_ros_bridge::Cone::ORANGE_SMALL;
+            cone_object.color = fs_msgs::Cone::ORANGE_SMALL;
         } else if (cone.color == CarApiBase::ConeColor::Unknown) {
-            cone_object.color = fsds_ros_bridge::Cone::UNKNOWN;
+            cone_object.color = fs_msgs::Cone::UNKNOWN;
         }
         track.track.push_back(cone_object);
 
@@ -168,7 +168,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         imu_pub = nh_.advertise<sensor_msgs::Imu>("imu", 10);
         control_cmd_sub = nh_.subscribe<fs_msgs::ControlCommand>("control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, vehicle_name));
         // TODO: remove track publisher at competition
-        track_pub = nh_.advertise<fsds_ros_bridge::Track>("testing_only/track", 10, true);
+        track_pub = nh_.advertise<fs_msgs::Track>("testing_only/track", 10, true);
 
 
         // iterate over camera map std::map<std::string, CameraSetting> cameras;
