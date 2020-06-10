@@ -36,6 +36,7 @@ During the competition, on each track, every AS will do an autocross mission bef
 It can occur that multiple autocross runs on different tracks take place before going to trackdrive.
 It can also happen that multiple autocross runs take place on the same track.
 For example, the AS might be requested to do:
+
 1. autocross on track A
 2. autocross on track B
 3. trackdrive on track A
@@ -44,6 +45,7 @@ For example, the AS might be requested to do:
 6. trackdrive on track C
 
 The AS must implement the following behaviour:
+
 * When the AS is requested to do autocross on a track that it has seen before, it must delete any and all data it gathered during all previous runs on this track.
 * When the AS is requested to do trackdrive on a track where it has done a trackdrive previously, it must delete any and all data it gathered during all previous trackdrive runs on this track. However, the data gathered during the last autocross on this track shouldn't be deleted.
 
@@ -155,21 +157,21 @@ Most of the parameters in the settings.json file will be set by the officials to
 You are allowed to configure the following subset of parameters within the boundaries of the above rules.
 
 * Cameras   
-   * camera name
-   * Width, Height
-   * FOV_Degrees
-   * X, Y, Z
-   * Pitch, Roll, Yaw
+ *  * camera name
+ *  * Width, Height
+ *  * FOV_Degrees
+ *  * X, Y, Z
+ *  * Pitch, Roll, Yaw
 * Lidars
-   * NumberOfChannels
-   * PointsPerSecond
-   * RotationsPerSecond
-   * HorizontalFOVStart
-   * HorizontalFOVEnd
-   * VerticalFOVUpper
-   * VerticalFOVLower
-   * X, Y, Z
-   * Pitch, Roll, Yaw
+ *  * NumberOfChannels
+ *  * PointsPerSecond
+ *  * RotationsPerSecond
+ *  * HorizontalFOVStart
+ *  * HorizontalFOVEnd
+ *  * VerticalFOVUpper
+ *  * VerticalFOVLower
+ *  * X, Y, Z
+ *  * Pitch, Roll, Yaw
 
 The GPS and IMU are configured equally for all teams according to the rules in the previous chapter.
 
@@ -184,6 +186,10 @@ Sensor data will be published by the [ros bridge](ros-bridge.md) and received by
 The autonomous system will publish vehicle setpoints and the ROS bridge will listen for those messages.
 Static transforms between sensors also are being published for usage by the autonomous system.
 
+### ROS msgs
+
+The ROS bridge of this simulator had to make use of several custom msgs (for control commands, the groundtruth track, etc). These messages are defined in a ROS package called `fs_msgs` which is located in a separate, light [repository](https://github.com/FS-Online/fs_msgs). To implement publishers and subscibers for these messages types in your autonomous pipeline, you will have to add the `fs_msgs` repository as a submodule in your codebase (inside de `src` directory of an existing **catkin workspace** as done in this repository) or clone it and build it somewhere else in your system.
+
 ### Topics
 
 The AS can subscribe to the following sensor topics:
@@ -193,6 +199,13 @@ The AS can subscribe to the following sensor topics:
 - `/fsds/camera/CAMERA_NAME`
 - `/fsds/camera/CAMERA_NAME/camera_info`
 - `/fsds/lidar/LIDAR_NAME`
+
+During **testing**, the following ground truth topics will also be available:
+
+- `/fsds/testing_only/odom`
+- `/fsds/testing_only/track`
+
+These two topics should allow you to run autonomously without a finished perception and state estimation pipeline.
 
 The AS will receive the GO signal on the following topic:
 
@@ -207,6 +220,8 @@ The AS must publish vehicle control commands on this topic:
 - `/fsds/control_command`
 
 Read more about the techincal detalis of these topics in the [ros-bridge documentation](ros-bridge.md)
+
+
 
 ## Vehicle dynamic model
 The vehicle dynamic model is a third-party high-fodelity model and will be the same for all teams. 

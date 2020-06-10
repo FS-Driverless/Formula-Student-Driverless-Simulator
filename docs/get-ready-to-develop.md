@@ -7,6 +7,7 @@ Using this tutorial you can set up your computer to development the simulator.
 
 For developing this project, you need quite a good computer because Unreal Engine is a heavy baby.
 We highly recommend the following computer specs. You might be able to run with less power but everything will be slower.
+
 * 8 core 3Ghz CPU
 * 12 GB memory
 * 100GB free SSD storage
@@ -33,10 +34,13 @@ Launch the epic installer and install Unreal Engine 4.25
 [Download visual studio 2019 (community edition)](https://visualstudio.microsoft.com/vs/)
 
 During installation, choose the following components:
+
 * Desktop development with C++
 * Game development with C++
 * Linux development with C++
+
 At 'Invidual Components select:
+
 * C++ CMake tools for Windows
 * Windows 10 SDK 10.0.18.362.0
 * .NET Framework 4.7 SDK
@@ -75,7 +79,7 @@ Once both are installed, open git bash and run `git lfs install`.
 
 Now clone the repo in the windows home directory 
 ```
-git clone git@github.com:FS-Online/Formula-Student-Driverless-Simulator.git
+git clone git@github.com:FS-Online/Formula-Student-Driverless-Simulator.git --recurse-submodules
 ```
 
 Go into the cloned repo and run `git config core.fileMode false` to ignore file mode changes.

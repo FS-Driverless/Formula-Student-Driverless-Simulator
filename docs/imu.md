@@ -10,7 +10,7 @@ The angular velocity, linear acceleration outputs as well as their biases have a
 
 All of the IMU measurements are timestamped.
 
-See [ImuSimple.hpp](/AirSim/AirLib/include/sensors/imu/ImuSimple.hpp) and [ImuSimpleParams.hpp](/AirSim/AirLib/include/sensors/imu/ImuSimpleParams.hpp) for the implementation of the IMU model.
+See ImuSimple.hpp (/AirSim/AirLib/include/sensors/imu/ImuSimple.hpp) and [ImuSimpleParams.hpp] /AirSim/AirLib/include/sensors/imu/ImuSimpleParams.hpp for the implementation of the IMU model.
 
 
 

@@ -37,9 +37,11 @@ The operator will launch the game when instructed by the user via the web gui.
 Go to the [releases](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/releases) and download the latest version.
 Extract the zip to the `simulator` folder.
 The result should be that the following file and folders exist inside the `simulator` folder:
+
 * FSDS.exe
 * FSOnline/
 * Engine/
+
 The [how-to-develop guide](how-to-develop.md) guide describes how to create an export.
 
 ## Usage

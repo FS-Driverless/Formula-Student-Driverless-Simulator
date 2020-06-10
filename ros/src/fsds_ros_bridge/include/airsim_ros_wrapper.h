@@ -14,11 +14,11 @@ STRICT_MODE_OFF //todo what does this do?
 #include "sensors/imu/ImuBase.hpp"
 #include "vehicles/car/api/CarRpcLibClient.hpp"
 #include "yaml-cpp/yaml.h"
-#include <fsds_ros_bridge/GPSYaw.h>
-#include <fsds_ros_bridge/ControlCommand.h>
+#include <fs_msgs/ControlCommand.h>
 #include <fsds_ros_bridge/Reset.h>
-#include <fsds_ros_bridge/GoSignal.h>
-#include <fsds_ros_bridge/FinishedSignal.h>
+#include <fs_msgs/GoSignal.h>
+#include <fs_msgs/FinishedSignal.h>
+#include <fs_msgs/Track.h>
 #include <chrono>
 #include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -76,6 +76,7 @@ public:
 
     void initialize_airsim();
     void initialize_ros();
+    void publish_track();
     void initialize_statistics();
 
     ros::AsyncSpinner lidar_async_spinner_;
@@ -118,13 +119,13 @@ private:
     void gps_timer_cb(const ros::TimerEvent& event);
     void imu_timer_cb(const ros::TimerEvent& event);
     void statictf_cb(const ros::TimerEvent& event);
-    void car_control_cb(const fsds_ros_bridge::ControlCommand::ConstPtr& msg, const std::string& vehicle_name);
+    void car_control_cb(const fs_msgs::ControlCommand::ConstPtr& msg, const std::string& vehicle_name);
     void lidar_timer_cb(const ros::TimerEvent& event);
     void statistics_timer_cb(const ros::TimerEvent& event);
     void go_signal_timer_cb(const ros::TimerEvent& event);
 
     /// ROS subscriber callbacks
-    void finished_signal_cb(fsds_ros_bridge::FinishedSignalConstPtr msg);
+    void finished_signal_cb(fs_msgs::FinishedSignalConstPtr msg);
 
     ros::Time make_ts(uint64_t unreal_ts);
     // void set_zero_vel_cmd();
@@ -147,7 +148,6 @@ private:
     msr::airlib::Quaternionr get_airlib_quat(const tf2::Quaternion& tf2_quat) const;
 
     nav_msgs::Odometry get_odom_msg_from_airsim_state(const msr::airlib::CarApiBase::CarState& car_state) const;
-    fsds_ros_bridge::GPSYaw get_gps_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
     sensor_msgs::NavSatFix get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
     sensor_msgs::Imu get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data);
     sensor_msgs::PointCloud2 get_lidar_msg_from_airsim(const std::string &lidar_name, const msr::airlib::LidarData& lidar_data) const;
@@ -156,6 +156,7 @@ private:
     ros::ServiceServer reset_srvr_;
 
     std::string vehicle_name;
+    CarApiBase::Point2D car_start_pos; // In Unreal coordinates
 
 
     AirSimSettingsParser airsim_settings_parser_;
@@ -200,6 +201,7 @@ private:
     ros::Publisher odom_pub;
     ros::Publisher global_gps_pub;
     ros::Publisher imu_pub;
+    ros::Publisher track_pub;
     ros::Publisher go_signal_pub_;
     
     /// ROS subscribers

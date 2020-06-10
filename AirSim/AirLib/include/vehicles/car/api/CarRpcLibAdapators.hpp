@@ -14,6 +14,8 @@
 #include "rpc/msgpack.hpp"
 #include "common/common_utils/WindowsApisCommonPost.hpp"
 
+MSGPACK_ADD_ENUM(msr::airlib::CarApiBase::ConeColor);
+
 namespace msr { namespace airlib_rpclib {
 
 class CarRpcLibAdapators : public RpcLibAdapatorsBase {
@@ -80,21 +82,57 @@ public:
         }
     };
 
+    struct Cone {
+        float x;
+        float y;
+        msr::airlib::CarApiBase::ConeColor color;
+        MSGPACK_DEFINE_MAP(x, y, color);
+    };
+
+    struct Point2D {
+        float x;
+        float y;
+        MSGPACK_DEFINE_MAP(x, y);
+    };
+
     struct RefereeState {
         int doo_counter = 0;
-	std::vector<float> laps;
+	    std::vector<float> laps;
+        std::vector<Cone> cones;
+        Point2D initial_position;
 
-        MSGPACK_DEFINE_MAP(doo_counter, laps);
+        MSGPACK_DEFINE_MAP(doo_counter, laps, cones, initial_position);
 
         RefereeState() {}
         RefereeState(const msr::airlib::CarApiBase::RefereeState& s) {
             doo_counter = s.doo_counter;
-	    laps = s.laps;
+	        laps = s.laps;
+            initial_position.x = s.car_start_location.x;
+            initial_position.y = s.car_start_location.y;
+
+            for (size_t i = 0; i < s.cones.size(); i++) {
+                Cone cone;
+                cone.x = s.cones[i].location.x;
+                cone.y = s.cones[i].location.y;
+                cone.color = s.cones[i].color;
+                cones.push_back(cone);
+            }
         }
 
         msr::airlib::CarApiBase::RefereeState to() const
         {
-            return msr::airlib::CarApiBase::RefereeState(doo_counter, laps);
+            msr::airlib::CarApiBase::Point2D initial_position_api_base;
+            initial_position_api_base.x = initial_position.x;
+            initial_position_api_base.y = initial_position.y;
+            std::vector<msr::airlib::CarApiBase::Cone> cones_api_base;
+            for (size_t i = 0; i < cones.size(); i++) {
+                msr::airlib::CarApiBase::Cone cone_api_base;
+                cone_api_base.location.x = cones[i].x;
+                cone_api_base.location.y = cones[i].y;
+                cone_api_base.color = cones[i].color;
+                cones_api_base.push_back(cone_api_base);
+            }
+            return msr::airlib::CarApiBase::RefereeState(doo_counter, laps, cones_api_base, initial_position_api_base);
         }
 
     };

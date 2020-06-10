@@ -37,10 +37,15 @@ Velocity, orientation and acceleratoin information at 250hz.
 [Read all about the IMU model here.](imu.md)
 Data is in the `fsds/FSCar` frame.
 
-- `/fsds/odom` [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)   
+- `/fsds/testing_only/odom` [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)   
 Ground truth car position and orientation in NED frame. THIS WILL NOT BE STREAMED DURING COMPETITION.
 
-- `/fsds/camera/CAMERA_NAME` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)   
+- `/fsds/testing_only/track` [fs_msgs/Track](https://github.com/FS-Online/fs_msgs/blob/master/msg/Track.msg)   
+Ground truth cone position and color with respect to the starting location of the car. THIS WILL NOT BE STREAMED DURING COMPETITION.
+Currently this only publishes the *initial position* of cones that are part of the track spline. Any cones placed manually in the world are not published here.
+Additionally, the track is published once and the message is latched (meaning it is always available for a newly created subscriber). 
+
+- `/fsds/camera/CAMERA_NAME` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)    
 One of this topic type will exist for every camera specified in the `settings.json` file.
 On this topic, camera frames are published. The format will be bgra8. 
 `CAMERA_NAME` will be replaced by the corresponding in the `Cameras` object in the `settings.json` file.
@@ -55,14 +60,14 @@ Transformations between the `fsds/LIDARNAME` and `fsds/FSCar` frame are being pu
 - `/fsds/lidar/LIDARNAME` [sensor_msgs/PointCloud](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/PointCloud.html).   
   Publishes the lidar points for each lidar sensor.
 
-- `/fsds/signal/go` [fsds_ros_bridge/GoSignal](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/GoSignal.msg)   
+- `/fsds/signal/go` [fs_msgs/GoSignal](https://github.com/FS-Online/fs_msgs/blob/master/msg/GoSignal.msg)   
 GO signal that is sent every second by the ROS bridge.
 The car is only allowed to drive once this message has been received. 
 If no GO signal is received for more than 4 seconds, the AS can assume that `fsds_ros_bridge` has been shut down.
 This message also includes the mission type and track.
 More info about signal topics can be found in the [integration handbook](integration-handbook.md)
 
-- `/fsds/signal/finished` [fsds_ros_bridge/FinishedSignal](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/FinishedSignal.msg)   
+- `/fsds/signal/finished` [fs_msgs/FinishedSignal](https://github.com/FS-Online/fs_msgs/blob/master/msg/FinishedSignal.msg)   
 Finished signal that is sent by the AS to stop the mission. More info about signal topics can be found in the [integration handbook](integration-handbook.md)
 
 - `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)   
@@ -71,14 +76,14 @@ See 'Coordinate frames and transforms'
 
 
 ## Subscribers
-- `/fsds/control_command` [fsds_ros_bridge/ControlCommand](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/ControlCommand.msg)   
+- `/fsds/control_command` [fs_msgs/ControlCommand](https://github.com/FS-Online/fs_msgs/blob/master/msg/ControlCommand.msg)   
 This message includes the dimensionless values throttle, steering and brake. 
 Throttle and brake range from 0 to 1.
 For steering `-1` steers full to the left and `+1` steers full to the right.
 The contents of this message fill the essential parts of the `msr::airlib::CarApiBase::CarControl` struct. 
 This is the only way to control the car when the airsim ROS client is connected (keyboard will no longer work!).
 
-- `/fsds/signal/finished` [fsds_ros_bridge/FinishedSignal](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/msg/FinishedSignal.msg)   
+- `/fsds/signal/finished` [fs_msgs/FinishedSignal](https://github.com/FS-Online/fs_msgs/blob/master/msg/FinishedSignal.msg)   
 Finished signal that is sent by the AS to stop the mission.
 The ros bridge will forward the signal to the operator which in turn will stop the ros bridge and finish the run.
 
