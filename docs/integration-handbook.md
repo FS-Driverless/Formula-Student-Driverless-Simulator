@@ -188,7 +188,7 @@ Static transforms between sensors also are being published for usage by the auto
 
 ### ROS msgs
 
-The ROS bridge of this simulator had to make use of several custom msgs (for control commands, the groundtruth track, etc). These messages are defined in a ROS package called `fs_msgs` which is located in a separate, light [repository](https://github.com/FS-Online/fs_msgs). To implement publishers and subscibers for these messages types in your autonomous pipeline, you will have to add the `fs_msgs` repository as a submodule in your codebase (inside de `src` directory of an existing catkin workspace as done in this repository) or clone it and build it somewhere else in your system.
+The ROS bridge of this simulator had to make use of several custom msgs (for control commands, the groundtruth track, etc). These messages are defined in a ROS package called `fs_msgs` which is located in a separate, light [repository](https://github.com/FS-Online/fs_msgs). To implement publishers and subscibers for these messages types in your autonomous pipeline, you will have to add the `fs_msgs` repository as a submodule in your codebase (inside de `src` directory of an existing **catkin workspace** as done in this repository) or clone it and build it somewhere else in your system.
 
 ### Topics
 
