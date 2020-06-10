@@ -16,7 +16,7 @@ client.confirmConnection()
 #
 # The simGetObjectPose and simSetObjectPose uses first object that has specified name OR tag.
 # more info: https://answers.unrealengine.com/questions/543807/whats-the-difference-between-tag-and-tag.html
-#            https://answers.unrealengine.com/revisions/790629.html
+#            https://answers.unrealengine.com/revisilapTimeons/790629.html
 
 # below works in Blocks environment
 

@@ -39,3 +39,26 @@ int32 AReferee::LapCompleted(float lapTime)
 	state.laps.push_back(lapTime);
 	return state.laps.size();
 }
+
+void AReferee::AppendYellowCone(FTransform transform) {
+	msr::airlib::CarApiBase::Cone cone;
+	cone.location.x = transform.GetTranslation().X;
+	cone.location.y = transform.GetTranslation().Y;
+	cone.color = msr::airlib::CarApiBase::ConeColor::Yellow;
+	state.cones.push_back(cone);
+}
+
+void AReferee::AppendBlueCone(FTransform transform) {
+	msr::airlib::CarApiBase::Cone cone;
+	cone.location.x = transform.GetTranslation().X;
+	cone.location.y = transform.GetTranslation().Y;
+	cone.color = msr::airlib::CarApiBase::ConeColor::Blue;
+	state.cones.push_back(cone);
+}
+
+void AReferee::LoadStartPos(FVector pos) {
+	msr::airlib::CarApiBase::Point2D point;
+	point.x = pos.X;
+	point.y = pos.Y;
+	state.car_start_location = point;
+}

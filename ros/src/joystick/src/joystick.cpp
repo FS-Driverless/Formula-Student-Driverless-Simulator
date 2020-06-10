@@ -174,8 +174,10 @@ int main(
   ros::init(argc, argv, ros::this_node::getName());
   ros::NodeHandle node_handle;
   node_handle.getParam("/joy/dev", JOYSTICK_PATH);
+
   CONTROL_PUBLISHER = node_handle.advertise<fs_msgs::ControlCommand>(
-      "/fsds_ros_bridge/FSCar/control_command", 1);
+      "/fsds/control_command", 1);
+
   // we only care about the last message so queue size set to 1 deletes any older messages.
   JOY_SUBSCRIBER = node_handle.subscribe("/joy", 1, JoyCallback);
 

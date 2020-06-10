@@ -37,7 +37,6 @@ find_package(catkin REQUIRED COMPONENTS
   fs_msgs
 )
 
-
 add_service_files(
   FILES
   Reset.srv

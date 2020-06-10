@@ -33,4 +33,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Referee")
 	int32 LapCompleted(float lapTime);
+
+	UFUNCTION(BlueprintCallable, Category="Referee")
+	void AppendYellowCone(FTransform cone);
+
+	UFUNCTION(BlueprintCallable, Category="Referee")
+	void AppendBlueCone(FTransform cone);
+
+	UFUNCTION(BlueprintCallable, Category="Referee")
+	void LoadStartPos(FVector pos);
 };
