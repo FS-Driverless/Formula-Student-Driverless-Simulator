@@ -19,6 +19,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include <fsds_ros_bridge/Reset.h>
 #include <fsds_ros_bridge/GoSignal.h>
 #include <fsds_ros_bridge/FinishedSignal.h>
+#include <fsds_ros_bridge/Track.h>
 #include <chrono>
 #include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -82,6 +83,7 @@ public:
 
     void initialize_airsim();
     void initialize_ros();
+    void publish_track();
     void initialize_statistics();
 
     // std::vector<ros::CallbackQueue> callback_queues_;
@@ -179,6 +181,7 @@ private:
     ros::ServiceServer reset_srvr_;
 
     std::string vehicle_name;
+    CarApiBase::Point2D car_start_pos; // In Unreal coordinates
 
 
     AirSimSettingsParser airsim_settings_parser_;
@@ -234,6 +237,7 @@ private:
     ros::Publisher odom_pub;
     ros::Publisher global_gps_pub;
     ros::Publisher imu_pub;
+    ros::Publisher track_pub;
     ros::Publisher go_signal_pub_;
     
     /// ROS subscribers
