@@ -186,6 +186,10 @@ Sensor data will be published by the [ros bridge](ros-bridge.md) and received by
 The autonomous system will publish vehicle setpoints and the ROS bridge will listen for those messages.
 Static transforms between sensors also are being published for usage by the autonomous system.
 
+### ROS msgs
+
+The ROS bridge of this simulator had to make use of several custom msgs (for control commands, the groundtruth track, etc). These messages are defined in a ROS package called `fs_msgs` which is located in a separate, light [repository](https://github.com/FS-Online/fs_msgs). To implement publishers and subscibers for these messages types in your autonomous pipeline, you will have to add the `fs_msgs` repository as a submodule in your codebase (inside de `src` directory of an existing **catkin workspace** as done in this repository) or clone it and build it somewhere else in your system.
+
 ### Topics
 
 The AS can subscribe to the following sensor topics:

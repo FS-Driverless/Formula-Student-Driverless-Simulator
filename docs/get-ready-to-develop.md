@@ -79,7 +79,7 @@ Once both are installed, open git bash and run `git lfs install`.
 
 Now clone the repo in the windows home directory 
 ```
-git clone git@github.com:FS-Online/Formula-Student-Driverless-Simulator.git
+git clone git@github.com:FS-Online/Formula-Student-Driverless-Simulator.git --recurse-submodules
 ```
 
 Go into the cloned repo and run `git config core.fileMode false` to ignore file mode changes.
