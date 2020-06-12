@@ -608,6 +608,7 @@ void AirsimROSWrapper::PrintStatistics()
     // {
     //     statistics_obj->Print();
     // }
+    std::cout << "------ ros_wrapper statistics" << std::endl;
     setCarControlsStatistics.Print();
     getGpsDataStatistics.Print();
     getCarStateStatistics.Print();
@@ -627,6 +628,7 @@ void AirsimROSWrapper::PrintStatistics()
     {
         lidar_pub_statistics.Print();
     }
+    std::cout << "------" << std::endl;
 }
 
 void AirsimROSWrapper::ResetStatistics()
