@@ -47,6 +47,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include <tf2_ros/static_transform_broadcaster.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
+#include <std_msgs/Float32.h>
 #include <unordered_map>
 #include <fstream>
 #include <curl/curl.h>
@@ -236,6 +237,8 @@ private:
     ros::Publisher clock_pub_;
     ros::Publisher odom_ned_pub;
     ros::Publisher odom_enu_pub;
+    ros::Publisher odom_ned_yaw_pub;
+    ros::Publisher odom_enu_yaw_pub;
     ros::Publisher global_gps_pub;
     ros::Publisher imu_pub;
     ros::Publisher track_pub;

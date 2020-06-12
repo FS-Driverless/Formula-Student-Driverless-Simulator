@@ -22,5 +22,5 @@
 	</node>
 
 	<!-- Static transforms -->
-	<include file="$(find fsds_ros_bridge)/launch/static_transforms.launch"/>
+	<!-- <include file="$(find fsds_ros_bridge)/launch/static_transforms.launch"/> -->
 </launch>

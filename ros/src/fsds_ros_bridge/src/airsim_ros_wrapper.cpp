@@ -85,7 +85,7 @@ void AirsimROSWrapper::publish_track() {
     for (const auto& cone : state.cones) {
         fs_msgs::Cone cone_object;
         cone_object.location.x = cone.location.x != 0 ? (cone.location.x - car_start_pos.x)*0.01 : 0;
-        cone_object.location.y = cone.location.y != 0 ? (cone.location.y - car_start_pos.y)*0.01 : 0;
+        cone_object.location.y = cone.location.y != 0 ? -(cone.location.y - car_start_pos.y)*0.01 : 0;
         if (cone.color == CarApiBase::ConeColor::Yellow) {
             cone_object.color = fs_msgs::Cone::YELLOW;
         } else if (cone.color == CarApiBase::ConeColor::Blue) {
@@ -165,6 +165,8 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         vehicle_name = curr_vehicle_name;
         odom_ned_pub = nh_.advertise<nav_msgs::Odometry>("testing_only/odom_ned", 10);
         odom_enu_pub = nh_.advertise<nav_msgs::Odometry>("testing_only/odom_enu", 10);
+        odom_ned_yaw_pub = nh_.advertise<std_msgs::Float32>("testing_only/odom_ned_yaw", 10);
+        odom_enu_yaw_pub = nh_.advertise<std_msgs::Float32>("testing_only/odom_enu_yaw", 10);
         global_gps_pub = nh_.advertise<sensor_msgs::NavSatFix>("gps", 10);
         imu_pub = nh_.advertise<sensor_msgs::Imu>("imu", 10);
         control_cmd_sub = nh_.subscribe<fs_msgs::ControlCommand>("control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, vehicle_name));
@@ -378,6 +380,8 @@ nav_msgs::Odometry AirsimROSWrapper::get_odom_msg_from_airsim_state(const msr::a
     odom_ned_msg.pose.pose.orientation.z = car_state.getOrientation().z();
     odom_ned_msg.pose.pose.orientation.w = car_state.getOrientation().w();
 
+
+
     odom_ned_msg.twist.twist.linear.x = car_state.kinematics_estimated.twist.linear.x();
     odom_ned_msg.twist.twist.linear.y = car_state.kinematics_estimated.twist.linear.y();
     odom_ned_msg.twist.twist.linear.z = car_state.kinematics_estimated.twist.linear.z();
@@ -390,6 +394,7 @@ nav_msgs::Odometry AirsimROSWrapper::get_odom_msg_from_airsim_state(const msr::a
 
 nav_msgs::Odometry AirsimROSWrapper::convert_ned_odom_to_enu(const nav_msgs::Odometry& odom_ned) const 
 {
+    std_msgs::Float32 yaw_ned, yaw_enu;
     nav_msgs::Odometry odom_enu_msg;
 
     odom_enu_msg.pose.pose.position.x = odom_ned.pose.pose.position.x;
@@ -397,19 +402,33 @@ nav_msgs::Odometry AirsimROSWrapper::convert_ned_odom_to_enu(const nav_msgs::Odo
     odom_enu_msg.pose.pose.position.z = - odom_ned.pose.pose.position.z;
 
     // odom_enu_msg.pose.pose.orientation = odom_ned.pose.pose.orientation;
-    tf::Quaternion odom_ned_tf_quat;
-    odom_ned_tf_quat.setX(odom_ned.pose.pose.orientation.x);
-    odom_ned_tf_quat.setY(odom_ned.pose.pose.orientation.y);
-    odom_ned_tf_quat.setZ(odom_ned.pose.pose.orientation.z);
-    odom_ned_tf_quat.setW(odom_ned.pose.pose.orientation.w);
-    tf::Quaternion heading_correction;
-    heading_correction.setRPY(M_PI, 0, 0);
-    odom_ned_tf_quat = odom_ned_tf_quat * heading_correction;
+    tf::Quaternion odom_enu_tf_quat;
+    odom_enu_tf_quat.setX(odom_ned.pose.pose.orientation.x);
+    odom_enu_tf_quat.setY(odom_ned.pose.pose.orientation.y);
+    odom_enu_tf_quat.setZ(odom_ned.pose.pose.orientation.z);
+    odom_enu_tf_quat.setW(odom_ned.pose.pose.orientation.w);
+
+    // Debug yaw
+    tf::Matrix3x3 m_ned(odom_enu_tf_quat);
+    double roll, pitch, yaw;
+    m_ned.getRPY(roll, pitch, yaw); 
+    yaw_ned.data = yaw;
+    odom_ned_yaw_pub.publish(yaw_ned);
+
+    // tf::Quaternion heading_correction;
+    // heading_correction.setRPY(0, 0, 0);
+    odom_enu_tf_quat = odom_enu_tf_quat.inverse();
     
-    odom_enu_msg.pose.pose.orientation.x = odom_ned_tf_quat.getX();
-    odom_enu_msg.pose.pose.orientation.y = odom_ned_tf_quat.getY();
-    odom_enu_msg.pose.pose.orientation.z = odom_ned_tf_quat.getZ();
-    odom_enu_msg.pose.pose.orientation.w = odom_ned_tf_quat.getW();
+    // Debug yaw
+    tf::Matrix3x3 m_enu(odom_enu_tf_quat);
+    m_enu.getRPY(roll, pitch, yaw);
+    yaw_enu.data = yaw; 
+    odom_enu_yaw_pub.publish(yaw_enu);
+
+    odom_enu_msg.pose.pose.orientation.x = odom_enu_tf_quat.getX();
+    odom_enu_msg.pose.pose.orientation.y = odom_enu_tf_quat.getY();
+    odom_enu_msg.pose.pose.orientation.z = odom_enu_tf_quat.getZ();
+    odom_enu_msg.pose.pose.orientation.w = odom_enu_tf_quat.getW();
 
     odom_enu_msg.twist.twist.linear.x =   odom_ned.twist.twist.linear.x;
     odom_enu_msg.twist.twist.linear.y = - odom_ned.twist.twist.linear.y;
