@@ -1,3 +1,4 @@
 <launch>
+	<!-- static_transform_publisher x y z yaw pitch roll frame_id child_frame_id period_in_ms -->
 	<node pkg="tf" type="static_transform_publisher" name="ned_to_enu_pub" args="0 0 0 1.57 0 3.14 fsds/FSCar fsds/FSCar/enu 100"/>
 </launch>
