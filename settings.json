@@ -1,46 +1,77 @@
 {
-  "SeeDocsAt": "https://github.com/Microsoft/AirSim/blob/master/docs/settings.md",
-  "SettingsVersion": 1.2,
-  "SimMode": "Car",
-  "ViewMode": "SpringArmChase",
-  "ClockSpeed": 1.0,
-  "Vehicles": {
-    "FSCar": {
-      "VehicleType": "PhysXCar",
-      "DefaultVehicleState": "",
-      "EnableCollisionPassthrogh": false,
-      "EnableCollisions": true,
-      "AllowAPIAlways": true,
-      "RC":{
-          "RemoteControlID": -1
-      },
-      "Sensors": {
-        "Imu" : {
-          "SensorType": 2,
-          "Enabled": true
+    "SeeDocsAt": "https://fs-online.github.io/Formula-Student-Driverless-Simulator/",
+    "SettingsVersion": 1.2,
+    "SimMode": "Car",
+    "ViewMode": "SpringArmChase",
+    "ClockSpeed": 1.0,
+    "Vehicles": {
+      "FSCar": {
+        "VehicleType": "PhysXCar",
+        "DefaultVehicleState": "",
+        "EnableCollisionPassthrogh": false,
+        "EnableCollisions": true,
+        "AllowAPIAlways": true,
+        "RC":{
+            "RemoteControlID": -1
         },
-        "Gps" : {
-          "SensorType": 3,
-          "Enabled": true
+        "Sensors": {
+          "Imu" : {
+            "SensorType": 2,
+            "Enabled": true
+          },
+          "Gps" : {
+            "SensorType": 3,
+            "Enabled": true
+          },
+          "LidarCustom": {
+            "SensorType": 6,
+            "Enabled": true,
+            "NumberOfChannels": 16,
+            "PointsPerSecond": 10000,
+            "X": 0,
+            "Y": 0,
+            "Z": -1,
+            "DrawDebugPoints": false
+          }
         },
-        "LidarCustom": {
-          "SensorType": 6,
-          "Enabled": true,
-          "NumberOfChannels": 16,
-          "PointsPerSecond": 10000,
-          "X": 0,
-          "Y": 0,
-          "Z": -1,
-          "DrawDebugPoints": false
-        }
-      },
-      "Cameras": {
-
-      },
-      "X": 2, "Y": 0, "Z": 0,
-      "Pitch": 0, "Roll": 0, "Yaw": 0
-    }
-  },
-  "SubWindows": [
-  ]
-}
+        "Cameras": {
+          "cam1": {
+            "CaptureSettings": [
+              {
+                "ImageType": 0,
+                "Width": 785,
+                "Height": 785,
+                "FOV_Degrees": 90
+              }
+            ],
+            "X": 1.0,
+            "Y": 0.06,
+            "Z": -2.20,
+            "Pitch": 0.0,
+            "Roll": 0.0,
+            "Yaw": 180
+          },
+          "cam2": {
+            "CaptureSettings": [
+              {
+                "ImageType": 0,
+                "Width": 785,
+                "Height": 785,
+                "FOV_Degrees": 90
+              }
+            ],
+            "X": 1.0,
+            "Y": 0.06,
+            "Z": -2.20,
+            "Pitch": 0.0,
+            "Roll": 0.0,
+            "Yaw": 0.0
+          }
+        },
+        "X": 2, "Y": 0, "Z": 0,
+        "Pitch": 0, "Roll": 0, "Yaw": 0
+      }
+    },
+    "SubWindows": [
+    ]
+  }
