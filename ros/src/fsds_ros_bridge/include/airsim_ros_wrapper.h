@@ -211,9 +211,9 @@ private:
     // std::recursive_mutex lidar_mutex_;
 
     /// ROS tf
-    tf2_ros::TransformBroadcaster tf_broadcaster_;
+    // tf2_ros::TransformBroadcaster tf_broadcaster_;
     tf2_ros::StaticTransformBroadcaster static_tf_pub_;
-    tf2_ros::Buffer tf_buffer_;
+    // tf2_ros::Buffer tf_buffer_;
 
     /// ROS Timers.
     ros::Timer airsim_img_response_timer_;

@@ -84,7 +84,9 @@ void AirsimROSWrapper::publish_track() {
     fs_msgs::Track track;
     for (const auto& cone : state.cones) {
         fs_msgs::Cone cone_object;
+        // 0.01 is a scaling constant that converts to meters
         cone_object.location.x = cone.location.x != 0 ? (cone.location.x - car_start_pos.x)*0.01 : 0;
+        // Negative sign follows ENU convention
         cone_object.location.y = cone.location.y != 0 ? -(cone.location.y - car_start_pos.y)*0.01 : 0;
         if (cone.color == CarApiBase::ConeColor::Yellow) {
             cone_object.color = fs_msgs::Cone::YELLOW;
