@@ -7,6 +7,8 @@
 #include "common/Common.hpp"
 #include "vehicles/car/api/CarRpcLibClient.hpp"
 #include "statistics.h"
+#include "rpc/rpc_error.h"
+
 
 
 
@@ -44,7 +46,16 @@ void doImageUpdate(const ros::TimerEvent&)
     // We are using simGetImages instead of simGetImage because the latter does not return image dimention information.
     std::vector<ImageRequest> req;
     req.push_back(ImageRequest(camera_name, ImageType::Scene, false, false));
-    std::vector<ImageResponse> img_responses = airsim_api->simGetImages(req, "FSCar");
+
+    std::vector<ImageResponse> img_responses;
+    try {
+        img_responses = airsim_api->simGetImages(req, "FSCar");
+    } catch (rpc::rpc_error& e) {
+        std::cout << "error" << std::endl;
+        std::string msg = e.get_error().as<std::string>();
+        std::cout << "Exception raised by the API while getting image:" << std::endl
+                << msg << std::endl;
+    }
 
     // if a render request failed for whatever reason, this img will be empty.
     if (img_responses.size() == 0 || img_responses[0].time_stamp == 0)

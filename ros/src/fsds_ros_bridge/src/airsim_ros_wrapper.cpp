@@ -53,8 +53,18 @@ void AirsimROSWrapper::initialize_statistics()
 }
 
 void AirsimROSWrapper::publish_track() {
+    CarApiBase::RefereeState state;
+    try{
+        std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
+        state = airsim_client_.getRefereeState();
+        lck.unlock();
+    } catch (rpc::rpc_error& e)
+    {
+        std::string msg = e.get_error().as<std::string>();
+        std::cout << "Exception raised by the API, something went wrong while retreiving referee state for publishing track." << std::endl
+                  << msg << std::endl;
+    }
     
-    CarApiBase::RefereeState state = airsim_client_.getRefereeState();
     // Get car initial position
     car_start_pos = state.car_start_location;
 
@@ -414,7 +424,7 @@ void AirsimROSWrapper::odom_cb(const ros::TimerEvent& event)
     {
         std::cout << "error" << std::endl;
         std::string msg = e.get_error().as<std::string>();
-        std::cout << "Exception raised by the API:" << std::endl
+        std::cout << "Exception raised by the API while getting car state:" << std::endl
                   << msg << std::endl;
     }
 }
@@ -439,27 +449,37 @@ void AirsimROSWrapper::gps_timer_cb(const ros::TimerEvent& event)
  {
     std::cout << "error" << std::endl;
     std::string msg = e.get_error().as<std::string>();
-    std::cout << "Exception raised by the API:" << std::endl
+    std::cout << "Exception raised by the API while getting gps data:" << std::endl
               << msg << std::endl;
  }
 }
 
 void AirsimROSWrapper::imu_timer_cb(const ros::TimerEvent& event)
 {
-    struct msr::airlib::ImuBase::Output imu_data;
+    try 
     {
-        ros_bridge::Timer timer(&getImuStatistics);
-        std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
-        auto imu_data = airsim_client_.getImuData("Imu", vehicle_name);
-        lck.unlock();
-    }
+        struct msr::airlib::ImuBase::Output imu_data;
+        {
+            ros_bridge::Timer timer(&getImuStatistics);
+            std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
+            auto imu_data = airsim_client_.getImuData("Imu", vehicle_name);
+            lck.unlock();
+        }
 
-    sensor_msgs::Imu imu_msg = get_imu_msg_from_airsim(imu_data);
-    imu_msg.header.frame_id = "fsds/" + vehicle_name;
-    // imu_msg.header.stamp = ros::Time::now();
+        sensor_msgs::Imu imu_msg = get_imu_msg_from_airsim(imu_data);
+        imu_msg.header.frame_id = "fsds/" + vehicle_name;
+        // imu_msg.header.stamp = ros::Time::now();
+        {
+            ros_bridge::ROSMsgCounter counter(&imu_pub_statistics);
+            imu_pub.publish(imu_msg);
+        }
+    }
+    catch (rpc::rpc_error& e)
     {
-        ros_bridge::ROSMsgCounter counter(&imu_pub_statistics);
-        imu_pub.publish(imu_msg);
+        std::cout << "error" << std::endl;
+        std::string msg = e.get_error().as<std::string>();
+        std::cout << "Exception raised by the API while getting imu data:" << std::endl
+                << msg << std::endl;
     }
 }
 

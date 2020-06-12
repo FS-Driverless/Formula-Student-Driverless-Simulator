@@ -14,9 +14,25 @@
         "RC":{
             "RemoteControlID": -1
         },
-        "Gps" : {
-          "SensorType": 3,
-          "Enabled": true
+        "Sensors": {
+          "Imu" : {
+            "SensorType": 2,
+            "Enabled": true
+          },
+          "Gps" : {
+            "SensorType": 3,
+            "Enabled": true
+          },
+          "LidarCustom": {
+            "SensorType": 6,
+            "Enabled": true,
+            "NumberOfChannels": 16,
+            "PointsPerSecond": 10000,
+            "X": 0,
+            "Y": 0,
+            "Z": -1,
+            "DrawDebugPoints": false
+          }
         },
         "Cameras": {
           "cam1": {

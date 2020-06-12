@@ -116,6 +116,7 @@ void RpcLibClientBase::confirmConnection()
     ClockBase* clock = ClockFactory::get();
 
     std::cout << "Waiting for connection - " << std::endl;
+    clock->sleep_for(1);
     if (getConnectionState() != RpcLibClientBase::ConnectionState::Connected)
     {
         throw std::runtime_error("Failed connecting to rps client (airsim). Is the simulator running?");
