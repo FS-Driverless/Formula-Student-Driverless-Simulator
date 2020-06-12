@@ -320,24 +320,10 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 
 ros::Time AirsimROSWrapper::make_ts(uint64_t unreal_ts)
 {
-    if (first_unreal_ts < 0)
-    {
-        first_unreal_ts = unreal_ts;
-        first_ros_ts = ros::Time::now();
-    }
-
-    int64_t relative_unreal_ts = unreal_ts - first_unreal_ts;
-
-    int64_t nsec_part = relative_unreal_ts % 1000000000L;
-    int64_t sec_part = relative_unreal_ts / 1000000000L;
-    while (nsec_part < 0) {
-        nsec_part += 1e9L;
-        --sec_part;
-    }
-    if (sec_part > UINT_MAX)
-        throw std::runtime_error("sec_part is out of dual 32-bit range");
-
-    return first_ros_ts + ros::Duration(sec_part, nsec_part);
+   // unreal timestamp is a unix nanosecond timestamp just like ros.
+   // We can do direct translation as long as ros is not running in simulated time mode.
+   ros::Time out;
+   return out.fromNSec(unreal_ts);
 }
 
 // todo add reset by vehicle_name API to airlib
