@@ -69,7 +69,7 @@ void doImageUpdate(const ros::TimerEvent&)
     img_msg->height = img_response.height;
     img_msg->width = img_response.width;
     img_msg->step = img_response.width * 8; // image_width * num_bytes
-    img_msg->encoding = "rgb8";
+    img_msg->encoding = "bgr8";
     img_msg->is_bigendian = 0;
     img_msg->header.stamp = make_ts(img_response.time_stamp);
     img_msg->header.frame_id = "/fsds/camera/"+camera_name;
