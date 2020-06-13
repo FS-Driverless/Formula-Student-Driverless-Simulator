@@ -127,11 +127,6 @@ Transforms to the ground truth are disabled because this would take away the cha
   Default: 0.004 seconds (250hz).   
   Timer callback frequency for updating and publishing the odometry.
 
-- `/fsds/ros_bridge/publish_static_tf_every_n_sec` [double]   
-  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   
-  Default: 1 seconds (1 hz).   
-  The frequency at which the static transforms are published.
-
 - `/fsds/ros_bridge/update_lidar_every_n_sec` [double]   
   Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   
   Default: 0.1 seconds (10 hz).   

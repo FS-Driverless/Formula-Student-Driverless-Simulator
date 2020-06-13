@@ -118,7 +118,6 @@ private:
     void odom_cb(const ros::TimerEvent& event);    // update drone state from airsim_client_ every nth sec
     void gps_timer_cb(const ros::TimerEvent& event);
     void imu_timer_cb(const ros::TimerEvent& event);
-    void statictf_cb(const ros::TimerEvent& event);
     void car_control_cb(const fs_msgs::ControlCommand::ConstPtr& msg, const std::string& vehicle_name);
     void lidar_timer_cb(const ros::TimerEvent& event);
     void statistics_timer_cb(const ros::TimerEvent& event);
@@ -135,9 +134,7 @@ private:
 
     // methods which parse setting json ang generate ros pubsubsrv
     void create_ros_pubs_from_settings_json();
-    void append_static_camera_tf(const std::string& vehicle_name, const std::string& camera_name, const CameraSetting& camera_setting);
-    void append_static_lidar_tf(const std::string& vehicle_name, const std::string& lidar_name, const LidarSetting& lidar_setting);
-    void append_static_vehicle_tf(const std::string& vehicle_name, const VehicleSetting& vehicle_setting);
+    void latch_static_lidar_tf(const std::string& vehicle_name, const std::string& lidar_name, const LidarSetting& lidar_setting);
     void set_nans_to_zeros_in_pose(VehicleSetting& vehicle_setting) const;
     void set_nans_to_zeros_in_pose(const VehicleSetting& vehicle_setting, CameraSetting& camera_setting) const;
     void set_nans_to_zeros_in_pose(const VehicleSetting& vehicle_setting, LidarSetting& lidar_setting) const;
@@ -161,7 +158,6 @@ private:
 
     AirSimSettingsParser airsim_settings_parser_;
     std::map<std::string, std::string> vehicle_lidar_map_;
-    std::vector<geometry_msgs::TransformStamped> static_tf_msg_vec_;
     std::string mission_name_; // rosparam obtained from launch file
     std::string track_name_; // rosparam obtained from launch file
 
@@ -180,9 +176,7 @@ private:
     // std::recursive_mutex lidar_mutex_;
 
     /// ROS tf
-    tf2_ros::TransformBroadcaster tf_broadcaster_;
-    tf2_ros::StaticTransformBroadcaster static_tf_pub_;
-    tf2_ros::Buffer tf_buffer_;
+    // tf2_ros::StaticTransformBroadcaster static_tf_pub_;
 
     /// ROS Timers.
     ros::Timer odom_update_timer_;
@@ -191,7 +185,6 @@ private:
     ros::Timer airsim_lidar_update_timer_;
     ros::Timer statistics_timer_;
     ros::Timer go_signal_timer_;
-    ros::Timer statictf_timer_;
 
     std::vector<ros::Publisher> lidar_pub_vec_;
 

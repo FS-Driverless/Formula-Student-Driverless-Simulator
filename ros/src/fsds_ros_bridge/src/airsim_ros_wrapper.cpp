@@ -104,14 +104,12 @@ void AirsimROSWrapper::initialize_ros()
     nh_private_.getParam("update_odom_every_n_sec", update_odom_every_n_sec);
     nh_private_.getParam("update_gps_every_n_sec", update_gps_every_n_sec);
     nh_private_.getParam("update_imu_every_n_sec", update_imu_every_n_sec);
-    nh_private_.getParam("publish_static_tf_every_n_sec", publish_static_tf_every_n_sec);
     
 
     create_ros_pubs_from_settings_json();
     odom_update_timer_ = nh_private_.createTimer(ros::Duration(update_odom_every_n_sec), &AirsimROSWrapper::odom_cb, this);
     gps_update_timer_ = nh_private_.createTimer(ros::Duration(update_gps_every_n_sec), &AirsimROSWrapper::gps_timer_cb, this);
     imu_update_timer_ = nh_private_.createTimer(ros::Duration(update_imu_every_n_sec), &AirsimROSWrapper::imu_timer_cb, this);
-    statictf_timer_ = nh_private_.createTimer(ros::Duration(publish_static_tf_every_n_sec), &AirsimROSWrapper::statictf_cb, this);
 
     statistics_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::statistics_timer_cb, this);
     go_signal_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::go_signal_timer_cb, this);
@@ -125,7 +123,6 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
     go_signal_pub_ = nh_.advertise<fs_msgs::GoSignal>("signal/go", 1);
     finished_signal_sub_ = nh_.subscribe("signal/finished", 1, &AirsimROSWrapper::finished_signal_cb, this);
 
-    static_tf_msg_vec_.clear();
     lidar_pub_vec_.clear();
     // vehicle_imu_map_;
     // callback_queues_.clear();
@@ -190,7 +187,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
                 std::cout << "Lidar" << std::endl;
                 auto lidar_setting = *static_cast<LidarSetting *>(sensor_setting.get());
                 set_nans_to_zeros_in_pose(*vehicle_setting, lidar_setting);
-                append_static_lidar_tf(curr_vehicle_name, sensor_name, lidar_setting); // todo is there a more readable way to down-cast?
+                latch_static_lidar_tf(curr_vehicle_name, sensor_name, lidar_setting); // todo is there a more readable way to down-cast?
                 vehicle_lidar_map_[curr_vehicle_name] = sensor_name;                   // non scalable
                 lidar_pub_vec_.push_back(nh_.advertise<sensor_msgs::PointCloud2>("lidar/" + sensor_name, 10));
                 lidar_pub_vec_statistics.push_back(ros_bridge::Statistics(sensor_name + "_Publisher"));
@@ -469,16 +466,6 @@ void AirsimROSWrapper::imu_timer_cb(const ros::TimerEvent& event)
     }
 }
 
-void AirsimROSWrapper::statictf_cb(const ros::TimerEvent& event)
-{
-    for (auto& static_tf_msg : static_tf_msg_vec_)
-    {
-        static_tf_msg.header.stamp = ros::Time::now();
-        static_tf_pub_.sendTransform(static_tf_msg);
-    }
-}
-
-
 // airsim uses nans for zeros in settings.json. we set them to zeros here for handling tfs in ROS
 void AirsimROSWrapper::set_nans_to_zeros_in_pose(VehicleSetting& vehicle_setting) const
 {
@@ -522,11 +509,14 @@ void AirsimROSWrapper::set_nans_to_zeros_in_pose(const VehicleSetting& vehicle_s
         lidar_setting.rotation.roll = vehicle_setting.rotation.roll;
 }
 
-void AirsimROSWrapper::append_static_lidar_tf(const std::string& vehicle_name, const std::string& lidar_name, const LidarSetting& lidar_setting)
+void AirsimROSWrapper::latch_static_lidar_tf(const std::string& vehicle_name, const std::string& lidar_name, const LidarSetting& lidar_setting)
 {
+    static tf2_ros::StaticTransformBroadcaster static_tf_pub_;
 
     geometry_msgs::TransformStamped lidar_tf_msg;
     lidar_tf_msg.header.frame_id = "fsds/" + vehicle_name;
+    lidar_tf_msg.header.stamp = ros::Time::now();
+    std::cout << lidar_tf_msg.header.stamp << "=============================================";
     lidar_tf_msg.child_frame_id = "fsds/" + lidar_name;
     lidar_tf_msg.transform.translation.x = lidar_setting.position.x();
     lidar_tf_msg.transform.translation.y = lidar_setting.position.y();
@@ -538,7 +528,11 @@ void AirsimROSWrapper::append_static_lidar_tf(const std::string& vehicle_name, c
     lidar_tf_msg.transform.rotation.z = quat.z();
     lidar_tf_msg.transform.rotation.w = quat.w();
 
-    static_tf_msg_vec_.push_back(lidar_tf_msg);
+    // As suggested by ros documentation, static transforms are sent once.
+    // The StaticTransformBroadcaster latches the sent messages.
+    // Sending it once will ensure all new subscribers will receive it once.
+    // Since this is a static and thus unchangeable transform this is handled correctly by ros.
+    static_tf_pub_.sendTransform(lidar_tf_msg);
 }
 
 void AirsimROSWrapper::lidar_timer_cb(const ros::TimerEvent& event)
