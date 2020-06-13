@@ -156,6 +156,15 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         // TODO: remove track publisher at competition
         track_pub = nh_.advertise<fs_msgs::Track>("testing_only/track", 10, true);
 
+        // iterate over camera map std::map<std::string, CameraSetting> cameras;
+        for (auto& curr_camera_elem : vehicle_setting->cameras)
+        {
+            auto& camera_setting = curr_camera_elem.second;
+            auto& curr_camera_name = curr_camera_elem.first;
+            set_nans_to_zeros_in_pose(*vehicle_setting, camera_setting);
+            append_static_camera_tf(curr_vehicle_name, curr_camera_name, camera_setting);
+            
+        }
 
         // iterate over sensors std::map<std::string, std::unique_ptr<SensorSetting>> sensors;
         for (auto& curr_sensor_map : vehicle_setting->sensors)
@@ -560,6 +569,28 @@ void AirsimROSWrapper::set_nans_to_zeros_in_pose(VehicleSetting& vehicle_setting
         vehicle_setting.rotation.roll = 0.0;
 }
 
+// if any nan's in camera pose, set them to match vehicle pose (which has already converted any potential nans to zeros)
+void AirsimROSWrapper::set_nans_to_zeros_in_pose(const VehicleSetting& vehicle_setting, CameraSetting& camera_setting) const
+{
+    if (std::isnan(camera_setting.position.x()))
+        camera_setting.position.x() = vehicle_setting.position.x();
+
+    if (std::isnan(camera_setting.position.y()))
+        camera_setting.position.y() = vehicle_setting.position.y();
+
+    if (std::isnan(camera_setting.position.z()))
+        camera_setting.position.z() = vehicle_setting.position.z();
+
+    if (std::isnan(camera_setting.rotation.yaw))
+        camera_setting.rotation.yaw = vehicle_setting.rotation.yaw;
+
+    if (std::isnan(camera_setting.rotation.pitch))
+        camera_setting.rotation.pitch = vehicle_setting.rotation.pitch;
+
+    if (std::isnan(camera_setting.rotation.roll))
+        camera_setting.rotation.roll = vehicle_setting.rotation.roll;
+}
+
 void AirsimROSWrapper::set_nans_to_zeros_in_pose(const VehicleSetting& vehicle_setting, LidarSetting& lidar_setting) const
 {
     if (std::isnan(lidar_setting.position.x()))
@@ -598,6 +629,24 @@ void AirsimROSWrapper::append_static_lidar_tf(const std::string& vehicle_name, c
     lidar_tf_msg.transform.rotation.w = quat.w();
 
     static_tf_msg_vec_.push_back(lidar_tf_msg);
+}
+
+void AirsimROSWrapper::append_static_camera_tf(const std::string& vehicle_name, const std::string& camera_name, const CameraSetting& camera_setting)
+{
+    geometry_msgs::TransformStamped static_cam_tf_body_msg;
+    static_cam_tf_body_msg.header.frame_id = "fsds/" + vehicle_name;
+    static_cam_tf_body_msg.child_frame_id = "fsds/" + camera_name;
+    static_cam_tf_body_msg.transform.translation.x = camera_setting.position.x();
+    static_cam_tf_body_msg.transform.translation.y = camera_setting.position.y();
+    static_cam_tf_body_msg.transform.translation.z = camera_setting.position.z();
+    tf2::Quaternion quat;
+    quat.setRPY(camera_setting.rotation.roll, camera_setting.rotation.pitch, camera_setting.rotation.yaw);
+    static_cam_tf_body_msg.transform.rotation.x = quat.x();
+    static_cam_tf_body_msg.transform.rotation.y = quat.y();
+    static_cam_tf_body_msg.transform.rotation.z = quat.z();
+    static_cam_tf_body_msg.transform.rotation.w = quat.w();
+
+    static_tf_msg_vec_.push_back(static_cam_tf_body_msg);
 }
 
 void AirsimROSWrapper::lidar_timer_cb(const ros::TimerEvent& event)
