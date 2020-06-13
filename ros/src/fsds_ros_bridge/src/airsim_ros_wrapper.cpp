@@ -146,10 +146,8 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         set_nans_to_zeros_in_pose(*vehicle_setting);
 
         vehicle_name = curr_vehicle_name;
-        odom_ned_pub = nh_.advertise<nav_msgs::Odometry>("testing_only/odom_ned", 10);
         odom_enu_pub = nh_.advertise<nav_msgs::Odometry>("testing_only/odom_enu", 10);
-        odom_ned_yaw_pub = nh_.advertise<std_msgs::Float32>("testing_only/odom_ned_yaw", 10);
-        odom_enu_yaw_pub = nh_.advertise<std_msgs::Float32>("testing_only/odom_enu_yaw", 10);
+        imu_enu_yaw_pub = nh_.advertise<std_msgs::Float32>("testing_only/odom_enu_yaw", 10);
         global_gps_pub = nh_.advertise<sensor_msgs::NavSatFix>("gps", 10);
         imu_pub = nh_.advertise<sensor_msgs::Imu>("imu", 10);
         control_cmd_sub = nh_.subscribe<fs_msgs::ControlCommand>("control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, vehicle_name));
@@ -282,76 +280,70 @@ msr::airlib::Quaternionr AirsimROSWrapper::get_airlib_quat(const tf2::Quaternion
 
 nav_msgs::Odometry AirsimROSWrapper::get_odom_msg_from_airsim_state(const msr::airlib::CarApiBase::CarState& car_state) const
 {
-    nav_msgs::Odometry odom_ned_msg;
-
-    odom_ned_msg.pose.pose.position.x = car_state.getPosition().x();
-    odom_ned_msg.pose.pose.position.y = car_state.getPosition().y();
-    odom_ned_msg.pose.pose.position.z = car_state.getPosition().z();
-    odom_ned_msg.pose.pose.orientation.x = car_state.getOrientation().x();
-    odom_ned_msg.pose.pose.orientation.y = car_state.getOrientation().y();
-    odom_ned_msg.pose.pose.orientation.z = car_state.getOrientation().z();
-    odom_ned_msg.pose.pose.orientation.w = car_state.getOrientation().w();
-
-
-
-    odom_ned_msg.twist.twist.linear.x = car_state.kinematics_estimated.twist.linear.x();
-    odom_ned_msg.twist.twist.linear.y = car_state.kinematics_estimated.twist.linear.y();
-    odom_ned_msg.twist.twist.linear.z = car_state.kinematics_estimated.twist.linear.z();
-    odom_ned_msg.twist.twist.angular.x = car_state.kinematics_estimated.twist.angular.x();
-    odom_ned_msg.twist.twist.angular.y = car_state.kinematics_estimated.twist.angular.y();
-    odom_ned_msg.twist.twist.angular.z = car_state.kinematics_estimated.twist.angular.z();
-
-    return odom_ned_msg;
-}
-
-nav_msgs::Odometry AirsimROSWrapper::convert_ned_odom_to_enu(const nav_msgs::Odometry& odom_ned) const 
-{
-    std_msgs::Float32 yaw_ned, yaw_enu;
+    // Convert to ENU frame (minus signs and quaternion inverse)
     nav_msgs::Odometry odom_enu_msg;
-
-    odom_enu_msg.pose.pose.position.x = odom_ned.pose.pose.position.x;
-    odom_enu_msg.pose.pose.position.y = - odom_ned.pose.pose.position.y;
-    odom_enu_msg.pose.pose.position.z = - odom_ned.pose.pose.position.z;
-
-    // odom_enu_msg.pose.pose.orientation = odom_ned.pose.pose.orientation;
+    odom_enu_msg.pose.pose.position.x = car_state.getPosition().x();
+    odom_enu_msg.pose.pose.position.y = - car_state.getPosition().y();
+    odom_enu_msg.pose.pose.position.z = - car_state.getPosition().z();
     tf::Quaternion odom_enu_tf_quat;
-    odom_enu_tf_quat.setX(odom_ned.pose.pose.orientation.x);
-    odom_enu_tf_quat.setY(odom_ned.pose.pose.orientation.y);
-    odom_enu_tf_quat.setZ(odom_ned.pose.pose.orientation.z);
-    odom_enu_tf_quat.setW(odom_ned.pose.pose.orientation.w);
-
-    // Debug yaw
-    tf::Matrix3x3 m_ned(odom_enu_tf_quat);
-    double roll, pitch, yaw;
-    m_ned.getRPY(roll, pitch, yaw); 
-    yaw_ned.data = yaw;
-    odom_ned_yaw_pub.publish(yaw_ned);
-
-    // tf::Quaternion heading_correction;
-    // heading_correction.setRPY(0, 0, 0);
+    odom_enu_tf_quat.setX(car_state.getOrientation().x());
+    odom_enu_tf_quat.setY(car_state.getOrientation().y());
+    odom_enu_tf_quat.setZ(car_state.getOrientation().z());
+    odom_enu_tf_quat.setW(car_state.getOrientation().w());
     odom_enu_tf_quat = odom_enu_tf_quat.inverse();
+
     
-    // Debug yaw
-    tf::Matrix3x3 m_enu(odom_enu_tf_quat);
-    m_enu.getRPY(roll, pitch, yaw);
-    yaw_enu.data = yaw; 
-    odom_enu_yaw_pub.publish(yaw_enu);
 
     odom_enu_msg.pose.pose.orientation.x = odom_enu_tf_quat.getX();
     odom_enu_msg.pose.pose.orientation.y = odom_enu_tf_quat.getY();
     odom_enu_msg.pose.pose.orientation.z = odom_enu_tf_quat.getZ();
     odom_enu_msg.pose.pose.orientation.w = odom_enu_tf_quat.getW();
 
-    odom_enu_msg.twist.twist.linear.x =   odom_ned.twist.twist.linear.x;
-    odom_enu_msg.twist.twist.linear.y = - odom_ned.twist.twist.linear.y;
-    odom_enu_msg.twist.twist.linear.z = - odom_ned.twist.twist.linear.z;
-    odom_enu_msg.twist.twist.angular.x = odom_ned.twist.twist.angular.x;
-    odom_enu_msg.twist.twist.angular.y = - odom_ned.twist.twist.angular.y;
-    odom_enu_msg.twist.twist.angular.z = - odom_ned.twist.twist.angular.z;
+    odom_enu_msg.twist.twist.linear.x = car_state.kinematics_estimated.twist.linear.x();
+    odom_enu_msg.twist.twist.linear.y = - car_state.kinematics_estimated.twist.linear.y();
+    odom_enu_msg.twist.twist.linear.z = - car_state.kinematics_estimated.twist.linear.z();
+    odom_enu_msg.twist.twist.angular.x = car_state.kinematics_estimated.twist.angular.x();
+    odom_enu_msg.twist.twist.angular.y = - car_state.kinematics_estimated.twist.angular.y();
+    odom_enu_msg.twist.twist.angular.z = - car_state.kinematics_estimated.twist.angular.z();
 
     return odom_enu_msg;
-
 }
+
+// nav_msgs::Odometry AirsimROSWrapper::convert_ned_odom_to_enu(const nav_msgs::Odometry& odom_ned) const 
+// {
+//     std_msgs::Float32 yaw_ned, yaw_enu;
+//     nav_msgs::Odometry odom_enu_msg;
+
+//     odom_enu_msg.pose.pose.position.x = odom_ned.pose.pose.position.x;
+//     odom_enu_msg.pose.pose.position.y = - odom_ned.pose.pose.position.y;
+//     odom_enu_msg.pose.pose.position.z = - odom_ned.pose.pose.position.z;
+
+//     // odom_enu_msg.pose.pose.orientation = odom_ned.pose.pose.orientation;
+//     tf::Quaternion odom_enu_tf_quat;
+//     odom_enu_tf_quat.setX(odom_ned.pose.pose.orientation.x);
+//     odom_enu_tf_quat.setY(odom_ned.pose.pose.orientation.y);
+//     odom_enu_tf_quat.setZ(odom_ned.pose.pose.orientation.z);
+//     odom_enu_tf_quat.setW(odom_ned.pose.pose.orientation.w);
+
+//     // tf::Quaternion heading_correction;
+//     // heading_correction.setRPY(0, 0, 0);
+//     odom_enu_tf_quat = odom_enu_tf_quat.inverse();
+
+//     odom_enu_msg.pose.pose.orientation.x = odom_enu_tf_quat.getX();
+//     odom_enu_msg.pose.pose.orientation.y = odom_enu_tf_quat.getY();
+//     odom_enu_msg.pose.pose.orientation.z = odom_enu_tf_quat.getZ();
+//     odom_enu_msg.pose.pose.orientation.w = odom_enu_tf_quat.getW();
+
+//     odom_enu_msg.twist.twist.linear.x =   odom_ned.twist.twist.linear.x;
+//     odom_enu_msg.twist.twist.linear.y = - odom_ned.twist.twist.linear.y;
+//     odom_enu_msg.twist.twist.linear.z = - odom_ned.twist.twist.linear.z;
+//     odom_enu_msg.twist.twist.angular.x = odom_ned.twist.twist.angular.x;
+//     odom_enu_msg.twist.twist.angular.y = - odom_ned.twist.twist.angular.y;
+//     odom_enu_msg.twist.twist.angular.z = - odom_ned.twist.twist.angular.z;
+
+//     return odom_enu_msg;
+
+// }
 
 // https://docs.ros.org/jade/api/sensor_msgs/html/point__cloud__conversion_8h_source.html#l00066
 // look at UnrealLidarSensor.cpp UnrealLidarSensor::getPointCloud() for math
@@ -400,21 +392,38 @@ sensor_msgs::PointCloud2 AirsimROSWrapper::get_lidar_msg_from_airsim(const std::
 // todo covariances
 sensor_msgs::Imu AirsimROSWrapper::get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data)
 {
+    std_msgs::Float32 yaw_enu;
+    // Convert to ENU frame here as well
     sensor_msgs::Imu imu_msg;
-    imu_msg.orientation.x = imu_data.orientation.x();
-    imu_msg.orientation.y = imu_data.orientation.y();
-    imu_msg.orientation.z = imu_data.orientation.z();
-    imu_msg.orientation.w = imu_data.orientation.w();
+    tf::Quaternion imu_heading_enu_quat;
+    imu_heading_enu_quat.setX(imu_data.orientation.x());
+    imu_heading_enu_quat.setY(imu_data.orientation.y());
+    imu_heading_enu_quat.setZ(imu_data.orientation.z());
+    imu_heading_enu_quat.setW(imu_data.orientation.w());
+    imu_heading_enu_quat = imu_heading_enu_quat.inverse();
 
-    // todo radians per second
-    imu_msg.angular_velocity.x = imu_data.angular_velocity.x();
-    imu_msg.angular_velocity.y = imu_data.angular_velocity.y();
-    imu_msg.angular_velocity.z = imu_data.angular_velocity.z();
+
+    imu_msg.orientation.x = imu_heading_enu_quat.getX();
+    imu_msg.orientation.y = imu_heading_enu_quat.getY();
+    imu_msg.orientation.z = imu_heading_enu_quat.getZ();
+    imu_msg.orientation.w = imu_heading_enu_quat.getW();
+
+    // Debug yaw
+    tf::Matrix3x3 m_enu(imu_heading_enu_quat);
+    double roll, pitch, yaw;
+    m_enu.getRPY(roll, pitch, yaw);
+    yaw_enu.data = yaw; 
+    imu_enu_yaw_pub.publish(yaw_enu);
+
+    // Publish IMU ang rates in radians per second
+    imu_msg.angular_velocity.x = math_common::deg2rad(imu_data.angular_velocity.x());
+    imu_msg.angular_velocity.y = -math_common::deg2rad(imu_data.angular_velocity.y());
+    imu_msg.angular_velocity.z = -math_common::deg2rad(imu_data.angular_velocity.z());
 
     // meters/s2^m
     imu_msg.linear_acceleration.x = imu_data.linear_acceleration.x();
-    imu_msg.linear_acceleration.y = imu_data.linear_acceleration.y();
-    imu_msg.linear_acceleration.z = imu_data.linear_acceleration.z();
+    imu_msg.linear_acceleration.y = -imu_data.linear_acceleration.y();
+    imu_msg.linear_acceleration.z = -imu_data.linear_acceleration.z();
 
     imu_msg.header.stamp = make_ts(imu_data.time_stamp);
     // imu_msg.orientation_covariance = ;
@@ -465,12 +474,11 @@ void AirsimROSWrapper::odom_cb(const ros::TimerEvent& event)
             lck.unlock();
         }
 
-        nav_msgs::Odometry message_ned = this->get_odom_msg_from_airsim_state(state);
-        nav_msgs::Odometry message_enu = this->convert_ned_odom_to_enu(message_ned);
+        // TODO: do the conversion in the get_odom_msg_from_airsim_state function and only publish enu odom
+        nav_msgs::Odometry message_enu = this->get_odom_msg_from_airsim_state(state);
         {
             ros_bridge::ROSMsgCounter counter(&odom_pub_statistics);
 
-            odom_ned_pub.publish(message_ned);
             odom_enu_pub.publish(message_enu);
         }
     }

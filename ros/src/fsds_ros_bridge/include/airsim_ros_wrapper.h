@@ -201,10 +201,8 @@ private:
 
     /// ROS publishers
     ros::Publisher clock_pub_;
-    ros::Publisher odom_ned_pub;
     ros::Publisher odom_enu_pub;
-    ros::Publisher odom_ned_yaw_pub;
-    ros::Publisher odom_enu_yaw_pub;
+    ros::Publisher imu_enu_yaw_pub;
     ros::Publisher global_gps_pub;
     ros::Publisher imu_pub;
     ros::Publisher track_pub;
