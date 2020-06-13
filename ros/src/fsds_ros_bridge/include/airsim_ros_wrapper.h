@@ -24,7 +24,6 @@ STRICT_MODE_OFF //todo what does this do?
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <geometry_msgs/Twist.h>
-#include <image_transport/image_transport.h>
 #include <iostream>
 #include <math.h>
 #include <math_common.h>
@@ -34,8 +33,6 @@ STRICT_MODE_OFF //todo what does this do?
 #include <ros/console.h>
 #include <sensor_msgs/CameraInfo.h>
 #include <sensor_msgs/distortion_models.h>
-#include <sensor_msgs/Image.h>
-#include <sensor_msgs/image_encodings.h>
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/NavSatFix.h>
 #include <sensor_msgs/PointCloud2.h>
@@ -55,9 +52,6 @@ STRICT_MODE_OFF //todo what does this do?
 #define printVariableNameAndValue(x) std::cout << "The name of variable **" << (#x) << "** and the value of variable is => " << x << "\n"
 
     // todo move airlib typedefs to separate header file?
-    typedef msr::airlib::ImageCaptureBase::ImageRequest ImageRequest;
-typedef msr::airlib::ImageCaptureBase::ImageResponse ImageResponse;
-typedef msr::airlib::ImageCaptureBase::ImageType ImageType;
 typedef msr::airlib::AirSimSettings::CaptureSetting CaptureSetting;
 typedef msr::airlib::AirSimSettings::VehicleSetting VehicleSetting;
 typedef msr::airlib::AirSimSettings::CameraSetting CameraSetting;
@@ -87,8 +81,6 @@ public:
     void publish_track();
     void initialize_statistics();
 
-    // std::vector<ros::CallbackQueue> callback_queues_;
-    ros::AsyncSpinner img_async_spinner_;
     ros::AsyncSpinner lidar_async_spinner_;
     bool is_used_lidar_timer_cb_queue_;
     bool is_used_img_timer_cb_queue_;
@@ -106,7 +98,6 @@ private:
     ros_bridge::Statistics getGpsDataStatistics;
     ros_bridge::Statistics getCarStateStatistics;
     ros_bridge::Statistics getImuStatistics;
-    std::vector<ros_bridge::Statistics> simGetImagesVecStatistics;
     std::vector<ros_bridge::Statistics> getLidarDataVecStatistics;
     ros_bridge::Statistics control_cmd_sub_statistics;
     ros_bridge::Statistics global_gps_pub_statistics;
@@ -126,7 +117,6 @@ private:
     void ResetStatistics();
 
     /// ROS timer callbacks
-    void img_response_timer_cb(const ros::TimerEvent& event); // update images from airsim_client_ every nth sec
     void odom_cb(const ros::TimerEvent& event);    // update drone state from airsim_client_ every nth sec
     void gps_timer_cb(const ros::TimerEvent& event);
     void imu_timer_cb(const ros::TimerEvent& event);
@@ -144,15 +134,6 @@ private:
 
     /// ROS service callbacks
     bool reset_srv_cb(fsds_ros_bridge::Reset::Request& request, fsds_ros_bridge::Reset::Response& response);
-
-    /// camera helper methods
-    sensor_msgs::CameraInfo generate_cam_info(const std::string& camera_name, const CameraSetting& camera_setting, const CaptureSetting& capture_setting) const;
-    cv::Mat manual_decode_depth(const ImageResponse& img_response) const;
-
-    sensor_msgs::ImagePtr get_img_msg_from_response(const ImageResponse& img_response, const ros::Time curr_ros_time, const std::string frame_id);
-    sensor_msgs::ImagePtr get_depth_img_msg_from_response(const ImageResponse& img_response, const ros::Time curr_ros_time, const std::string frame_id);
-
-    void process_and_publish_img_response(const std::vector<ImageResponse>& img_response_vec, const int img_response_idx, const std::string& vehicle_name);
 
     // methods which parse setting json ang generate ros pubsubsrv
     void create_ros_pubs_from_settings_json();
@@ -174,10 +155,6 @@ private:
     sensor_msgs::Imu get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data);
     sensor_msgs::PointCloud2 get_lidar_msg_from_airsim(const std::string &lidar_name, const msr::airlib::LidarData& lidar_data) const;
 
-    // not used anymore, but can be useful in future with an unreal camera calibration environment
-    void read_params_from_yaml_and_fill_cam_info_msg(const std::string& file_name, sensor_msgs::CameraInfo& cam_info) const;
-    void convert_yaml_to_simple_mat(const YAML::Node& node, SimpleMatrix& m) const; // todo ugly
-
 private:
     ros::ServiceServer reset_srvr_;
 
@@ -186,15 +163,12 @@ private:
 
 
     AirSimSettingsParser airsim_settings_parser_;
-    static const std::unordered_map<int, std::string> image_type_int_to_string_map_;
     std::map<std::string, std::string> vehicle_lidar_map_;
     std::vector<geometry_msgs::TransformStamped> static_tf_msg_vec_;
-    bool is_vulkan_; // rosparam obtained from launch file. If vulkan is being used, we BGR encoding instead of RGB
     std::string mission_name_; // rosparam obtained from launch file
     std::string track_name_; // rosparam obtained from launch file
 
     msr::airlib::CarRpcLibClient airsim_client_;
-    msr::airlib::CarRpcLibClient airsim_client_images_;
     msr::airlib::CarRpcLibClient airsim_client_lidar_;
 
     ros::NodeHandle nh_;
@@ -202,12 +176,10 @@ private:
 
     // todo not sure if async spinners shuold be inside this class, or should be instantiated in fsds_ros_bridge.cpp, and cb queues should be public
     // todo for multiple drones with multiple sensors, this won't scale. make it a part of MultiRotorROS?
-    ros::CallbackQueue img_timer_cb_queue_;
     ros::CallbackQueue lidar_timer_cb_queue_;
 
     // todo race condition
     std::recursive_mutex car_control_mutex_;
-    // std::recursive_mutex img_mutex_;
     // std::recursive_mutex lidar_mutex_;
 
     /// ROS tf
@@ -216,7 +188,6 @@ private:
     // tf2_ros::Buffer tf_buffer_;
 
     /// ROS Timers.
-    ros::Timer airsim_img_response_timer_;
     ros::Timer odom_update_timer_;
     ros::Timer gps_update_timer_;
     ros::Timer imu_update_timer_;
@@ -225,13 +196,8 @@ private:
     ros::Timer go_signal_timer_;
     ros::Timer statictf_timer_;
 
-    typedef std::pair<std::vector<ImageRequest>, std::string> airsim_img_request_vehicle_name_pair;
-    std::vector<airsim_img_request_vehicle_name_pair> airsim_img_request_vehicle_name_pair_vec_;
-    std::vector<image_transport::Publisher> image_pub_vec_;
-    std::vector<ros::Publisher> cam_info_pub_vec_;
     std::vector<ros::Publisher> lidar_pub_vec_;
 
-    std::vector<sensor_msgs::CameraInfo> camera_info_msg_vec_;
 
     /// ROS publishers
     ros::Publisher clock_pub_;
@@ -247,14 +213,4 @@ private:
     /// ROS subscribers
     ros::Subscriber control_cmd_sub;
     ros::Subscriber finished_signal_sub_;
-
-
-    static constexpr char CAM_YML_NAME[] = "camera_name";
-    static constexpr char WIDTH_YML_NAME[] = "image_width";
-    static constexpr char HEIGHT_YML_NAME[] = "image_height";
-    static constexpr char K_YML_NAME[] = "camera_matrix";
-    static constexpr char D_YML_NAME[] = "distortion_coefficients";
-    static constexpr char R_YML_NAME[] = "rectification_matrix";
-    static constexpr char P_YML_NAME[] = "projection_matrix";
-    static constexpr char DMODEL_YML_NAME[] = "distortion_model";
 };

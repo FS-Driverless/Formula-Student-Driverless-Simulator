@@ -12,11 +12,19 @@ It listens for car setpoints on other another and forwards these to the AirSim p
 ## Running
 Make sure you have [built the ROS workspace](building-ros.md).
 
+The ros bridge consists of a different few nodes to achieve the highest performance and keep the codebase clean.
+Everything can be launched using the `fsds_ros_bridge.launch` launchfile.
 ```
 cd ros
 source devel/setup.bash
 roslaunch fsds_ros_bridge fsds_ros_bridge.launch
 ```
+
+This launches the following nodes:
+* `/fsds/ros_bridge` node responsible for IMU, GPS, lidar, vehicle setpoints and go/finish signals.
+* `/fsds/camera/CAMERANAME` node is run for each camera configured in the `settings.json`. The nodes are launched using the `cameralauncher.py` script.
+* `/fsds/camera/CAMERANAME/tf` node that publishes the transform with the camera position and orientation. 
+* `/fsds/ned_to_enu_pub` node that translates between NED and ENU frame. See 'Coordinate frames and transforms' for more information about this.
 
 ## Publishers
 - `/fsds/gps` [sensor_msgs/NavSatFix](https://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html)   
@@ -37,16 +45,12 @@ Ground truth cone position and color with respect to the starting location of th
 Currently this only publishes the *initial position* of cones that are part of the track spline. Any cones placed manually in the world are not published here.
 Additionally, the track is published once and the message is latched (meaning it is always available for a newly created subscriber). 
 
-- `/fsds/CAMERA_NAME/IMAGE_TYPE` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)   
+- `/fsds/camera/CAMERA_NAME` [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)    
 One of this topic type will exist for every camera specified in the `settings.json` file.
 On this topic, camera frames are published. The format will be bgra8. 
 `CAMERA_NAME` will be replaced by the corresponding in the `Cameras` object in the `settings.json` file.
 `IMAGE_TYPE` is determand by the `SensorType` field. 
 When choosing 0, it will be 'Scene'.
-
-- `/fsds/CAMERA_NAME/IMAGE_TYPE/camera_info` [sensor_msgs/CameraInfo](https://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html)   
-This topic publishes metadata about the related camera.
-For every frame sent on `/fsds/CAMERA_NAME` 1 message will be sent on this topic.
 
 - `/fsds/lidar/LIDARNAME` [sensor_msgs/PointCloud](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/PointCloud.html)   
 Publishes the lidar points for each lidar sensor.
@@ -100,6 +104,7 @@ Read more about the differences between ENU and NED [here](https://en.wikipedia.
 The ros bridge regularly publishes static transforms between the `fsds/FSCar` frame and each of the cameras and lidars.
 Naming of these frames is `fsds/SENSORNAME`.
 For example, a lidar named `Example` will publish it's points in the `fsds/Example` frame.
+The position and orientation of a camera named `Test` will become available in the frame `/fsds/Test`.
 
 Only static transforms within the vehicle are published.
 Transforms to the ground truth are disabled because this would take away the challenge of the competition.
@@ -131,13 +136,6 @@ Transforms to the ground truth are disabled because this would take away the cha
   Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   
   Default: 0.1 seconds (10 hz).   
   The frequency at which the lidar is publshed.
-
-- `/fsds/ros_bridge/update_airsim_img_response_every_n_sec` [double]   
-  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   
-  Default: 0.01 seconds.   
-  Timer callback frequency for receiving images from all cameras in airsim.
-  The speed will depend on number of images requested and their resolution.
-  Timer callbacks in ROS run at maximum rate possible, so it's best to not touch this parameter.
 
 ## Visualization
 This package contains some useful launch and config files which will help you in visualizing the data being streamed through the above topics.
