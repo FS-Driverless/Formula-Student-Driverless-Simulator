@@ -12,7 +12,7 @@ SETPOINT_FREQUENCY = 5.0
 THROTLE = 0.5
 
 def publishloop():
-    controllpublisher = rospy.Publisher('/fsds_ros_bridge/FSCar/control_command', ControlCommand, queue_size=10)
+    controllpublisher = rospy.Publisher('/fsds/control_command', ControlCommand, queue_size=10)
     rate = rospy.Rate(5) # 5hz
     time = 0
     while not rospy.is_shutdown():
