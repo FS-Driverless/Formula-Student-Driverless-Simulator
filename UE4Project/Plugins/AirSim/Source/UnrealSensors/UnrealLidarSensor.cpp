@@ -170,6 +170,12 @@ bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const ms
 
         // tranform to lidar frame
         point = VectorMath::transformToBodyFrame(point_v_i, lidar_pose + vehicle_pose, true);
+        
+        // Convert to ENU frame
+        point.y() = - point.y();
+        point.z() = - point.z();
+
+
 
         // The above should be same as first transforming to vehicle-body frame and then to lidar frame
         //    Vector3r point_v_b = VectorMath::transformToBodyFrame(point_v_i, vehicle_pose, true);
