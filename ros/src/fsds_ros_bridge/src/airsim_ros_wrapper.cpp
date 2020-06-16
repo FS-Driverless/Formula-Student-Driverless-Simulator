@@ -309,41 +309,6 @@ nav_msgs::Odometry AirsimROSWrapper::get_odom_msg_from_airsim_state(const msr::a
     return odom_enu_msg;
 }
 
-// nav_msgs::Odometry AirsimROSWrapper::convert_ned_odom_to_enu(const nav_msgs::Odometry& odom_ned) const 
-// {
-//     std_msgs::Float32 yaw_ned, yaw_enu;
-//     nav_msgs::Odometry odom_enu_msg;
-
-//     odom_enu_msg.pose.pose.position.x = odom_ned.pose.pose.position.x;
-//     odom_enu_msg.pose.pose.position.y = - odom_ned.pose.pose.position.y;
-//     odom_enu_msg.pose.pose.position.z = - odom_ned.pose.pose.position.z;
-
-//     // odom_enu_msg.pose.pose.orientation = odom_ned.pose.pose.orientation;
-//     tf::Quaternion odom_enu_tf_quat;
-//     odom_enu_tf_quat.setX(odom_ned.pose.pose.orientation.x);
-//     odom_enu_tf_quat.setY(odom_ned.pose.pose.orientation.y);
-//     odom_enu_tf_quat.setZ(odom_ned.pose.pose.orientation.z);
-//     odom_enu_tf_quat.setW(odom_ned.pose.pose.orientation.w);
-
-//     // tf::Quaternion heading_correction;
-//     // heading_correction.setRPY(0, 0, 0);
-//     odom_enu_tf_quat = odom_enu_tf_quat.inverse();
-
-//     odom_enu_msg.pose.pose.orientation.x = odom_enu_tf_quat.getX();
-//     odom_enu_msg.pose.pose.orientation.y = odom_enu_tf_quat.getY();
-//     odom_enu_msg.pose.pose.orientation.z = odom_enu_tf_quat.getZ();
-//     odom_enu_msg.pose.pose.orientation.w = odom_enu_tf_quat.getW();
-
-//     odom_enu_msg.twist.twist.linear.x =   odom_ned.twist.twist.linear.x;
-//     odom_enu_msg.twist.twist.linear.y = - odom_ned.twist.twist.linear.y;
-//     odom_enu_msg.twist.twist.linear.z = - odom_ned.twist.twist.linear.z;
-//     odom_enu_msg.twist.twist.angular.x = odom_ned.twist.twist.angular.x;
-//     odom_enu_msg.twist.twist.angular.y = - odom_ned.twist.twist.angular.y;
-//     odom_enu_msg.twist.twist.angular.z = - odom_ned.twist.twist.angular.z;
-
-//     return odom_enu_msg;
-
-// }
 
 // https://docs.ros.org/jade/api/sensor_msgs/html/point__cloud__conversion_8h_source.html#l00066
 // look at UnrealLidarSensor.cpp UnrealLidarSensor::getPointCloud() for math
@@ -474,7 +439,6 @@ void AirsimROSWrapper::odom_cb(const ros::TimerEvent& event)
             lck.unlock();
         }
 
-        // TODO: do the conversion in the get_odom_msg_from_airsim_state function and only publish enu odom
         nav_msgs::Odometry message_enu = this->get_odom_msg_from_airsim_state(state);
         {
             ros_bridge::ROSMsgCounter counter(&odom_pub_statistics);
