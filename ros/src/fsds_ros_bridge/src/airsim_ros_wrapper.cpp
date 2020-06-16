@@ -448,7 +448,7 @@ void AirsimROSWrapper::imu_timer_cb(const ros::TimerEvent& event)
         {
             ros_bridge::Timer timer(&getImuStatistics);
             std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
-            auto imu_data = airsim_client_.getImuData("Imu", vehicle_name);
+            imu_data = airsim_client_.getImuData("Imu", vehicle_name);
             lck.unlock();
         }
 
