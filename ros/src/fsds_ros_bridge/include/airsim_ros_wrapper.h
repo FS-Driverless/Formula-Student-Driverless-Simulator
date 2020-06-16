@@ -150,7 +150,6 @@ private:
     msr::airlib::Quaternionr get_airlib_quat(const tf2::Quaternion& tf2_quat) const;
 
     nav_msgs::Odometry get_odom_msg_from_airsim_state(const msr::airlib::CarApiBase::CarState& car_state) const;
-    nav_msgs::Odometry convert_ned_odom_to_enu(const nav_msgs::Odometry& odom_ned) const; 
     sensor_msgs::NavSatFix get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
     sensor_msgs::Imu get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data);
     sensor_msgs::PointCloud2 get_lidar_msg_from_airsim(const std::string &lidar_name, const msr::airlib::LidarData& lidar_data) const;
@@ -183,9 +182,7 @@ private:
     // std::recursive_mutex lidar_mutex_;
 
     /// ROS tf
-    // tf2_ros::TransformBroadcaster tf_broadcaster_;
     tf2_ros::StaticTransformBroadcaster static_tf_pub_;
-    // tf2_ros::Buffer tf_buffer_;
 
     /// ROS Timers.
     ros::Timer odom_update_timer_;
