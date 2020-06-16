@@ -152,7 +152,7 @@ The IMU captures the acceleration, orientation and angular rate of the vehicle.
 More detailed technical information about the IMU implementation of the IMU can be found [here](imu.md).
 
 ### Sensor specification
-Teams are expected to provide their sensor suite as a single AirSim settings.json file.
+Teams are expected to provide their sensor suite as a single AirSim `settings.json` file.
 Most of the parameters in the settings.json file will be set by the officials to ensure fairness during competition.
 You are allowed to configure the following subset of parameters within the boundaries of the above rules.
 
@@ -175,7 +175,9 @@ You are allowed to configure the following subset of parameters within the bound
 
 The GPS and IMU are configured equally for all teams according to the rules in the previous chapter.
 
-We recommend to copy the settings.json in this repository as a base and configure the cameras and lidar from thereon.
+X, Y, Z, Pitch, Roll, Yaw have to be specified in a NED frame (it might take some experimentation to understand the correct signs to use). The transforms you will get from ROS however, will be in the ENU frame (which is probably what you are used to).
+
+We recommend to copy the `settings.json` in this repository as a base and configure the cameras and lidar from thereon.
 
 ## Launching the simulator
 To run the simulation, read the [simulation guide](how-to-simulate.md).
@@ -202,7 +204,7 @@ The AS can subscribe to the following sensor topics:
 
 During **testing**, the following ground truth topics will also be available:
 
-- `/fsds/testing_only/odom`
+- `/fsds/testing_only/odom_enu`
 - `/fsds/testing_only/track`
 
 These two topics should allow you to run autonomously without a finished perception and state estimation pipeline.
