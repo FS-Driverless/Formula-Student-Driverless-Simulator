@@ -586,7 +586,7 @@ void AirsimROSWrapper::append_static_lidar_tf(const std::string& vehicle_name, c
     lidar_tf_msg.transform.translation.y = - lidar_setting.position.y();
     lidar_tf_msg.transform.translation.z = - lidar_setting.position.z();
     tf2::Quaternion quat;
-    quat.setRPY(-math_common::deg2rad(lidar_setting.rotation.roll), -math_common::deg2rad(lidar_setting.rotation.pitch), -math_common::deg2rad(lidar_setting.rotation.yaw));
+    quat.setRPY(math_common::deg2rad(lidar_setting.rotation.roll), -math_common::deg2rad(lidar_setting.rotation.pitch), -math_common::deg2rad(lidar_setting.rotation.yaw));
     lidar_tf_msg.transform.rotation.x = quat.x();
     lidar_tf_msg.transform.rotation.y = quat.y();
     lidar_tf_msg.transform.rotation.z = quat.z();
@@ -604,7 +604,7 @@ void AirsimROSWrapper::append_static_camera_tf(const std::string& vehicle_name, 
     static_cam_tf_body_msg.transform.translation.y = - camera_setting.position.y();
     static_cam_tf_body_msg.transform.translation.z = - camera_setting.position.z();
     tf2::Quaternion quat;
-    quat.setRPY(-math_common::deg2rad(camera_setting.rotation.roll), -math_common::deg2rad(camera_setting.rotation.pitch), -math_common::deg2rad(camera_setting.rotation.yaw));
+    quat.setRPY(math_common::deg2rad(camera_setting.rotation.roll), -math_common::deg2rad(camera_setting.rotation.pitch), -math_common::deg2rad(camera_setting.rotation.yaw));
     static_cam_tf_body_msg.transform.rotation.x = quat.x();
     static_cam_tf_body_msg.transform.rotation.y = quat.y();
     static_cam_tf_body_msg.transform.rotation.z = quat.z();
