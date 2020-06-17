@@ -162,7 +162,7 @@ private:
 
 
     AirSimSettingsParser airsim_settings_parser_;
-    std::map<std::string, std::string> vehicle_lidar_map_;
+    std::vector<std::string> lidar_names_vec_;
     std::vector<geometry_msgs::TransformStamped> static_tf_msg_vec_;
     std::string mission_name_; // rosparam obtained from launch file
     std::string track_name_; // rosparam obtained from launch file
@@ -198,8 +198,7 @@ private:
 
     /// ROS publishers
     ros::Publisher clock_pub_;
-    ros::Publisher odom_enu_pub;
-    ros::Publisher imu_enu_yaw_pub;
+    ros::Publisher odom_pub;
     ros::Publisher global_gps_pub;
     ros::Publisher imu_pub;
     ros::Publisher track_pub;
