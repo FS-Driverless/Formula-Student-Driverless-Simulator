@@ -281,6 +281,9 @@ nav_msgs::Odometry AirsimROSWrapper::get_odom_msg_from_airsim_state(const msr::a
 {
     // Convert to ENU frame (minus signs and quaternion inverse)
     nav_msgs::Odometry odom_enu_msg;
+    odom_enu_msg.header.frame_id = "fsds/map";
+    odom_enu_msg.header.stamp = ros::Time::now();
+    odom_enu_msg.child_frame_id = "fsds/FSCar";
     odom_enu_msg.pose.pose.position.x = car_state.getPosition().x();
     odom_enu_msg.pose.pose.position.y = - car_state.getPosition().y();
     odom_enu_msg.pose.pose.position.z = - car_state.getPosition().z();
