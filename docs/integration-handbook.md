@@ -158,24 +158,26 @@ You are allowed to configure the following subset of parameters within the bound
 
 * Cameras   
  *  * camera name
- *  * Width, Height
- *  * FOV_Degrees
- *  * X, Y, Z
- *  * Pitch, Roll, Yaw
+ *  * Width, Height (pixels)
+ *  * FOV_Degrees (degrees)
+ *  * X, Y, Z (meters)
+ *  * Pitch, Roll, Yaw (degrees)
 * Lidars
  *  * NumberOfChannels
  *  * PointsPerSecond
  *  * RotationsPerSecond
- *  * HorizontalFOVStart
- *  * HorizontalFOVEnd
- *  * VerticalFOVUpper
- *  * VerticalFOVLower
- *  * X, Y, Z
- *  * Pitch, Roll, Yaw
+ *  * HorizontalFOVStart (degrees)
+ *  * HorizontalFOVEnd (degrees)
+ *  * VerticalFOVUpper (degrees)
+ *  * VerticalFOVLower(degrees)
+ *  * X, Y, Z (meters)
+ *  * Pitch, Roll, Yaw (degrees)
 
 The GPS and IMU are configured equally for all teams according to the rules in the previous chapter.
 
-X, Y, Z, Pitch, Roll, Yaw have to be specified in a NED frame (it might take some experimentation to understand the correct signs to use). The transforms you will get from ROS however, will be in the ENU frame (which is probably what you are used to).
+X, Y, Z, Pitch, Roll, Yaw have to be specified in a NED frame (it might take some experimentation to understand the correct signs to use). 
+The transforms you will get from ROS however, will be in the ENU frame (which is the default ros coordinate system).
+Distance values are in meters and rotation values are degrees.
 
 We recommend to copy the `settings.json` in this repository as a base and configure the cameras and lidar from thereon.
 
