@@ -24,8 +24,5 @@
 
 		<node pkg="fsds_ros_bridge" name="cameralauncher" type="cameralauncher.py" output="screen"  required="true"/>
 
-		<!-- Static transforms -->
-		<include file="$(find fsds_ros_bridge)/launch/static_transforms.launch"/>
-
 	</group>
 </launch>

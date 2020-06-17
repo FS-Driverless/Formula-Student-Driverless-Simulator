@@ -32,13 +32,13 @@ for cameraname in settings['Vehicles']['FSCar']['Cameras']:
           'framerate': CAMERA_FRAMERATE,
           'host_ip': AIRSIM_HOSTIP
         })))
-    launch.launch(
-      roslaunch.core.Node(
-        'tf', 'static_transform_publisher',
-        namespace="fsds/camera/"+cameraname, name='tf',
-        required=True, output='screen',
-        # see http://wiki.ros.org/tf#static_transform_publisher why this works
-        args="static_transform_publisher "+str(camsettings['X'])+" "+str(camsettings['Y'])+" "+str(camsettings['Z'])+" "+str(camsettings['Yaw'])+" "+str(camsettings['Pitch'])+" "+str(camsettings['Roll'])+" /fsds/FSCar /fsds/"+cameraname+" 1000"))
+    # launch.launch(
+    #   roslaunch.core.Node(
+    #     'tf', 'static_transform_publisher',
+    #     namespace="fsds/camera/"+cameraname, name='tf',
+    #     required=True, output='screen',
+    #     # see http://wiki.ros.org/tf#static_transform_publisher why this works
+    #     args="static_transform_publisher "+str(camsettings['X'])+" "+str(camsettings['Y'])+" "+str(camsettings['Z'])+" "+str(camsettings['Yaw'])+" "+str(camsettings['Pitch'])+" "+str(camsettings['Roll'])+" /fsds/FSCar /fsds/"+cameraname+" 1000"))
 
 try:
   launch.spin()

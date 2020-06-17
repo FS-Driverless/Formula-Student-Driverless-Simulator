@@ -71,8 +71,10 @@ void AirsimROSWrapper::publish_track() {
     fs_msgs::Track track;
     for (const auto& cone : state.cones) {
         fs_msgs::Cone cone_object;
+        // 0.01 is a scaling constant that converts to meters
         cone_object.location.x = cone.location.x != 0 ? (cone.location.x - car_start_pos.x)*0.01 : 0;
-        cone_object.location.y = cone.location.y != 0 ? (cone.location.y - car_start_pos.y)*0.01 : 0;
+        // Negative sign follows ENU convention
+        cone_object.location.y = cone.location.y != 0 ? -(cone.location.y - car_start_pos.y)*0.01 : 0;
         if (cone.color == CarApiBase::ConeColor::Yellow) {
             cone_object.color = fs_msgs::Cone::YELLOW;
         } else if (cone.color == CarApiBase::ConeColor::Blue) {
@@ -151,6 +153,15 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         // TODO: remove track publisher at competition
         track_pub = nh_.advertise<fs_msgs::Track>("testing_only/track", 10, true);
 
+        // iterate over camera map std::map<std::string, CameraSetting> cameras;
+        for (auto& curr_camera_elem : vehicle_setting->cameras)
+        {
+            auto& camera_setting = curr_camera_elem.second;
+            auto& curr_camera_name = curr_camera_elem.first;
+            set_nans_to_zeros_in_pose(*vehicle_setting, camera_setting);
+            append_static_camera_tf(curr_vehicle_name, curr_camera_name, camera_setting);
+            
+        }
 
         // iterate over sensors std::map<std::string, std::unique_ptr<SensorSetting>> sensors;
         for (auto& curr_sensor_map : vehicle_setting->sensors)
@@ -191,7 +202,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
                 auto lidar_setting = *static_cast<LidarSetting *>(sensor_setting.get());
                 set_nans_to_zeros_in_pose(*vehicle_setting, lidar_setting);
                 append_static_lidar_tf(curr_vehicle_name, sensor_name, lidar_setting); // todo is there a more readable way to down-cast?
-                vehicle_lidar_map_[curr_vehicle_name] = sensor_name;                   // non scalable
+                lidar_names_vec_.push_back(sensor_name);
                 lidar_pub_vec_.push_back(nh_.advertise<sensor_msgs::PointCloud2>("lidar/" + sensor_name, 10));
                 lidar_pub_vec_statistics.push_back(ros_bridge::Statistics(sensor_name + "_Publisher"));
                 getLidarDataVecStatistics.push_back(ros_bridge::Statistics(sensor_name + "_RpcCaller"));
@@ -268,25 +279,38 @@ msr::airlib::Quaternionr AirsimROSWrapper::get_airlib_quat(const tf2::Quaternion
 
 nav_msgs::Odometry AirsimROSWrapper::get_odom_msg_from_airsim_state(const msr::airlib::CarApiBase::CarState& car_state) const
 {
-    nav_msgs::Odometry odom_ned_msg;
+    // Convert to ENU frame (minus signs and quaternion inverse)
+    nav_msgs::Odometry odom_enu_msg;
+    odom_enu_msg.header.frame_id = "fsds/map";
+    odom_enu_msg.header.stamp = ros::Time::now();
+    odom_enu_msg.child_frame_id = "fsds/FSCar";
+    odom_enu_msg.pose.pose.position.x = car_state.getPosition().x();
+    odom_enu_msg.pose.pose.position.y = - car_state.getPosition().y();
+    odom_enu_msg.pose.pose.position.z = - car_state.getPosition().z();
+    tf::Quaternion odom_enu_tf_quat;
+    odom_enu_tf_quat.setX(car_state.getOrientation().x());
+    odom_enu_tf_quat.setY(car_state.getOrientation().y());
+    odom_enu_tf_quat.setZ(car_state.getOrientation().z());
+    odom_enu_tf_quat.setW(car_state.getOrientation().w());
+    odom_enu_tf_quat = odom_enu_tf_quat.inverse();
 
-    odom_ned_msg.pose.pose.position.x = car_state.getPosition().x();
-    odom_ned_msg.pose.pose.position.y = car_state.getPosition().y();
-    odom_ned_msg.pose.pose.position.z = car_state.getPosition().z();
-    odom_ned_msg.pose.pose.orientation.x = car_state.getOrientation().x();
-    odom_ned_msg.pose.pose.orientation.y = car_state.getOrientation().y();
-    odom_ned_msg.pose.pose.orientation.z = car_state.getOrientation().z();
-    odom_ned_msg.pose.pose.orientation.w = car_state.getOrientation().w();
+    
 
-    odom_ned_msg.twist.twist.linear.x = car_state.kinematics_estimated.twist.linear.x();
-    odom_ned_msg.twist.twist.linear.y = car_state.kinematics_estimated.twist.linear.y();
-    odom_ned_msg.twist.twist.linear.z = car_state.kinematics_estimated.twist.linear.z();
-    odom_ned_msg.twist.twist.angular.x = car_state.kinematics_estimated.twist.angular.x();
-    odom_ned_msg.twist.twist.angular.y = car_state.kinematics_estimated.twist.angular.y();
-    odom_ned_msg.twist.twist.angular.z = car_state.kinematics_estimated.twist.angular.z();
+    odom_enu_msg.pose.pose.orientation.x = odom_enu_tf_quat.getX();
+    odom_enu_msg.pose.pose.orientation.y = odom_enu_tf_quat.getY();
+    odom_enu_msg.pose.pose.orientation.z = odom_enu_tf_quat.getZ();
+    odom_enu_msg.pose.pose.orientation.w = odom_enu_tf_quat.getW();
 
-    return odom_ned_msg;
+    odom_enu_msg.twist.twist.linear.x = car_state.kinematics_estimated.twist.linear.x();
+    odom_enu_msg.twist.twist.linear.y = - car_state.kinematics_estimated.twist.linear.y();
+    odom_enu_msg.twist.twist.linear.z = - car_state.kinematics_estimated.twist.linear.z();
+    odom_enu_msg.twist.twist.angular.x = car_state.kinematics_estimated.twist.angular.x();
+    odom_enu_msg.twist.twist.angular.y = - car_state.kinematics_estimated.twist.angular.y();
+    odom_enu_msg.twist.twist.angular.z = - car_state.kinematics_estimated.twist.angular.z();
+
+    return odom_enu_msg;
 }
+
 
 // https://docs.ros.org/jade/api/sensor_msgs/html/point__cloud__conversion_8h_source.html#l00066
 // look at UnrealLidarSensor.cpp UnrealLidarSensor::getPointCloud() for math
@@ -325,31 +349,41 @@ sensor_msgs::PointCloud2 AirsimROSWrapper::get_lidar_msg_from_airsim(const std::
         std::vector<unsigned char> lidar_msg_data(bytes, bytes + sizeof(float) * data_std.size());
         lidar_msg.data = std::move(lidar_msg_data);
     }
-    else
-    {
-        // msg = []
-    }
     return lidar_msg;
 }
 
 // todo covariances
 sensor_msgs::Imu AirsimROSWrapper::get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data)
 {
+    // Convert to ENU frame here as well
     sensor_msgs::Imu imu_msg;
-    imu_msg.orientation.x = imu_data.orientation.x();
-    imu_msg.orientation.y = imu_data.orientation.y();
-    imu_msg.orientation.z = imu_data.orientation.z();
-    imu_msg.orientation.w = imu_data.orientation.w();
+    tf::Quaternion imu_heading_enu_quat;
+    imu_heading_enu_quat.setX(imu_data.orientation.x());
+    imu_heading_enu_quat.setY(imu_data.orientation.y());
+    imu_heading_enu_quat.setZ(imu_data.orientation.z());
+    imu_heading_enu_quat.setW(imu_data.orientation.w());
+    imu_heading_enu_quat = imu_heading_enu_quat.inverse();
 
-    // todo radians per second
-    imu_msg.angular_velocity.x = imu_data.angular_velocity.x();
-    imu_msg.angular_velocity.y = imu_data.angular_velocity.y();
-    imu_msg.angular_velocity.z = imu_data.angular_velocity.z();
+
+    imu_msg.orientation.x = imu_heading_enu_quat.getX();
+    imu_msg.orientation.y = imu_heading_enu_quat.getY();
+    imu_msg.orientation.z = imu_heading_enu_quat.getZ();
+    imu_msg.orientation.w = imu_heading_enu_quat.getW();
+
+    // Debug yaw
+    tf::Matrix3x3 m_enu(imu_heading_enu_quat);
+    double roll, pitch, yaw;
+    m_enu.getRPY(roll, pitch, yaw);
+
+    // Publish IMU ang rates in radians per second
+    imu_msg.angular_velocity.x = math_common::deg2rad(imu_data.angular_velocity.x());
+    imu_msg.angular_velocity.y = -math_common::deg2rad(imu_data.angular_velocity.y());
+    imu_msg.angular_velocity.z = -math_common::deg2rad(imu_data.angular_velocity.z());
 
     // meters/s2^m
     imu_msg.linear_acceleration.x = imu_data.linear_acceleration.x();
-    imu_msg.linear_acceleration.y = imu_data.linear_acceleration.y();
-    imu_msg.linear_acceleration.z = imu_data.linear_acceleration.z();
+    imu_msg.linear_acceleration.y = -imu_data.linear_acceleration.y();
+    imu_msg.linear_acceleration.z = -imu_data.linear_acceleration.z();
 
     imu_msg.header.stamp = make_ts(imu_data.time_stamp);
     // imu_msg.orientation_covariance = ;
@@ -400,10 +434,11 @@ void AirsimROSWrapper::odom_cb(const ros::TimerEvent& event)
             lck.unlock();
         }
 
-        nav_msgs::Odometry message = this->get_odom_msg_from_airsim_state(state);
+        nav_msgs::Odometry message_enu = this->get_odom_msg_from_airsim_state(state);
         {
             ros_bridge::ROSMsgCounter counter(&odom_pub_statistics);
-            odom_pub.publish(message);
+
+            odom_pub.publish(message_enu);
         }
     }
     catch (rpc::rpc_error& e)
@@ -501,6 +536,28 @@ void AirsimROSWrapper::set_nans_to_zeros_in_pose(VehicleSetting& vehicle_setting
         vehicle_setting.rotation.roll = 0.0;
 }
 
+// if any nan's in camera pose, set them to match vehicle pose (which has already converted any potential nans to zeros)
+void AirsimROSWrapper::set_nans_to_zeros_in_pose(const VehicleSetting& vehicle_setting, CameraSetting& camera_setting) const
+{
+    if (std::isnan(camera_setting.position.x()))
+        camera_setting.position.x() = vehicle_setting.position.x();
+
+    if (std::isnan(camera_setting.position.y()))
+        camera_setting.position.y() = vehicle_setting.position.y();
+
+    if (std::isnan(camera_setting.position.z()))
+        camera_setting.position.z() = vehicle_setting.position.z();
+
+    if (std::isnan(camera_setting.rotation.yaw))
+        camera_setting.rotation.yaw = vehicle_setting.rotation.yaw;
+
+    if (std::isnan(camera_setting.rotation.pitch))
+        camera_setting.rotation.pitch = vehicle_setting.rotation.pitch;
+
+    if (std::isnan(camera_setting.rotation.roll))
+        camera_setting.rotation.roll = vehicle_setting.rotation.roll;
+}
+
 void AirsimROSWrapper::set_nans_to_zeros_in_pose(const VehicleSetting& vehicle_setting, LidarSetting& lidar_setting) const
 {
     if (std::isnan(lidar_setting.position.x()))
@@ -529,16 +586,34 @@ void AirsimROSWrapper::append_static_lidar_tf(const std::string& vehicle_name, c
     lidar_tf_msg.header.frame_id = "fsds/" + vehicle_name;
     lidar_tf_msg.child_frame_id = "fsds/" + lidar_name;
     lidar_tf_msg.transform.translation.x = lidar_setting.position.x();
-    lidar_tf_msg.transform.translation.y = lidar_setting.position.y();
-    lidar_tf_msg.transform.translation.z = lidar_setting.position.z();
+    lidar_tf_msg.transform.translation.y = - lidar_setting.position.y();
+    lidar_tf_msg.transform.translation.z = - lidar_setting.position.z();
     tf2::Quaternion quat;
-    quat.setRPY(lidar_setting.rotation.roll, lidar_setting.rotation.pitch, lidar_setting.rotation.yaw);
+    quat.setRPY(math_common::deg2rad(lidar_setting.rotation.roll), -math_common::deg2rad(lidar_setting.rotation.pitch), -math_common::deg2rad(lidar_setting.rotation.yaw));
     lidar_tf_msg.transform.rotation.x = quat.x();
     lidar_tf_msg.transform.rotation.y = quat.y();
     lidar_tf_msg.transform.rotation.z = quat.z();
     lidar_tf_msg.transform.rotation.w = quat.w();
 
     static_tf_msg_vec_.push_back(lidar_tf_msg);
+}
+
+void AirsimROSWrapper::append_static_camera_tf(const std::string& vehicle_name, const std::string& camera_name, const CameraSetting& camera_setting)
+{
+    geometry_msgs::TransformStamped static_cam_tf_body_msg;
+    static_cam_tf_body_msg.header.frame_id = "fsds/" + vehicle_name;
+    static_cam_tf_body_msg.child_frame_id = "fsds/" + camera_name;
+    static_cam_tf_body_msg.transform.translation.x = camera_setting.position.x();
+    static_cam_tf_body_msg.transform.translation.y = - camera_setting.position.y();
+    static_cam_tf_body_msg.transform.translation.z = - camera_setting.position.z();
+    tf2::Quaternion quat;
+    quat.setRPY(math_common::deg2rad(camera_setting.rotation.roll), -math_common::deg2rad(camera_setting.rotation.pitch), -math_common::deg2rad(camera_setting.rotation.yaw));
+    static_cam_tf_body_msg.transform.rotation.x = quat.x();
+    static_cam_tf_body_msg.transform.rotation.y = quat.y();
+    static_cam_tf_body_msg.transform.rotation.z = quat.z();
+    static_cam_tf_body_msg.transform.rotation.w = quat.w();
+
+    static_tf_msg_vec_.push_back(static_cam_tf_body_msg);
 }
 
 void AirsimROSWrapper::lidar_timer_cb(const ros::TimerEvent& event)
@@ -550,18 +625,18 @@ void AirsimROSWrapper::lidar_timer_cb(const ros::TimerEvent& event)
         {
             // std::lock_guard<std::recursive_mutex> guard(lidar_mutex_);
             int ctr = 0;
-            for (const auto& vehicle_lidar_pair : vehicle_lidar_map_)
+            for (const std::string lidar_name : lidar_names_vec_)
             {
                 sensor_msgs::PointCloud2 lidar_msg;
                 struct msr::airlib::LidarData lidar_data;
                 {
                     ros_bridge::Timer timer(&getLidarDataVecStatistics[ctr]);
                     std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
-                    lidar_data = airsim_client_lidar_.getLidarData(vehicle_lidar_pair.second, vehicle_lidar_pair.first); // airsim api is imu_name, vehicle_name
+                    lidar_data = airsim_client_lidar_.getLidarData(lidar_name, vehicle_name); // airsim api is imu_name, vehicle_name
                     lck.unlock();
                 }
-                lidar_msg = get_lidar_msg_from_airsim(vehicle_lidar_pair.second, lidar_data);     // todo make const ptr msg to avoid copy
-                lidar_msg.header.frame_id = "fsds/" + vehicle_lidar_pair.second; // sensor frame name. todo add to doc
+                lidar_msg = get_lidar_msg_from_airsim(lidar_name, lidar_data);     // todo make const ptr msg to avoid copy
+                lidar_msg.header.frame_id = "fsds/" + lidar_name;
                 lidar_msg.header.stamp = ros::Time::now();
 
                 {

@@ -152,30 +152,34 @@ The IMU captures the acceleration, orientation and angular rate of the vehicle.
 More detailed technical information about the IMU implementation of the IMU can be found [here](imu.md).
 
 ### Sensor specification
-Teams are expected to provide their sensor suite as a single AirSim settings.json file.
+Teams are expected to provide their sensor suite as a single AirSim `settings.json` file.
 Most of the parameters in the settings.json file will be set by the officials to ensure fairness during competition.
 You are allowed to configure the following subset of parameters within the boundaries of the above rules.
 
 * Cameras   
  *  * camera name
- *  * Width, Height
- *  * FOV_Degrees
- *  * X, Y, Z
- *  * Pitch, Roll, Yaw
+ *  * Width, Height (pixels)
+ *  * FOV_Degrees (degrees)
+ *  * X, Y, Z (meters)
+ *  * Pitch, Roll, Yaw (degrees)
 * Lidars
  *  * NumberOfChannels
  *  * PointsPerSecond
  *  * RotationsPerSecond
- *  * HorizontalFOVStart
- *  * HorizontalFOVEnd
- *  * VerticalFOVUpper
- *  * VerticalFOVLower
- *  * X, Y, Z
- *  * Pitch, Roll, Yaw
+ *  * HorizontalFOVStart (degrees)
+ *  * HorizontalFOVEnd (degrees)
+ *  * VerticalFOVUpper (degrees)
+ *  * VerticalFOVLower(degrees)
+ *  * X, Y, Z (meters)
+ *  * Pitch, Roll, Yaw (degrees)
 
 The GPS and IMU are configured equally for all teams according to the rules in the previous chapter.
 
-We recommend to copy the settings.json in this repository as a base and configure the cameras and lidar from thereon.
+X, Y, Z, Pitch, Roll, Yaw have to be specified in a NED frame (it might take some experimentation to understand the correct signs to use). 
+The transforms you will get from ROS however, will be in the ENU frame (which is the default ros coordinate system).
+Distance values are in meters and rotation values are degrees.
+
+We recommend to copy the `settings.json` in this repository as a base and configure the cameras and lidar from thereon.
 
 ## Launching the simulator
 To run the simulation, read the [simulation guide](how-to-simulate.md).

@@ -37,12 +37,14 @@ STRICT_MODE_OFF //todo what does this do?
 #include <sensor_msgs/NavSatFix.h>
 #include <sensor_msgs/PointCloud2.h>
 #include <std_srvs/Empty.h>
+#include <tf/tf.h>
 #include <tf2/LinearMath/Matrix3x3.h>
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf2_ros/static_transform_broadcaster.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
+#include <std_msgs/Float32.h>
 #include <unordered_map>
 #include <fstream>
 #include <curl/curl.h>
@@ -160,7 +162,7 @@ private:
 
 
     AirSimSettingsParser airsim_settings_parser_;
-    std::map<std::string, std::string> vehicle_lidar_map_;
+    std::vector<std::string> lidar_names_vec_;
     std::vector<geometry_msgs::TransformStamped> static_tf_msg_vec_;
     std::string mission_name_; // rosparam obtained from launch file
     std::string track_name_; // rosparam obtained from launch file
@@ -180,9 +182,7 @@ private:
     // std::recursive_mutex lidar_mutex_;
 
     /// ROS tf
-    tf2_ros::TransformBroadcaster tf_broadcaster_;
     tf2_ros::StaticTransformBroadcaster static_tf_pub_;
-    tf2_ros::Buffer tf_buffer_;
 
     /// ROS Timers.
     ros::Timer odom_update_timer_;
