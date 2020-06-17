@@ -146,8 +146,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         set_nans_to_zeros_in_pose(*vehicle_setting);
 
         vehicle_name = curr_vehicle_name;
-        odom_enu_pub = nh_.advertise<nav_msgs::Odometry>("testing_only/odom_enu", 10);
-        imu_enu_yaw_pub = nh_.advertise<std_msgs::Float32>("testing_only/odom_enu_yaw", 10);
+        odom_pub = nh_.advertise<nav_msgs::Odometry>("testing_only/odom", 10);
         global_gps_pub = nh_.advertise<sensor_msgs::NavSatFix>("gps", 10);
         imu_pub = nh_.advertise<sensor_msgs::Imu>("imu", 10);
         control_cmd_sub = nh_.subscribe<fs_msgs::ControlCommand>("control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, vehicle_name));
@@ -357,7 +356,6 @@ sensor_msgs::PointCloud2 AirsimROSWrapper::get_lidar_msg_from_airsim(const std::
 // todo covariances
 sensor_msgs::Imu AirsimROSWrapper::get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data)
 {
-    std_msgs::Float32 yaw_enu;
     // Convert to ENU frame here as well
     sensor_msgs::Imu imu_msg;
     tf::Quaternion imu_heading_enu_quat;
@@ -377,8 +375,6 @@ sensor_msgs::Imu AirsimROSWrapper::get_imu_msg_from_airsim(const msr::airlib::Im
     tf::Matrix3x3 m_enu(imu_heading_enu_quat);
     double roll, pitch, yaw;
     m_enu.getRPY(roll, pitch, yaw);
-    yaw_enu.data = yaw; 
-    imu_enu_yaw_pub.publish(yaw_enu);
 
     // Publish IMU ang rates in radians per second
     imu_msg.angular_velocity.x = math_common::deg2rad(imu_data.angular_velocity.x());
@@ -443,7 +439,7 @@ void AirsimROSWrapper::odom_cb(const ros::TimerEvent& event)
         {
             ros_bridge::ROSMsgCounter counter(&odom_pub_statistics);
 
-            odom_enu_pub.publish(message_enu);
+            odom_pub.publish(message_enu);
         }
     }
     catch (rpc::rpc_error& e)
