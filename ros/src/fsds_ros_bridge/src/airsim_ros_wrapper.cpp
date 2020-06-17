@@ -202,7 +202,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
                 auto lidar_setting = *static_cast<LidarSetting *>(sensor_setting.get());
                 set_nans_to_zeros_in_pose(*vehicle_setting, lidar_setting);
                 append_static_lidar_tf(curr_vehicle_name, sensor_name, lidar_setting); // todo is there a more readable way to down-cast?
-                vehicle_lidar_map_[curr_vehicle_name] = sensor_name;                   // non scalable
+                lidar_names_vec_.push_back(sensor_name);
                 lidar_pub_vec_.push_back(nh_.advertise<sensor_msgs::PointCloud2>("lidar/" + sensor_name, 10));
                 lidar_pub_vec_statistics.push_back(ros_bridge::Statistics(sensor_name + "_Publisher"));
                 getLidarDataVecStatistics.push_back(ros_bridge::Statistics(sensor_name + "_RpcCaller"));
@@ -345,10 +345,6 @@ sensor_msgs::PointCloud2 AirsimROSWrapper::get_lidar_msg_from_airsim(const std::
         const unsigned char *bytes = reinterpret_cast<const unsigned char *>(&data_std[0]);
         std::vector<unsigned char> lidar_msg_data(bytes, bytes + sizeof(float) * data_std.size());
         lidar_msg.data = std::move(lidar_msg_data);
-    }
-    else
-    {
-        // msg = []
     }
     return lidar_msg;
 }
@@ -626,18 +622,18 @@ void AirsimROSWrapper::lidar_timer_cb(const ros::TimerEvent& event)
         {
             // std::lock_guard<std::recursive_mutex> guard(lidar_mutex_);
             int ctr = 0;
-            for (const auto& vehicle_lidar_pair : vehicle_lidar_map_)
+            for (const std::string lidar_name : lidar_names_vec_)
             {
                 sensor_msgs::PointCloud2 lidar_msg;
                 struct msr::airlib::LidarData lidar_data;
                 {
                     ros_bridge::Timer timer(&getLidarDataVecStatistics[ctr]);
                     std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
-                    lidar_data = airsim_client_lidar_.getLidarData(vehicle_lidar_pair.second, vehicle_lidar_pair.first); // airsim api is imu_name, vehicle_name
+                    lidar_data = airsim_client_lidar_.getLidarData(lidar_name, vehicle_name); // airsim api is imu_name, vehicle_name
                     lck.unlock();
                 }
-                lidar_msg = get_lidar_msg_from_airsim(vehicle_lidar_pair.second, lidar_data);     // todo make const ptr msg to avoid copy
-                lidar_msg.header.frame_id = "fsds/" + vehicle_lidar_pair.second; // sensor frame name. todo add to doc
+                lidar_msg = get_lidar_msg_from_airsim(lidar_name, lidar_data);     // todo make const ptr msg to avoid copy
+                lidar_msg.header.frame_id = "fsds/" + lidar_name;
                 lidar_msg.header.stamp = ros::Time::now();
 
                 {
