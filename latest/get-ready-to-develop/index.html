@@ -212,7 +212,7 @@ You can even add <code>export DISPLAY=:0</code> to your <code>~/.bashrc</code> t
 <p>In Windows, install <a href="https://git-scm.com/download/win">git</a> and <a href="https://git-lfs.github.com/">git lfs</a>.</p>
 <p>Once both are installed, open git bash and run <code>git lfs install</code>.</p>
 <p>Now clone the repo in the windows home directory </p>
-<pre><code>git clone git@github.com:FS-Online/Formula-Student-Driverless-Simulator.git
+<pre><code>git clone git@github.com:FS-Online/Formula-Student-Driverless-Simulator.git --recurse-submodules
 </code></pre>
 
 <p>Go into the cloned repo and run <code>git config core.fileMode false</code> to ignore file mode changes.</p>

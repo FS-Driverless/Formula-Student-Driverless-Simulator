@@ -135,7 +135,7 @@
                 <h2 id="imu-sensor">IMU Sensor</h2>
 <p>The IMU sensor in FSDS is using AirSim's built in IMU sensor simulation, that has been modelled and parametrized according to MPU 6000 IMU from <a href="https://www.invensense.com/wp-content/uploads/2015/02/MPU-6000-Datasheet1.pdf">InvenSense</a></p>
 <p>The maximum achievable internal IMU frequency is 1000 Hz, ouputing information of the vehicle's 3-axis angular velocity, 3-axis linear acceleration, as well as its orientation in quaternions. </p>
-<p>IMU gyroscope and accelomter bias and accuracy parameters can be found and fine-tuned in AirLib/include/sensors/imu/ImuSimpleParams.hpp, or can be initialized with custom parameters in your settings.json file. </p>
+<p>IMU gyroscope and accelomter bias and accuracy parameters can be found and fine-tuned in AirLib/include/sensors/imu/ImuSimpleParams.hpp, or can be initialized with custom parameters in your <code>settings.json</code> file. </p>
 <p>The angular velocity, linear acceleration outputs as well as their biases have artificially introduced Gaussian noise (0 mean, standard deviation of 1) updated on each IMU cycle. </p>
 <p>All of the IMU measurements are timestamped.</p>
 <p>See ImuSimple.hpp (/AirSim/AirLib/include/sensors/imu/ImuSimple.hpp) and [ImuSimpleParams.hpp] /AirSim/AirLib/include/sensors/imu/ImuSimpleParams.hpp for the implementation of the IMU model.</p>
