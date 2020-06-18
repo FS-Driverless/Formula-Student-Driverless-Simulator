@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/GameUserSettings.h"
+#include "SimMode/SimModeBase.h"
 #include "AirSimGameMode.generated.h"
 
 /**
@@ -17,10 +18,23 @@ public:
 	GENERATED_BODY()
     
     virtual void StartPlay() override;
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
     
     AAirSimGameMode(const FObjectInitializer& ObjectInitializer);
+
+    UPROPERTY() ASimModeBase* simmode;
+
     
-//private:
-    //UGameUserSettings* GetGameUserSettings();
+private:
+    void initializeSettings();
+    bool getSettingsText(std::string& settingsText);
+    bool getSettingsTextFromCommandLine(std::string& settingsText);
+    bool readSettingsTextFromFile(FString fileName, std::string& settingsText);
+    std::string getSimModeFromUser();
+
+    void setUnrealEngineSettings();
+    void createSimMode();
+
 
 };
