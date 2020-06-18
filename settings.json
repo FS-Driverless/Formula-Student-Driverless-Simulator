@@ -4,6 +4,7 @@
   "SimMode": "Car",
   "ViewMode": "SpringArmChase",
   "ClockSpeed": 1.0,
+  "RecordUIVisible": false,
   "Vehicles": {
     "FSCar": {
       "VehicleType": "PhysXCar",
