@@ -19,6 +19,7 @@ public:
     
     virtual void StartPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+    virtual void PostLogin(APlayerController * NewPlayer) override;
 
     
     AAirSimGameMode(const FObjectInitializer& ObjectInitializer);

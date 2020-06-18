@@ -43,6 +43,9 @@ AAirSimGameMode::AAirSimGameMode(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer)
 {
     DefaultPawnClass = nullptr;
+    static ConstructorHelpers::FClassFinder<APawn> AirsimSpectatorPawn(TEXT("/AirSim/AirsimSpectatorPawn"));
+    SpectatorClass = AirsimSpectatorPawn.Class;
+    // DefaultPawnClass = ASpectatorPawn::StaticClass();
     HUDClass = ASimHUD::StaticClass();
 
     common_utils::Utils::getSetLogger(&GlobalASimLog);
@@ -88,6 +91,10 @@ void AAirSimGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
     UAirBlueprintLib::OnEndPlay();
 
     Super::EndPlay(EndPlayReason);
+}
+
+void AAirSimGameMode::PostLogin(APlayerController * newPlayer) {
+    newPlayer->StartSpectatingOnly();
 }
 
 std::string AAirSimGameMode::getSimModeFromUser()
