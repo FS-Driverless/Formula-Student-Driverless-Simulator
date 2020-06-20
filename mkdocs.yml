@@ -26,6 +26,7 @@ nav:
     - "ROS Bridge statistics": "statistics.md"
     - "Joystick": "joystick.md"
     - "Operator": "operator.md"
+    - "Spectator": "spectator.md"
 extra_css:
   - css\version-select.css
 extra_javascript:

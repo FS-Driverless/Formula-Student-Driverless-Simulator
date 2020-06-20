@@ -2,12 +2,10 @@ _This document is intended to read top-to-bottom. Do yourself a favour and read 
 
 # Formula Student Driverless Simulation: System overview
 
-FSDS is built around Unreal Engine 4 (the game engine) and the AirSim plugin. 
+FSDS is built around Unreal Engine 4 (the game engine) and the AirSim plugin.
 The game engine does all the graphical rendering, collision simulation and car movement simulation. 
-A separate component - the simulator - will handle all control of the simulation, provide external interfaces and store what is happening.
-
-! We will also provide a video feed of the simulation for live streaming purposes.
-  Since it is still unclear how this will work this is not included in this description.
+Autonomous systems connect to the simulation using ROS topics provided by the ros-bridge. 
+A separate component - the operator - will provide an interface to officials to controll the simulation during competition.
 
 ![System overview](images/system-overview.png)
 
@@ -100,3 +98,9 @@ AirSim is used to connect Unreal with the operator and ROS bridge.
 This plugin is added inside the Unreal world and takes control of most of the game logic.
 It receives the sensor suite and simulates the sensors, it moves the car according to trajectory setpoints and exposes an RPC API for external management.
 This RPC API is used by the simulator to interact with the world.
+
+## The Spectator
+The spectator provides an eye into the virtual world from an external computer.
+Through a network connection the virtual world state is replicated and shown on the screen.
+The user can operate the camera with its mouse and keyboard.
+Read more about usage of the spectator [here](spectator.md).
