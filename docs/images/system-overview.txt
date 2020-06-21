@@ -31,5 +31,6 @@ package "Google Cloud" {
 [Official's browser<size:20><&person></size>] as official
 [official] -down-> [Operator] : Instruction
 
+[Spectator] -up-> [Game Engine]
 
 @enduml
