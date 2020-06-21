@@ -17,7 +17,7 @@ class AIRSIM_API AAirSimGameMode : public AGameModeBase
 public:
 	GENERATED_BODY()
     
-    virtual void StartPlay() override;
+    virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
     virtual void PostLogin(APlayerController * NewPlayer) override;
 

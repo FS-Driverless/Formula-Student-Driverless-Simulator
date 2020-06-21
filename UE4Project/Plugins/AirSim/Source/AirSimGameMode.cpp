@@ -54,7 +54,7 @@ AAirSimGameMode::AAirSimGameMode(const FObjectInitializer& ObjectInitializer)
     static IImageWrapperModule& ImageWrapperModule = FModuleManager::LoadModuleChecked<IImageWrapperModule>(TEXT("ImageWrapper"));
 }
 
-void AAirSimGameMode::StartPlay() 
+void AAirSimGameMode::BeginPlay() 
 {
     try
     {
@@ -74,7 +74,7 @@ void AAirSimGameMode::StartPlay()
         UAirBlueprintLib::ShowMessage(EAppMsgType::Ok, std::string("Error at startup: ") + ex.what(), "Error");
     }
 
-    Super::StartPlay();
+    Super::BeginPlay();
 }
 
 void AAirSimGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
