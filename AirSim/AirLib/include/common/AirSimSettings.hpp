@@ -345,7 +345,6 @@ public: //fields
 
     std::string clock_type = "";
     float clock_speed = 1.0f;
-    bool engine_sound = false;
     bool log_messages_visible = true;
     HomeGeoPoint origin_geopoint{ GeoPoint(47.641468, -122.140165, 122) }; //The geo-coordinate assigned to Unreal coordinate 0,0,0
     std::map<std::string, PawnPath> pawn_paths; //path for pawn blueprint
@@ -1023,7 +1022,6 @@ private:
         api_server_address = settings_json.getString("LocalHostIp", "");
 		api_port = settings_json.getInt("ApiServerPort", RpcLibPort);
         is_record_ui_visible = settings_json.getBool("RecordUIVisible", true);
-        engine_sound = settings_json.getBool("EngineSound", false);
         enable_rpc = settings_json.getBool("EnableRpc", enable_rpc);
         speed_unit_factor = settings_json.getFloat("SpeedUnitFactor", 1.0f);
         speed_unit_label = settings_json.getString("SpeedUnitLabel", "m\\s");

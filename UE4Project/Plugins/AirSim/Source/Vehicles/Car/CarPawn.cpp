@@ -3,7 +3,6 @@
 #include "GameFramework/Controller.h"
 #include "Components/TextRenderComponent.h"
 #include "Components/AudioComponent.h"
-#include "Sound/SoundCue.h"
 #include "WheeledVehicleMovementComponent4W.h"
 
 #include "CarWheelFront.h"
@@ -71,12 +70,6 @@ ACarPawn::ACarPawn()
     gear_text_render_->SetRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
     gear_text_render_->SetupAttachment(GetMesh());
     gear_text_render_->SetVisibility(true);
-
-    // Setup the audio component and allocate it a sound cue
-    ConstructorHelpers::FObjectFinder<USoundCue> SoundCue(TEXT("/AirSim/VehicleAdv/Sound/Engine_Loop_Cue.Engine_Loop_Cue"));
-    engine_sound_audio_ = CreateDefaultSubobject<UAudioComponent>(TEXT("EngineSound"));
-    engine_sound_audio_->SetSound(SoundCue.Object);
-    engine_sound_audio_->SetupAttachment(GetMesh());
 
     // Colors for the in-car gear display. One for normal one for reverse
     last_gear_display_reverse_color_ = FColor(255, 0, 0, 255);
@@ -168,14 +161,8 @@ UWheeledVehicleMovementComponent* ACarPawn::getVehicleMovementComponent() const
     return GetVehicleMovement();
 }
 
-void ACarPawn::initializeForBeginPlay(bool engine_sound)
+void ACarPawn::initializeForBeginPlay()
 {
-    if (engine_sound)
-        engine_sound_audio_->Activate();
-    else
-        engine_sound_audio_->Deactivate();
-
-
     //put camera little bit above vehicle
     FTransform camera_transform(FVector::ZeroVector);
     FActorSpawnParameters camera_spawn_params;
@@ -252,20 +239,13 @@ void ACarPawn::Tick(float Delta)
 
     // Set the string in the in-car HUD
     updateInCarHUD();
-
-    // Pass the engine RPM to the sound component
-    float RPMToAudioScale = 2500.0f / GetVehicleMovement()->GetEngineMaxRotationSpeed();
-    engine_sound_audio_->SetFloatParameter(FName("RPM"), GetVehicleMovement()->GetEngineRotationSpeed()*RPMToAudioScale);
-
+    
     pawn_events_.getPawnTickSignal().emit(Delta);
 }
 
 void ACarPawn::BeginPlay()
 {
     Super::BeginPlay();
-
-    // Start an engine sound playing
-    engine_sound_audio_->Play();
 }
 
 void ACarPawn::updateHUDStrings()
