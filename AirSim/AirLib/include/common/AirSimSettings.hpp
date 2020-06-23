@@ -66,8 +66,8 @@ public: //types
         std::string non_slippery_mat;
 
         PawnPath(const std::string& pawn_bp_val = "",
-            const std::string& slippery_mat_val = "/AirSim/VehicleAdv/PhysicsMaterials/Slippery.Slippery",
-            const std::string& non_slippery_mat_val = "/AirSim/VehicleAdv/PhysicsMaterials/NonSlippery.NonSlippery")
+            const std::string& slippery_mat_val = "/AirSim/VehicleAdv/WheelData/Slippery.Slippery",
+            const std::string& non_slippery_mat_val = "/AirSim/VehicleAdv/WheelData/NonSlippery.NonSlippery")
             : pawn_bp(pawn_bp_val), slippery_mat(slippery_mat_val), non_slippery_mat(non_slippery_mat_val)
         {
         }
