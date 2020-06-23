@@ -109,7 +109,6 @@ protected:
     int record_tick_count;
 
     UPROPERTY() UClass* pip_camera_class;
-    UPROPERTY() UParticleSystem* collision_display_template;
 private:
     typedef common_utils::Utils Utils;
     typedef msr::airlib::ClockFactory ClockFactory;

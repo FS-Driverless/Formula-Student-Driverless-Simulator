@@ -253,15 +253,6 @@ msr::airlib::RCData PawnSimApi::getRCData() const
     return rc_data_;
 }
 
-void PawnSimApi::displayCollisionEffect(FVector hit_location, const FHitResult& hit)
-{
-    if (params_.collision_display_template != nullptr && Utils::isDefinitelyLessThan(hit.ImpactNormal.Z, 0.0f)) {
-        UParticleSystemComponent* particles = UGameplayStatics::SpawnEmitterAtLocation(params_.pawn->GetWorld(), 
-            params_.collision_display_template, FTransform(hit_location), true);
-        particles->SetWorldScale3D(FVector(0.1f, 0.1f, 0.1f));
-    }
-}
-
 int PawnSimApi::getRemoteControlID() const
 {
     return getVehicleSetting()->rc.remote_control_id;
