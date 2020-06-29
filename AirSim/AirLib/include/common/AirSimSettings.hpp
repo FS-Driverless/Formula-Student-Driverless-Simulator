@@ -805,7 +805,7 @@ private:
     {
         pawn_paths.clear();
         pawn_paths.emplace("DefaultCar",
-            PawnPath("Class'/AirSim/VehicleAdv/FSCarPawn.FSCarPawn_C'"));
+            PawnPath("Class'/AirSim/VehicleAdv/Cars/TechnionCar/TechnionCarPawn.TechnionCarPawn_C'"));
         pawn_paths.emplace("DefaultComputerVision",
             PawnPath("Class'/AirSim/Blueprints/BP_ComputerVisionPawn.BP_ComputerVisionPawn_C'"));
 
