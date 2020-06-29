@@ -232,7 +232,7 @@ The vehicle dynamic model is a third-party high-fodelity model and will be the s
 More details and information on this choice can be found [here](vehicle_model.md).
 
 ## 3D vehicle model
-Read [this](intimport-car-3d-model.md) tutorial on how to import your own 3d car model.
+Read [this](import-car-3d-model.md) tutorial on how to import your own 3d car model.
 
 To select a different car for a run, change the `PawnPaths -> DefaultCar -> PawnBP` field in the `settings.json`.
 Currently the following values are supported:
