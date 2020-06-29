@@ -27,6 +27,7 @@ nav:
     - "Joystick": "joystick.md"
     - "Operator": "operator.md"
     - "Spectator": "spectator.md"
+    - "Import your 3d car model": "import-car-3d-model.md"
 extra_css:
   - css\version-select.css
 extra_javascript:
