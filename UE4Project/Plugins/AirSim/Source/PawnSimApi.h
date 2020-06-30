@@ -41,7 +41,6 @@ public: //types
         PawnEvents* pawn_events;
         common_utils::UniqueValueMap<std::string, APIPCamera*> cameras;
         UClass* pip_camera_class;
-        UParticleSystem* collision_display_template;
         msr::airlib::GeoPoint home_geopoint;
         std::string vehicle_name;
 
@@ -51,7 +50,7 @@ public: //types
 
         Params(APawn* pawn_val, const NedTransform* global_transform_val, PawnEvents* pawn_events_val,
             const common_utils::UniqueValueMap<std::string, APIPCamera*> cameras_val, UClass* pip_camera_class_val,
-            UParticleSystem* collision_display_template_val, const msr::airlib::GeoPoint home_geopoint_val,
+            const msr::airlib::GeoPoint home_geopoint_val,
             std::string vehicle_name_val)
         {
             pawn = pawn_val; 
@@ -59,7 +58,6 @@ public: //types
             pawn_events = pawn_events_val;
             cameras = cameras_val;
             pip_camera_class = pip_camera_class_val;
-            collision_display_template = collision_display_template_val;
             home_geopoint = home_geopoint_val;
             vehicle_name = vehicle_name_val;
         }

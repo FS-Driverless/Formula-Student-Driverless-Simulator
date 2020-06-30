@@ -178,12 +178,6 @@ public:
         return getAirDensity(std_pressure, std_temperature);
     }
 
-    static real_T getSpeedofSound(real_T altitude)  // m/s
-    {
-        //http://www.braeunig.us/space/atmmodel.htm
-        return sqrt(1.400f * 287.053f * getStandardTemperature(getGeopotential(altitude)));
-    }
-
     static real_T getGravity(real_T altitude)
     {
         //derivation: http://www.citycollegiate.com/gravitation_XId.htm

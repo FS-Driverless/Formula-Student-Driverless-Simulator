@@ -34,12 +34,6 @@ ASimModeBase::ASimModeBase()
     static ConstructorHelpers::FClassFinder<ACameraDirector> camera_director_class(TEXT("Blueprint'/AirSim/Blueprints/BP_CameraDirector'"));
     camera_director_class_ = camera_director_class.Succeeded() ? camera_director_class.Class : nullptr;
 
-    static ConstructorHelpers::FObjectFinder<UParticleSystem> collision_display(TEXT("ParticleSystem'/AirSim/StarterContent/Particles/P_Explosion.P_Explosion'"));
-    if (!collision_display.Succeeded())
-        collision_display_template = collision_display.Object;
-    else
-        collision_display_template = nullptr;
-
     static ConstructorHelpers::FClassFinder<APIPCamera> pip_camera_class_val(TEXT("Blueprint'/AirSim/Blueprints/BP_PIPCamera'"));
     pip_camera_class = pip_camera_class_val.Succeeded() ? pip_camera_class_val.Class : nullptr;
 
@@ -543,7 +537,7 @@ void ASimModeBase::setupVehiclesAndCamera()
 
             PawnSimApi::Params pawn_sim_api_params(vehicle_pawn, &getGlobalNedTransform(),
                 getVehiclePawnEvents(vehicle_pawn), getVehiclePawnCameras(vehicle_pawn), pip_camera_class, 
-                collision_display_template, home_geopoint, vehicle_name);
+                home_geopoint, vehicle_name);
 
             auto vehicle_sim_api = createVehicleSimApi(pawn_sim_api_params);
             auto vehicle_sim_api_p = vehicle_sim_api.get();

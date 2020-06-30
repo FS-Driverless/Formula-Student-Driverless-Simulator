@@ -114,7 +114,7 @@ const common_utils::UniqueValueMap<std::string, APIPCamera*> ASimModeCar::getVeh
 void ASimModeCar::initializeVehiclePawn(APawn* pawn)
 {
     auto vehicle_pawn = static_cast<TVehiclePawn*>(pawn);
-    vehicle_pawn->initializeForBeginPlay(getSettings().engine_sound);
+    vehicle_pawn->initializeForBeginPlay();
 }
 std::unique_ptr<PawnSimApi> ASimModeCar::createVehicleSimApi(
     const PawnSimApi::Params& pawn_sim_api_params) const

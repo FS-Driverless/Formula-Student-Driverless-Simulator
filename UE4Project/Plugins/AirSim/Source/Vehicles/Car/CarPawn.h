@@ -40,7 +40,7 @@ public:
         FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;
 
     //interface
-    void initializeForBeginPlay(bool engine_sound);
+    void initializeForBeginPlay();
     const common_utils::UniqueValueMap<std::string, APIPCamera*> getCameras() const;
     PawnEvents* getPawnEvents()
     {
@@ -92,7 +92,6 @@ private:
 
     UTextRenderComponent* speed_text_render_;
     UTextRenderComponent* gear_text_render_;
-    UAudioComponent* engine_sound_audio_;
     
     msr::airlib::CarApiBase::CarControls keyboard_controls_;
 

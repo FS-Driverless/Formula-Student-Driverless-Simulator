@@ -232,9 +232,16 @@ The vehicle dynamic model is a third-party high-fodelity model and will be the s
 More details and information on this choice can be found [here](vehicle_model.md).
 
 ## 3D vehicle model
-//todo
-This chapter will describe how to change the 3d model of the vehicle and how to provide the 3d model for usage during the competition. 
-At this moment we have no idea how this works sooooo when we figure it out this will be filled in.
+Read [this](import-car-3d-model.md) tutorial on how to import your own 3d car model.
+
+To select a different car for a run, change the `PawnPaths -> DefaultCar -> PawnBP` field in the `settings.json`.
+Currently the following values are supported:
+* `Class'/AirSim/VehicleAdv/Cars/TechnionCar/TechnionCarPawn.TechnionCarPawn_C'`
+* `Class'/AirSim/VehicleAdv/Cars/SuvCar/SuvCarPawn.SuvCarPawn_C'` 
+
+All vehicles will have a width of 100cm and a length of 180cm.
+This is the bounding box of the vehicle (the part of the vehicle that interacts with the world)
+The 3d models are not restricted to this size.
 
 ## Competition deployment
 A few weeks before the competition, each team will receive the ssh credentials to an Ubuntu google cloud instance.
