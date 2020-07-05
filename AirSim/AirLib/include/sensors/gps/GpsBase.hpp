@@ -79,6 +79,7 @@ public: //types
         GeoPoint geo_point;
         double position_covariance[9] = {};
         NavSatStatus status;
+        real_T eph, epv;
         PositionCovarianceType position_covariance_type;
     };
 

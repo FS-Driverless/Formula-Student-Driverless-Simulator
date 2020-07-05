@@ -5,9 +5,6 @@
   "ViewMode": "SpringArmChase",
   "ClockSpeed": 1.0,
   "RecordUIVisible": false,
-  "PawnPaths": {
-    "DefaultCar": { "PawnBP": "Class'/AirSim/VehicleAdv/Cars/TechnionCar/TechnionCarPawn.TechnionCarPawn_C'" }
-  },
   "Vehicles": {
     "FSCar": {
       "VehicleType": "PhysXCar",
