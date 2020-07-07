@@ -457,10 +457,15 @@ void AirsimROSWrapper::gps_timer_cb(const ros::TimerEvent& event)
     sensor_msgs::NavSatFix message;
     {
         ros_bridge::Timer timer(&getGpsDataStatistics);
-        msr::airlib::GeoPoint gps_location = airsim_client_.getGpsData("Gps", vehicle_name).gnss.geo_point;
+        msr::airlib::GpsBase::Output gps_output = airsim_client_.getGpsData("Gps", vehicle_name);
+        msr::airlib::GeoPoint gps_location = gps_output.gnss.geo_point;
+        msr::airlib::GpsBase::GnssReport gnss_gps_report = gps_output.gnss;
         message = get_gps_sensor_msg_from_airsim_geo_point(gps_location);
+        message.position_covariance[0] = gnss_gps_report.eph*gnss_gps_report.eph;
+        message.position_covariance[4] = gnss_gps_report.eph*gnss_gps_report.eph;
+        message.position_covariance[8] = gnss_gps_report.epv*gnss_gps_report.epv;
+        message.header.stamp = AirsimROSWrapper::make_ts(gps_output.time_stamp);
     }
-    message.header.stamp = ros::Time::now();
     {
         ros_bridge::ROSMsgCounter counter(&global_gps_pub_statistics);
         global_gps_pub.publish(message);
