@@ -22,6 +22,7 @@ public: //types
         TTimePoint time_stamp; 
         Quaternionr orientation;
         Vector3r angular_velocity;
+        real_T sigma_arw, sigma_vrw;
         Vector3r linear_acceleration;
     };
 
