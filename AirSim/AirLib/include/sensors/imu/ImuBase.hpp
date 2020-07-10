@@ -6,6 +6,7 @@
 
 
 #include "sensors/SensorBase.hpp"
+#include "common/Common.hpp"
 
 
 namespace msr { namespace airlib {

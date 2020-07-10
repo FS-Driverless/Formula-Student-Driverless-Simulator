@@ -491,7 +491,7 @@ void AirsimROSWrapper::imu_timer_cb(const ros::TimerEvent& event)
         }
 
         sensor_msgs::Imu imu_msg = get_imu_msg_from_airsim(imu_data);
-        imu_msg.angular_velocity_covariance[0] = imu_data.sigma_arw*imu_data.sigma_arw;
+        imu_msg.angular_velocity_covariance[0] = imu_data.sigma_arw*imu_data.sigma_arw; 
         imu_msg.angular_velocity_covariance[4] = imu_data.sigma_arw*imu_data.sigma_arw;
         imu_msg.angular_velocity_covariance[8] = imu_data.sigma_arw*imu_data.sigma_arw;
         imu_msg.linear_acceleration_covariance[0] = imu_data.sigma_vrw*imu_data.sigma_vrw;

@@ -506,6 +506,7 @@ public:
         Quaternionr orientation;
         Vector3r angular_velocity;
         Vector3r linear_acceleration;
+        msr::airlib::real_T sigma_arw, sigma_vrw;
 
         MSGPACK_DEFINE_MAP(time_stamp, orientation, angular_velocity, linear_acceleration);
 
@@ -518,6 +519,8 @@ public:
             orientation = s.orientation;
             angular_velocity = s.angular_velocity;
             linear_acceleration = s.linear_acceleration;
+            sigma_arw = s.sigma_arw;
+            sigma_vrw = s.sigma_vrw;
         }
 
         msr::airlib::ImuBase::Output to() const
@@ -528,6 +531,8 @@ public:
             d.orientation = orientation.to();
             d.angular_velocity = angular_velocity.to();
             d.linear_acceleration = linear_acceleration.to();
+            d.sigma_vrw = sigma_vrw;
+            d.sigma_arw = sigma_arw;
 
             return d;
         }
