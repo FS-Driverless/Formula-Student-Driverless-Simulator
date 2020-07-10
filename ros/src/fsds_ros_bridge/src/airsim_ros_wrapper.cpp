@@ -387,12 +387,6 @@ sensor_msgs::Imu AirsimROSWrapper::get_imu_msg_from_airsim(const msr::airlib::Im
 
     imu_msg.header.stamp = make_ts(imu_data.time_stamp);
     // imu_msg.orientation_covariance = ;
-    imu_msg.angular_velocity_covariance[0] = imu_data.sigma_arw*imu_data.sigma_arw;
-    imu_msg.angular_velocity_covariance[4] = imu_data.sigma_arw*imu_data.sigma_arw;
-    imu_msg.angular_velocity_covariance[8] = imu_data.sigma_arw*imu_data.sigma_arw;
-    imu_msg.linear_acceleration_covariance[0] = imu_data.sigma_vrw*imu_data.sigma_vrw;
-    imu_msg.linear_acceleration_covariance[4] = imu_data.sigma_vrw*imu_data.sigma_vrw;
-    imu_msg.linear_acceleration_covariance[8] = imu_data.sigma_vrw*imu_data.sigma_vrw;
 
     return imu_msg;
 }
@@ -497,6 +491,12 @@ void AirsimROSWrapper::imu_timer_cb(const ros::TimerEvent& event)
         }
 
         sensor_msgs::Imu imu_msg = get_imu_msg_from_airsim(imu_data);
+        imu_msg.angular_velocity_covariance[0] = imu_data.sigma_arw*imu_data.sigma_arw;
+        imu_msg.angular_velocity_covariance[4] = imu_data.sigma_arw*imu_data.sigma_arw;
+        imu_msg.angular_velocity_covariance[8] = imu_data.sigma_arw*imu_data.sigma_arw;
+        imu_msg.linear_acceleration_covariance[0] = imu_data.sigma_vrw*imu_data.sigma_vrw;
+        imu_msg.linear_acceleration_covariance[4] = imu_data.sigma_vrw*imu_data.sigma_vrw;
+        imu_msg.linear_acceleration_covariance[8] = imu_data.sigma_vrw*imu_data.sigma_vrw;
         imu_msg.header.frame_id = "fsds/" + vehicle_name;
         // imu_msg.header.stamp = ros::Time::now();
         {
