@@ -20,7 +20,7 @@ STRICT_MODE_OFF
 
 #include "common/common_utils/WindowsApisCommonPre.hpp"
 #undef FLOAT
-#undef checkx
+#undef check
 #include "rpc/server.h"
 //TODO: HACK: UE4 defines macro with stupid names like "check" that conflicts with msgpack library
 #ifndef check
