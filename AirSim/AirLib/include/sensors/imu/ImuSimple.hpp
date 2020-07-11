@@ -64,7 +64,8 @@ private: //methods
         // TODO: Add noise in orientation?
 
         output.time_stamp = clock()->nowNanos();
-
+        output.sigma_arw = sigma_gyro_out;
+        output.sigma_vrw = sigma_accel_out;
         setOutput(output);
     }
 
@@ -84,6 +85,7 @@ private: //methods
         //update bias random walk
         real_T gyro_sigma_bias = gyro_bias_stability_norm * sqrt_dt;
         state_.gyroscope_bias += gauss_dist.next() * gyro_sigma_bias;
+        sigma_gyro_out = gyro_sigma_arw + gyro_sigma_bias; // Not 100% sure about this - as you are accumulating error through bias, the bias' std devs also accumulate, so I chose to include the accumulating std deviation of the bias in the covariance matrix
 
         //accelerometer
         //convert vrw to stddev
@@ -92,8 +94,12 @@ private: //methods
         //update bias random walk
         real_T accel_sigma_bias = accel_bias_stability_norm * sqrt_dt;
         state_.accelerometer_bias += gauss_dist.next() * accel_sigma_bias;
+        sigma_accel_out = accel_sigma_vrw + accel_sigma_bias; 
     }
 
+
+public:
+    real_T sigma_gyro_out, sigma_accel_out;
 
 private: //fields
     ImuSimpleParams params_;
@@ -101,7 +107,6 @@ private: //fields
 
     //cached calculated values
     real_T gyro_bias_stability_norm, accel_bias_stability_norm;
-
     struct State {
         Vector3r gyroscope_bias;
         Vector3r accelerometer_bias;
