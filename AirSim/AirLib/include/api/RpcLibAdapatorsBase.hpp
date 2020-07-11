@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Mizosoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 #ifndef air_RpcLibAdapatorsBase_hpp
@@ -508,7 +508,7 @@ public:
         Vector3r linear_acceleration;
         msr::airlib::real_T sigma_arw, sigma_vrw;
 
-        MSGPACK_DEFINE_MAP(time_stamp, orientation, angular_velocity, linear_acceleration);
+        MSGPACK_DEFINE_MAP(time_stamp, orientation, angular_velocity, linear_acceleration, sigma_arw, sigma_vrw);
 
         ImuData()
         {}
