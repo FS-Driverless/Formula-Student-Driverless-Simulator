@@ -38,12 +38,7 @@ If you make changes to AirLib you have to run `build.cmd` again.
 
 ## ROS development
 
-To set up the ROS workspace, cd into the `ros` folder and run
-```
-catkin init
-catkin build
-```
-Now you can [run the ros bridge](ros-bridge.md).
+Read [here](building-ros.md) how to compile the ros workspace.
 
 
 ## Export the Unreal Engine project for release
