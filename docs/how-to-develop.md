@@ -20,6 +20,13 @@ build.cmd
 ```
 If you try to develop the simulation on linux (unsupported atm) you can use `setup.sh` and `build.sh` instead of `build.cmd`.
 
+So what does build.cmd? 
+It downloads any nessesary libraries and compiles AirLib.
+AirLib is the shared code between the ros wrapper and the AirSim Unreal Engine plugin.
+After compilation it places the files in the UE4Project so that these files can be used durcing compilation of the plugin.
+To compile the ros wrapper you do not need the compiled files resulting form build.cmd.
+However, you do need the libraries. If you are on linux you can use setup.sh to download these libraries. 
+
 The first time this takes quite a while. Go walk around a bit, maybe start playing [factoryidle](https://factoryidle.com/). 
 
 After it is finished, launch unreal engine and open the project file `Formula-Student-Driverless-Simulator/UE4Project/FSOnline.uproject`

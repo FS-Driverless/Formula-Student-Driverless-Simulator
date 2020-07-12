@@ -13,7 +13,7 @@ The first time when compiling this on a linux machine you need to run AirSim/set
 This will download the nessesary libraries required to compile airlib.
 You will only need to run this once.
 Everything setup.sh does is also included in build.cmd. 
-So if you ran build.cmd in a WS shared folder, you don't need setup.sh
+So if you ran build.cmd in a WSL shared folder, you don't need setup.sh
 
 - Build ROS package
 ```
