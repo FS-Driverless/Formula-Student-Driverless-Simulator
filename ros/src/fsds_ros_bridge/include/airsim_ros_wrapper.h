@@ -188,7 +188,7 @@ private:
     ros::Timer odom_update_timer_;
     ros::Timer gps_update_timer_;
     ros::Timer imu_update_timer_;
-    ros::Timer airsim_lidar_update_timer_;
+    std::vector<ros::Timer> airsim_lidar_update_timers_;
     ros::Timer statistics_timer_;
     ros::Timer go_signal_timer_;
     ros::Timer statictf_timer_;

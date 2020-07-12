@@ -38,8 +38,22 @@
           "VerticalFOVLower": -5,
           "HorizontalFOVStart": -90,
           "HorizontalFOVEnd": 90,
-          "RotationsPerSecond": 20,
-          "DrawDebugPoints": true
+          "RotationsPerSecond": 10,
+          "DrawDebugPoints": false
+        },
+        "Lidar2": {
+          "SensorType": 6,
+          "Enabled": true,
+          "X": 0, "Y": 0, "Z": -1,
+          "Roll": 0, "Pitch": 0, "Yaw" : 0,
+          "NumberOfLasers": 4,
+          "PointsPerScan": 4096,
+          "VerticalFOVUpper": 5,
+          "VerticalFOVLower": -5,
+          "HorizontalFOVStart": -90,
+          "HorizontalFOVEnd": 90,
+          "RotationsPerSecond": 5,
+          "DrawDebugPoints": false
         }
       },
       "Cameras": {
