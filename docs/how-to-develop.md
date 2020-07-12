@@ -18,6 +18,15 @@ First build the AirLib code. Open the _Developer Command Prompt for VS 2019_, go
 ```
 build.cmd
 ```
+If you try to develop the simulation on linux (unsupported atm) you can use `setup.sh` and `build.sh` instead of `build.cmd`.
+
+So what does build.cmd? 
+It downloads any nessesary libraries and compiles AirLib.
+AirLib is the shared code between the ros wrapper and the AirSim Unreal Engine plugin.
+After compilation it places the files in the UE4Project so that these files can be used durcing compilation of the plugin.
+To compile the ros wrapper you do not need the compiled files resulting form build.cmd.
+However, you do need the libraries. If you are on linux you can use setup.sh to download these libraries. 
+
 The first time this takes quite a while. Go walk around a bit, maybe start playing [factoryidle](https://factoryidle.com/). 
 
 After it is finished, launch unreal engine and open the project file `Formula-Student-Driverless-Simulator/UE4Project/FSOnline.uproject`
@@ -38,12 +47,7 @@ If you make changes to AirLib you have to run `build.cmd` again.
 
 ## ROS development
 
-To set up the ROS workspace, cd into the `ros` folder and run
-```
-catkin init
-catkin build
-```
-Now you can [run the ros bridge](ros-bridge.md).
+Read [here](building-ros.md) how to compile the ros workspace.
 
 
 ## Export the Unreal Engine project for release

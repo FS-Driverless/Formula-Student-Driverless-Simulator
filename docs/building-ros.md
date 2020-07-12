@@ -9,23 +9,15 @@ Before we can build the workspace, install the workspace c++ library dependencie
 sudo apt-get install ros-melodic-tf2-geometry-msgs python-catkin-tools ros-melodic-rqt-multiplot ros-melodic-joy ros-melodic-cv-bridge ros-melodic-image-transport libyaml-cpp-dev libcurl4-openssl-dev
 ```
 
-Then:
-
-- Build AirSim shared c++ code. From the root of this repository, run:
-```
-cd AirSim
-./setup.sh
-./build.sh
-```
+The first time when compiling this on a linux machine you need to run AirSim/setup.sh.
+This will download the nessesary libraries required to compile airlib.
+You will only need to run this once.
+Everything setup.sh does is also included in build.cmd. 
+So if you ran build.cmd in a WSL shared folder, you don't need setup.sh
 
 - Build ROS package
 ```
 cd ros
+catkin init
 catkin build
-```
-
-If your default GCC isn't 8 or greater (check using `gcc --version`), then compilation will fail. In that case, use `gcc-8` explicitly as follows:
-
-```
-catkin build -DCMAKE_C_COMPILER=gcc-8 -DCMAKE_CXX_COMPILER=g++-8
 ```
