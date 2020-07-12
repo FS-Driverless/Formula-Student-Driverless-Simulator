@@ -11,38 +11,30 @@ namespace msr { namespace airlib {
 
 struct LidarSimpleParams {
 
-    // Velodyne VLP-16 Puck config
-    // https://velodynelidar.com/vlp-16.html
-
-    // default settings
-    // TODO: enable reading of these params from AirSim settings
-
-    uint number_of_channels = 16; 
+    // default values
+    uint number_of_lasers = 16; 
     real_T range = 10000.0f / 100;            // meters
-    uint points_per_second = 100000;  
+    uint points_per_scan = 100000;  
     uint horizontal_rotation_frequency = 10;  // rotations/sec
     real_T horizontal_FOV_start = 0;
     real_T horizontal_FOV_end = 359;
-    real_T vertical_FOV_upper = -15;             // drones -15, car +10
-    real_T vertical_FOV_lower = -45;             // drones -45, car -10
+    real_T vertical_FOV_upper = -15;
+    real_T vertical_FOV_lower = -45;
 
     Pose relative_pose {
-        Vector3r(0,0,-1),                     // position - a little above vehicle (especially for cars) or Vector3r::Zero()
+        Vector3r(0,0,-1),                     // position - a little above vehicle
         Quaternionr::Identity()               // orientation - by default Quaternionr(1, 0, 0, 0) 
         };                       
 
     bool draw_debug_points = false;
 
-    real_T update_frequency = 10;             // Hz
-    real_T startup_delay = 0;                 // sec
-
     void initializeFromSettings(const AirSimSettings::LidarSetting& settings)
     {
         std::string simmode_name = AirSimSettings::singleton().simmode_name;
 
-        number_of_channels = settings.number_of_channels;
+        number_of_lasers = settings.number_of_lasers;
         range = settings.range;
-        points_per_second = settings.points_per_second;
+        points_per_scan = settings.points_per_scan;
         horizontal_rotation_frequency = settings.horizontal_rotation_frequency;
 
         horizontal_FOV_start = settings.horizontal_FOV_start;

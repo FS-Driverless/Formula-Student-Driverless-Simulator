@@ -617,11 +617,6 @@ msr::airlib::VehicleApiBase* ASimModeBase::getVehicleApi(const PawnSimApi::Param
 // Used for debugging only.
 void ASimModeBase::drawLidarDebugPoints()
 {
-    // Currently we are checking the sensor-collection instead of sensor-settings.
-    // Also using variables to optimize not checking the collection if not needed.
-    if (lidar_checks_done_ && !lidar_draw_debug_points_)
-        return;
-
     if (getApiProvider() == nullptr)
         return;
 
@@ -639,7 +634,6 @@ void ASimModeBase::drawLidarDebugPoints()
                 const msr::airlib::LidarSimple* lidar =
                     static_cast<const msr::airlib::LidarSimple*>(api->getSensors().getByType(msr::airlib::SensorBase::SensorType::Lidar, i));
                 if (lidar != nullptr && lidar->getParams().draw_debug_points) {
-                    lidar_draw_debug_points_ = true;
 
                     msr::airlib::LidarData lidar_data = lidar->getOutput();
 
@@ -647,7 +641,8 @@ void ASimModeBase::drawLidarDebugPoints()
                         return;
 
                     for (int j = 0; j < lidar_data.point_cloud.size(); j = j + 3) {
-                        msr::airlib::Vector3r point(lidar_data.point_cloud[j], lidar_data.point_cloud[j + 1], lidar_data.point_cloud[j + 2]);
+                        // Lidar points are stored in ENU frame. Here we need them in NED frame. So we have ivnert Y and Z
+                        msr::airlib::Vector3r point(lidar_data.point_cloud[j], -1 * lidar_data.point_cloud[j + 1], -1 * lidar_data.point_cloud[j + 2]);
 
                         msr::airlib::Vector3r point_w = msr::airlib::VectorMath::transformToWorldFrame(point, lidar_data.pose, true);
                         FVector uu_point = pawn_sim_api->getNedTransform().fromLocalNed(point_w);
@@ -656,7 +651,7 @@ void ASimModeBase::drawLidarDebugPoints()
                         DrawDebugPoint(
                             this->GetWorld(),
                             uu_point,
-                            5,              // size
+                            3,              // size
                             FColor::Green,
                             false,          // persistent (never goes away)
                             0.03            // LifeTime: point leaves a trail on moving object
@@ -666,6 +661,4 @@ void ASimModeBase::drawLidarDebugPoints()
             }
         }
     }
-
-    lidar_checks_done_ = true;
 }

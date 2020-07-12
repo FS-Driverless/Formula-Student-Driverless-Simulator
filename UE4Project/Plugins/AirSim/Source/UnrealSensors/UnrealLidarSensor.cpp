@@ -20,20 +20,18 @@ void UnrealLidarSensor::createLasers()
 {
     msr::airlib::LidarSimpleParams params = getParams();
 
-    const auto number_of_lasers = params.number_of_channels;
-
-    if (number_of_lasers <= 0)
+    if (params.number_of_lasers <= 0)
         return;
 
     // calculate verticle angle distance between each laser
     float delta_angle = 0;
-    if (number_of_lasers > 1)
+    if (params.number_of_lasers > 1)
         delta_angle = (params.vertical_FOV_upper - (params.vertical_FOV_lower)) /
-            static_cast<float>(number_of_lasers - 1);
+            static_cast<float>(params.number_of_lasers - 1);
 
     // store vertical angles for each laser
     laser_angles_.clear();
-    for (auto i = 0u; i < number_of_lasers; ++i)
+    for (auto i = 0u; i < params.number_of_lasers; ++i)
     {
         const float vertical_angle = params.vertical_FOV_upper - static_cast<float>(i) * delta_angle;
         laser_angles_.emplace_back(vertical_angle);
@@ -48,46 +46,30 @@ void UnrealLidarSensor::getPointCloud(const msr::airlib::Pose& lidar_pose, const
     segmentation_cloud.clear();
 
     msr::airlib::LidarSimpleParams params = getParams();
-    const auto number_of_lasers = params.number_of_channels;
-
-    // cap the points to scan via ray-tracing; this is currently needed for car/Unreal tick scenarios
-    // since SensorBase mechanism uses the elapsed clock time instead of the tick delta-time.
-    constexpr float MAX_POINTS_IN_SCAN = 1e+5f;
-    uint32 total_points_to_scan = FMath::RoundHalfFromZero(params.points_per_second * delta_time);
-    if (total_points_to_scan > MAX_POINTS_IN_SCAN)
-    {
-        total_points_to_scan = MAX_POINTS_IN_SCAN;
-        UAirBlueprintLib::LogMessageString("Lidar: ", "Capping number of points to scan", LogDebugLevel::Failure);
-    }
 
     // calculate number of points needed for each laser/channel
-    const uint32 points_to_scan_with_one_laser = FMath::RoundHalfFromZero(total_points_to_scan / float(number_of_lasers));
+    const uint32 points_to_scan_with_one_laser = FMath::RoundHalfFromZero(params.points_per_scan / float(params.number_of_lasers));
     if (points_to_scan_with_one_laser <= 0)
     {
-        //UAirBlueprintLib::LogMessageString("Lidar: ", "No points requested this frame", LogDebugLevel::Failure);
+        UAirBlueprintLib::LogMessageString("Lidar: ", "No points requested this frame", LogDebugLevel::Failure);
         return;
     }
-
-    // calculate needed angle/distance between each point
-    const float angle_distance_of_tick = params.horizontal_rotation_frequency * 360.0f * delta_time;
-    const float angle_distance_of_laser_measure = angle_distance_of_tick / points_to_scan_with_one_laser;
 
     // normalize FOV start/end
     const float laser_start = std::fmod(360.0f + params.horizontal_FOV_start, 360.0f);
     const float laser_end = std::fmod(360.0f + params.horizontal_FOV_end, 360.0f);
 
+    // calculate needed angle/distance between each point
+    const float angle_distance_of_laser_measure = std::abs(laser_end - laser_start) / float(points_to_scan_with_one_laser);
+
     // shoot lasers
-    for (auto laser = 0u; laser < number_of_lasers; ++laser)
+    for (auto laser = 0u; laser < params.number_of_lasers; ++laser)
     {
         const float vertical_angle = laser_angles_[laser];
 
         for (auto i = 0u; i < points_to_scan_with_one_laser; ++i)
         {
-            const float horizontal_angle = std::fmod(current_horizontal_angle_ + angle_distance_of_laser_measure * i, 360.0f);
-
-            // check if the laser is outside the requested horizontal FOV
-            if (!VectorMath::isAngleBetweenAngles(horizontal_angle, laser_start, laser_end))
-                continue;
+            const float horizontal_angle = std::fmod(laser_end - angle_distance_of_laser_measure * i, 360.0f);
        
             Vector3r point;
             int segmentationID = -1;
@@ -101,8 +83,6 @@ void UnrealLidarSensor::getPointCloud(const msr::airlib::Pose& lidar_pose, const
             }
         }
     }
-
-    current_horizontal_angle_ = std::fmod(current_horizontal_angle_ + angle_distance_of_tick, 360.0f);
 
     return;
 }
@@ -174,20 +154,6 @@ bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const ms
         // Convert to ENU frame
         point.y() = - point.y();
         point.z() = - point.z();
-
-
-
-        // The above should be same as first transforming to vehicle-body frame and then to lidar frame
-        //    Vector3r point_v_b = VectorMath::transformToBodyFrame(point_v_i, vehicle_pose, true);
-        //    point = VectorMath::transformToBodyFrame(point_v_b, lidar_pose, true);
-
-        // On the client side, if it is needed to transform this data back to the world frame,
-        // then do the equivalent of following,
-        //     Vector3r point_w = VectorMath::transformToWorldFrame(point, lidar_pose + vehicle_pose, true);
-        // See SimModeBase::drawLidarDebugPoints()
-
-        // TODO: Optimization -- instead of doing this for every point, it should be possible to do this
-        // for the point-cloud together? Need to look into matrix operations to do this together for all points.
 
         return true;
     }

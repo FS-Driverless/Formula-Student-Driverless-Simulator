@@ -101,41 +101,23 @@ A vehicle can have between 0 and 5 lidars.
 The lidar(s) can be placed anywhere on the vehicle that would be allowed by FSG 2020 rules.
 The body dimension of every lidar is a vertical cylinder, 8 cm height and 8 cm diameter with mounting points at the top and bottom.
 
-A single lidar can have between 1 and 500 lasers. 
-The lasers are stacked vertically and rotate on the horizontal plane. 
-The lasers are distributed equally to cover the specified vertical field of view.
+A single lidar can have between 1 and 128 lasers. 
 
-The vertical field of view is specified by choosing the upper and lower limit in degrees. 
-The lower limit specifies the vertical angle between the horizontal plane of the lidar and the most bottom laser. 
-The upper limit specifies the vertical angle between the horizontal plane of the lidar and most upper laser. 
+The vertical inter-laser angle must be at least 0,18 degrees be no larger than 180 degrees.
 
-The horizontal field of view of the lidar is specified with an upper and lower limit in degree as well. Only points within this FOV will be returned. 
-The lower limit specifies the counterclockwise angle on a top view from the direction the lidar is pointing towards. 
-The upper limit specifies the clockwise angle on a top view from the direction the lidar is pointing towards. 
+The rotation frequency must be between 5 and 20 Hz.
 
-For every lidar, the rotation speed (Hz) and capture frequency (Hz) must be chosen. 
-The rotation speed specifies how fast the lasers spin and the capture frequency specifies how often a point cloud is created.
+For each lidar, during a single rotation, the number of collected points for 1 laser must be not higher than 2048 for 360 degrees.
 
-While rotating, only lasers within the horizontal field of view are captured. 
+The number of collected points per lidar per laser per second cannot exceed 20480.
 
-> For example, a lidar with 190 degrees horizontal field of view, rotating at 10hz with a capture frequency of 20 Hz will receive point clouds covering anything from 10 to 180 degrees of the field of view.
+To ensure the simulation keeps running smoothly:
+* Every lidar is limited to collect 10000 points per scan.
+* The total number of points collected per second can be no larger than 100000
 
-There is no guarantee that the rotation speed and capture frequency stay in sync. 
-You won’t be able to rely on synchronization of rotation speed and capture frequency. 
-A lidar rotating at 5 Hz would theoretically have rotated 50 times after 10 seconds but in reality, this will be somewhere between 45 and 55 times. 
+The range of each laser is 100 meter.
 
-For every lidar, you can specify the resolution: the total number of points collected if the lasers would do a 360 field of view sweep scan. 
-This value is used to calculate the number of points in each laser and the spacing between the points. 
-
-Every lidar capture is limited to collecting 10000 points. 
-The maximum number of points collected during a capture is calculated by dividing the lidar’s resolution by the horizontal field of view fraction.
-
-> For example, a lidar with a 30 degrees horizontal field (horizontal FOV fraction of 30/360 = 1/12) can have a maximum resolution of 120000.
-
-The total number of points per second is limited to 100000 points.
-
-> For example, a first lidar collects 10000 points per capture at 5 hz, a second lidar collects 8000 points per capture at 5 hz. 
-  This is valid because in total they collect 90000 points per second.
+Details on how to configure the lidar sensor can be found [here](lidar.md).
 
 ### GPS
 Every vehicle has 1 GPS, it is located at the centre of gravity of the vehicle.
@@ -162,9 +144,9 @@ You are allowed to configure the following subset of parameters within the bound
  *  * FOV_Degrees (degrees)
  *  * X, Y, Z (meters)
  *  * Pitch, Roll, Yaw (degrees)
-* Lidars
- *  * NumberOfChannels
- *  * PointsPerSecond
+* Lidars (for more details, see [the lidar documentation](lidar.md))
+ *  * NumberOfLasers
+ *  * PointsPerScan
  *  * RotationsPerSecond
  *  * HorizontalFOVStart (degrees)
  *  * HorizontalFOVEnd (degrees)
