@@ -18,6 +18,8 @@ First build the AirLib code. Open the _Developer Command Prompt for VS 2019_, go
 ```
 build.cmd
 ```
+If you try to develop the simulation on linux (unsupported atm) you can use `setup.sh` and `build.sh` instead of `build.cmd`.
+
 The first time this takes quite a while. Go walk around a bit, maybe start playing [factoryidle](https://factoryidle.com/). 
 
 After it is finished, launch unreal engine and open the project file `Formula-Student-Driverless-Simulator/UE4Project/FSOnline.uproject`
