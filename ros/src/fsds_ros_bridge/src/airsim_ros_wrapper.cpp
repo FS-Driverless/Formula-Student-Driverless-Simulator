@@ -205,7 +205,10 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
                 lidar_pub_vec_statistics.push_back(ros_bridge::Statistics(sensor_name + "_Publisher"));
                 getLidarDataVecStatistics.push_back(ros_bridge::Statistics(sensor_name + "_RpcCaller"));
 
-                ros::TimerOptions timer_options(ros::Duration(float(1) / float(lidar_setting.horizontal_rotation_frequency)), boost::bind(&AirsimROSWrapper::lidar_timer_cb, this, _1), &lidar_timer_cb_queue_);
+                auto lidar_index = lidar_pub_vec_.size() -1;
+
+                auto x = [this, sensor_name, lidar_index](const ros::TimerEvent& te) { this->lidar_timer_cb(te, sensor_name, lidar_index); };
+                ros::TimerOptions timer_options(ros::Duration(float(1) / float(lidar_setting.horizontal_rotation_frequency)), x, &lidar_timer_cb_queue_);
                 airsim_lidar_update_timers_.push_back(nh_private_.createTimer(timer_options));
                 break;
             }
@@ -603,33 +606,25 @@ void AirsimROSWrapper::append_static_camera_tf(const std::string& vehicle_name, 
     static_tf_msg_vec_.push_back(static_cam_tf_body_msg);
 }
 
-void AirsimROSWrapper::lidar_timer_cb(const ros::TimerEvent& event)
+void AirsimROSWrapper::lidar_timer_cb(const ros::TimerEvent& event, const std::string& lidar_name, const int lidar_index)
 {
     try
     {
-        if (lidar_pub_vec_.size() > 0)
+        sensor_msgs::PointCloud2 lidar_msg;
+        struct msr::airlib::LidarData lidar_data;
         {
-            int ctr = 0;
-            for (const std::string lidar_name : lidar_names_vec_)
-            {
-                sensor_msgs::PointCloud2 lidar_msg;
-                struct msr::airlib::LidarData lidar_data;
-                {
-                    ros_bridge::Timer timer(&getLidarDataVecStatistics[ctr]);
-                    std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
-                    lidar_data = airsim_client_lidar_.getLidarData(lidar_name, vehicle_name); // airsim api is imu_name, vehicle_name
-                    lck.unlock();
-                }
-                lidar_msg = get_lidar_msg_from_airsim(lidar_name, lidar_data);     // todo make const ptr msg to avoid copy
-                lidar_msg.header.frame_id = "fsds/" + lidar_name;
-                lidar_msg.header.stamp = ros::Time::now();
+            ros_bridge::Timer timer(&getLidarDataVecStatistics[lidar_index]);
+            std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
+            lidar_data = airsim_client_lidar_.getLidarData(lidar_name, vehicle_name); // airsim api is imu_name, vehicle_name
+            lck.unlock();
+        }
+        lidar_msg = get_lidar_msg_from_airsim(lidar_name, lidar_data);     // todo make const ptr msg to avoid copy
+        lidar_msg.header.frame_id = "fsds/" + lidar_name;
+        lidar_msg.header.stamp = ros::Time::now();
 
-                {
-                    ros_bridge::ROSMsgCounter counter(&lidar_pub_vec_statistics[ctr]);
-                    lidar_pub_vec_[ctr].publish(lidar_msg);
-                }
-                ctr++;
-            }
+        {
+            ros_bridge::ROSMsgCounter counter(&lidar_pub_vec_statistics[lidar_index]);
+            lidar_pub_vec_[lidar_index].publish(lidar_msg);
         }
     }
 
