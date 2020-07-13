@@ -33,6 +33,12 @@ Ready? Lets clone the repo **into your home directory**:
 ```
 git clone git@github.com:FS-Online/Formula-Student-Driverless-Simulator.git --recurse-submodules
 ```
+
+If you havn't setup your ssh keys, you can clone using https by running the following command:
+```
+git clone https://github.com/FS-Online/Formula-Student-Driverless-Simulator.git --recurse-submodules
+```
+
 The repository will be placed in `~/Formula-Student-Driverless-Simulator`.
 If this folder already exists as a result of the previous step, you can get your settings.json out, delete the folder (or rename it to something like UEProject or UESim) and after cloning the repo place the settings.json file back (this time inside the root of the repository where the default settings.json lives).
 
