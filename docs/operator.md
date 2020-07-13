@@ -6,7 +6,7 @@ From this web interface, the official can launch and exit the simulator, select 
 All these logs are stored in log files, in the case that the operator crashes.
 
 **The operator is primarily used during competition by officials. You don't need this for development and testing.**
-Refer to the [how-to-simulate](how-to-simulate.md) and [how-to-develop](how-to-develop.md) guide first.
+Refer to the [getting started guide](getting-started.md) first.
 
 
 ![Operator](images/operator.png)
@@ -42,7 +42,7 @@ The result should be that the following file and folders exist inside the `simul
 * FSOnline/
 * Engine/
 
-The [how-to-develop guide](how-to-develop.md) guide describes how to create an export.
+[Here](how-to-release.md) is described how to export the Unreal project.
 
 ## Usage
 To start the web server, run the following command in the `/operator` folder:

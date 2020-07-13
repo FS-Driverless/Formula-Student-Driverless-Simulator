@@ -80,6 +80,7 @@ Validate the installation by running the following command in a powershell termi
 
 ## 5. Install .NET and Windows Subsystem for Linux
 Start the Server Manager.
+
 1. Click 'Manage', 'Add Roles and Features'
 2. Click Next until you find 'Server Roles'.
 3. In 'Server Roles', select 'Remote Desktop Services'

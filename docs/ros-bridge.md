@@ -9,18 +9,9 @@ Physically this node should run on the airsim simulation server (that is the one
 The node connects to the AirSim plugin, periodically retrieves sensor data (images, lidar, imu, gps) and publishes it on ROS topics.
 It listens for car setpoints on other another and forwards these to the AirSim plugin.
 
-## Running
-Make sure you have [built the ROS workspace](building-ros.md).
+## Nodes
 
-The ros bridge consists of a different few nodes to achieve the highest performance and keep the codebase clean.
-Everything can be launched using the `fsds_ros_bridge.launch` launchfile.
-```
-cd ros
-source devel/setup.bash
-roslaunch fsds_ros_bridge fsds_ros_bridge.launch
-```
-
-This launches the following nodes:
+The fsds_ros_bridge.launch launches the following nodes:
 * `/fsds/ros_bridge` node responsible for IMU, GPS, lidar, vehicle setpoints and go/finish signals.
 * `/fsds/camera/CAMERANAME` node is run for each camera configured in the `settings.json`. The nodes are launched using the `cameralauncher.py` script.
 

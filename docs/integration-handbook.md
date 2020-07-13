@@ -163,9 +163,6 @@ Distance values are in meters and rotation values are degrees.
 
 We recommend to copy the `settings.json` in this repository as a base and configure the cameras and lidar from thereon.
 
-## Launching the simulator
-To run the simulation, read the [simulation guide](how-to-simulate.md).
-
 ## ROS integration
 Communication between the autonomous system and simulator will take place using ROS topics.
 Sensor data will be published by the [ros bridge](ros-bridge.md) and received by the autonomous system.
