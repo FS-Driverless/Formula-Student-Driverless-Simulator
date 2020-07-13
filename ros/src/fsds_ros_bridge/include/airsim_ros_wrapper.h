@@ -122,7 +122,7 @@ private:
     void imu_timer_cb(const ros::TimerEvent& event);
     void statictf_cb(const ros::TimerEvent& event);
     void car_control_cb(const fs_msgs::ControlCommand::ConstPtr& msg, const std::string& vehicle_name);
-    void lidar_timer_cb(const ros::TimerEvent& event);
+    void lidar_timer_cb(const ros::TimerEvent& event, const std::string& camera_name, const int lidar_index);
     void statistics_timer_cb(const ros::TimerEvent& event);
     void go_signal_timer_cb(const ros::TimerEvent& event);
 
@@ -188,7 +188,7 @@ private:
     ros::Timer odom_update_timer_;
     ros::Timer gps_update_timer_;
     ros::Timer imu_update_timer_;
-    ros::Timer airsim_lidar_update_timer_;
+    std::vector<ros::Timer> airsim_lidar_update_timers_;
     ros::Timer statistics_timer_;
     ros::Timer go_signal_timer_;
     ros::Timer statictf_timer_;

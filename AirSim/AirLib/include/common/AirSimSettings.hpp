@@ -202,9 +202,9 @@ public: //types
     struct LidarSetting : SensorSetting {
 
         // shared defaults
-        uint number_of_channels = 16;
+        uint number_of_lasers = 16;
         real_T range = 10000.0f / 100;                    // meters
-        uint points_per_second = 100000;
+        uint points_per_scan = 10000;
         uint horizontal_rotation_frequency = 10;          // rotations/sec
         float horizontal_FOV_start = 0;                   // degrees
         float horizontal_FOV_end = 359;                   // degrees
@@ -1156,9 +1156,9 @@ private:
 
     static void initializeLidarSetting(LidarSetting& lidar_setting, const Settings& settings_json)
     {
-        lidar_setting.number_of_channels = settings_json.getInt("NumberOfChannels", lidar_setting.number_of_channels);
+        lidar_setting.number_of_lasers = settings_json.getInt("NumberOfLasers", lidar_setting.number_of_lasers);
         lidar_setting.range = settings_json.getFloat("Range", lidar_setting.range);
-        lidar_setting.points_per_second = settings_json.getInt("PointsPerSecond", lidar_setting.points_per_second);
+        lidar_setting.points_per_scan = settings_json.getInt("PointsPerScan", lidar_setting.points_per_scan);
         lidar_setting.horizontal_rotation_frequency = settings_json.getInt("RotationsPerSecond", lidar_setting.horizontal_rotation_frequency);
         lidar_setting.draw_debug_points = settings_json.getBool("DrawDebugPoints", lidar_setting.draw_debug_points);
 

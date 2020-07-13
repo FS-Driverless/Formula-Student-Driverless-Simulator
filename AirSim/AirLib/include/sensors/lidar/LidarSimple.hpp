@@ -22,7 +22,7 @@ public:
         params_.initializeFromSettings(setting);
 
         //initialize frequency limiter
-        freq_limiter_.initialize(params_.update_frequency, params_.startup_delay);
+        freq_limiter_.initialize(params_.horizontal_rotation_frequency, 0);
     }
 
     //*** Start: UpdatableState implementation ***//
@@ -50,7 +50,7 @@ public:
         //call base
         LidarBase::reportState(reporter);
 
-        reporter.writeValue("Lidar-NumChannels", params_.number_of_channels);
+        reporter.writeValue("Lidar-NumLasers", params_.number_of_lasers);
         reporter.writeValue("Lidar-Range", params_.range);
         reporter.writeValue("Lidar-FOV-Upper", params_.vertical_FOV_upper);
         reporter.writeValue("Lidar-FOV-Lower", params_.vertical_FOV_lower);

@@ -32,8 +32,8 @@
                         "LidarCustom": {
                         "SensorType": 6,
                         "Enabled": true,
-                        "NumberOfChannels": 16,
-                        "PointsPerSecond": 10000,
+                        "NumberOfLasers": 16,
+                        "PointsPerScan": 10000,
                         "X": 0,
                         "Y": 0,
                         "Z": -1,
@@ -137,8 +137,8 @@
                         "LidarCustom": {
                         "SensorType": 6,
                         "Enabled": true,
-                        "NumberOfChannels": 16,
-                        "PointsPerSecond": 10000,
+                        "NumberOfLasers": 16,
+                        "PointsPerScan": 10000,
                         "X": 0,
                         "Y": 0,
                         "Z": -1,
