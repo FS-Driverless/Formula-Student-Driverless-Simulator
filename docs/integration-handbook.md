@@ -157,7 +157,9 @@ You are allowed to configure the following subset of parameters within the bound
 
 The GPS and IMU are configured equally for all teams according to the rules in the previous chapter.
 
-X, Y, Z, Pitch, Roll, Yaw have to be specified in a NED frame (it might take some experimentation to understand the correct signs to use). 
+X, Y, Z, Pitch, Roll, Yaw have to be specified in a NED frame (it might take some experimentation to understand the correct signs to use).
+All values are relative to the vehicle pawn center.
+You can read more about this point in the [vehicle model description](vehicle_model.md).
 The transforms you will get from ROS however, will be in the ENU frame (which is the default ros coordinate system).
 Distance values are in meters and rotation values are degrees.
 
@@ -212,6 +214,9 @@ Read more about the techincal detalis of these topics in the [ros-bridge documen
 ## Vehicle dynamic model
 The vehicle dynamic model is a third-party high-fodelity model and will be the same for all teams. 
 More details and information on this choice can be found [here](vehicle_model.md).
+
+At this moment only the Technion Formula racecar has these parameters applied (`AirSim/VehicleAdv/Cars/TechnionCar/TechnionCarPawn`).
+Every team is allowed to create their own car pawn with different looks, given that it behaves exactly like the TechnionCarPawn.
 
 ## 3D vehicle model
 Read [this](import-car-3d-model.md) tutorial on how to import your own 3d car model.
