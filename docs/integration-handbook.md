@@ -226,7 +226,7 @@ Currently the following values are supported:
 * `Class'/AirSim/VehicleAdv/Cars/TechnionCar/TechnionCarPawn.TechnionCarPawn_C'`
 * `Class'/AirSim/VehicleAdv/Cars/SuvCar/SuvCarPawn.SuvCarPawn_C'` 
 
-All vehicles will have a width of 100cm, a length of 180cm and a hight of 50cm.
+All vehicles will have a width of 100cm, a length of 180cm and a height of 50cm.
 This is the bounding box of the vehicle (the part of the vehicle that interacts with the world)
 The 3d models are not restricted to this size.
 
