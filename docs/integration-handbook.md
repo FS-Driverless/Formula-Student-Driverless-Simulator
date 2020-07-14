@@ -1,6 +1,6 @@
 # Autonomous System Integration Handbook
 This page describes how to integrate your autonomous system (AS) to the Formula Student Driverless Simulator (FSDS).
-The rules and procedures set out in this document will be used during the FSOnline competition.
+The rules and procedures set out in this document will be used during the **FSOnline competition**.
 
 ## High-level overview
 Your AS is expected to continuously run a ROS master.
