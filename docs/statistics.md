@@ -11,6 +11,7 @@ are diagnosed on the simulator side.
 The following describes how the class and the auxiliary classes `Timer` and `ROSMsgCounter` measure performance and are implemented, so that as a developer you can monitor new publishers, subscribers, rpc calls, or actually any line of code in the AirSimROSWrapper class.
 
 We are gathering statistics about:
+
 - Rpc calls:
     - getGpsData
     - getCarState

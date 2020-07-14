@@ -9,18 +9,9 @@ Physically this node should run on the airsim simulation server (that is the one
 The node connects to the AirSim plugin, periodically retrieves sensor data (images, lidar, imu, gps) and publishes it on ROS topics.
 It listens for car setpoints on other another and forwards these to the AirSim plugin.
 
-## Running
-Make sure you have [built the ROS workspace](building-ros.md).
+## Nodes
 
-The ros bridge consists of a different few nodes to achieve the highest performance and keep the codebase clean.
-Everything can be launched using the `fsds_ros_bridge.launch` launchfile.
-```
-cd ros
-source devel/setup.bash
-roslaunch fsds_ros_bridge fsds_ros_bridge.launch
-```
-
-This launches the following nodes:
+The fsds_ros_bridge.launch launches the following nodes:
 * `/fsds/ros_bridge` node responsible for IMU, GPS, lidar, vehicle setpoints and go/finish signals.
 * `/fsds/camera/CAMERANAME` node is run for each camera configured in the `settings.json`. The nodes are launched using the `cameralauncher.py` script.
 
@@ -34,7 +25,7 @@ This launches the following nodes:
 | `/fsds/testing_only/odom` | Ground truth car position and orientation in ENU frame about the CoG of the car (`fsds/FSCar`).  The units are `m` for distance and `rad` for angles. The message is in the `fsds/map` frame. This is a frame that is not (yet) used anywhere else and is just here so you can easely reference it if needed. *THIS WILL NOT BE STREAMED DURING COMPETITION.* | [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)  | 250 |
 | `/fsds/testing_only/track` | Ground truth cone position and color with respect to the starting location of the car in ENU. Currently this only publishes the *initial position* of cones that are part of the track spline. Any cones placed manually in the world are not published here. Additionally, the track is published once and the message is latched (meaning it is always available for a newly created subscriber). *THIS WILL NOT BE STREAMED DURING COMPETITION.* | [fs_msgs/Track](https://github.com/FS-Online/fs_msgs/blob/master/msg/Track.msg)  | Latched |
 | `/fsds/camera/CAMERA_NAME` | One of this topic type will exist for every camera specified in the `settings.json` file. On this topic, camera frames are published. The format will be bgra8. `CAMERA_NAME` will be replaced by the corresponding in the `Cameras` object in the `settings.json` file. `IMAGE_TYPE` is determand by the `SensorType` field. When choosing 0, it will be 'Scene'. | [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)  | ~18 |
-| `/fsds/lidar/LIDARNAME` | Publishes the lidar points for each lidar sensor. All points are in the `fsds/LIDARNAME` frame. Transformations between the `fsds/LIDARNAME` and `fsds/FSCar` frame are being published regularly. More info on the lidar sensor can be found [here](integration-handbook.md) | [sensor_msgs/PointCloud](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/PointCloud.html)  | 10 |
+| `/fsds/lidar/LIDARNAME` | Publishes the lidar points for each lidar sensor. All points are in the `fsds/LIDARNAME` frame. Transformations between the `fsds/LIDARNAME` and `fsds/FSCar` frame are being published regularly. More info on the lidar sensor can be found [here](lidar.md) | [sensor_msgs/PointCloud](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/PointCloud.html)  | ``RotationsPerSecond` param in `settings.json` |
 | `/fsds/signal/go` | GO signal that is sent every second by the ROS bridge.The car is only allowed to drive once this message has been received. If no GO signal is received for more than 4 seconds, the AS can assume that `fsds_ros_bridge` has been shut down. This message also includes the mission type and track. More info about signal topics can be found in the [integration handbook](integration-handbook.md) | [fs_msgs/GoSignal](https://github.com/FS-Online/fs_msgs/blob/master/msg/GoSignal.msg)  | 1 |
 | `/tf_static` | See [Coordinate frames and transforms](#coordinate-frames-and-transforms) | [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)   | 1 |
 

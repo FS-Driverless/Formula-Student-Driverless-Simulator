@@ -10,16 +10,12 @@ nav:
   - "Home": "README.md"
   - "Introduction":
     - "System overview": "system-overview.md"
+    - "Getting started": "getting-started.md"
     - "Integration handbook": "integration-handbook.md"
-  - "Usage & Development":
-    - "How to simulate": "how-to-simulate.md"
-    - "Setup your development environment": "get-ready-to-develop.md" 
-    - "How to develop the FSDS project": "how-to-develop.md"
-    - "Build your ros workspace": "building-ros.md"
-    - "Google cloud remote workstation": "gcp-remote-workstation.md" 
   - "Vehicle & Sensors":
     - "Vehicle model": "vehicle_model.md"
     - "IMU": "imu.md"
+    - "Lidar": "lidar.md"
     - "GPS": "gps.md"
   - "#tech madness":
     - "ROS Bridge": "ros-bridge.md"
@@ -28,6 +24,10 @@ nav:
     - "Operator": "operator.md"
     - "Spectator": "spectator.md"
     - "Import your 3d car model": "import-car-3d-model.md"
+    - "Google cloud remote workstation": "gcp-remote-workstation.md" 
+    - "Software install instructions": "software-install-instructions.md"
+    - "How to release": "how-to-release.md"
+
 extra_css:
   - css\version-select.css
 extra_javascript:

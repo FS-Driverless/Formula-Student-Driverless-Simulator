@@ -1,6 +1,6 @@
 # Autonomous System Integration Handbook
 This page describes how to integrate your autonomous system (AS) to the Formula Student Driverless Simulator (FSDS).
-The rules and procedures set out in this document will be used during the FSOnline competition.
+The rules and procedures set out in this document will be used during the **FSOnline competition**.
 
 ## High-level overview
 Your AS is expected to continuously run a ROS master.
@@ -164,9 +164,6 @@ The transforms you will get from ROS however, will be in the ENU frame (which is
 Distance values are in meters and rotation values are degrees.
 
 We recommend to copy the `settings.json` in this repository as a base and configure the cameras and lidar from thereon.
-
-## Launching the simulator
-To run the simulation, read the [simulation guide](how-to-simulate.md).
 
 ## ROS integration
 Communication between the autonomous system and simulator will take place using ROS topics.

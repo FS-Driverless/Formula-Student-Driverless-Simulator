@@ -62,7 +62,6 @@ It is also shown within the referee's web interface.
 
 You can run the simulation stack yourself perfectly fine without the operator.
 The operator is just a tool for officials to easely manage the competition.
-[Read more about how to run the simulation here.](how-to-simulate.md)
 
 ## The ROS Bridge
 The ROS bridge node connects to the simulated world inside Unreal Engine using AirSim (more on that later).
