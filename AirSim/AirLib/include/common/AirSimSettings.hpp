@@ -400,19 +400,6 @@ public: //methods
             throw std::invalid_argument("Cannot parse JSON settings_json string.");
     }
 
-    static void createDefaultSettingsFile()
-    {
-        std::string settings_filename = common_utils::FileSystem::getConfigFilePath();
-        Settings& settings_json = Settings::loadJSonString("{}");
-        //write some settings_json in new file otherwise the string "null" is written if all settings_json are empty
-        settings_json.setString("SeeDocsAt", "https://github.com/Microsoft/AirSim/blob/master/docs/settings.md");
-        settings_json.setDouble("SettingsVersion", 1.2);
-
-        //TODO: there is a crash in Linux due to settings_json.saveJSonString(). Remove this workaround after we only support Unreal 4.17
-        //https://answers.unrealengine.com/questions/664905/unreal-crashes-on-two-lines-of-extremely-simple-st.html
-        settings_json.saveJSonFile(settings_filename);
-    }
-
     const VehicleSetting* getVehicleSetting(const std::string& vehicle_name) const
     {
         auto it = vehicles.find(vehicle_name);
