@@ -20,15 +20,16 @@ If your computer does not suffice you can use a remote workstation on Google Clo
 Read [this tutorial](gcp-remote-workstation.md) on how to setup your virtual workstation.
 
 The simulator will load settings from the file `Formula-Student-Driverless-Simulator/settings.json` in your **home directory**.
-This file contains the sensor configuration of the car.
-Copy-paste the contents of the [settings.json file at the root of this repository](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/settings.json) inside.
+This file is required for the simulator to work and contains the sensor configuration of the car.
+If you clone the repo you will already have this file in place.
+If not, copy-paste the contents of the [settings.json file at the root of this repository](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/settings.json) into the `~/Formula-Student-Driverless-Simulator`.
 This should get you started with the default sensor configuration, feel free to try your own custom sensor suite.
 
 ### From release binaries
 
 The simulator is distributed as binaries on every release.
 [At this moment only windows binaries are released. For now, if you are on Ubuntu you will have to run the simulator from the Unreal Engine Editor.](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/issues/107)
-We reccommend Windows for competitoins because it offers a bit better performance and stability.
+During competition, the simulation will run on Windows because it offers a bit better performance and stability.
 
 Go to [releases](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/releases) and download the latest one.
 Unzip it to anywhere on your computer and launch FSDS.exe.
@@ -123,10 +124,10 @@ git clone https://github.com/FS-Online/Formula-Student-Driverless-Simulator.git 
 Why you ask? Because we couldn't get relative paths in the C++ code to work so now we have hard-coded some paths to the home directory.
 I know yes it is ugly but it works. If you are bothered by it I would welcome you to open a pr with a fix.
 
-If this folder already exists as a result of any previous step, you can get your settings.json out, delete the folder (or rename it to something like UEProject or UESim) and after cloning the repo place the settings.json file back (this time inside the root of the repository where the default settings.json lives).
+If this folder already exists as a result of any previous step, move the existing folder out of the way and merge the content afterwards.
 
 If you are on Windows and cloned this repository in a Windows directory, go into the cloned repo and run `git config core.fileMode false` to ignore file mode changes. 
-If you want to share the the clone directory with the Ubuntu WSL system, create a symlink from `~/Formula-Student-Driverless-Simulator` to `~/Formula-Student-Driverless-Simulator`
+If you want to share the the clone directory with the Ubuntu WSL system, create a symlink within WSL like so:
 ```
 ln -s /mnt/c/Users/developer/Formula-Student-Driverless-Simulator ~/Formula-Student-Driverless-Simulator
 ```
