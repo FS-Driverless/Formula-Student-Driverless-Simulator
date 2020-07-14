@@ -35,7 +35,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/odom_local_ned</topic>
+                                    <topic>/fsds/testing_only/odom</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </x_axis>
                                 <y_axis>
@@ -48,7 +48,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/odom_local_ned</topic>
+                                    <topic>/fsds/testing_only/odom</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </y_axis>
                             </axes>
@@ -109,7 +109,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/odom_local_ned</topic>
+                                    <topic>/fsds/testing_only/odom</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </x_axis>
                                 <y_axis>
@@ -122,7 +122,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/odom_local_ned</topic>
+                                    <topic>/fsds/testing_only/odom</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </y_axis>
                             </axes>
@@ -160,7 +160,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/odom_local_ned</topic>
+                                    <topic>/fsds/testing_only/odom</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </x_axis>
                                 <y_axis>
@@ -173,7 +173,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/odom_local_ned</topic>
+                                    <topic>/fsds/testing_only/odom</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </y_axis>
                             </axes>
@@ -234,8 +234,8 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/control_command</topic>
-                                    <type>fsds_ros_bridge/ControlCommand</type>
+                                    <topic>/fsds/control_command</topic>
+                                    <type>fs_msgs/ControlCommand</type>
                                 </x_axis>
                                 <y_axis>
                                     <field>throttle</field>
@@ -247,8 +247,8 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/control_command</topic>
-                                    <type>fsds_ros_bridge/ControlCommand</type>
+                                    <topic>/fsds/control_command</topic>
+                                    <type>fs_msgs/ControlCommand</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -310,7 +310,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/global_gps</topic>
+                                    <topic>/fsds/gps</topic>
                                     <type>sensor_msgs/NavSatFix</type>
                                 </x_axis>
                                 <y_axis>
@@ -323,7 +323,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/global_gps</topic>
+                                    <topic>/fsds/gps</topic>
                                     <type>sensor_msgs/NavSatFix</type>
                                 </y_axis>
                             </axes>
@@ -384,7 +384,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
+                                    <topic>/fsds/imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </x_axis>
                                 <y_axis>
@@ -397,7 +397,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
+                                    <topic>/fsds/imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </y_axis>
                             </axes>
@@ -435,7 +435,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
+                                    <topic>/fsds/imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </x_axis>
                                 <y_axis>
@@ -448,7 +448,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
+                                    <topic>/fsds/imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </y_axis>
                             </axes>
@@ -509,8 +509,8 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/control_command</topic>
-                                    <type>fsds_ros_bridge/ControlCommand</type>
+                                    <topic>/fsds/control_command</topic>
+                                    <type>fs_msgs/ControlCommand</type>
                                 </x_axis>
                                 <y_axis>
                                     <field>steering</field>
@@ -522,8 +522,8 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/control_command</topic>
-                                    <type>fsds_ros_bridge/ControlCommand</type>
+                                    <topic>/fsds/control_command</topic>
+                                    <type>fs_msgs/ControlCommand</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -606,7 +606,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
+                                    <topic>/fsds/imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </x_axis>
                                 <y_axis>
@@ -619,7 +619,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
+                                    <topic>/fsds/imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </y_axis>
                             </axes>
@@ -657,7 +657,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
+                                    <topic>/fsds/imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </x_axis>
                                 <y_axis>
@@ -670,7 +670,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
+                                    <topic>/fsds/imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </y_axis>
                             </axes>
@@ -708,7 +708,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
+                                    <topic>/fsds/imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </x_axis>
                                 <y_axis>
@@ -721,7 +721,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/fsds_ros_bridge/FSCar/imu/Imu</topic>
+                                    <topic>/fsds/imu</topic>
                                     <type>sensor_msgs/Imu</type>
                                 </y_axis>
                             </axes>
