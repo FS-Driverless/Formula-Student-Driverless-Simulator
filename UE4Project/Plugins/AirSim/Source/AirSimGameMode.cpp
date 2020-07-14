@@ -97,18 +97,13 @@ void AAirSimGameMode::PostLogin(APlayerController * newPlayer) {
     newPlayer->StartSpectatingOnly();
 }
 
-std::string AAirSimGameMode::getSimModeFromUser()
-{
-    return "Car";
-}
-
 void AAirSimGameMode::initializeSettings()
 {
     std::string settingsText;
     readSettingsTextFromFile(FString(common_utils::FileSystem::getConfigFilePath().c_str()), settingsText);
     msr::airlib::AirSimSettings::initializeSettings(settingsText);
 
-    msr::airlib::AirSimSettings::singleton().load(std::bind(&AAirSimGameMode::getSimModeFromUser, this));
+    msr::airlib::AirSimSettings::singleton().load();
     for (const auto &warning : msr::airlib::AirSimSettings::singleton().warning_messages)
     {
         UAirBlueprintLib::LogMessageString(warning, "", LogDebugLevel::Failure);

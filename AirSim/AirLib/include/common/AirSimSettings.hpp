@@ -370,14 +370,14 @@ public: //methods
     }
 
     //returns number of warnings
-    void load(std::function<std::string(void)> simmode_getter)
+    void load()
     {
         warning_messages.clear();
         error_messages.clear();
         const Settings& settings_json = Settings::singleton();
         checkSettingsVersion(settings_json);
 
-        loadCoreSimModeSettings(settings_json, simmode_getter);
+        loadCoreSimModeSettings(settings_json);
         loadDefaultCameraSetting(settings_json, camera_defaults);
         loadCameraDirectorSetting(settings_json, camera_director, simmode_name);
         loadSubWindowsSettings(settings_json, subwindow_settings);
@@ -395,9 +395,12 @@ public: //methods
 
     static void initializeSettings(const std::string& json_settings_text)
     {
-        Settings& settings_json = Settings::loadJSonString(json_settings_text);
-        if (! settings_json.isLoadSuccess())
-            throw std::invalid_argument("Cannot parse JSON settings_json string.");
+        try {
+            Settings::loadJSonString(json_settings_text);
+        }
+        catch (std::exception &ex) {
+            throw std::invalid_argument(std::string("Error while parsing settings.json: ") + ex.what());
+        }
     }
 
     const VehicleSetting* getVehicleSetting(const std::string& vehicle_name) const
@@ -481,16 +484,10 @@ private:
         return has_default;
     }
 
-    void loadCoreSimModeSettings(const Settings& settings_json, std::function<std::string(void)> simmode_getter)
+    void loadCoreSimModeSettings(const Settings& settings_json)
     {
         //get the simmode from user if not specified
-        simmode_name = settings_json.getString("SimMode", "");
-        if (simmode_name == "") {
-            if (simmode_getter)
-                simmode_name = simmode_getter();
-            else
-                throw std::invalid_argument("simmode_name is not expected empty in SimModeBase");
-        }
+        simmode_name = "Car";
 
         physics_engine_name = settings_json.getString("PhysicsEngineName", "");
         if (physics_engine_name == "") {

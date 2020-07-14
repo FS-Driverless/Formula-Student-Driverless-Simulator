@@ -10,6 +10,24 @@ AirsimROSWrapper::AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHan
                                                                                                                                airsim_client_(host_ip),
                                                                                                                                airsim_client_lidar_(host_ip)
 {
+    try {
+        auto settingsText = this->readTextFromFile(common_utils::FileSystem::getConfigFilePath());
+        msr::airlib::AirSimSettings::initializeSettings(settingsText);
+
+        msr::airlib::AirSimSettings::singleton().load();
+        for (const auto &warning : msr::airlib::AirSimSettings::singleton().warning_messages)
+        {
+            std::cout << "Configuration warning: " << warning;
+        }
+        for (const auto &error : msr::airlib::AirSimSettings::singleton().error_messages)
+        {
+            std::cout << "Configuration error: " << error;
+        }
+    }
+    catch (std::exception &ex) {
+        throw std::invalid_argument(std::string("Failed loading settings.json.") + ex.what());
+    }
+    
     initialize_statistics();
     initialize_ros();
 
@@ -749,4 +767,16 @@ void AirsimROSWrapper::finished_signal_cb(fs_msgs::FinishedSignalConstPtr msg)
 
     curl_easy_cleanup(curl);
     curl_global_cleanup();
+}
+
+std::string AirsimROSWrapper::readTextFromFile(std::string settingsFilepath) 	
+{	
+    // check if path exists	
+    if(!std::ifstream(settingsFilepath.c_str()).good()){
+        throw std::invalid_argument("settings.json file does not exist. Ensure the ~/Formula-Student-Driverless-Simulator/settings.json file exists.");
+    }
+    std::ifstream ifs(settingsFilepath);	
+    std::stringstream buffer;	
+    buffer << ifs.rdbuf();		
+    return buffer.str();
 }
