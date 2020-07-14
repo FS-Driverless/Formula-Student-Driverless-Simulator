@@ -24,7 +24,6 @@ class Settings {
 private:
     std::string full_filepath_;
     nlohmann::json doc_;
-    bool load_success_ = false;
 
 private:
     static std::mutex& getFileAccessMutex()
@@ -39,71 +38,19 @@ public:
         return instance;
     }
 
-    std::string getFullFilePath() { return full_filepath_; }
-
-    static std::string getExecutableFullPath(std::string fileName)
-    {
-        std::string path = common_utils::FileSystem::getExecutableFolder();
-        return common_utils::FileSystem::combine(path, fileName);
-    }
-
     static Settings& loadJSonString(const std::string& json_str)
     {
         singleton().full_filepath_ = "";
-        singleton().load_success_ = false;
 
         if (json_str.length() > 0) {
             std::stringstream ss;
             ss << json_str;
             ss >> singleton().doc_;
-            singleton().load_success_ = true;
+        } else {
+            throw std::invalid_argument("Invalid settings.json: json string empty.");
         }
 
         return singleton();
-    }
-    std::string saveJSonString()
-    {
-        std::lock_guard<std::mutex> guard(getFileAccessMutex());
-        std::stringstream ss;
-        ss << std::setw(2) << singleton().doc_ << std::endl;
-
-        return ss.str();
-    }
-            
-    static Settings& loadJSonFile(std::string full_filepath)
-    {
-        std::lock_guard<std::mutex> guard(getFileAccessMutex());
-        singleton().full_filepath_ = full_filepath;
-
-        singleton().load_success_ = false;
-
-        std::ifstream s;
-        common_utils::FileSystem::openTextFile(full_filepath, s);
-        if (!s.fail()) {
-            s >> singleton().doc_;
-            singleton().load_success_ = true;
-        }
-
-        return singleton();
-    }
-
-    bool isLoadSuccess()
-    {
-        return load_success_;
-    }
-
-    bool hasFileName()
-    {
-        return !getFullFilePath().empty();
-    }
-
-    void saveJSonFile(std::string full_filepath)
-    {
-        std::lock_guard<std::mutex> guard(getFileAccessMutex());
-        singleton().full_filepath_ = full_filepath;
-        std::ofstream s;
-        common_utils::FileSystem::createTextFile(full_filepath, s);
-        s << std::setw(2) << doc_ << std::endl;
     }
 
     bool getChild(const std::string& name, Settings& child) const

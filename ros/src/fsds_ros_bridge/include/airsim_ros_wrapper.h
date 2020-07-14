@@ -153,6 +153,8 @@ private:
     sensor_msgs::Imu get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data);
     sensor_msgs::PointCloud2 get_lidar_msg_from_airsim(const std::string &lidar_name, const msr::airlib::LidarData& lidar_data) const;
 
+    std::string readTextFromFile(std::string settingsFilepath);
+
 private:
     ros::ServiceServer reset_srvr_;
 

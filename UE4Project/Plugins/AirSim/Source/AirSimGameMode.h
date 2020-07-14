@@ -30,7 +30,6 @@ public:
 private:
     void initializeSettings();
     void readSettingsTextFromFile(FString fileName, std::string& settingsText);
-    std::string getSimModeFromUser();
 
     void setUnrealEngineSettings();
     void createSimMode();
