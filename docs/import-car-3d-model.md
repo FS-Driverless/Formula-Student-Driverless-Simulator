@@ -70,11 +70,11 @@ Take a look at `Suv_Pa` for an example:
 
 ![](images/ue-suv_pa.png)
 
-**If you are planning to use this car in an online competition (FSOnline)** you must use create the bounding boxes exactly the the following specification:
+**If you are planning to use this car in an online competition (FSOnline)** you must use create the bounding boxes exactly the following specification:
 
 * Width: 100cm
 * Length: 180cm
-* Height > 150cm
+* Height: 50cm
 
 In competition all cars will be equal in behaviour. 
 So all bounding boxes must be equal.

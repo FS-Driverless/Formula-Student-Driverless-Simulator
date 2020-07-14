@@ -9,16 +9,57 @@ One of the most controversial subjects of any competition simulator is the vehic
 * **A third-party, open-source model would be ideal**. This way, not even the developers of the simulation (Formula Student Team Delft) would have an edge over other teams. Everyone has access to the same code and has had no experience working with it or been involved in developing it.
 
 
-The Unreal Engine repository contains (as a third party library) the code for [PhysXVehicles](https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/guide/Manual/Vehicles.html) that was developed by Nvidia. This seemed like the perfect solution for our simulator, given that it complies with all the criteria of our design philosophy above. Airsim simply interacts with the PhysXCar API in [these](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/tree/93fa784106c70e53e973e6d755ab5430feeef9da/UE4Project/Plugins/AirSim/Source/Vehicles/Car) files, which have configurable parameters exposed in the uassets files [here](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/tree/master/UE4Project/Plugins/AirSim/Content/VehicleAdv/SUV). 
+Unreal Engine provides the [PhysXVehicles](https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/guide/Manual/Vehicles.html) that was developed by Nvidia. 
+This seemed like the perfect solution for our simulator, given that it complies with all the criteria of our design philosophy above. 
+Airsim simply interacts with the PhysXCar API in [these](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/tree/master/UE4Project/Plugins/AirSim/Source/Vehicles/Car) files.
 
-These are the current (high-level) vehicle parameters (you will be notified if anything changes):
+## Vehicle pawn center
+
+Just like everything inside the simulated world, the vehicle has a position within the world (x, y, z).
+Relative to this point the rest of the vehicle is constructed.
+The collision box, the center of gravity and the sensor positions all are relative to this center point.
+
+The center position is located at the bottom of the car and on the horizontal plane in the geometric center.
+When car is stationary the height offset between the world track and the pawn position is 0.
+In below image the blue dot represents the location of the pawn center:
+
+![vehicle layout 4 angles](images/vehicle-layout.png)
+_Vehicle Layout Overview_
+
+## Vehicle collision model
+
+The collision model (bounding box) defines which parts of the car interact with other parts of the world.
+For cars used in competition (FSOnline) the bounding boxes must use the following specification:
+
+* Width: 100cm
+* Length: 180cm
+* Height: 50cm
+
+The bounding boxes will be centered ontop of the vehicle pawn center. 
+In the Vehicle Layout Overview picture above the orange lines show the bounding box. 
+These boundries are unrealted to the vehicle 3d model.
+The car may look smaller or bigger but they will hit cones all the same.
+
+![](images/ue-equality.png)
+
+
+## Vehicle center of gravity
+
+The center of gravity of the car sits in the center of the collision model.
+For cars used in competition (FSOnline), the center of gravity is 25cm above the vehicle pawn center.
+In turn, when the car is stationary, the height offset between the world ground and the center of gravity is 25 cm.
+Within the _Vehicle Layout Overview_ picture the red dot represents the center of gravity.
+
+## More properties of competition vehicles
 
 * Mass: 255 kg
 * Max speed: ~27 m/s
 * Drag coefficient: 0.3 [-]
-* Chassis width: 1.44 m
-* Chassis height: 1.22 m
-
-These parameters can only be found when opening the UE4Editor and opening the SUVCarPawn.uasset file located [here](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/tree/master/UE4Project/Plugins/AirSim/Content/VehicleAdv/SUV).
 
 ![SUVCarPawn](images/vehicle_dynamic_model.png)
+
+# How to configure vehicle properties?
+
+All vehicle proprties are set in the unreal vehicle pawn classes.
+You can view and edit these configuratoin files using the Unreal Editor in `/UE4Project/Plugins/AirSim/Content/VehicleAdv/`.
+
