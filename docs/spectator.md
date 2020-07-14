@@ -32,12 +32,18 @@ This fallback initiates after a connection timeout of 20 seconds.
 Theoretically multiple simultaneous spectators in a single world should work but this is not tested or supported.
 
 ## 3. Using the spectator
-Spectators can use the wsdaqe to move around and their mouse to look around. 
-They can also use the buttons 1 til 9 to teleport to predefined camera locations.
-We call these camera locations 'spectator points'. 
+
+When starting the spectator it will be launched in follow-car mode.
+In this mode the camera will always point at the vehicle.
+When the vehicle crosses a triggerline, the camera will move to another viewpoint.
+
+You can toggle the follow-car mode using the `F` key on your keyboard.
+When not following the car you can use the `wsdaqe` keys to move around and your mouse to look around.
 
 ## 4. Adding spectator points to the map
-Spectator points are places in the world where the spectator can teleport to using the number keys on the keyboard.
-These locations are defined in the map and cannot be changed during the game.
-To create a new point, add a new CameraActor to the world and add the `spectator` tag to the actor.
-The AirsimSpectatorPawn will find them automatically and add them in the order that they were found.
+Spectator viewpoints are places in the world where the spectator can be teleported to.
+These locations are defined in the map and cannot be changed during the simulation.
+To create a new viewpoint, add a new `CameraActor` to the world and place it wherever you like.
+Next, add a `AirsimSpectatorTeleportTrigger` to the world.
+In the settings, set the camera to the one you just created.
+Whenever the vehicle touches this trigger object, the spectator will be teleported to the selected camera (in follow-car mode).
