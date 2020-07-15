@@ -146,7 +146,7 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>Longitudinal</title>
+                            <title>X-direction</title>
                         </curve_0>
                         <curve_1>
                             <axes>
@@ -197,7 +197,7 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>Lateral</title>
+                            <title>Y-direction</title>
                         </curve_1>
                     </curves>
                     <legend>
