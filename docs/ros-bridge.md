@@ -95,9 +95,9 @@ Transforms to the ground truth are disabled because this would take away the sta
 ## Visualization
 This package contains some useful launch and config files which will help you in visualizing the data being streamed through the above topics.
 
-To open Rviz with [this](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/config/rviz/default.rviz) configuration file, run `roslaunch fsds_ros_bridge rviz.launch`.
+To open Rviz with [this](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/config/rviz/default.rviz) configuration file, run `roslaunch fsds_ros_bridge fsds_ros_bridge.launch rviz:=true`.
 
-To open Multiplot with [this](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/config/multiplot/multiplot.xml) configuration file, run `roslaunch fsds_ros_bridge plot.launch`
+To open Multiplot with [this](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/config/multiplot/multiplot.xml) configuration file, run `roslaunch fsds_ros_bridge fsds_ros_bridge.launch plot:=true`.
 
 ## Monitoring
 Performance monitoring of the ROS Bridge is described [here](statistics.md)
