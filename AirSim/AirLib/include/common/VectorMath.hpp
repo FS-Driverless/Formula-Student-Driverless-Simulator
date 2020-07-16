@@ -324,11 +324,40 @@ public:
 
 	static Vector3T toAngularVelocity(const QuaternionT& start, const QuaternionT& end, RealT dt)
 	{
+		// these values are rotations between -pi and pi
+
 		RealT p_s, r_s, y_s;
 		toEulerianAngle(start, p_s, r_s, y_s);
 
+		// these values are rotations between -pi and pi.
 		RealT p_e, r_e, y_e;
 		toEulerianAngle(end, p_e, r_e, y_e);
+
+		// When passing a rotation of 180 degrees, the angle jumps from close to -pi to pi or from pi to -pi.
+		// To calculate the difference between the two angles we have to make sure they are on the same reference datum.
+		// In below comparison we check for the jump between -pi to pi and if so, we move the negative number by 2pi so they can be subtracted.
+
+		if(p_s < -3 && p_e > 3) {
+			p_s += 2*M_PI;
+		}
+		if(p_e < -3 && p_s > 3) {
+			p_e += 2*M_PI;
+		}
+
+		if(r_s < -3 && r_e > 3) {
+			r_s += 2*M_PI;
+		}
+		if(r_e < -3 && r_s > 3) {
+			r_e += 2*M_PI;
+		}
+
+		if(y_s < -3 && y_e > 3) {
+			y_s += 2*M_PI;
+		}
+		if(y_e < -3 && y_s > 3) {
+			y_e += 2*M_PI;
+		}
+
 
 		RealT p_rate = (p_e - p_s) / dt;
 		RealT r_rate = (r_e - r_s) / dt;

@@ -357,9 +357,9 @@ sensor_msgs::Imu AirsimROSWrapper::get_imu_msg_from_airsim(const msr::airlib::Im
     m_enu.getRPY(roll, pitch, yaw);
 
     // Publish IMU ang rates in radians per second
-    imu_msg.angular_velocity.x = math_common::deg2rad(imu_data.angular_velocity.x());
-    imu_msg.angular_velocity.y = -math_common::deg2rad(imu_data.angular_velocity.y());
-    imu_msg.angular_velocity.z = -math_common::deg2rad(imu_data.angular_velocity.z());
+    imu_msg.angular_velocity.x = imu_data.angular_velocity.x();
+    imu_msg.angular_velocity.y = -imu_data.angular_velocity.y();
+    imu_msg.angular_velocity.z = -imu_data.angular_velocity.z();
 
     // meters/s2^m
     imu_msg.linear_acceleration.x = imu_data.linear_acceleration.x();
