@@ -29,10 +29,10 @@
 	</group>
 
 	<group if="$(arg plot)">
-		<include file="$(find fsonline)/launch/plot.launch">
+		<include file="$(find fsds_ros_bridge)/launch/plot.launch" />
 	</group>
 
 	<group if="$(arg rviz)">
-		<include file="$(find fsonline)/launch/rviz.launch">
+		<include file="$(find fsds_ros_bridge)/launch/rviz.launch" />
 	</group>
 </launch>
