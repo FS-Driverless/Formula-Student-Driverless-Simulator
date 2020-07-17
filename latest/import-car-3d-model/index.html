@@ -56,20 +56,9 @@
                 <ul>
                     <li class="toctree-l1"><a class="reference internal" href="../system-overview/">System overview</a>
                     </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
+                    </li>
                     <li class="toctree-l1"><a class="reference internal" href="../integration-handbook/">Integration handbook</a>
-                    </li>
-                </ul>
-                <p class="caption"><span class="caption-text">Usage & Development</span></p>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../how-to-simulate/">How to simulate</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../get-ready-to-develop/">Setup your development environment</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../how-to-develop/">How to develop the FSDS project</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../building-ros/">Build your ros workspace</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../gcp-remote-workstation/">Google cloud remote workstation</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Vehicle & Sensors</span></p>
@@ -77,6 +66,8 @@
                     <li class="toctree-l1"><a class="reference internal" href="../vehicle_model/">Vehicle model</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../imu/">IMU</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../lidar/">Lidar</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../gps/">GPS</a>
                     </li>
@@ -106,6 +97,12 @@
     <li class="toctree-l2"><a class="reference internal" href="#4-configuring-the-physics-asset">4. Configuring the physics asset</a>
     </li>
     </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../gcp-remote-workstation/">Google cloud remote workstation</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../software-install-instructions/">Software install instructions</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../how-to-release/">How to release</a>
                     </li>
                 </ul>
       </div>
@@ -199,11 +196,11 @@ Some key settings to keep in mind:</p>
 </ul>
 <p>Take a look at <code>Suv_Pa</code> for an example:</p>
 <p><img alt="" src="../images/ue-suv_pa.png" /></p>
-<p><strong>If you are planning to use this car in an online competition (FSOnline)</strong> you must use create the bounding boxes exactly the the following specification:</p>
+<p><strong>If you are planning to use this car in an online competition (FSOnline)</strong> you must use create the bounding boxes exactly the following specification:</p>
 <ul>
 <li>Width: 100cm</li>
 <li>Length: 180cm</li>
-<li>Height &gt; 150cm</li>
+<li>Height: 50cm</li>
 </ul>
 <p>In competition all cars will be equal in behaviour. 
 So all bounding boxes must be equal.
@@ -251,6 +248,8 @@ It should (tm) work.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="../gcp-remote-workstation/" class="btn btn-neutral float-right" title="Google cloud remote workstation">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
       
         <a href="../spectator/" class="btn btn-neutral" title="Spectator"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
@@ -282,6 +281,8 @@ It should (tm) work.</p>
       
         <span><a href="../spectator/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
+      
+        <span style="margin-left: 15px"><a href="../gcp-remote-workstation/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

@@ -68,20 +68,9 @@
     </li>
     </ul>
                     </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
+                    </li>
                     <li class="toctree-l1"><a class="reference internal" href="../integration-handbook/">Integration handbook</a>
-                    </li>
-                </ul>
-                <p class="caption"><span class="caption-text">Usage & Development</span></p>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../how-to-simulate/">How to simulate</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../get-ready-to-develop/">Setup your development environment</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../how-to-develop/">How to develop the FSDS project</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../building-ros/">Build your ros workspace</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../gcp-remote-workstation/">Google cloud remote workstation</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Vehicle & Sensors</span></p>
@@ -89,6 +78,8 @@
                     <li class="toctree-l1"><a class="reference internal" href="../vehicle_model/">Vehicle model</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../imu/">IMU</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../lidar/">Lidar</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../gps/">GPS</a>
                     </li>
@@ -106,6 +97,12 @@
                     <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../import-car-3d-model/">Import your 3d car model</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../gcp-remote-workstation/">Google cloud remote workstation</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../software-install-instructions/">Software install instructions</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../how-to-release/">How to release</a>
                     </li>
                 </ul>
       </div>
@@ -194,8 +191,7 @@ It gives a timeline of everything that happened to always go back afterwards and
 The logbook is stored on disk so that in the event of a whole system crash we will still have the logbook.
 It is also shown within the referee's web interface.</p>
 <p>You can run the simulation stack yourself perfectly fine without the operator.
-The operator is just a tool for officials to easely manage the competition.
-<a href="../how-to-simulate/">Read more about how to run the simulation here.</a></p>
+The operator is just a tool for officials to easely manage the competition.</p>
 <h2 id="the-ros-bridge">The ROS Bridge</h2>
 <p>The ROS bridge node connects to the simulated world inside Unreal Engine using AirSim (more on that later).
 On the one hand, it requests sensor data and passes it along on ROS topics to the current AS.
@@ -235,7 +231,7 @@ Read more about usage of the spectator <a href="../spectator/">here</a>.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../integration-handbook/" class="btn btn-neutral float-right" title="Integration handbook">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../getting-started/" class="btn btn-neutral float-right" title="Getting started">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -269,7 +265,7 @@ Read more about usage of the spectator <a href="../spectator/">here</a>.</p>
         <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../integration-handbook/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../getting-started/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

@@ -56,20 +56,9 @@
                 <ul>
                     <li class="toctree-l1"><a class="reference internal" href="../system-overview/">System overview</a>
                     </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
+                    </li>
                     <li class="toctree-l1"><a class="reference internal" href="../integration-handbook/">Integration handbook</a>
-                    </li>
-                </ul>
-                <p class="caption"><span class="caption-text">Usage & Development</span></p>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../how-to-simulate/">How to simulate</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../get-ready-to-develop/">Setup your development environment</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../how-to-develop/">How to develop the FSDS project</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../building-ros/">Build your ros workspace</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../gcp-remote-workstation/">Google cloud remote workstation</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Vehicle & Sensors</span></p>
@@ -78,6 +67,8 @@
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../imu/">IMU</a>
                     </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../lidar/">Lidar</a>
+                    </li>
                     <li class="toctree-l1"><a class="reference internal" href="../gps/">GPS</a>
                     </li>
                 </ul>
@@ -85,7 +76,7 @@
                 <ul class="current">
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">ROS Bridge</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#running">Running</a>
+    <li class="toctree-l2"><a class="reference internal" href="#nodes">Nodes</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#published-topics">Published topics</a>
     </li>
@@ -114,6 +105,12 @@
                     <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../import-car-3d-model/">Import your 3d car model</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../gcp-remote-workstation/">Google cloud remote workstation</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../software-install-instructions/">Software install instructions</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../how-to-release/">How to release</a>
                     </li>
                 </ul>
       </div>
@@ -161,16 +158,8 @@
 Physically this node should run on the airsim simulation server (that is the one that also runs the Unreal) project.
 The node connects to the AirSim plugin, periodically retrieves sensor data (images, lidar, imu, gps) and publishes it on ROS topics.
 It listens for car setpoints on other another and forwards these to the AirSim plugin.</p>
-<h2 id="running">Running</h2>
-<p>Make sure you have <a href="../building-ros/">built the ROS workspace</a>.</p>
-<p>The ros bridge consists of a different few nodes to achieve the highest performance and keep the codebase clean.
-Everything can be launched using the <code>fsds_ros_bridge.launch</code> launchfile.</p>
-<pre><code>cd ros
-source devel/setup.bash
-roslaunch fsds_ros_bridge fsds_ros_bridge.launch
-</code></pre>
-
-<p>This launches the following nodes:
+<h2 id="nodes">Nodes</h2>
+<p>The fsds_ros_bridge.launch launches the following nodes:
 * <code>/fsds/ros_bridge</code> node responsible for IMU, GPS, lidar, vehicle setpoints and go/finish signals.
 * <code>/fsds/camera/CAMERANAME</code> node is run for each camera configured in the <code>settings.json</code>. The nodes are launched using the <code>cameralauncher.py</code> script.</p>
 <h2 id="published-topics">Published topics</h2>
@@ -198,7 +187,7 @@ roslaunch fsds_ros_bridge fsds_ros_bridge.launch
 </tr>
 <tr>
 <td><code>/fsds/testing_only/odom</code></td>
-<td>Ground truth car position and orientation in ENU frame about the CoG of the car (<code>fsds/FSCar</code>).  The units are <code>m</code> for distance and <code>rad</code> for angles. The message is in the <code>fsds/map</code> frame. This is a frame that is not (yet) used anywhere else and is just here so you can easely reference it if needed. <em>THIS WILL NOT BE STREAMED DURING COMPETITION.</em></td>
+<td>Ground truth car position and orientation in ENU frame about the CoG of the car (<code>fsds/FSCar</code>).  The units are <code>m</code> for distance. The orientation are expressed in terms of quaternions. The message is in the <code>fsds/map</code> frame. This is a frame that is not (yet) used anywhere else and is just here so you can easely reference it if needed. <em>THIS WILL NOT BE STREAMED DURING COMPETITION.</em></td>
 <td><a href="https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html">nav_msgs/Odometry</a></td>
 <td>250</td>
 </tr>
@@ -216,9 +205,9 @@ roslaunch fsds_ros_bridge fsds_ros_bridge.launch
 </tr>
 <tr>
 <td><code>/fsds/lidar/LIDARNAME</code></td>
-<td>Publishes the lidar points for each lidar sensor. All points are in the <code>fsds/LIDARNAME</code> frame. Transformations between the <code>fsds/LIDARNAME</code> and <code>fsds/FSCar</code> frame are being published regularly. More info on the lidar sensor can be found <a href="../integration-handbook/">here</a></td>
+<td>Publishes the lidar points for each lidar sensor. All points are in the <code>fsds/LIDARNAME</code> frame. Transformations between the <code>fsds/LIDARNAME</code> and <code>fsds/FSCar</code> frame are being published regularly. More info on the lidar sensor can be found <a href="../lidar/">here</a></td>
 <td><a href="http://docs.ros.org/melodic/api/sensor_msgs/html/msg/PointCloud.html">sensor_msgs/PointCloud</a></td>
-<td>10</td>
+<td><code>`RotationsPerSecond</code> param in <code>settings.json</code></td>
 </tr>
 <tr>
 <td><code>/fsds/signal/go</code></td>
@@ -311,8 +300,8 @@ Transforms to the ground truth are disabled because this would take away the sta
 </ul>
 <h2 id="visualization">Visualization</h2>
 <p>This package contains some useful launch and config files which will help you in visualizing the data being streamed through the above topics.</p>
-<p>To open Rviz with <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/config/rviz/default.rviz">this</a> configuration file, run <code>roslaunch fsds_ros_bridge rviz.launch</code>.</p>
-<p>To open Multiplot with <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/config/multiplot/multiplot.xml">this</a> configuration file, run <code>roslaunch fsds_ros_bridge plot.launch</code></p>
+<p>To open Rviz with <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/config/rviz/default.rviz">this</a> configuration file, run <code>roslaunch fsds_ros_bridge fsds_ros_bridge.launch rviz:=true</code>.</p>
+<p>To open Multiplot with <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/config/multiplot/multiplot.xml">this</a> configuration file, run <code>roslaunch fsds_ros_bridge fsds_ros_bridge.launch plot:=true</code>.</p>
 <h2 id="monitoring">Monitoring</h2>
 <p>Performance monitoring of the ROS Bridge is described <a href="../statistics/">here</a></p>
               

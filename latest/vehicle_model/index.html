@@ -56,29 +56,28 @@
                 <ul>
                     <li class="toctree-l1"><a class="reference internal" href="../system-overview/">System overview</a>
                     </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
+                    </li>
                     <li class="toctree-l1"><a class="reference internal" href="../integration-handbook/">Integration handbook</a>
-                    </li>
-                </ul>
-                <p class="caption"><span class="caption-text">Usage & Development</span></p>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../how-to-simulate/">How to simulate</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../get-ready-to-develop/">Setup your development environment</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../how-to-develop/">How to develop the FSDS project</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../building-ros/">Build your ros workspace</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../gcp-remote-workstation/">Google cloud remote workstation</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Vehicle & Sensors</span></p>
                 <ul class="current">
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">Vehicle model</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#vehicle-pawn-center">Vehicle pawn center</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#vehicle-collision-model">Vehicle collision model</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#vehicle-center-of-gravity">Vehicle center of gravity</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#more-properties-of-competition-vehicles">More properties of competition vehicles</a>
+    </li>
     </ul>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../imu/">IMU</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../lidar/">Lidar</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../gps/">GPS</a>
                     </li>
@@ -96,6 +95,12 @@
                     <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../import-car-3d-model/">Import your 3d car model</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../gcp-remote-workstation/">Google cloud remote workstation</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../software-install-instructions/">Software install instructions</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../how-to-release/">How to release</a>
                     </li>
                 </ul>
       </div>
@@ -149,17 +154,46 @@
 <p><strong>A third-party, open-source model would be ideal</strong>. This way, not even the developers of the simulation (Formula Student Team Delft) would have an edge over other teams. Everyone has access to the same code and has had no experience working with it or been involved in developing it.</p>
 </li>
 </ul>
-<p>The Unreal Engine repository contains (as a third party library) the code for <a href="https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/guide/Manual/Vehicles.html">PhysXVehicles</a> that was developed by Nvidia. This seemed like the perfect solution for our simulator, given that it complies with all the criteria of our design philosophy above. Airsim simply interacts with the PhysXCar API in <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/tree/93fa784106c70e53e973e6d755ab5430feeef9da/UE4Project/Plugins/AirSim/Source/Vehicles/Car">these</a> files, which have configurable parameters exposed in the uassets files <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/tree/master/UE4Project/Plugins/AirSim/Content/VehicleAdv/SUV">here</a>. </p>
-<p>These are the current (high-level) vehicle parameters (you will be notified if anything changes):</p>
+<p>Unreal Engine provides the <a href="https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/guide/Manual/Vehicles.html">PhysXVehicles</a> that was developed by Nvidia. 
+This seemed like the perfect solution for our simulator, given that it complies with all the criteria of our design philosophy above. 
+Airsim simply interacts with the PhysXCar API in <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/tree/master/UE4Project/Plugins/AirSim/Source/Vehicles/Car">these</a> files.</p>
+<h2 id="vehicle-pawn-center">Vehicle pawn center</h2>
+<p>Just like everything inside the simulated world, the vehicle has a position within the world (x, y, z).
+Relative to this point the rest of the vehicle is constructed.
+The collision box, the center of gravity and the sensor positions all are relative to this center point.</p>
+<p>The center position is located at the bottom of the car and on the horizontal plane in the geometric center.
+When car is stationary the height offset between the world track and the pawn position is 0.
+In below image the blue dot represents the location of the pawn center:</p>
+<p><img alt="vehicle layout 4 angles" src="../images/vehicle-layout.png" />
+<em>Vehicle Layout Overview</em></p>
+<h2 id="vehicle-collision-model">Vehicle collision model</h2>
+<p>The collision model (bounding box) defines which parts of the car interact with other parts of the world.
+For cars used in competition (FSOnline) the bounding boxes must use the following specification:</p>
+<ul>
+<li>Width: 100cm</li>
+<li>Length: 180cm</li>
+<li>Height: 50cm</li>
+</ul>
+<p>The bounding boxes will be centered ontop of the vehicle pawn center. 
+In the Vehicle Layout Overview picture above the orange lines show the bounding box. 
+These boundries are unrealted to the vehicle 3d model.
+The car may look smaller or bigger but they will hit cones all the same.</p>
+<p><img alt="" src="../images/ue-equality.png" /></p>
+<h2 id="vehicle-center-of-gravity">Vehicle center of gravity</h2>
+<p>The center of gravity of the car sits in the center of the collision model.
+For cars used in competition (FSOnline), the center of gravity is 25cm above the vehicle pawn center.
+In turn, when the car is stationary, the height offset between the world ground and the center of gravity is 25 cm.
+Within the <em>Vehicle Layout Overview</em> picture the red dot represents the center of gravity.</p>
+<h2 id="more-properties-of-competition-vehicles">More properties of competition vehicles</h2>
 <ul>
 <li>Mass: 255 kg</li>
 <li>Max speed: ~27 m/s</li>
 <li>Drag coefficient: 0.3 [-]</li>
-<li>Chassis width: 1.44 m</li>
-<li>Chassis height: 1.22 m</li>
 </ul>
-<p>These parameters can only be found when opening the UE4Editor and opening the SUVCarPawn.uasset file located <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/tree/master/UE4Project/Plugins/AirSim/Content/VehicleAdv/SUV">here</a>.</p>
 <p><img alt="SUVCarPawn" src="../images/vehicle_dynamic_model.png" /></p>
+<h1 id="how-to-configure-vehicle-properties">How to configure vehicle properties?</h1>
+<p>All vehicle proprties are set in the unreal vehicle pawn classes.
+You can view and edit these configuratoin files using the Unreal Editor in <code>/UE4Project/Plugins/AirSim/Content/VehicleAdv/</code>.</p>
               
             </div>
           </div>
@@ -170,7 +204,7 @@
         <a href="../imu/" class="btn btn-neutral float-right" title="IMU">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../gcp-remote-workstation/" class="btn btn-neutral" title="Google cloud remote workstation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../integration-handbook/" class="btn btn-neutral" title="Integration handbook"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -198,7 +232,7 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../gcp-remote-workstation/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../integration-handbook/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
         <span style="margin-left: 15px"><a href="../imu/" style="color: #fcfcfc">Next &raquo;</a></span>

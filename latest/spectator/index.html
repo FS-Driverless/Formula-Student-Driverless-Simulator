@@ -56,20 +56,9 @@
                 <ul>
                     <li class="toctree-l1"><a class="reference internal" href="../system-overview/">System overview</a>
                     </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
+                    </li>
                     <li class="toctree-l1"><a class="reference internal" href="../integration-handbook/">Integration handbook</a>
-                    </li>
-                </ul>
-                <p class="caption"><span class="caption-text">Usage & Development</span></p>
-                <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../how-to-simulate/">How to simulate</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../get-ready-to-develop/">Setup your development environment</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../how-to-develop/">How to develop the FSDS project</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../building-ros/">Build your ros workspace</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../gcp-remote-workstation/">Google cloud remote workstation</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Vehicle & Sensors</span></p>
@@ -77,6 +66,8 @@
                     <li class="toctree-l1"><a class="reference internal" href="../vehicle_model/">Vehicle model</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../imu/">IMU</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../lidar/">Lidar</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../gps/">GPS</a>
                     </li>
@@ -104,6 +95,12 @@
     </ul>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../import-car-3d-model/">Import your 3d car model</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../gcp-remote-workstation/">Google cloud remote workstation</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../software-install-instructions/">Software install instructions</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../how-to-release/">How to release</a>
                     </li>
                 </ul>
       </div>
@@ -171,14 +168,18 @@ Run the simulation as follows:</p>
 This fallback initiates after a connection timeout of 20 seconds.</p>
 <p>Theoretically multiple simultaneous spectators in a single world should work but this is not tested or supported.</p>
 <h2 id="3-using-the-spectator">3. Using the spectator</h2>
-<p>Spectators can use the wsdaqe to move around and their mouse to look around. 
-They can also use the buttons 1 til 9 to teleport to predefined camera locations.
-We call these camera locations 'spectator points'. </p>
+<p>When starting the spectator it will be launched in follow-car mode.
+In this mode the camera will always point at the vehicle.
+When the vehicle crosses a triggerline, the camera will move to another viewpoint.</p>
+<p>You can toggle the follow-car mode using the <code>F</code> key on your keyboard.
+When not following the car you can use the <code>wsdaqe</code> keys to move around and your mouse to look around.</p>
 <h2 id="4-adding-spectator-points-to-the-map">4. Adding spectator points to the map</h2>
-<p>Spectator points are places in the world where the spectator can teleport to using the number keys on the keyboard.
-These locations are defined in the map and cannot be changed during the game.
-To create a new point, add a new CameraActor to the world and add the <code>spectator</code> tag to the actor.
-The AirsimSpectatorPawn will find them automatically and add them in the order that they were found.</p>
+<p>Spectator viewpoints are places in the world where the spectator can be teleported to.
+These locations are defined in the map and cannot be changed during the simulation.
+To create a new viewpoint, add a new <code>CameraActor</code> to the world and place it wherever you like.
+Next, add a <code>AirsimSpectatorTeleportTrigger</code> to the world.
+In the settings, set the camera to the one you just created.
+Whenever the vehicle touches this trigger object, the spectator will be teleported to the selected camera (in follow-car mode).</p>
               
             </div>
           </div>
