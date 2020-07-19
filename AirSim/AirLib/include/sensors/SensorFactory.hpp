@@ -31,8 +31,10 @@ public:
             return std::unique_ptr<GpsSimple>(new GpsSimple(*static_cast<const AirSimSettings::GpsSetting*>(sensor_setting)));
         case SensorBase::SensorType::Barometer:
             return std::unique_ptr<BarometerSimple>(new BarometerSimple(*static_cast<const AirSimSettings::BarometerSetting*>(sensor_setting)));
+        case SensorBase::SensorType::GSS:
+            return std::unique_ptr<GSSSimple>(new GSSSimple());
         default:
-            throw new std::invalid_argument("Unexpected sensor type");
+            throw new std::invalid_argument("Unexpected sensor type (C)");
         }
     }
 

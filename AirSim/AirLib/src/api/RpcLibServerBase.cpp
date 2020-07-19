@@ -223,6 +223,11 @@ RpcLibServerBase::RpcLibServerBase(ApiProvider* api_provider, const std::string&
         return RpcLibAdapatorsBase::DistanceSensorData(distance_sensor_data);
     });
 
+    pimpl_->server.bind("getGroundSpeedSensorData", [&](const std::string& vehicle_name) -> RpcLibAdapatorsBase::GSSData {
+        const auto& gss_data = getVehicleApi(vehicle_name)->getGroundSpeedSensorData();
+        return RpcLibAdapatorsBase::GSSData(gss_data);
+    });
+
     pimpl_->server.bind("simGetCameraInfo", [&](const std::string& camera_name, const std::string& vehicle_name) -> RpcLibAdapatorsBase::CameraInfo {
         const auto& camera_info = getVehicleSimApi(vehicle_name)->getCameraInfo(camera_name);
         return RpcLibAdapatorsBase::CameraInfo(camera_info);

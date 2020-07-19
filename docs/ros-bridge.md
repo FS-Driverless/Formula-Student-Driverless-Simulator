@@ -77,6 +77,11 @@ Transforms to the ground truth are disabled because this would take away the sta
   Timer callback frequency for updating and publishing the imu messages.   
   This value must be equal or higher to the minimual sample rate of the sensor configured in the settings.json
 
+- `/fsds/ros_bridge/update_gss_every_n_sec` [double]   
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   
+  Default: 0.01 seconds (100hz).   
+  Timer callback frequency for updating and publishing the ground speed sensor messages.
+
 - `/fsds/ros_bridge/update_odom_every_n_sec` [double]   
   Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   
   Default: 0.004 seconds (250hz).   

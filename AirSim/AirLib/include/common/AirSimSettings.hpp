@@ -1196,8 +1196,13 @@ private:
         case SensorBase::SensorType::Lidar:
             sensor_setting = std::unique_ptr<SensorSetting>(new LidarSetting());
             break;
+        case SensorBase::SensorType::GSS:
+            // at this moment the codebase requires every sensor to have settings.
+            // However, gss does not have settings... so we just place ImuSettings in here for now.
+            sensor_setting = std::unique_ptr<SensorSetting>(new ImuSetting());
+            break;
         default:
-            throw std::invalid_argument("Unexpected sensor type");
+            throw std::invalid_argument("Unexpected sensor type (B)");
         }
 
         sensor_setting->sensor_type = sensor_type;
@@ -1230,8 +1235,10 @@ private:
         case SensorBase::SensorType::Lidar:
             initializeLidarSetting(*static_cast<LidarSetting*>(sensor_setting), settings_json);
             break;
+        case SensorBase::SensorType::GSS:
+            break;
         default:
-            throw std::invalid_argument("Unexpected sensor type");
+            throw std::invalid_argument("Unexpected sensor type (A)");
         }
     }
 

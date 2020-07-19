@@ -82,6 +82,7 @@ public:
     msr::airlib::MagnetometerBase::Output getMagnetometerData(const std::string& magnetometer_name = "", const std::string& vehicle_name = "") const;
     msr::airlib::GpsBase::Output getGpsData(const std::string& gps_name = "", const std::string& vehicle_name = "") const;
     msr::airlib::DistanceBase::Output getDistanceSensorData(const std::string& distance_sensor_name = "", const std::string& vehicle_name = "") const;
+    msr::airlib::GSSSimple::Output getGroundSpeedSensorData(const std::string& vehicle_name = "") const;
 
     // sensor omniscient APIs
     vector<int> simGetLidarSegmentation(const std::string& lidar_name = "", const std::string& vehicle_name = "") const;

@@ -17,6 +17,7 @@
 #include "sensors/barometer/BarometerBase.hpp"
 #include "sensors/magnetometer/MagnetometerBase.hpp"
 #include "sensors/distance/DistanceBase.hpp"
+#include "sensors/gss/GSSSimple.hpp"
 #include "sensors/gps/GpsBase.hpp"
 #include <exception>
 #include <string>
@@ -233,6 +234,21 @@ public:
             throw VehicleControllerException(Utils::stringf("No distance sensor with name %s exist on vehicle", distance_sensor_name.c_str()));
 
         return distance_sensor->getOutput();
+    }
+
+    virtual GSSSimple::Output getGroundSpeedSensorData() const 
+    {
+        uint count_gss = getSensors().size(SensorBase::SensorType::GSS);
+        if(count_gss == 0) {
+            throw VehicleControllerException(Utils::stringf("No ground speed sensor on vehicle"));
+        }
+        const GSSSimple* gss = static_cast<const GSSSimple*>(getSensors().getByType(SensorBase::SensorType::GSS, 0));
+        if (gss == nullptr)
+        {
+            throw VehicleControllerException(Utils::stringf("Ground speed sensor nullptr"));
+        }
+
+        return gss->getOutput();
     }
 
     virtual ~VehicleApiBase() = default;

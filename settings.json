@@ -54,6 +54,10 @@
           "HorizontalFOVEnd": 90,
           "RotationsPerSecond": 5,
           "DrawDebugPoints": false
+        },
+        "GSS" : {
+          "SensorType": 7,
+          "Enabled": true
         }
       },
       "Cameras": {

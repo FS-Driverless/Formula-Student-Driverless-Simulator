@@ -98,6 +98,7 @@ private:
     ros_bridge::Statistics getGpsDataStatistics;
     ros_bridge::Statistics getCarStateStatistics;
     ros_bridge::Statistics getImuStatistics;
+    ros_bridge::Statistics getGSSStatistics;
     std::vector<ros_bridge::Statistics> getLidarDataVecStatistics;
     ros_bridge::Statistics control_cmd_sub_statistics;
     ros_bridge::Statistics global_gps_pub_statistics;
@@ -105,6 +106,7 @@ private:
     std::vector<ros_bridge::Statistics> cam_pub_vec_statistics;
     std::vector<ros_bridge::Statistics> lidar_pub_vec_statistics;
     ros_bridge::Statistics imu_pub_statistics;
+    ros_bridge::Statistics gss_pub_statistics;
     
     // create std::vector<Statistics*> which I can use to iterate over all these options 
     // and apply common operations such as print, reset
@@ -120,6 +122,7 @@ private:
     void odom_cb(const ros::TimerEvent& event);    // update drone state from airsim_client_ every nth sec
     void gps_timer_cb(const ros::TimerEvent& event);
     void imu_timer_cb(const ros::TimerEvent& event);
+    void gss_timer_cb(const ros::TimerEvent& event);
     void statictf_cb(const ros::TimerEvent& event);
     void car_control_cb(const fs_msgs::ControlCommand::ConstPtr& msg, const std::string& vehicle_name);
     void lidar_timer_cb(const ros::TimerEvent& event, const std::string& camera_name, const int lidar_index);
@@ -188,6 +191,7 @@ private:
     ros::Timer odom_update_timer_;
     ros::Timer gps_update_timer_;
     ros::Timer imu_update_timer_;
+    ros::Timer gss_update_timer_;
     std::vector<ros::Timer> airsim_lidar_update_timers_;
     ros::Timer statistics_timer_;
     ros::Timer go_signal_timer_;
@@ -201,6 +205,7 @@ private:
     ros::Publisher odom_pub;
     ros::Publisher global_gps_pub;
     ros::Publisher imu_pub;
+    ros::Publisher gss_pub;
     ros::Publisher track_pub;
     ros::Publisher go_signal_pub_;
     

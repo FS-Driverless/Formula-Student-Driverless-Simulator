@@ -117,6 +117,7 @@
     <ClInclude Include="include\sensors\magnetometer\MagnetometerBase.hpp" />
     <ClInclude Include="include\sensors\magnetometer\MagnetometerSimple.hpp" />
     <ClInclude Include="include\sensors\magnetometer\MagnetometerSimpleParams.hpp" />
+    <ClInclude Include="include\sensors\gss\GSSSimple.hpp" />
     <ClInclude Include="include\sensors\SensorBase.hpp" />
     <ClInclude Include="include\sensors\SensorCollection.hpp" />
   </ItemGroup>
