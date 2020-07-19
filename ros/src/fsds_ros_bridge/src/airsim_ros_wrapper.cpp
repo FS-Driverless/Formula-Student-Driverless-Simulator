@@ -524,12 +524,9 @@ void AirsimROSWrapper::gss_timer_cb(const ros::TimerEvent& event)
         gss_msg.header.stamp = make_ts(gss_data.time_stamp);
 
         // Convert to ENU frame (minus signs)
-        gss_msg.twist.linear.x = gss_data.twist.linear.x();
-        gss_msg.twist.linear.y = - gss_data.twist.linear.y();
-        gss_msg.twist.linear.z = - gss_data.twist.linear.z();
-        gss_msg.twist.angular.x = gss_data.twist.angular.x();
-        gss_msg.twist.angular.y = - gss_data.twist.angular.y();
-        gss_msg.twist.angular.z = - gss_data.twist.angular.z();
+        gss_msg.twist.linear.x = gss_data.linear_velocity.x();
+        gss_msg.twist.linear.y = - gss_data.linear_velocity.y();
+        gss_msg.twist.linear.z = - gss_data.linear_velocity.z();
 
         {
             ros_bridge::ROSMsgCounter counter(&gss_pub_statistics);

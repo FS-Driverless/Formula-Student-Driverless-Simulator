@@ -17,7 +17,7 @@ public:
 public:
     struct Output {
         TTimePoint time_stamp;
-        Twist twist;
+        Vector3r linear_velocity;
     };
 
 public:
@@ -27,7 +27,7 @@ public:
         const GroundTruth& ground_truth = getGroundTruth();
 
         output.time_stamp = clock()->nowNanos();
-        output.twist = ground_truth.kinematics->twist;
+        output.linear_velocity = ground_truth.kinematics->twist.linear;
 
         output_ = output;
     }
