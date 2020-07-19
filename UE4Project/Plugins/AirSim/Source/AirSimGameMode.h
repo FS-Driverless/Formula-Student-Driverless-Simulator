@@ -25,14 +25,12 @@ public:
     AAirSimGameMode(const FObjectInitializer& ObjectInitializer);
 
     UPROPERTY() ASimModeBase* simmode;
-
     
 private:
     void initializeSettings();
     void readSettingsTextFromFile(FString fileName, std::string& settingsText);
 
     void setUnrealEngineSettings();
-    void createSimMode();
 
 
 };

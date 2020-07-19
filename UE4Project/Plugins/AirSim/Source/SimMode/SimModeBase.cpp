@@ -73,8 +73,6 @@ void ASimModeBase::BeginPlay()
     setTimeOfDay(tod_setting.enabled, tod_setting.start_datetime, tod_setting.is_start_datetime_dst,
         tod_setting.celestial_clock_speed, tod_setting.update_interval_secs, tod_setting.move_sun);
 
-    UAirBlueprintLib::LogMessage(TEXT("Press F1 to see help"), TEXT(""), LogDebugLevel::Informational);
-
     setupVehiclesAndCamera();
     FRecordingThread::init();
 
