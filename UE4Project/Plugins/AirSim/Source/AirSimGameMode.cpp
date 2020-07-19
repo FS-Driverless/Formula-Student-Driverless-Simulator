@@ -43,7 +43,7 @@ AAirSimGameMode::AAirSimGameMode(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer)
 {
     DefaultPawnClass = nullptr;
-    static ConstructorHelpers::FClassFinder<APawn> AirsimSpectatorPawn(TEXT("/AirSim/AirsimSpectatorPawn"));
+    static ConstructorHelpers::FClassFinder<APawn> AirsimSpectatorPawn(TEXT("/AirSim/Blueprints/AirsimSpectatorPawn"));
     SpectatorClass = AirsimSpectatorPawn.Class;
     // DefaultPawnClass = ASpectatorPawn::StaticClass();
     HUDClass = ASimHUD::StaticClass();
@@ -61,12 +61,6 @@ void AAirSimGameMode::BeginPlay()
         UAirBlueprintLib::OnBeginPlay();
         initializeSettings();
         setUnrealEngineSettings();
-        createSimMode();
-
-        if (simmode)
-            simmode->startApiServer();
-        else
-            UAirBlueprintLib::LogMessageString("Error at startup: ", "simmode could not be created", LogDebugLevel::Failure);
     }
     catch (std::exception &ex)
     {
@@ -79,15 +73,6 @@ void AAirSimGameMode::BeginPlay()
 
 void AAirSimGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-    if (simmode)
-        simmode->stopApiServer();
-
-    if (simmode)
-    {
-        simmode->Destroy();
-        simmode = nullptr;
-    }
-
     UAirBlueprintLib::OnEndPlay();
 
     Super::EndPlay(EndPlayReason);
@@ -198,14 +183,4 @@ void AAirSimGameMode::setUnrealEngineSettings()
     //we get error that GameThread has timed out after 30 sec waiting on render thread
     static const auto render_timeout_var = IConsoleManager::Get().FindConsoleVariable(TEXT("g.TimeoutForBlockOnRenderFence"));
     render_timeout_var->Set(300000);
-}
-
-void AAirSimGameMode::createSimMode()
-{
-    FActorSpawnParameters simmode_spawn_params;
-    simmode_spawn_params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-    //spawn at origin. We will use this to do global NED transforms, for ex, non-vehicle objects in environment
-
-    simmode = this->GetWorld()->SpawnActor<ASimModeCar>(FVector::ZeroVector, FRotator::ZeroRotator, simmode_spawn_params);
 }

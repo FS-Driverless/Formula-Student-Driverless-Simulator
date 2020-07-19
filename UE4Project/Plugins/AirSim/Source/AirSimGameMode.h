@@ -25,7 +25,6 @@ public:
     AAirSimGameMode(const FObjectInitializer& ObjectInitializer);
 
     UPROPERTY() ASimModeBase* simmode;
-
     
 private:
     void initializeSettings();
@@ -35,7 +34,6 @@ private:
     std::string getSimModeFromUser();
 
     void setUnrealEngineSettings();
-    void createSimMode();
 
 
 };

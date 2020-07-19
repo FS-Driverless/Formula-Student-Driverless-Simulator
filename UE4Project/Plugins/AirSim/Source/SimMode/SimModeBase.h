@@ -34,6 +34,16 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Recording")
     bool toggleRecording();
 
+    UFUNCTION(BlueprintCallable, Category = "Api")
+    void startApiServer();
+    
+    UFUNCTION(BlueprintCallable, Category = "Api")
+    void stopApiServer();
+
+    UFUNCTION(BlueprintCallable, Category = "Api")
+    bool isApiServerStarted();
+
+
 public:	
     // Sets default values for this actor's properties
     ASimModeBase();
@@ -56,10 +66,6 @@ public:
     virtual void startRecording();
     virtual void stopRecording();
     virtual bool isRecording() const;
-
-    void startApiServer();
-    void stopApiServer();
-    bool isApiServerStarted();
 
     const NedTransform& getGlobalNedTransform();
 
