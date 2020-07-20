@@ -455,20 +455,6 @@ class VehicleClient:
         return KinematicsState.from_msgpack(kinematics_state)
     simGetGroundTruthKinematics.__annotations__ = {'return': KinematicsState}
 
-    def simGetGroundTruthEnvironment(self, vehicle_name = ''):
-        """
-        Get ground truth environment state
-
-        Args:
-            vehicle_name (str, optional): Name of the vehicle
-
-        Returns:
-            EnvironmentState: Ground truth environment state
-        """
-        env_state = self.client.call('simGetGroundTruthEnvironment', vehicle_name)
-        return EnvironmentState.from_msgpack(env_state)
-    simGetGroundTruthEnvironment.__annotations__ = {'return': EnvironmentState}
-
     # sensor APIs
     def getImuData(self, imu_name = '', vehicle_name = ''):
         """
@@ -480,28 +466,6 @@ class VehicleClient:
             ImuData:
         """
         return ImuData.from_msgpack(self.client.call('getImuData', imu_name, vehicle_name))
-
-    def getBarometerData(self, barometer_name = '', vehicle_name = ''):
-        """
-        Args:
-            barometer_name (str, optional): Name of Barometer to get data from, specified in settings.json
-            vehicle_name (str, optional): Name of vehicle to which the sensor corresponds to
-
-        Returns:
-            BarometerData:
-        """
-        return BarometerData.from_msgpack(self.client.call('getBarometerData', barometer_name, vehicle_name))
-
-    def getMagnetometerData(self, magnetometer_name = '', vehicle_name = ''):
-        """
-        Args:
-            magnetometer_name (str, optional): Name of Magnetometer to get data from, specified in settings.json
-            vehicle_name (str, optional): Name of vehicle to which the sensor corresponds to
-
-        Returns:
-            MagnetometerData:
-        """
-        return MagnetometerData.from_msgpack(self.client.call('getMagnetometerData', magnetometer_name, vehicle_name))
 
     def getGpsData(self, gps_name = '', vehicle_name = ''):
         """

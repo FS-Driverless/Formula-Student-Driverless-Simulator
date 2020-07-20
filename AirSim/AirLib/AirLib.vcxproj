@@ -89,20 +89,13 @@
     <ClInclude Include="include\vehicles\car\api\CarRpcLibServer.hpp" />
     <ClInclude Include="include\common\Settings.hpp" />
     <ClInclude Include="include\common\Waiter.hpp" />
-    <ClInclude Include="include\physics\Environment.hpp" />
     <ClInclude Include="include\physics\Kinematics.hpp" />
-    <ClInclude Include="include\sensors\barometer\BarometerBase.hpp" />
-    <ClInclude Include="include\sensors\barometer\BarometerSimple.hpp" />
-    <ClInclude Include="include\sensors\barometer\BarometerSimpleParams.hpp" />
     <ClInclude Include="include\sensors\gps\GpsBase.hpp" />
     <ClInclude Include="include\sensors\gps\GpsSimple.hpp" />
     <ClInclude Include="include\sensors\gps\GpsSimpleParams.hpp" />
     <ClInclude Include="include\sensors\imu\ImuBase.hpp" />
     <ClInclude Include="include\sensors\imu\ImuSimple.hpp" />
     <ClInclude Include="include\sensors\imu\ImuSimpleParams.hpp" />
-    <ClInclude Include="include\sensors\magnetometer\MagnetometerBase.hpp" />
-    <ClInclude Include="include\sensors\magnetometer\MagnetometerSimple.hpp" />
-    <ClInclude Include="include\sensors\magnetometer\MagnetometerSimpleParams.hpp" />
     <ClInclude Include="include\sensors\SensorBase.hpp" />
     <ClInclude Include="include\sensors\SensorCollection.hpp" />
   </ItemGroup>

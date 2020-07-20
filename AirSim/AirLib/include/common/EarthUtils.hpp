@@ -178,19 +178,6 @@ public:
         return getAirDensity(std_pressure, std_temperature);
     }
 
-    static real_T getGravity(real_T altitude)
-    {
-        //derivation: http://www.citycollegiate.com/gravitation_XId.htm
-        if (altitude < 10000 && altitude > -10000)   //up to 10 km, difference is too small
-            return EarthUtils::Gravity;
-        if (altitude < 100000 && altitude > -100000)   //use first exproximation using binomial expansion
-            return EarthUtils::Gravity * (1 - 2 * altitude / EARTH_RADIUS);
-        else {
-            real_T factor = 1 + altitude / EARTH_RADIUS;
-            return EarthUtils::Gravity / factor / factor;
-        }
-    }
-
     static Vector3r getMagField(const GeoPoint& geo_point)  //return Tesla
     {
         double declination, inclination;

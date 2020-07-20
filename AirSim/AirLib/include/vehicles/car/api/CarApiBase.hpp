@@ -131,9 +131,9 @@ public:
 
     CarApiBase(const AirSimSettings::VehicleSetting *vehicle_setting,
                std::shared_ptr<SensorFactory> sensor_factory,
-               const Kinematics::State &state, const Environment &environment)
+               const Kinematics::State &state)
     {
-        initialize(vehicle_setting, sensor_factory, state, environment);
+        initialize(vehicle_setting, sensor_factory, state);
     }
 
     virtual void update() override
@@ -161,7 +161,7 @@ public:
 
     void initialize(const AirSimSettings::VehicleSetting *vehicle_setting,
                     std::shared_ptr<SensorFactory> sensor_factory,
-                    const Kinematics::State &state, const Environment &environment)
+                    const Kinematics::State &state)
     {
         sensor_factory_ = sensor_factory;
 
@@ -170,7 +170,7 @@ public:
 
         addSensorsFromSettings(vehicle_setting);
 
-        getSensors().initialize(&state, &environment);
+        getSensors().initialize(&state);
     }
 
     void addSensorsFromSettings(const AirSimSettings::VehicleSetting *vehicle_setting)

@@ -196,11 +196,6 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 
             switch (sensor_setting->sensor_type)
             {
-            case msr::airlib::SensorBase::SensorType::Barometer:
-            {
-                std::cout << "Barometer" << std::endl;
-                break;
-            }
             case msr::airlib::SensorBase::SensorType::Imu:
             {
                 std::cout << "Imu" << std::endl;                
@@ -209,11 +204,6 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
             case msr::airlib::SensorBase::SensorType::Gps:
             {
                 std::cout << "Gps" << std::endl;
-                break;
-            }
-            case msr::airlib::SensorBase::SensorType::Magnetometer:
-            {
-                std::cout << "Magnetometer" << std::endl;
                 break;
             }
             case msr::airlib::SensorBase::SensorType::Distance:
