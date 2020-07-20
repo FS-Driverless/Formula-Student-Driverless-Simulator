@@ -415,10 +415,10 @@ void AirsimROSWrapper::odom_cb(const ros::TimerEvent& event)
         }
 
         nav_msgs::Odometry message_enu = this->get_odom_msg_from_airsim_state(state);
-        if(message_enu_previous_ && AirsimROSWrapper::equalsMessage(message_enu, *message_enu_previous_)) {
+        if(AirsimROSWrapper::equalsMessage(message_enu, message_enu_previous_)) {
             return;
         }
-        message_enu_previous_ = &message_enu;
+        message_enu_previous_ = message_enu;
         {
             ros_bridge::ROSMsgCounter counter(&odom_pub_statistics);
 

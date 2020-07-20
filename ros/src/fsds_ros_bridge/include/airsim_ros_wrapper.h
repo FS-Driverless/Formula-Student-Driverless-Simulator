@@ -172,7 +172,7 @@ private:
     msr::airlib::CarRpcLibClient airsim_client_;
     msr::airlib::CarRpcLibClient airsim_client_lidar_;
 
-    nav_msgs::Odometry* message_enu_previous_;
+    nav_msgs::Odometry message_enu_previous_;
 
     ros::NodeHandle nh_;
     ros::NodeHandle nh_private_;
