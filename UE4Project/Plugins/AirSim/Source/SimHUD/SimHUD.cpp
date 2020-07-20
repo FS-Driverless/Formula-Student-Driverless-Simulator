@@ -4,7 +4,6 @@
 #include "Misc/FileHelper.h"
 
 #include "Vehicles/Car/SimModeCar.h"
-#include "Vehicles/ComputerVision/SimModeComputerVision.h"
 
 #include "common/AirSimSettings.hpp"
 #include <stdexcept>

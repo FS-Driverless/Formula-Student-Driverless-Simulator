@@ -30,8 +30,6 @@ struct LidarSimpleParams {
 
     void initializeFromSettings(const AirSimSettings::LidarSetting& settings)
     {
-        std::string simmode_name = AirSimSettings::singleton().simmode_name;
-
         number_of_lasers = settings.number_of_lasers;
         range = settings.range;
         points_per_scan = settings.points_per_scan;
@@ -44,18 +42,12 @@ struct LidarSimpleParams {
         // for cars, the lidars FOV is more forward facing.
         vertical_FOV_upper = settings.vertical_FOV_upper;
         if (std::isnan(vertical_FOV_upper)) {
-            if (simmode_name == "Multirotor")
-                vertical_FOV_upper = -15;
-            else
-                vertical_FOV_upper = +10;
+            vertical_FOV_upper = +10;
         }
 
         vertical_FOV_lower = settings.vertical_FOV_lower;
         if (std::isnan(vertical_FOV_lower)) {
-            if (simmode_name == "Multirotor")
-                vertical_FOV_lower = -45;
-            else
-                vertical_FOV_lower = -10;
+            vertical_FOV_lower = -10;
         }
 
         relative_pose.position = settings.position;
@@ -64,10 +56,7 @@ struct LidarSimpleParams {
         if (std::isnan(relative_pose.position.y()))
             relative_pose.position.y() = 0;
         if (std::isnan(relative_pose.position.z())) {
-            if (simmode_name == "Multirotor")
-                relative_pose.position.z() = 0;
-            else
-                relative_pose.position.z() = -1;  // a little bit above for cars
+            relative_pose.position.z() = -1;  // a little bit above for cars
         }
 
         float pitch, roll, yaw;

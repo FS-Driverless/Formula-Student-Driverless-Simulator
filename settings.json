@@ -1,7 +1,6 @@
 {
   "SeeDocsAt": "https://fs-online.github.io/Formula-Student-Driverless-Simulator/",
   "SettingsVersion": 1.2,
-  "SimMode": "Car",
   "ViewMode": "SpringArmChase",
   "ClockSpeed": 1.0,
   "RecordUIVisible": false,
