@@ -84,9 +84,7 @@
     <ClInclude Include="include\api\VehicleConnectorBase.hpp" />
     <ClInclude Include="include\sensors\SensorFactory.hpp" />
     <ClInclude Include="include\vehicles\car\api\CarApiBase.hpp" />
-    <ClInclude Include="include\physics\DebugPhysicsBody.hpp" />
     <ClInclude Include="include\physics\PhysicsBodyWorld.hpp" />
-    <ClInclude Include="include\physics\PhysicsWorld.hpp" />
     <ClInclude Include="include\safety\CubeGeoFence.hpp" />
     <ClInclude Include="include\safety\IGeoFence.hpp" />
     <ClInclude Include="include\safety\ObstacleMap.hpp" />
@@ -99,12 +97,9 @@
     <ClInclude Include="include\safety\SphereGeoFence.hpp" />
     <ClInclude Include="include\common\Waiter.hpp" />
     <ClInclude Include="include\physics\Environment.hpp" />
-    <ClInclude Include="include\physics\FastPhysicsEngine.hpp" />
     <ClInclude Include="include\physics\Kinematics.hpp" />
     <ClInclude Include="include\physics\PhysicsBody.hpp" />
     <ClInclude Include="include\physics\PhysicsBodyVertex.hpp" />
-    <ClInclude Include="include\physics\PhysicsEngineBase.hpp" />
-    <ClInclude Include="include\physics\World.hpp" />
     <ClInclude Include="include\sensors\barometer\BarometerBase.hpp" />
     <ClInclude Include="include\sensors\barometer\BarometerSimple.hpp" />
     <ClInclude Include="include\sensors\barometer\BarometerSimpleParams.hpp" />

@@ -491,10 +491,7 @@ private:
 
         physics_engine_name = settings_json.getString("PhysicsEngineName", "");
         if (physics_engine_name == "") {
-            if (simmode_name == "Multirotor")
-                physics_engine_name = "FastPhysicsEngine";
-            else
-                physics_engine_name = "PhysX"; //this value is only informational for now
+            physics_engine_name = "PhysX"; //this value is only informational for now
         }
     }
 

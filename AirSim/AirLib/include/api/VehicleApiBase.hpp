@@ -66,17 +66,6 @@ public:
         unused(last_interval);
     }
 
-    //below APIs are used by FastPhysicsEngine
-    virtual real_T getActuation(unsigned int actuator_index) const
-    {
-        unused(actuator_index);
-        throw VehicleCommandNotImplementedException("getActuation API is not supported for this vehicle");
-    }
-    virtual size_t getActuatorCount() const
-    {
-        throw VehicleCommandNotImplementedException("getActuatorCount API is not supported for this vehicle");
-    }
-
     virtual void getStatusMessages(std::vector<std::string>& messages)
     {
         unused(messages);
