@@ -59,11 +59,6 @@ public:
         //default implementation doesn't do anything
     }
 
-    virtual UpdatableObject* getPhysicsBody()
-    {
-        return nullptr;
-    }
-
     virtual ClockBase* clock()
     {
         return ClockFactory::get();

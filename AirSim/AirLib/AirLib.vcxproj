@@ -38,7 +38,6 @@
     <ClInclude Include="include\common\Common.hpp" />
     <ClInclude Include="include\common\CommonStructs.hpp" />
     <ClInclude Include="include\common\ClockFactory.hpp" />
-    <ClInclude Include="include\common\common_utils\bitmap_image.hpp" />
     <ClInclude Include="include\common\common_utils\ColorUtils.hpp" />
     <ClInclude Include="include\common\common_utils\ctpl_stl.h" />
     <ClInclude Include="include\common\common_utils\EnumFlags.hpp" />
@@ -84,7 +83,6 @@
     <ClInclude Include="include\api\VehicleConnectorBase.hpp" />
     <ClInclude Include="include\sensors\SensorFactory.hpp" />
     <ClInclude Include="include\vehicles\car\api\CarApiBase.hpp" />
-    <ClInclude Include="include\physics\PhysicsBodyWorld.hpp" />
     <ClInclude Include="include\common\PidController.hpp" />
     <ClInclude Include="include\vehicles\car\api\CarRpcLibAdapators.hpp" />
     <ClInclude Include="include\vehicles\car\api\CarRpcLibClient.hpp" />
@@ -93,8 +91,6 @@
     <ClInclude Include="include\common\Waiter.hpp" />
     <ClInclude Include="include\physics\Environment.hpp" />
     <ClInclude Include="include\physics\Kinematics.hpp" />
-    <ClInclude Include="include\physics\PhysicsBody.hpp" />
-    <ClInclude Include="include\physics\PhysicsBodyVertex.hpp" />
     <ClInclude Include="include\sensors\barometer\BarometerBase.hpp" />
     <ClInclude Include="include\sensors\barometer\BarometerSimple.hpp" />
     <ClInclude Include="include\sensors\barometer\BarometerSimpleParams.hpp" />
