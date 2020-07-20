@@ -341,7 +341,6 @@ public: //fields
     bool enable_rpc = true;
     std::string api_server_address = "";
 	int api_port = RpcLibPort;
-    std::string physics_engine_name = "";
 
     std::string clock_type = "";
     float clock_speed = 1.0f;

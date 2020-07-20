@@ -155,7 +155,6 @@ private:
     void initializeTimeOfDay();
     void advanceTimeOfDay();
     void setSunRotation(FRotator rotation);
-    void setupPhysicsLoopPeriod();
     void showClockStats();
     void drawLidarDebugPoints();
 };

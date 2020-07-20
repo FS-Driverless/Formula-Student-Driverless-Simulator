@@ -27,8 +27,6 @@ void ASimHUD::BeginPlay()
     catch (std::exception &ex)
     {
         UAirBlueprintLib::LogMessageString("Error at startup: ", ex.what(), LogDebugLevel::Failure);
-        //FGenericPlatformMisc::PlatformInit();
-        //FGenericPlatformMisc::MessageBoxExt(EAppMsgType::Ok, TEXT("Error at Startup"), ANSI_TO_TCHAR(ex.what()));
         UAirBlueprintLib::ShowMessage(EAppMsgType::Ok, std::string("Error at startup: ") + ex.what(), "Error");
     }
 }

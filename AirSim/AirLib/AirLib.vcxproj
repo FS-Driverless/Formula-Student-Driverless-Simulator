@@ -85,16 +85,11 @@
     <ClInclude Include="include\sensors\SensorFactory.hpp" />
     <ClInclude Include="include\vehicles\car\api\CarApiBase.hpp" />
     <ClInclude Include="include\physics\PhysicsBodyWorld.hpp" />
-    <ClInclude Include="include\safety\CubeGeoFence.hpp" />
-    <ClInclude Include="include\safety\IGeoFence.hpp" />
-    <ClInclude Include="include\safety\ObstacleMap.hpp" />
     <ClInclude Include="include\common\PidController.hpp" />
     <ClInclude Include="include\vehicles\car\api\CarRpcLibAdapators.hpp" />
     <ClInclude Include="include\vehicles\car\api\CarRpcLibClient.hpp" />
     <ClInclude Include="include\vehicles\car\api\CarRpcLibServer.hpp" />
-    <ClInclude Include="include\safety\SafetyEval.hpp" />
     <ClInclude Include="include\common\Settings.hpp" />
-    <ClInclude Include="include\safety\SphereGeoFence.hpp" />
     <ClInclude Include="include\common\Waiter.hpp" />
     <ClInclude Include="include\physics\Environment.hpp" />
     <ClInclude Include="include\physics\Kinematics.hpp" />
@@ -118,8 +113,6 @@
   <ItemGroup>
     <ClCompile Include="src\api\RpcLibClientBase.cpp" />
     <ClCompile Include="src\api\RpcLibServerBase.cpp" />
-    <ClCompile Include="src\safety\ObstacleMap.cpp" />
-    <ClCompile Include="src\safety\SafetyEval.cpp" />
     <ClCompile Include="src\common\common_utils\FileSystem.cpp" />
     <ClCompile Include="src\vehicles\car\api\CarRpcLibClient.cpp" />
     <ClCompile Include="src\vehicles\car\api\CarRpcLibServer.cpp" />
