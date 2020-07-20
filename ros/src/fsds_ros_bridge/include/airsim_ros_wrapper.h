@@ -166,6 +166,7 @@ private:
     std::vector<geometry_msgs::TransformStamped> static_tf_msg_vec_;
     std::string mission_name_; // rosparam obtained from launch file
     std::string track_name_; // rosparam obtained from launch file
+    bool competition_mode_;
 
     msr::airlib::CarRpcLibClient airsim_client_;
     msr::airlib::CarRpcLibClient airsim_client_lidar_;
