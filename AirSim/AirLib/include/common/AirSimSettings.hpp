@@ -312,8 +312,6 @@ private: //fields
     float settings_version_minimum = 1.2f;
 
 public: //fields
-    std::string simmode_name = "";
-
     std::vector<SubwindowSetting> subwindow_settings;
     RecordingSetting recording_setting;
     SegmentationSetting segmentation_setting;
@@ -362,17 +360,16 @@ public: //methods
         const Settings& settings_json = Settings::singleton();
         checkSettingsVersion(settings_json);
 
-        loadCoreSimModeSettings(settings_json);
         loadDefaultCameraSetting(settings_json, camera_defaults);
-        loadCameraDirectorSetting(settings_json, camera_director, simmode_name);
+        loadCameraDirectorSetting(settings_json, camera_director);
         loadSubWindowsSettings(settings_json, subwindow_settings);
         loadViewModeSettings(settings_json);
         loadRecordingSetting(settings_json, recording_setting);
         loadSegmentationSetting(settings_json, segmentation_setting);
         loadPawnPaths(settings_json, pawn_paths);
         loadOtherSettings(settings_json);
-        loadDefaultSensorSettings(simmode_name, settings_json, sensor_defaults);
-        loadVehicleSettings(simmode_name, settings_json, vehicles);
+        loadDefaultSensorSettings(settings_json, sensor_defaults);
+        loadVehicleSettings(settings_json, vehicles);
 
         //this should be done last because it depends on type of vehicles we have
         loadClockSettings(settings_json);
@@ -469,28 +466,12 @@ private:
         return has_default;
     }
 
-    void loadCoreSimModeSettings(const Settings& settings_json)
-    {
-        //get the simmode from user if not specified
-        simmode_name = "Car";
-
-        physics_engine_name = settings_json.getString("PhysicsEngineName", "");
-        if (physics_engine_name == "") {
-            physics_engine_name = "PhysX"; //this value is only informational for now
-        }
-    }
-
     void loadViewModeSettings(const Settings& settings_json)
     {
         std::string view_mode_string = settings_json.getString("ViewMode", "");
 
         if (view_mode_string == "") {
-            if (simmode_name == "Multirotor")
-                view_mode_string = "FlyWithMe";
-            else if (simmode_name == "ComputerVision")
-                view_mode_string = "Fpv";
-            else
-                view_mode_string = "SpringArmChase";
+            view_mode_string = "SpringArmChase";
         }
 
         if (view_mode_string == "Fpv")
@@ -513,12 +494,11 @@ private:
             error_messages.push_back("ViewMode setting is not recognized: " + view_mode_string);
     }
 
-    static void loadRCSetting(const std::string& simmode_name, const Settings& settings_json, RCSettings& rc_setting)
+    static void loadRCSetting(const Settings& settings_json, RCSettings& rc_setting)
     {
         Settings rc_json;
         if (settings_json.getChild("RC", rc_json)) {
-            rc_setting.remote_control_id = rc_json.getInt("RemoteControlID",
-                simmode_name == "Multirotor" ? 0 : -1);
+            rc_setting.remote_control_id = rc_json.getInt("RemoteControlID", -1);
             rc_setting.allow_api_when_disconnected = rc_json.getBool("AllowAPIWhenDisconnected",
                 rc_setting.allow_api_when_disconnected);
         }
@@ -666,7 +646,7 @@ private:
             settings_json.getFloat("Roll", default_rot.roll));
     }
 
-    static std::unique_ptr<VehicleSetting> createVehicleSetting(const std::string& simmode_name,  const Settings& settings_json,
+    static std::unique_ptr<VehicleSetting> createVehicleSetting(const Settings& settings_json,
         const std::string vehicle_name)
     {
 
@@ -692,7 +672,7 @@ private:
         vehicle_setting->is_fpv_vehicle = settings_json.getBool("IsFpvVehicle",
             vehicle_setting->is_fpv_vehicle);
 
-        loadRCSetting(simmode_name, settings_json, vehicle_setting->rc);
+        loadRCSetting(settings_json, vehicle_setting->rc);
 
         vehicle_setting->position = createVectorSetting(settings_json, vehicle_setting->position);
         vehicle_setting->rotation = createRotationSetting(settings_json, vehicle_setting->rotation);
@@ -716,7 +696,7 @@ private:
         vehicles[physx_car_setting->vehicle_name] = std::move(physx_car_setting);
     }
 
-    static void loadVehicleSettings(const std::string& simmode_name, const Settings& settings_json,
+    static void loadVehicleSettings(const Settings& settings_json,
         std::map<std::string, std::unique_ptr<VehicleSetting>>& vehicles)
     {
         initializeVehicleSettings(vehicles);
@@ -733,7 +713,7 @@ private:
             for (const auto& key : keys) {
                 msr::airlib::Settings child;
                 vehicles_child.getChild(key, child);
-                vehicles[key] = createVehicleSetting(simmode_name, child, key);
+                vehicles[key] = createVehicleSetting(child, key);
             }
         }
     }
@@ -743,9 +723,6 @@ private:
         pawn_paths.clear();
         pawn_paths.emplace("DefaultCar",
             PawnPath("Class'/AirSim/VehicleAdv/Cars/TechnionCar/TechnionCarPawn.TechnionCarPawn_C'"));
-        pawn_paths.emplace("DefaultComputerVision",
-            PawnPath("Class'/AirSim/Blueprints/BP_ComputerVisionPawn.BP_ComputerVisionPawn_C'"));
-
     }
 
     static void loadPawnPaths(const Settings& settings_json, std::map<std::string, PawnPath>& pawn_paths)
@@ -993,7 +970,7 @@ private:
     }
 
     static void loadCameraDirectorSetting(const Settings& settings_json,
-        CameraDirectorSetting& camera_director, const std::string& simmode_name)
+        CameraDirectorSetting& camera_director)
     {
         camera_director = CameraDirectorSetting();
 
@@ -1005,20 +982,14 @@ private:
         }
 
         if (std::isnan(camera_director.follow_distance)) {
-            if (simmode_name == "Car")
-                camera_director.follow_distance = -8;
-            else
-                camera_director.follow_distance = -3;
+            camera_director.follow_distance = -8;
         }
         if (std::isnan(camera_director.position.x()))
             camera_director.position.x() = camera_director.follow_distance;
         if (std::isnan(camera_director.position.y()))
             camera_director.position.y() = 0;
         if (std::isnan(camera_director.position.z())) {
-            if (simmode_name == "Car")
-                camera_director.position.z() = -4;
-            else
-                camera_director.position.z() = -2;
+            camera_director.position.z() = -4;
         }
     }
 
@@ -1150,23 +1121,14 @@ private:
     }
 
     // creates default sensor list when none specified in json
-    static void createDefaultSensorSettings(const std::string& simmode_name,
+    static void createDefaultSensorSettings(
         std::map<std::string, std::unique_ptr<SensorSetting>>& sensors)
     {
-        if (simmode_name == "Multirotor") {
-            sensors["imu"] = createSensorSetting(SensorBase::SensorType::Imu, "imu", true);
-            sensors["gps"] = createSensorSetting(SensorBase::SensorType::Gps, "gps", true);
-        }
-        else if (simmode_name == "Car") {
-            sensors["gps"] = createSensorSetting(SensorBase::SensorType::Gps, "gps", true);
-        }
-        else {
-            // no sensors added for other modes
-        }
+        sensors["gps"] = createSensorSetting(SensorBase::SensorType::Gps, "gps", true);
     }
 
     // loads or creates default sensor list
-    static void loadDefaultSensorSettings(const std::string& simmode_name,
+    static void loadDefaultSensorSettings(
         const Settings& settings_json,
         std::map<std::string, std::unique_ptr<SensorSetting>>& sensors)
     {
@@ -1174,7 +1136,7 @@ private:
         if (settings_json.getChild("DefaultSensors", sensors_child))
             loadSensorSettings(settings_json, "DefaultSensors", sensors);
         else
-            createDefaultSensorSettings(simmode_name, sensors);
+            createDefaultSensorSettings(sensors);
     }
 };
 

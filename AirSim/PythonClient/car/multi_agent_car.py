@@ -8,9 +8,7 @@ import time
 # Use below in settings.json with blocks environment
 """
 {
-	"SettingsVersion": 1.2,
-	"SimMode": "Car",
-	
+	"SettingsVersion": 1.2,	
 	"Vehicles": {
 		"Car1": {
 		  "X": 4, "Y": 0, "Z": -2

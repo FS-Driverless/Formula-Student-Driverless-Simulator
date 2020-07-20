@@ -7,7 +7,6 @@
             "master": "http://localhost:11311 ",
             "car_settings": {
                 "SettingsVersion": 1.2,
-                "SimMode": "Car",
                 "ViewMode": "SpringArmChase",
                 "ClockSpeed": 1.0,
                 "Vehicles": {
@@ -111,7 +110,6 @@
             "master": "http://localhost:11312 ",
             "car_settings": {
                 "SettingsVersion": 1.2,
-                "SimMode": "Car",
                 "ViewMode": "SpringArmChase",
                 "ClockSpeed": 1.0,
                 "Vehicles": {
