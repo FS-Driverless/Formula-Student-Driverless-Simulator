@@ -9,7 +9,6 @@
 #include "physics/Kinematics.hpp"
 #include "physics/Environment.hpp"
 #include "common/ImageCaptureBase.hpp"
-// #include "safety/SafetyEval.hpp"
 #include "api/WorldSimApiBase.hpp"
 
 #include "common/common_utils/WindowsApisCommonPre.hpp"
@@ -762,8 +761,6 @@ public:
 
 }} //namespace
 
-// MSGPACK_ADD_ENUM(msr::airlib::SafetyEval::SafetyViolationType_);
-// MSGPACK_ADD_ENUM(msr::airlib::SafetyEval::ObsAvoidanceStrategy);
 MSGPACK_ADD_ENUM(msr::airlib::ImageCaptureBase::ImageType);
 MSGPACK_ADD_ENUM(msr::airlib::WorldSimApiBase::WeatherParameter);
 

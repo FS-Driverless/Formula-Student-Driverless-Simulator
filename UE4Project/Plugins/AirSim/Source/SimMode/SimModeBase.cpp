@@ -59,7 +59,6 @@ void ASimModeBase::BeginPlay()
 
     world_sim_api_.reset(new WorldSimApi(this));
     api_provider_.reset(new msr::airlib::ApiProvider(world_sim_api_.get()));
-    setupPhysicsLoopPeriod();
 
     setupClockSpeed();
 
@@ -244,10 +243,6 @@ void ASimModeBase::setupClockSpeed()
     else
         throw std::invalid_argument(common_utils::Utils::stringf(
             "clock_type %s is not recognized", clock_type.c_str()));
-}
-
-void ASimModeBase::setupPhysicsLoopPeriod()
-{
 }
 
 void ASimModeBase::Tick(float DeltaSeconds)
