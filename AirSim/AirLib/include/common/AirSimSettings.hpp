@@ -25,13 +25,6 @@ private:
 
 public: //types
     static constexpr int kSubwindowCount = 3; //must be >= 3 for now
-    static constexpr char const * kVehicleTypePX4 = "px4multirotor";
-	static constexpr char const * kVehicleTypeArduCopterSolo = "arducoptersolo";
-	static constexpr char const * kVehicleTypeSimpleFlight = "simpleflight";
-    static constexpr char const * kVehicleTypeArduCopter = "arducopter";
-    static constexpr char const * kVehicleTypePhysXCar = "physxcar";
-    static constexpr char const * kVehicleTypeArduRover = "ardurover";
-    static constexpr char const * kVehicleTypeComputerVision = "computervision";
 
     static constexpr char const * kVehicleInertialFrame = "VehicleInertialFrame";
     static constexpr char const * kSensorLocalFrame = "SensorLocalFrame";
@@ -215,7 +208,6 @@ public: //types
     struct VehicleSetting {
         //required
         std::string vehicle_name;
-        std::string vehicle_type;
 
         //optional
         std::string default_vehicle_state;
@@ -677,25 +669,12 @@ private:
     static std::unique_ptr<VehicleSetting> createVehicleSetting(const std::string& simmode_name,  const Settings& settings_json,
         const std::string vehicle_name)
     {
-        auto vehicle_type = Utils::toLower(settings_json.getString("VehicleType", ""));
 
         std::unique_ptr<VehicleSetting> vehicle_setting;
-        if (vehicle_type == kVehicleTypePX4 || vehicle_type == kVehicleTypeArduCopterSolo 
-            || vehicle_type == kVehicleTypeArduCopter || vehicle_type == kVehicleTypeArduRover)
-            vehicle_setting = createMavLinkVehicleSetting(settings_json);
-        //for everything else we don't need derived class yet
-        else {
-            vehicle_setting = std::unique_ptr<VehicleSetting>(new VehicleSetting());
-            if (vehicle_type == kVehicleTypeSimpleFlight) {
-                //TODO: we should be selecting remote if available else keyboard
-                //currently keyboard is not supported so use rc as default
-                vehicle_setting->rc.remote_control_id = 0;
-            }
-        }
+
+        vehicle_setting = std::unique_ptr<VehicleSetting>(new VehicleSetting());        
         vehicle_setting->vehicle_name = vehicle_name;
 
-        //required settings_json
-        vehicle_setting->vehicle_type = vehicle_type;
 
         //optional settings_json
         vehicle_setting->pawn_path = settings_json.getString("PawnPath", "");
@@ -731,26 +710,10 @@ private:
         //NOTE: Do not set defaults for vehicle type here. If you do then make sure
         //to sync code in createVehicleSetting() as well.
 
-        //create simple flight as default multirotor
-        // auto simple_flight_setting = std::unique_ptr<VehicleSetting>(new VehicleSetting());
-        // simple_flight_setting->vehicle_name = "SimpleFlight";
-        // simple_flight_setting->vehicle_type = kVehicleTypeSimpleFlight;
-        // //TODO: we should be selecting remote if available else keyboard
-        // //currently keyboard is not supported so use rc as default
-        // simple_flight_setting->rc.remote_control_id = 0;
-        // vehicles[simple_flight_setting->vehicle_name] = std::move(simple_flight_setting);
-
         //create default car vehicle
         auto physx_car_setting = std::unique_ptr<VehicleSetting>(new VehicleSetting());
         physx_car_setting->vehicle_name = "PhysXCar";
-        physx_car_setting->vehicle_type = kVehicleTypePhysXCar;
         vehicles[physx_car_setting->vehicle_name] = std::move(physx_car_setting);
-
-        //create default computer vision vehicle
-        // auto cv_setting = std::unique_ptr<VehicleSetting>(new VehicleSetting());
-        // cv_setting->vehicle_name = "ComputerVisiontest";
-        // cv_setting->vehicle_type = kVehicleTypeComputerVision;
-        // vehicles[cv_setting->vehicle_name] = std::move(cv_setting);
     }
 
     static void loadVehicleSettings(const std::string& simmode_name, const Settings& settings_json,
@@ -1066,23 +1029,6 @@ private:
         if (clock_type == "") {
             //default value
             clock_type = "ScalableClock";
-
-            //override if multirotor simmode with simple_flight
-            if (simmode_name == "Multirotor") {
-                //TODO: this won't work if simple_flight and PX4 is combined together!
-
-                //for multirotors we select steppable fixed interval clock unless we have
-                //PX4 enabled vehicle
-                clock_type = "SteppableClock";
-                for (auto const& vehicle : vehicles)
-                {
-                    if (vehicle.second->auto_create &&
-                        vehicle.second->vehicle_type == kVehicleTypePX4) {
-                        clock_type = "ScalableClock";
-                        break;
-                    }
-                }
-            }
         }
 
         clock_speed = settings_json.getFloat("ClockSpeed", 1.0f);

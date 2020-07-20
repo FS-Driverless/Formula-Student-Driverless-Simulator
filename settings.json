@@ -10,7 +10,6 @@
   },
   "Vehicles": {
     "FSCar": {
-      "VehicleType": "PhysXCar",
       "DefaultVehicleState": "",
       "EnableCollisionPassthrogh": false,
       "EnableCollisions": true,

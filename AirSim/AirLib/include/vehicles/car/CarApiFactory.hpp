@@ -15,15 +15,7 @@ public:
                                                  const Kinematics::State& state, 
                                                  const msr::airlib::GeoPoint& home_geopoint)
     {
-        if (vehicle_setting->vehicle_type == "" || //default config
-            vehicle_setting->vehicle_type == AirSimSettings::kVehicleTypePhysXCar) {
-            return std::unique_ptr<CarApiBase>(new PhysXCarApi(vehicle_setting, sensor_factory, 
-                                                               state, home_geopoint));
-        }
-        else
-            throw std::runtime_error(Utils::stringf(
-                    "Cannot create vehicle config because vehicle name '%s' is not recognized",
-                    vehicle_setting->vehicle_name.c_str()));
+        return std::unique_ptr<CarApiBase>(new PhysXCarApi(vehicle_setting, sensor_factory, state, home_geopoint));
     }
 };
 
