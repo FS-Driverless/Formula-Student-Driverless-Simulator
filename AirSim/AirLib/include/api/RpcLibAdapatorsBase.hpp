@@ -7,7 +7,6 @@
 #include "common/Common.hpp"
 #include "common/CommonStructs.hpp"
 #include "physics/Kinematics.hpp"
-#include "physics/Environment.hpp"
 #include "common/ImageCaptureBase.hpp"
 #include "api/WorldSimApiBase.hpp"
 
@@ -288,45 +287,6 @@ public:
         }
     };
 
-    struct EnvironmentState {
-        Vector3r position;
-        GeoPoint geo_point;
-
-        //these fields are computed
-        Vector3r gravity;
-        float air_pressure;
-        float temperature;
-        float air_density;
-
-        MSGPACK_DEFINE_MAP(position, geo_point, gravity, air_pressure, temperature, air_density);
-
-        EnvironmentState()
-        {}
-
-        EnvironmentState(const msr::airlib::Environment::State& s)
-        {
-            position = s.position;
-            geo_point = s.geo_point;
-            gravity = s.gravity;
-            air_pressure = s.air_pressure;
-            temperature = s.temperature;
-            air_density = s.air_density;
-        }
-
-        msr::airlib::Environment::State to() const
-        {
-            msr::airlib::Environment::State s;
-            s.position = position.to();
-            s.geo_point = geo_point.to();
-            s.gravity = gravity.to();
-            s.air_pressure = air_pressure;
-            s.temperature = temperature;
-            s.air_density = air_density;
-
-            return s;
-        }
-    };
-
     struct ImageRequest {
         std::string camera_name;
         msr::airlib::ImageCaptureBase::ImageType image_type;
@@ -532,67 +492,6 @@ public:
             d.linear_acceleration = linear_acceleration.to();
             d.sigma_vrw = sigma_vrw;
             d.sigma_arw = sigma_arw;
-
-            return d;
-        }
-    };
-
-    struct BarometerData {
-        msr::airlib::TTimePoint time_stamp;
-        msr::airlib::real_T altitude;
-        msr::airlib::real_T pressure;
-        msr::airlib::real_T qnh;
-
-        MSGPACK_DEFINE_MAP(time_stamp, altitude, pressure, qnh);
-
-        BarometerData()
-        {}
-
-        BarometerData(const msr::airlib::BarometerBase::Output& s)
-        {
-            time_stamp = s.time_stamp;
-            altitude = s.altitude;
-            pressure = s.pressure;
-            qnh = s.qnh;
-        }
-
-        msr::airlib::BarometerBase::Output to() const
-        {
-            msr::airlib::BarometerBase::Output d;
-
-            d.time_stamp = time_stamp;
-            d.altitude = altitude;
-            d.pressure = pressure;
-            d.qnh = qnh;
-
-            return d;
-        }
-    };
-
-    struct MagnetometerData {
-        msr::airlib::TTimePoint time_stamp;
-        Vector3r magnetic_field_body;
-        std::vector<float> magnetic_field_covariance; // not implemented in MagnetometerBase.hpp
-
-        MSGPACK_DEFINE_MAP(time_stamp, magnetic_field_body, magnetic_field_covariance);
-
-        MagnetometerData()
-        {}
-
-        MagnetometerData(const msr::airlib::MagnetometerBase::Output& s)
-        {
-            time_stamp = s.time_stamp;
-            magnetic_field_body = s.magnetic_field_body;
-            magnetic_field_covariance = s.magnetic_field_covariance;
-        }
-
-        msr::airlib::MagnetometerBase::Output to() const
-        {
-            msr::airlib::MagnetometerBase::Output d;
-
-            d.time_stamp = time_stamp;
-            d.magnetic_field_body = magnetic_field_body.to();
-            d.magnetic_field_covariance = magnetic_field_covariance;
 
             return d;
         }

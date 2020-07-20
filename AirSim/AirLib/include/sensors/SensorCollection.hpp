@@ -53,11 +53,11 @@ public:
         }
     }
 
-    void initialize(const Kinematics::State* kinematics, const Environment* environment)
+    void initialize(const Kinematics::State* kinematics)
     {
         for (auto& pair : sensors_) {
             for (auto& sensor : *pair.second) {
-                sensor->initialize(kinematics, environment);
+                sensor->initialize(kinematics);
             }
         }
     }

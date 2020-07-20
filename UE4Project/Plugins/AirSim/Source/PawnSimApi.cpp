@@ -23,11 +23,6 @@ void PawnSimApi::initialize()
     initial_kinematic_state.pose = getPose();
     kinematics_.reset(new Kinematics(initial_kinematic_state));
 
-    Environment::State initial_environment;
-    initial_environment.position = initial_kinematic_state.pose.position;
-    initial_environment.geo_point = params_.home_geopoint;
-    environment_.reset(new Environment(initial_environment));
-
     //initialize state
     params_.pawn->GetActorBounds(true, initial_state_.mesh_origin, initial_state_.mesh_bounds);
     initial_state_.ground_offset = FVector(0, 0, initial_state_.mesh_bounds.Z);
@@ -285,14 +280,10 @@ void PawnSimApi::resetImplementation()
     rc_data_ = msr::airlib::RCData();
     params_.pawn->SetActorLocationAndRotation(state_.start_location, state_.start_rotation, false, nullptr, ETeleportType::TeleportPhysics);
     kinematics_->reset();
-    environment_->reset();
 }
 
 void PawnSimApi::update()
 {
-    //sync environment from kinematics
-    environment_->setPosition(kinematics_->getPose().position);
-    environment_->update();
     VehicleSimApiBase::update();
 }
 
@@ -301,7 +292,6 @@ void PawnSimApi::reportState(msr::airlib::StateReporter& reporter)
     msr::airlib::VehicleSimApiBase::reportState(reporter);
 
     kinematics_->reportState(reporter);
-    environment_->reportState(reporter);
 
     // report actual location in unreal coordinates so we can plug that into the UE editor to move the drone.
     FVector unrealPosition = getUUPosition();
@@ -529,17 +519,10 @@ const msr::airlib::Kinematics::State* PawnSimApi::getGroundTruthKinematics() con
 {
     return & kinematics_->getState();
 }
-const msr::airlib::Environment* PawnSimApi::getGroundTruthEnvironment() const
-{
-    return environment_.get();
-}
+
 msr::airlib::Kinematics* PawnSimApi::getKinematics()
 {
     return kinematics_.get();
-}
-msr::airlib::Environment* PawnSimApi::getEnvironment()
-{
-    return environment_.get();
 }
 
 std::string PawnSimApi::getRecordFileLine(bool is_header_line) const

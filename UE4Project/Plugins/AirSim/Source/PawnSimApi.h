@@ -90,7 +90,6 @@ public: //implementation of VehicleSimApiBase
     virtual void updateRenderedState(float dt) override;
     virtual void updateRendering(float dt) override;
     virtual const msr::airlib::Kinematics::State* getGroundTruthKinematics() const override;
-    virtual const msr::airlib::Environment* getGroundTruthEnvironment() const override;
     virtual std::string getRecordFileLine(bool is_header_line) const override;
     virtual void reportState(msr::airlib::StateReporter& reporter) override;
 
@@ -99,7 +98,6 @@ protected: //additional interface for derived class
     void setPoseInternal(const Pose& pose, bool ignore_collision);
     virtual msr::airlib::VehicleApiBase* getVehicleApiBase() const;
     msr::airlib::Kinematics* getKinematics();
-    msr::airlib::Environment* getEnvironment();
 
 public: //Unreal specific methods
     PawnSimApi(const Params& params);
@@ -146,7 +144,6 @@ private: //methods
 private: //vars
     typedef msr::airlib::AirSimSettings AirSimSettings;
     typedef msr::airlib::Kinematics Kinematics;
-    typedef msr::airlib::Environment Environment;
 
     Params params_;
     common_utils::UniqueValueMap<std::string, APIPCamera*> cameras_;
@@ -187,7 +184,6 @@ private: //vars
     State state_, initial_state_;
 
     std::unique_ptr<msr::airlib::Kinematics> kinematics_;
-    std::unique_ptr<msr::airlib::Environment> environment_;
 
     FColor trace_color_ = FColor::Purple;
     float trace_thickness_ = 3.0f;

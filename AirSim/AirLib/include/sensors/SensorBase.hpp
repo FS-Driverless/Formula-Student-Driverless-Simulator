@@ -7,7 +7,6 @@
 #include "common/Common.hpp"
 #include "common/UpdatableObject.hpp"
 #include "common/CommonStructs.hpp"
-#include "physics/Environment.hpp"
 #include "physics/Kinematics.hpp"
 
 
@@ -21,10 +20,8 @@ namespace msr { namespace airlib {
 class SensorBase : public UpdatableObject  {
 public:
     enum class SensorType : uint {
-        Barometer = 1,
         Imu = 2,
         Gps = 3,
-        Magnetometer = 4,
         Distance = 5,
         Lidar = 6
     };
@@ -36,13 +33,11 @@ public:
 protected:
     struct GroundTruth {
         const Kinematics::State* kinematics;
-        const Environment* environment;
     };
 public:
-    virtual void initialize(const Kinematics::State* kinematics, const Environment* environment)
+    virtual void initialize(const Kinematics::State* kinematics)
     {
         ground_truth_.kinematics = kinematics;
-        ground_truth_.environment = environment;
     }
 
     const GroundTruth& getGroundTruth() const

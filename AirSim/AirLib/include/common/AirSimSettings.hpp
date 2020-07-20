@@ -184,16 +184,10 @@ public: //types
         bool enabled;
     };
 
-    struct BarometerSetting : SensorSetting {
-    };
-
     struct ImuSetting : SensorSetting {
     };
 
     struct GpsSetting : SensorSetting {
-    };
-
-    struct MagnetometerSetting : SensorSetting {
     };
 
     struct DistanceSetting : SensorSetting {
@@ -1094,14 +1088,6 @@ private:
         clock_speed = settings_json.getFloat("ClockSpeed", 1.0f);
     }
 
-    static void initializeBarometerSetting(BarometerSetting& barometer_setting, const Settings& settings_json)
-    {
-        unused(barometer_setting);
-        unused(settings_json);
-
-        //TODO: set from json as needed
-    }
-
     static void initializeImuSetting(ImuSetting& imu_setting, const Settings& settings_json)
     {
         unused(imu_setting);
@@ -1113,14 +1099,6 @@ private:
     static void initializeGpsSetting(GpsSetting& gps_setting, const Settings& settings_json)
     {
         unused(gps_setting);
-        unused(settings_json);
-
-        //TODO: set from json as needed
-    }
-
-    static void initializeMagnetometerSetting(MagnetometerSetting& magnetometer_setting, const Settings& settings_json)
-    {
-        unused(magnetometer_setting);
         unused(settings_json);
 
         //TODO: set from json as needed
@@ -1158,17 +1136,11 @@ private:
         std::unique_ptr<SensorSetting> sensor_setting;
 
         switch (sensor_type) {
-        case SensorBase::SensorType::Barometer:
-            sensor_setting = std::unique_ptr<SensorSetting>(new BarometerSetting());
-            break;
         case SensorBase::SensorType::Imu:
             sensor_setting = std::unique_ptr<SensorSetting>(new ImuSetting());
             break;
         case SensorBase::SensorType::Gps:
             sensor_setting = std::unique_ptr<SensorSetting>(new GpsSetting());
-            break;
-        case SensorBase::SensorType::Magnetometer:
-            sensor_setting = std::unique_ptr<SensorSetting>(new MagnetometerSetting());
             break;
         case SensorBase::SensorType::Distance:
             sensor_setting = std::unique_ptr<SensorSetting>(new DistanceSetting());
@@ -1192,17 +1164,11 @@ private:
         sensor_setting->enabled = settings_json.getBool("Enabled", sensor_setting->enabled);
 
         switch (sensor_setting->sensor_type) {
-        case SensorBase::SensorType::Barometer:
-            initializeBarometerSetting(*static_cast<BarometerSetting*>(sensor_setting), settings_json);
-            break;
         case SensorBase::SensorType::Imu:
             initializeImuSetting(*static_cast<ImuSetting*>(sensor_setting), settings_json);
             break;
         case SensorBase::SensorType::Gps:
             initializeGpsSetting(*static_cast<GpsSetting*>(sensor_setting), settings_json);
-            break;
-        case SensorBase::SensorType::Magnetometer:
-            initializeMagnetometerSetting(*static_cast<MagnetometerSetting*>(sensor_setting), settings_json);
             break;
         case SensorBase::SensorType::Distance:
             initializeDistanceSetting(*static_cast<DistanceSetting*>(sensor_setting), settings_json);
@@ -1243,9 +1209,7 @@ private:
     {
         if (simmode_name == "Multirotor") {
             sensors["imu"] = createSensorSetting(SensorBase::SensorType::Imu, "imu", true);
-            sensors["magnetometer"] = createSensorSetting(SensorBase::SensorType::Magnetometer, "magnetometer", true);
             sensors["gps"] = createSensorSetting(SensorBase::SensorType::Gps, "gps", true);
-            sensors["barometer"] = createSensorSetting(SensorBase::SensorType::Barometer, "barometer", true);
         }
         else if (simmode_name == "Car") {
             sensors["gps"] = createSensorSetting(SensorBase::SensorType::Gps, "gps", true);
