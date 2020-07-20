@@ -73,8 +73,6 @@
     <ClInclude Include="include\common\GeodeticConverter.hpp" />
     <ClInclude Include="include\common\LogFileWriter.hpp" />
     <ClInclude Include="include\common\ScalableClock.hpp" />
-    <ClInclude Include="include\common\StateReporter.hpp" />
-    <ClInclude Include="include\common\StateReporterWrapper.hpp" />
     <ClInclude Include="include\common\UpdatableContainer.hpp" />
     <ClInclude Include="include\common\UpdatableObject.hpp" />
     <ClInclude Include="include\common\VectorMath.hpp" />

@@ -5,7 +5,6 @@
 #define airsim_core_UpdatableObject_hpp
 
 #include "common/Common.hpp"
-#include "StateReporter.hpp"
 #include "ClockFactory.hpp"
 
 namespace msr { namespace airlib {
@@ -52,12 +51,6 @@ public:
     }
 
     virtual ~UpdatableObject() = default;
-
-    virtual void reportState(StateReporter& reporter)
-    {
-        unused(reporter);
-        //default implementation doesn't do anything
-    }
 
     virtual ClockBase* clock()
     {

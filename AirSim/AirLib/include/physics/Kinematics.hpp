@@ -52,18 +52,7 @@ public:
         //needs to take in to account state of other objects as well,
         //for example, if collision occurs
     }
-    virtual void reportState(StateReporter& reporter) override
-    {
-        //call base
-        UpdatableObject::reportState(reporter);
 
-        reporter.writeValue("Position", current_.pose.position);
-        reporter.writeValue("Orientation", current_.pose.orientation);
-        reporter.writeValue("Lin-Vel", current_.twist.linear);
-        reporter.writeValue("Lin-Accl", current_.accelerations.linear);
-        reporter.writeValue("Ang-Vel", current_.twist.angular);
-        reporter.writeValue("Ang-Accl", current_.accelerations.angular);
-    }
     //*** End: UpdatableState implementation ***//
 
     const Pose& getPose() const

@@ -17,7 +17,6 @@ class CarPawnSimApi : public PawnSimApi
 {
 public:
     typedef msr::airlib::Utils Utils;
-    typedef msr::airlib::StateReporter StateReporter;
     typedef msr::airlib::UpdatableObject UpdatableObject;
     typedef msr::airlib::Pose Pose;
 

@@ -47,9 +47,6 @@ void ASimModeBase::BeginPlay()
 {
     Super::BeginPlay();
 
-    debug_reporter_.initialize(false);
-    debug_reporter_.reset();
-
     //get player start
     //this must be done from within actor otherwise we don't get player start
     APlayerController* player_controller = this->GetWorld()->GetFirstPlayerController();
@@ -254,8 +251,6 @@ void ASimModeBase::Tick(float DeltaSeconds)
 
     showClockStats();
 
-    updateDebugReport(debug_reporter_);
-
     drawLidarDebugPoints();
 
     Super::Tick(DeltaSeconds);
@@ -313,11 +308,6 @@ void ASimModeBase::reset()
             api->reset();
         }
     }, true);
-}
-
-std::string ASimModeBase::getDebugReport()
-{
-    return debug_reporter_.getOutput();
 }
 
 void ASimModeBase::setupInputBindings()
@@ -419,34 +409,6 @@ void ASimModeBase::stopApiServer()
 bool ASimModeBase::isApiServerStarted()
 {
     return api_server_ != nullptr;
-}
-
-void ASimModeBase::updateDebugReport(msr::airlib::StateReporterWrapper& debug_reporter)
-{
-    debug_reporter.update();
-    debug_reporter.setEnable(EnableReport);
-
-    if (debug_reporter.canReport()) {
-        debug_reporter.clearReport();
-
-        for (auto& api : getApiProvider()->getVehicleSimApis()) {
-            PawnSimApi* vehicle_sim_api = static_cast<PawnSimApi*>(api);
-            msr::airlib::StateReporter& reporter = *debug_reporter.getReporter();
-            std::string vehicle_name = vehicle_sim_api->getVehicleName();
-
-            reporter.writeHeading(std::string("Vehicle: ").append(
-                vehicle_name == "" ? "(default)" : vehicle_name));
-
-            const msr::airlib::Kinematics::State* kinematics = vehicle_sim_api->getGroundTruthKinematics();
-
-            reporter.writeValue("Position", kinematics->pose.position);
-            reporter.writeValue("Orientation", kinematics->pose.orientation);
-            reporter.writeValue("Lin-Vel", kinematics->twist.linear);
-            reporter.writeValue("Lin-Accl", kinematics->accelerations.linear);
-            reporter.writeValue("Ang-Vel", kinematics->twist.angular);
-            reporter.writeValue("Ang-Accl", kinematics->accelerations.angular);
-        }
-    }
 }
 
 FRotator ASimModeBase::toFRotator(const msr::airlib::AirSimSettings::Rotation& rotation, const FRotator& default_val)

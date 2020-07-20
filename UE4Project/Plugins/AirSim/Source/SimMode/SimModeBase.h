@@ -13,7 +13,6 @@
 #include "api/ApiServerBase.hpp"
 #include "api/ApiProvider.hpp"
 #include "PawnSimApi.h"
-#include "common/StateReporterWrapper.hpp"
 
 #include "SimModeBase.generated.h"
 
@@ -27,9 +26,6 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Refs")
     ACameraDirector* CameraDirector;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Debugging")
-    bool EnableReport = false;
 
     UFUNCTION(BlueprintCallable, Category = "Recording")
     bool toggleRecording();
@@ -53,7 +49,6 @@ public:
 
     //additional overridable methods
     virtual void reset();
-    virtual std::string getDebugReport();
     virtual ECameraDirectorMode getInitialViewMode() const;
 
     virtual bool isPaused() const;
@@ -103,7 +98,6 @@ protected: //optional overrides
     virtual void setupClockSpeed();
     void initializeCameraDirector(const FTransform& camera_transform, float follow_distance);
     void checkVehicleReady(); //checks if vehicle is available to use
-    virtual void updateDebugReport(msr::airlib::StateReporterWrapper& debug_reporter);
 
 protected: //Utility methods for derived classes
     virtual const msr::airlib::AirSimSettings& getSettings() const;
@@ -142,7 +136,6 @@ private:
     std::unique_ptr<msr::airlib::WorldSimApiBase> world_sim_api_;
     std::unique_ptr<msr::airlib::ApiProvider> api_provider_;
     std::unique_ptr<msr::airlib::ApiServerBase> api_server_;
-    msr::airlib::StateReporterWrapper debug_reporter_;
 
     std::vector<std::unique_ptr<msr::airlib::VehicleSimApiBase>> vehicle_sim_apis_;
 

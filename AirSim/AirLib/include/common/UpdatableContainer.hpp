@@ -45,12 +45,6 @@ public:
             member->update();
     }
 
-    virtual void reportState(StateReporter& reporter) override
-    {
-        for (TUpdatableObjectPtr& member : members_)
-            member->reportState(reporter);
-    }
-
     //*** End: UpdatableState implementation ***//
 
     virtual ~UpdatableContainer() = default;
