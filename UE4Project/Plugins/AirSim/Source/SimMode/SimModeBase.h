@@ -87,7 +87,6 @@ protected: //must overrides
 
     virtual std::unique_ptr<msr::airlib::ApiServerBase> createApiServer() const;
     virtual void getExistingVehiclePawns(TArray<AActor*>& pawns) const;
-    virtual bool isVehicleTypeSupported(const std::string& vehicle_type) const;
     virtual std::string getVehiclePawnPathName(const AirSimSettings::VehicleSetting& vehicle_setting) const;
     virtual PawnEvents* getVehiclePawnEvents(APawn* pawn) const;
     virtual const common_utils::UniqueValueMap<std::string, APIPCamera*> getVehiclePawnCameras(APawn* pawn) const;

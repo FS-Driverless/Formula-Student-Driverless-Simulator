@@ -12,7 +12,6 @@
                 "ClockSpeed": 1.0,
                 "Vehicles": {
                     "FSCar": {
-                    "VehicleType": "PhysXCar",
                     "DefaultVehicleState": "",
                     "EnableCollisionPassthrogh": false,
                     "EnableCollisions": true,
@@ -117,7 +116,6 @@
                 "ClockSpeed": 1.0,
                 "Vehicles": {
                     "FSCar": {
-                    "VehicleType": "PhysXCar",
                     "DefaultVehicleState": "",
                     "EnableCollisionPassthrogh": false,
                     "EnableCollisions": true,

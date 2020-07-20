@@ -32,11 +32,6 @@ void ASimModeComputerVision::getExistingVehiclePawns(TArray<AActor*>& pawns) con
     UAirBlueprintLib::FindAllActor<TVehiclePawn>(this, pawns);
 }
 
-bool ASimModeComputerVision::isVehicleTypeSupported(const std::string& vehicle_type) const
-{
-    return vehicle_type == msr::airlib::AirSimSettings::kVehicleTypeComputerVision;
-}
-
 std::string ASimModeComputerVision::getVehiclePawnPathName(const AirSimSettings::VehicleSetting& vehicle_setting) const
 {
     //decide which derived BP to use

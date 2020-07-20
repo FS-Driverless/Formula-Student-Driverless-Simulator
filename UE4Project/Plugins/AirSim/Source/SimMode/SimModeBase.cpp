@@ -487,8 +487,7 @@ void ASimModeBase::setupVehiclesAndCamera()
         {
             //if vehicle is of type for derived SimMode and auto creatable
             const auto& vehicle_setting = *vehicle_setting_pair.second;
-            if (vehicle_setting.auto_create &&
-                isVehicleTypeSupported(vehicle_setting.vehicle_type)) {
+            if (vehicle_setting.auto_create) {
 
                 //compute initial pose
                 FVector spawn_position = uu_origin.GetLocation();
@@ -558,12 +557,6 @@ void ASimModeBase::setupVehiclesAndCamera()
 void ASimModeBase::getExistingVehiclePawns(TArray<AActor*>& pawns) const
 {
     //derived class should override this method to retrieve types of pawns they support
-}
-
-bool ASimModeBase::isVehicleTypeSupported(const std::string& vehicle_type) const
-{
-    //derived class should override this method to retrieve types of pawns they support
-    return false;
 }
 
 std::string ASimModeBase::getVehiclePawnPathName(const AirSimSettings::VehicleSetting& vehicle_setting) const
