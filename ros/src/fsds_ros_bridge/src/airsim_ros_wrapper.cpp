@@ -24,7 +24,7 @@ void AirsimROSWrapper::initialize_airsim()
         airsim_client_.confirmConnection();
         airsim_client_lidar_.confirmConnection();
 
-        airsim_client_.enableApiControl(true, vehicle_name);
+        airsim_client_.enableApiControl(false, vehicle_name);
         airsim_client_.armDisarm(true, vehicle_name); 
     }
     catch (rpc::rpc_error& e)
@@ -415,7 +415,11 @@ void AirsimROSWrapper::odom_cb(const ros::TimerEvent& event)
         }
 
         nav_msgs::Odometry message_enu = this->get_odom_msg_from_airsim_state(state);
-        if(AirsimROSWrapper::equalsMessage(message_enu, message_enu_previous_)) {
+
+        // the wrapper requests vehicle position faster then unreal simulates.
+        // We shouldn't be sending duplicate messages as explained in #156
+        // So we only publish a message if it changes, making an exception for when vehicle is not moving.
+        if(AirsimROSWrapper::equalsMessage(message_enu, message_enu_previous_) && !(message_enu.twist.twist.linear.x == 0 && message_enu.twist.twist.linear.y == 0 && message_enu.twist.twist.linear.z == 0)) {
             return;
         }
         message_enu_previous_ = message_enu;
