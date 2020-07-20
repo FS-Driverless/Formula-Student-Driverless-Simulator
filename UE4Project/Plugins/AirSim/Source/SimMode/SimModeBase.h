@@ -27,8 +27,6 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Refs")
     ACameraDirector* CameraDirector;
 
-    UFUNCTION(BlueprintCallable, Category = "Recording")
-    bool toggleRecording();
 
     UFUNCTION(BlueprintCallable, Category = "Api")
     void startApiServer();
@@ -38,7 +36,6 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Api")
     bool isApiServerStarted();
-
 
 public:	
     // Sets default values for this actor's properties
@@ -57,10 +54,6 @@ public:
 
     virtual void setTimeOfDay(bool is_enabled, const std::string& start_datetime, bool is_start_datetime_dst,
         float celestial_clock_speed, float update_interval_secs, bool move_sun);
-
-    virtual void startRecording();
-    virtual void stopRecording();
-    virtual bool isRecording() const;
 
     const NedTransform& getGlobalNedTransform();
 

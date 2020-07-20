@@ -32,29 +32,6 @@ void CarPawnSimApi::createVehicleApi(ACarPawn* pawn, const msr::airlib::GeoPoint
     pawn_api_ = std::unique_ptr<CarPawnApi>(new CarPawnApi(pawn, getGroundTruthKinematics(), vehicle_api_.get()));
 }
 
-std::string CarPawnSimApi::getRecordFileLine(bool is_header_line) const
-{
-    std::string common_line = PawnSimApi::getRecordFileLine(is_header_line);
-    if (is_header_line) {
-        return common_line +
-               "Throttle\tSteering\tBrake\tGear\tHandbrake\tRPM\tSpeed\t";
-    }
-
-    const msr::airlib::Kinematics::State* kinematics = getGroundTruthKinematics();
-    const auto state = pawn_api_->getCarState();
-
-    common_line
-        .append(std::to_string(current_controls_.throttle)).append("\t")
-        .append(std::to_string(current_controls_.steering)).append("\t")
-        .append(std::to_string(current_controls_.brake)).append("\t")
-        .append(std::to_string(state.gear)).append("\t")
-        .append(std::to_string(state.handbrake)).append("\t")
-        .append(std::to_string(state.rpm)).append("\t")
-        .append(std::to_string(state.speed)).append("\t")
-        ;
-
-    return common_line;
-}
 
 //these are called on render ticks
 void CarPawnSimApi::updateRenderedState(float dt)

@@ -1,5 +1,4 @@
 #include "SimModeBase.h"
-#include "Recording/RecordingThread.h"
 #include "Misc/MessageDialog.h"
 #include "Misc/EngineVersion.h"
 #include "Runtime/Launch/Resources/Version.h"
@@ -70,7 +69,6 @@ void ASimModeBase::BeginPlay()
         tod_setting.celestial_clock_speed, tod_setting.update_interval_secs, tod_setting.move_sun);
 
     setupVehiclesAndCamera();
-    FRecordingThread::init();
 
     UWorld* World = GetWorld();
     if (World)
@@ -116,8 +114,6 @@ void ASimModeBase::setStencilIDs()
 
 void ASimModeBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-    FRecordingThread::stopRecording();
-    FRecordingThread::killRecording();
     world_sim_api_.reset();
     api_provider_.reset();
     api_server_.reset();
@@ -244,9 +240,6 @@ void ASimModeBase::setupClockSpeed()
 
 void ASimModeBase::Tick(float DeltaSeconds)
 {
-    if (isRecording())
-        ++record_tick_count;
-
     advanceTimeOfDay();
 
     showClockStats();
@@ -348,33 +341,6 @@ void ASimModeBase::initializeCameraDirector(const FTransform& camera_transform, 
     else {
         CameraDirector = static_cast<ACameraDirector*>(camera_dirs[0]);
     }
-}
-
-bool ASimModeBase::toggleRecording()
-{
-    if (isRecording())
-        stopRecording();
-    else
-        startRecording();
-
-    return isRecording();
-}
-
-void ASimModeBase::stopRecording()
-{
-    FRecordingThread::stopRecording();
-}
-
-void ASimModeBase::startRecording()
-{
-    FRecordingThread::startRecording(getVehicleSimApi()->getImageCapture(),
-        getVehicleSimApi()->getGroundTruthKinematics(), getSettings().recording_setting ,
-        getVehicleSimApi());
-}
-
-bool ASimModeBase::isRecording() const
-{
-    return FRecordingThread::isRecording();
 }
 
 //API server start/stop
