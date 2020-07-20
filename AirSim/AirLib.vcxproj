@@ -92,7 +92,6 @@
     <ClCompile Include="unreal\plugins\airsim\source\simjoystick\DirectInputJoyStick.cpp" />
     <ClCompile Include="unreal\plugins\airsim\source\simjoystick\SimJoyStick.cpp" />
     <ClCompile Include="unreal\plugins\airsim\source\simmode\SimModeBase.cpp" />
-    <ClCompile Include="unreal\plugins\airsim\source\simmode\SimModeWorldBase.cpp" />
     <ClCompile Include="Unreal\Plugins\AirSim\Source\TextureShuffleActor.cpp" />
     <ClCompile Include="Unreal\Plugins\AirSim\Source\UnrealImageCapture.cpp" />
     <ClCompile Include="Unreal\Plugins\AirSim\Source\UnrealSensors\UnrealDistanceSensor.cpp" />
@@ -127,7 +126,6 @@
     <ClInclude Include="unreal\plugins\airsim\source\simjoystick\DirectInputJoystick.h" />
     <ClInclude Include="unreal\plugins\airsim\source\simjoystick\SimJoyStick.h" />
     <ClInclude Include="unreal\plugins\airsim\source\simmode\SimModeBase.h" />
-    <ClInclude Include="unreal\plugins\airsim\source\simmode\SimModeWorldBase.h" />
     <ClInclude Include="Unreal\Plugins\AirSim\Source\UnrealImageCapture.h" />
     <ClInclude Include="Unreal\Plugins\AirSim\Source\UnrealSensors\UnrealDistanceSensor.h" />
     <ClInclude Include="Unreal\Plugins\AirSim\Source\UnrealSensors\UnrealLidarSensor.h" />
