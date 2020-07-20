@@ -143,11 +143,6 @@ public:
         getSensors().update();
     }
 
-    void reportState(StateReporter &reporter) override
-    {
-        getSensors().reportState(reporter);
-    }
-
     // sensor helpers
     virtual const SensorCollection &getSensors() const override
     {

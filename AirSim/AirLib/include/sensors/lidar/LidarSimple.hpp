@@ -44,17 +44,7 @@ public:
             updateOutput();
         }
     }
-
-    virtual void reportState(StateReporter& reporter) override
-    {
-        //call base
-        LidarBase::reportState(reporter);
-
-        reporter.writeValue("Lidar-NumLasers", params_.number_of_lasers);
-        reporter.writeValue("Lidar-Range", params_.range);
-        reporter.writeValue("Lidar-FOV-Upper", params_.vertical_FOV_upper);
-        reporter.writeValue("Lidar-FOV-Lower", params_.vertical_FOV_lower);
-    }
+    
     //*** End: UpdatableState implementation ***//
 
     virtual ~LidarSimple() = default;

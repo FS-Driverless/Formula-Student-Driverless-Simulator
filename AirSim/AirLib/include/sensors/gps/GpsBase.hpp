@@ -90,16 +90,6 @@ public: //types
 
 
 public:
-    virtual void reportState(StateReporter& reporter) override
-    {
-        //call base
-        UpdatableObject::reportState(reporter);
-
-        reporter.writeValue("GPS-Loc", output_.gnss.geo_point);
-        reporter.writeValue("GPS-Vel", output_.gnss.velocity);
-        reporter.writeValue("GPS-Eph", output_.gnss.eph);
-        reporter.writeValue("GPS-Epv", output_.gnss.epv);
-    }
 
     const Output& getOutput() const
     {

@@ -27,13 +27,6 @@ public: //types
 
 
 public:
-    virtual void reportState(StateReporter& reporter) override
-    {
-        //call base
-        UpdatableObject::reportState(reporter);
-
-        reporter.writeValue("Dist-Curr", output_.distance);
-    }
 
     const Output& getOutput() const
     {

@@ -287,16 +287,6 @@ void PawnSimApi::update()
     VehicleSimApiBase::update();
 }
 
-void PawnSimApi::reportState(msr::airlib::StateReporter& reporter)
-{
-    msr::airlib::VehicleSimApiBase::reportState(reporter);
-
-    kinematics_->reportState(reporter);
-
-    // report actual location in unreal coordinates so we can plug that into the UE editor to move the drone.
-    FVector unrealPosition = getUUPosition();
-    reporter.writeValue("unreal pos", Vector3r(unrealPosition.X, unrealPosition.Y, unrealPosition.Z));
-}
 
 //void playBack()
 //{

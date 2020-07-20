@@ -29,14 +29,6 @@ public: //types
 
 
 public:
-    virtual void reportState(StateReporter& reporter) override
-    {
-        //call base
-        UpdatableObject::reportState(reporter);
-
-        reporter.writeValue("IMU-Ang", output_.angular_velocity);
-        reporter.writeValue("IMU-Lin", output_.linear_acceleration);
-    }
 
     const Output& getOutput() const
     {

@@ -83,13 +83,6 @@ public:
             pair.second->update();
         }
     }
-
-    virtual void reportState(StateReporter& reporter) override
-    {
-        for (auto& pair : sensors_) {
-            pair.second->reportState(reporter);
-        }
-    }
     //*** End: UpdatableState implementation ***//
 
 private:
