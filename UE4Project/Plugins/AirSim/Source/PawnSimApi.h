@@ -90,7 +90,6 @@ public: //implementation of VehicleSimApiBase
     virtual void updateRenderedState(float dt) override;
     virtual void updateRendering(float dt) override;
     virtual const msr::airlib::Kinematics::State* getGroundTruthKinematics() const override;
-    virtual std::string getRecordFileLine(bool is_header_line) const override;
 
 protected: //additional interface for derived class
     virtual void pawnTick(float dt);

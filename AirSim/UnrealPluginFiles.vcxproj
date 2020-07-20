@@ -84,8 +84,6 @@
     <ClCompile Include="Unreal\Plugins\AirSim\Source\Multirotor\SimModeWorldMultirotor.cpp" />
     <ClCompile Include="unreal\plugins\airsim\source\NedTransform.cpp" />
     <ClCompile Include="unreal\plugins\airsim\source\PIPCamera.cpp" />
-    <ClCompile Include="unreal\plugins\airsim\source\recording\RecordingFile.cpp" />
-    <ClCompile Include="unreal\plugins\airsim\source\recording\RecordingThread.cpp" />
     <ClCompile Include="unreal\plugins\airsim\source\RenderRequest.cpp" />
     <ClCompile Include="unreal\plugins\airsim\source\simhud\SimHUD.cpp" />
     <ClCompile Include="unreal\plugins\airsim\source\simhud\SimHUDWidget.cpp" />
@@ -118,8 +116,6 @@
     <ClInclude Include="unreal\plugins\airsim\source\multirotor\SimModeWorldMultiRotor.h" />
     <ClInclude Include="unreal\plugins\airsim\source\NedTransform.h" />
     <ClInclude Include="unreal\plugins\airsim\source\PIPCamera.h" />
-    <ClInclude Include="unreal\plugins\airsim\source\recording\RecordingFile.h" />
-    <ClInclude Include="unreal\plugins\airsim\source\recording\RecordingThread.h" />
     <ClInclude Include="unreal\plugins\airsim\source\RenderRequest.h" />
     <ClInclude Include="unreal\plugins\airsim\source\simhud\SimHUD.h" />
     <ClInclude Include="unreal\plugins\airsim\source\simhud\SimHUDWidget.h" />
