@@ -415,6 +415,10 @@ void AirsimROSWrapper::odom_cb(const ros::TimerEvent& event)
         }
 
         nav_msgs::Odometry message_enu = this->get_odom_msg_from_airsim_state(state);
+        if(message_enu_previous_ && AirsimROSWrapper::equalsMessage(message_enu, *message_enu_previous_)) {
+            return;
+        }
+        message_enu_previous_ = &message_enu;
         {
             ros_bridge::ROSMsgCounter counter(&odom_pub_statistics);
 
@@ -749,4 +753,20 @@ void AirsimROSWrapper::finished_signal_cb(fs_msgs::FinishedSignalConstPtr msg)
 
     curl_easy_cleanup(curl);
     curl_global_cleanup();
+}
+
+bool AirsimROSWrapper::equalsMessage(const nav_msgs::Odometry& a, const nav_msgs::Odometry& b) {
+    return a.pose.pose.position.x == b.pose.pose.position.x &&
+        a.pose.pose.position.y == b.pose.pose.position.y &&
+        a.pose.pose.position.z == b.pose.pose.position.z &&
+        a.pose.pose.orientation.x == b.pose.pose.orientation.x &&
+        a.pose.pose.orientation.y == b.pose.pose.orientation.y &&
+        a.pose.pose.orientation.z == b.pose.pose.orientation.z &&
+        a.pose.pose.orientation.w == b.pose.pose.orientation.w &&
+        a.twist.twist.linear.x == b.twist.twist.linear.x &&
+        a.twist.twist.linear.y == b.twist.twist.linear.y &&
+        a.twist.twist.linear.z == b.twist.twist.linear.z &&
+        a.twist.twist.angular.x == b.twist.twist.angular.x &&
+        a.twist.twist.angular.y == b.twist.twist.angular.y &&
+        a.twist.twist.angular.z == b.twist.twist.angular.z;
 }

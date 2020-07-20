@@ -153,6 +153,8 @@ private:
     sensor_msgs::NavSatFix get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
     sensor_msgs::Imu get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data);
     sensor_msgs::PointCloud2 get_lidar_msg_from_airsim(const std::string &lidar_name, const msr::airlib::LidarData& lidar_data) const;
+    static bool equalsMessage(const nav_msgs::Odometry& a, const nav_msgs::Odometry& b);
+
 
 private:
     ros::ServiceServer reset_srvr_;
@@ -169,6 +171,8 @@ private:
 
     msr::airlib::CarRpcLibClient airsim_client_;
     msr::airlib::CarRpcLibClient airsim_client_lidar_;
+
+    nav_msgs::Odometry* message_enu_previous_;
 
     ros::NodeHandle nh_;
     ros::NodeHandle nh_private_;
