@@ -7,7 +7,6 @@ STRICT_MODE_OFF //todo what does this do?
     STRICT_MODE_ON
 
 #include "statistics.h"
-#include "airsim_settings_parser.h"
 #include "common/AirSimSettings.hpp"
 #include "common/common_utils/FileSystem.hpp"
 #include "ros/ros.h"
@@ -156,6 +155,8 @@ private:
     static bool equalsMessage(const nav_msgs::Odometry& a, const nav_msgs::Odometry& b);
 
 
+    std::string readTextFromFile(std::string settingsFilepath);
+
 private:
     ros::ServiceServer reset_srvr_;
 
@@ -163,11 +164,11 @@ private:
     CarApiBase::Point2D car_start_pos; // In Unreal coordinates
 
 
-    AirSimSettingsParser airsim_settings_parser_;
     std::vector<std::string> lidar_names_vec_;
     std::vector<geometry_msgs::TransformStamped> static_tf_msg_vec_;
     std::string mission_name_; // rosparam obtained from launch file
     std::string track_name_; // rosparam obtained from launch file
+    bool competition_mode_;
 
     msr::airlib::CarRpcLibClient airsim_client_;
     msr::airlib::CarRpcLibClient airsim_client_lidar_;
