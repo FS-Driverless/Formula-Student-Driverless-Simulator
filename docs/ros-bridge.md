@@ -95,7 +95,8 @@ Transforms to the ground truth are disabled because this would take away the sta
 - `/fsds/ros_bridge/competition_mode` [bool]   
   Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
   Default: `false`, during competition set to `true`
-  If competition mode is enabled, the `testing_only` topics won't be available.
+  If competition mode is enabled, the `testing_only` topics won't be available. 
+  Also, input from keyboard and joystick to unreal will no longer controll the vehicle.
 
 ## Visualization
 This package contains some useful launch and config files which will help you in visualizing the data being streamed through the above topics.

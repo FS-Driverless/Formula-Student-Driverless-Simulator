@@ -23,9 +23,6 @@ void AirsimROSWrapper::initialize_airsim()
     {
         airsim_client_.confirmConnection();
         airsim_client_lidar_.confirmConnection();
-
-        airsim_client_.enableApiControl(false, vehicle_name);
-        airsim_client_.armDisarm(true, vehicle_name); 
     }
     catch (rpc::rpc_error& e)
     {
@@ -120,6 +117,9 @@ void AirsimROSWrapper::initialize_ros()
 
     statistics_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::statistics_timer_cb, this);
     go_signal_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::go_signal_timer_cb, this);
+
+    airsim_client_.enableApiControl(competition_mode_, vehicle_name);
+    airsim_client_.armDisarm(true, vehicle_name); 
 
     if(!competition_mode_) {
         publish_track();
