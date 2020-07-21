@@ -1,7 +1,6 @@
 #include "CarPawnSimApi.h"
 #include "AirBlueprintLib.h"
 #include "UnrealSensors/UnrealSensorFactory.h"
-#include "CarPawnApi.h"
 #include <exception>
 
 #include "Engine/World.h"
@@ -15,6 +14,8 @@
 #include "common/EarthUtils.hpp"
 
 #include "DrawDebugHelpers.h"
+#include "PhysXVehicleManager.h"
+
 
 using namespace msr::airlib;
 
@@ -66,7 +67,8 @@ void CarPawnSimApi::createVehicleApi(ACarPawn* pawn, const msr::airlib::GeoPoint
     std::shared_ptr<UnrealSensorFactory> sensor_factory = std::make_shared<UnrealSensorFactory>(getPawn(), &getNedTransform());
 
     vehicle_api_ = std::unique_ptr<CarApiBase>(new PhysXCarApi(getVehicleSetting(), sensor_factory, *getGroundTruthKinematics(), home_geopoint));
-    pawn_api_ = std::unique_ptr<CarPawnApi>(new CarPawnApi(pawn, getGroundTruthKinematics(), vehicle_api_.get()));
+    pawn_ = pawn;
+    movement_ = pawn->GetVehicleMovement();
 }
 
 
@@ -157,12 +159,12 @@ void CarPawnSimApi::updateCarControls()
     if (!vehicle_api_->isApiControlEnabled()) {
         //all car controls from anywhere must be routed through API component
         vehicle_api_->setCarControls(current_controls_);
-        pawn_api_->updateMovement(current_controls_);
+        updateMovement(current_controls_);
     }
     else {
         UAirBlueprintLib::LogMessageString("Control Mode: ", "API", LogDebugLevel::Informational);
         current_controls_ = vehicle_api_->getCarControls();
-        pawn_api_->updateMovement(current_controls_);
+        updateMovement(current_controls_);
     }
     UAirBlueprintLib::LogMessageString("Accel: ", std::to_string(current_controls_.throttle), LogDebugLevel::Informational);
     UAirBlueprintLib::LogMessageString("Break: ", std::to_string(current_controls_.brake), LogDebugLevel::Informational);
@@ -178,14 +180,15 @@ void CarPawnSimApi::resetImplementation()
     rc_data_ = msr::airlib::RCData();
     params_.pawn->SetActorLocationAndRotation(state_.start_location, state_.start_rotation, false, nullptr, ETeleportType::TeleportPhysics);
     kinematics_->reset();
-    pawn_api_->reset();
+    resetPawn();
 }
 
 //physics tick
 void CarPawnSimApi::update()
 {
     VehicleSimApiBase::update();
-    pawn_api_->update();
+    vehicle_api_->updateCarState(getPawnCarState());
+    vehicle_api_->update();
 }
 
 //*** End: UpdatableState implementation ***//
@@ -594,4 +597,69 @@ const msr::airlib::Kinematics::State* CarPawnSimApi::getGroundTruthKinematics() 
 msr::airlib::Kinematics* CarPawnSimApi::getKinematics()
 {
     return kinematics_.get();
+}
+
+void CarPawnSimApi::updateMovement(const msr::airlib::CarApiBase::CarControls& controls)
+{
+    last_controls_ = controls;
+
+    if (!controls.is_manual_gear && movement_->GetTargetGear() < 0)
+        movement_->SetTargetGear(0, true); //in auto gear we must have gear >= 0
+    if (controls.is_manual_gear && movement_->GetTargetGear() != controls.manual_gear)
+        movement_->SetTargetGear(controls.manual_gear, controls.gear_immediate);
+
+    movement_->SetThrottleInput(controls.throttle);
+    movement_->SetSteeringInput(controls.steering);
+    movement_->SetBrakeInput(controls.brake);
+    movement_->SetHandbrakeInput(controls.handbrake);
+    movement_->SetUseAutoGears(!controls.is_manual_gear);
+}
+
+
+void CarPawnSimApi::resetPawn()
+{
+    vehicle_api_->reset();
+
+    last_controls_ = msr::airlib::CarApiBase::CarControls();
+    auto phys_comps = UAirBlueprintLib::getPhysicsComponents(pawn_);
+    UAirBlueprintLib::RunCommandOnGameThread([this, &phys_comps]() {
+        for (auto* phys_comp : phys_comps) {
+            phys_comp->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
+            phys_comp->SetPhysicsLinearVelocity(FVector::ZeroVector);
+            phys_comp->SetSimulatePhysics(false);
+        }
+        movement_->ResetMoveState();
+        movement_->SetActive(false);
+        movement_->SetActive(true, true);
+        vehicle_api_->setCarControls(msr::airlib::CarApiBase::CarControls());
+        updateMovement(msr::airlib::CarApiBase::CarControls());
+
+        auto pv = movement_->PVehicle;
+        if (pv) {
+            pv->mWheelsDynData.setToRestState();
+        }
+        auto pvd = movement_->PVehicleDrive;
+        if (pvd) {
+            pvd->mDriveDynData.setToRestState();
+        }
+    }, true);
+
+    UAirBlueprintLib::RunCommandOnGameThread([this, &phys_comps]() {
+        for (auto* phys_comp : phys_comps)
+            phys_comp->SetSimulatePhysics(true);
+    }, true);
+}
+
+msr::airlib::CarApiBase::CarState CarPawnSimApi::getPawnCarState() const
+{
+    msr::airlib::CarApiBase::CarState state(
+        movement_->GetForwardSpeed() / 100, //cm/s -> m/s
+        movement_->GetCurrentGear(),
+        movement_->GetEngineRotationSpeed(),
+        movement_->GetEngineMaxRotationSpeed(),
+        last_controls_.handbrake,
+        *getGroundTruthKinematics(),
+        msr::airlib::ClockFactory::get()->nowNanos()
+    );
+    return state;
 }
