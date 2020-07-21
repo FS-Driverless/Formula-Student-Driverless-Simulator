@@ -12,7 +12,7 @@
 #include "common/ClockFactory.hpp"
 #include "api/ApiServerBase.hpp"
 #include "api/ApiProvider.hpp"
-#include "PawnSimApi.h"
+#include "Vehicles/Car/CarPawnSimApi.h"
 
 #include "SimModeBase.generated.h"
 
@@ -61,13 +61,13 @@ public:
     {
         return api_provider_.get();
     }
-    const PawnSimApi* getVehicleSimApi(const std::string& vehicle_name = "") const
+    const CarPawnSimApi* getVehicleSimApi(const std::string& vehicle_name = "") const
     {
-        return static_cast<PawnSimApi*>(api_provider_->getVehicleSimApi(vehicle_name));
+        return static_cast<CarPawnSimApi*>(api_provider_->getVehicleSimApi(vehicle_name));
     }
-    PawnSimApi* getVehicleSimApi(const std::string& vehicle_name = "")
+    CarPawnSimApi* getVehicleSimApi(const std::string& vehicle_name = "")
     {
-        return static_cast<PawnSimApi*>(api_provider_->getVehicleSimApi(vehicle_name));
+        return static_cast<CarPawnSimApi*>(api_provider_->getVehicleSimApi(vehicle_name));
     }
 
 protected: //must overrides
@@ -79,10 +79,10 @@ protected: //must overrides
     virtual PawnEvents* getVehiclePawnEvents(APawn* pawn) const;
     virtual const common_utils::UniqueValueMap<std::string, APIPCamera*> getVehiclePawnCameras(APawn* pawn) const;
     virtual void initializeVehiclePawn(APawn* pawn);
-    virtual std::unique_ptr<PawnSimApi> createVehicleSimApi(
-        const PawnSimApi::Params& pawn_sim_api_params) const;
-    virtual msr::airlib::VehicleApiBase* getVehicleApi(const PawnSimApi::Params& pawn_sim_api_params,
-        const PawnSimApi* sim_api) const;
+    virtual std::unique_ptr<CarPawnSimApi> createVehicleSimApi(
+        const CarPawnSimApi::Params& pawn_sim_api_params) const;
+    virtual msr::airlib::VehicleApiBase* getVehicleApi(const CarPawnSimApi::Params& pawn_sim_api_params,
+        const CarPawnSimApi* sim_api) const;
 
 protected: //optional overrides
     virtual void setupVehiclesAndCamera();
