@@ -28,7 +28,7 @@ void CarPawnSimApi::createVehicleApi(ACarPawn* pawn, const msr::airlib::GeoPoint
     //create vehicle params
     std::shared_ptr<UnrealSensorFactory> sensor_factory = std::make_shared<UnrealSensorFactory>(getPawn(), &getNedTransform());
 
-    vehicle_api_ = CarApiFactory::createApi(getVehicleSetting(), sensor_factory, (*getGroundTruthKinematics()), home_geopoint);
+    vehicle_api_ = std::unique_ptr<CarApiBase>(new PhysXCarApi(getVehicleSetting(), sensor_factory, *getGroundTruthKinematics(), home_geopoint));
     pawn_api_ = std::unique_ptr<CarPawnApi>(new CarPawnApi(pawn, getGroundTruthKinematics(), vehicle_api_.get()));
 }
 
