@@ -2,6 +2,8 @@
 import roslaunch
 from os.path import expanduser
 import json 
+import signal
+import sys
 
 CAMERA_FRAMERATE = 30
 AIRSIM_HOSTIP = "localhost"
@@ -16,6 +18,16 @@ def args(argsmap):
 
 with open(expanduser("~")+'/Formula-Student-Driverless-Simulator/settings.json', 'r') as file:
     settings = json.load(file)
+
+if(len(settings['Vehicles']['FSCar']['Cameras']) == 0):
+  # when no camera's are available, ros launch would exit immediatly and thus failing. 
+  # And this process failing will take down the parent launchfile as well. 
+  # So we just let the process wait for a signal.
+  def signal_handler(sig, frame):
+    sys.exit(0)
+  signal.signal(signal.SIGINT, signal_handler)
+  print('No cameras to launch. Camera ros bridge launcher waiting for exit signal')
+  signal.pause()
 
 launch = roslaunch.scriptapi.ROSLaunch()
 launch.start()
