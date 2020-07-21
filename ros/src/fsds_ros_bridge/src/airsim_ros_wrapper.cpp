@@ -10,6 +10,24 @@ AirsimROSWrapper::AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHan
                                                                                                                                airsim_client_(host_ip),
                                                                                                                                airsim_client_lidar_(host_ip)
 {
+    try {
+        auto settingsText = this->readTextFromFile(common_utils::FileSystem::getConfigFilePath());
+        msr::airlib::AirSimSettings::initializeSettings(settingsText);
+
+        msr::airlib::AirSimSettings::singleton().load();
+        for (const auto &warning : msr::airlib::AirSimSettings::singleton().warning_messages)
+        {
+            std::cout << "Configuration warning: " << warning;
+        }
+        for (const auto &error : msr::airlib::AirSimSettings::singleton().error_messages)
+        {
+            std::cout << "Configuration error: " << error;
+        }
+    }
+    catch (std::exception &ex) {
+        throw std::invalid_argument(std::string("Failed loading settings.json.") + ex.what());
+    }
+    
     initialize_statistics();
     initialize_ros();
 
@@ -23,9 +41,6 @@ void AirsimROSWrapper::initialize_airsim()
     {
         airsim_client_.confirmConnection();
         airsim_client_lidar_.confirmConnection();
-
-        airsim_client_.enableApiControl(false, vehicle_name);
-        airsim_client_.armDisarm(true, vehicle_name); 
     }
     catch (rpc::rpc_error& e)
     {
@@ -101,6 +116,7 @@ void AirsimROSWrapper::initialize_ros()
     double publish_static_tf_every_n_sec;
     nh_private_.getParam("mission_name", mission_name_);
     nh_private_.getParam("track_name", track_name_);
+    nh_private_.getParam("competition_mode", competition_mode_);
     nh_private_.getParam("update_odom_every_n_sec", update_odom_every_n_sec);
     nh_private_.getParam("update_gps_every_n_sec", update_gps_every_n_sec);
     nh_private_.getParam("update_imu_every_n_sec", update_imu_every_n_sec);
@@ -108,7 +124,11 @@ void AirsimROSWrapper::initialize_ros()
     
 
     create_ros_pubs_from_settings_json();
-    odom_update_timer_ = nh_private_.createTimer(ros::Duration(update_odom_every_n_sec), &AirsimROSWrapper::odom_cb, this);
+
+    if(!competition_mode_) {
+        odom_update_timer_ = nh_private_.createTimer(ros::Duration(update_odom_every_n_sec), &AirsimROSWrapper::odom_cb, this);
+    }
+
     gps_update_timer_ = nh_private_.createTimer(ros::Duration(update_gps_every_n_sec), &AirsimROSWrapper::gps_timer_cb, this);
     imu_update_timer_ = nh_private_.createTimer(ros::Duration(update_imu_every_n_sec), &AirsimROSWrapper::imu_timer_cb, this);
     statictf_timer_ = nh_private_.createTimer(ros::Duration(publish_static_tf_every_n_sec), &AirsimROSWrapper::statictf_cb, this);
@@ -116,7 +136,12 @@ void AirsimROSWrapper::initialize_ros()
     statistics_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::statistics_timer_cb, this);
     go_signal_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::go_signal_timer_cb, this);
 
-    publish_track();
+    airsim_client_.enableApiControl(competition_mode_, vehicle_name);
+    airsim_client_.armDisarm(true, vehicle_name); 
+
+    if(!competition_mode_) {
+        publish_track();
+    }
 }
 
 // XmlRpc::XmlRpcValue can't be const in this case
@@ -144,13 +169,15 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         set_nans_to_zeros_in_pose(*vehicle_setting);
 
         vehicle_name = curr_vehicle_name;
-        odom_pub = nh_.advertise<nav_msgs::Odometry>("testing_only/odom", 10);
         global_gps_pub = nh_.advertise<sensor_msgs::NavSatFix>("gps", 10);
         imu_pub = nh_.advertise<sensor_msgs::Imu>("imu", 10);
         control_cmd_sub = nh_.subscribe<fs_msgs::ControlCommand>("control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, vehicle_name));
-        // TODO: remove track publisher at competition
-        track_pub = nh_.advertise<fs_msgs::Track>("testing_only/track", 10, true);
 
+        if(!competition_mode_) {
+            odom_pub = nh_.advertise<nav_msgs::Odometry>("testing_only/odom", 10);
+            track_pub = nh_.advertise<fs_msgs::Track>("testing_only/track", 10, true);
+        }
+        
         // iterate over camera map std::map<std::string, CameraSetting> cameras;
         for (auto& curr_camera_elem : vehicle_setting->cameras)
         {
@@ -773,4 +800,16 @@ bool AirsimROSWrapper::equalsMessage(const nav_msgs::Odometry& a, const nav_msgs
         a.twist.twist.angular.x == b.twist.twist.angular.x &&
         a.twist.twist.angular.y == b.twist.twist.angular.y &&
         a.twist.twist.angular.z == b.twist.twist.angular.z;
+}
+
+std::string AirsimROSWrapper::readTextFromFile(std::string settingsFilepath) 	
+{	
+    // check if path exists	
+    if(!std::ifstream(settingsFilepath.c_str()).good()){
+        throw std::invalid_argument("settings.json file does not exist. Ensure the ~/Formula-Student-Driverless-Simulator/settings.json file exists.");
+    }
+    std::ifstream ifs(settingsFilepath);	
+    std::stringstream buffer;	
+    buffer << ifs.rdbuf();		
+    return buffer.str();
 }

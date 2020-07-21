@@ -43,7 +43,7 @@ AAirSimGameMode::AAirSimGameMode(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer)
 {
     DefaultPawnClass = nullptr;
-    static ConstructorHelpers::FClassFinder<APawn> AirsimSpectatorPawn(TEXT("/AirSim/AirsimSpectatorPawn"));
+    static ConstructorHelpers::FClassFinder<APawn> AirsimSpectatorPawn(TEXT("/AirSim/Blueprints/AirsimSpectatorPawn"));
     SpectatorClass = AirsimSpectatorPawn.Class;
     // DefaultPawnClass = ASpectatorPawn::StaticClass();
     HUDClass = ASimHUD::StaticClass();
@@ -61,12 +61,6 @@ void AAirSimGameMode::BeginPlay()
         UAirBlueprintLib::OnBeginPlay();
         initializeSettings();
         setUnrealEngineSettings();
-        createSimMode();
-
-        if (simmode)
-            simmode->startApiServer();
-        else
-            UAirBlueprintLib::LogMessageString("Error at startup: ", "simmode could not be created", LogDebugLevel::Failure);
     }
     catch (std::exception &ex)
     {
@@ -79,15 +73,6 @@ void AAirSimGameMode::BeginPlay()
 
 void AAirSimGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-    if (simmode)
-        simmode->stopApiServer();
-
-    if (simmode)
-    {
-        simmode->Destroy();
-        simmode = nullptr;
-    }
-
     UAirBlueprintLib::OnEndPlay();
 
     Super::EndPlay(EndPlayReason);
@@ -97,20 +82,13 @@ void AAirSimGameMode::PostLogin(APlayerController * newPlayer) {
     newPlayer->StartSpectatingOnly();
 }
 
-std::string AAirSimGameMode::getSimModeFromUser()
-{
-    return "Car";
-}
-
 void AAirSimGameMode::initializeSettings()
 {
     std::string settingsText;
-    if (getSettingsText(settingsText))
-        msr::airlib::AirSimSettings::initializeSettings(settingsText);
-    else
-       msr::airlib:: AirSimSettings::createDefaultSettingsFile();
+    readSettingsTextFromFile(FString(common_utils::FileSystem::getConfigFilePath().c_str()), settingsText);
+    msr::airlib::AirSimSettings::initializeSettings(settingsText);
 
-    msr::airlib::AirSimSettings::singleton().load(std::bind(&AAirSimGameMode::getSimModeFromUser, this));
+    msr::airlib::AirSimSettings::singleton().load();
     for (const auto &warning : msr::airlib::AirSimSettings::singleton().warning_messages)
     {
         UAirBlueprintLib::LogMessageString(warning, "", LogDebugLevel::Failure);
@@ -121,64 +99,22 @@ void AAirSimGameMode::initializeSettings()
     }
 }
 
-
-// Attempts to parse the settings text from one of multiple locations.
-// First, check the command line for settings provided via "-s" or "--settings" arguments
-// Next, check the default settings file location
-// If the settings file cannot be read, throw an exception
-
-bool AAirSimGameMode::getSettingsText(std::string &settingsText)
+void AAirSimGameMode::readSettingsTextFromFile(FString settingsFilepath, std::string &settingsText)
 {
-    return (getSettingsTextFromCommandLine(settingsText) || readSettingsTextFromFile(FString(common_utils::FileSystem::getConfigFilePath().c_str()), settingsText));
-}
-
-// Attempts to parse the settings text from the command line
-// Looks for the flag "--settings". If it exists, settingsText will be set to the value.
-// Example: AirSim.exe -s '{"foo" : "bar"}' -> settingsText will be set to {"foo": "bar"}
-// Returns true if the argument is present, false otherwise.
-bool AAirSimGameMode::getSettingsTextFromCommandLine(std::string &settingsText)
-{
-
-    bool found = false;
-    FString settingsTextFString;
-    const TCHAR *commandLineArgs = FCommandLine::Get();
-
-    if (FParse::Param(commandLineArgs, TEXT("-settings")))
-    {
-        FString commandLineArgsFString = FString(commandLineArgs);
-        int idx = commandLineArgsFString.Find(TEXT("-settings"));
-        FString settingsJsonFString = commandLineArgsFString.RightChop(idx + 10);
-        if (FParse::QuotedString(*settingsJsonFString, settingsTextFString))
-        {
-            settingsText = std::string(TCHAR_TO_UTF8(*settingsTextFString));
-            found = true;
-        }
+    if (!FPaths::FileExists(settingsFilepath)) {
+        throw std::runtime_error("settings.json file does not exist. Ensure the ~/Formula-Student-Driverless-Simulator/settings.json file exists.");
     }
-
-    return found;
-}
-
-bool AAirSimGameMode::readSettingsTextFromFile(FString settingsFilepath, std::string &settingsText)
-{
-
-    bool found = FPaths::FileExists(settingsFilepath);
-    if (found)
+    FString settingsTextFStr;
+    if (FFileHelper::LoadFileToString(settingsTextFStr, *settingsFilepath))
     {
-        FString settingsTextFStr;
-        bool readSuccessful = FFileHelper::LoadFileToString(settingsTextFStr, *settingsFilepath);
-        if (readSuccessful)
-        {
-            UAirBlueprintLib::LogMessageString("Loaded settings from ", TCHAR_TO_UTF8(*settingsFilepath), LogDebugLevel::Informational);
-            settingsText = TCHAR_TO_UTF8(*settingsTextFStr);
-        }
-        else
-        {
-            UAirBlueprintLib::LogMessageString("Cannot read file ", TCHAR_TO_UTF8(*settingsFilepath), LogDebugLevel::Failure);
-            throw std::runtime_error("Cannot read settings file.");
-        }
+        UAirBlueprintLib::LogMessageString("Loaded settings from ", TCHAR_TO_UTF8(*settingsFilepath), LogDebugLevel::Informational);
+        settingsText = TCHAR_TO_UTF8(*settingsTextFStr);
     }
-
-    return found;
+    else
+    {
+        UAirBlueprintLib::LogMessageString("Cannot read settings.json file ", TCHAR_TO_UTF8(*settingsFilepath), LogDebugLevel::Failure);
+        throw std::runtime_error("Failed reading settings.json. Ensure the ~/Formula-Student-Driverless-Simulator/settings.json file is correct.");
+    }
 }
 
 void AAirSimGameMode::setUnrealEngineSettings()
@@ -198,14 +134,4 @@ void AAirSimGameMode::setUnrealEngineSettings()
     //we get error that GameThread has timed out after 30 sec waiting on render thread
     static const auto render_timeout_var = IConsoleManager::Get().FindConsoleVariable(TEXT("g.TimeoutForBlockOnRenderFence"));
     render_timeout_var->Set(300000);
-}
-
-void AAirSimGameMode::createSimMode()
-{
-    FActorSpawnParameters simmode_spawn_params;
-    simmode_spawn_params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-    //spawn at origin. We will use this to do global NED transforms, for ex, non-vehicle objects in environment
-
-    simmode = this->GetWorld()->SpawnActor<ASimModeCar>(FVector::ZeroVector, FRotator::ZeroRotator, simmode_spawn_params);
 }
