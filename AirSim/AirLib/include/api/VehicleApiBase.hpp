@@ -55,14 +55,6 @@ public:
         return true;
     }
 
-    //if vehicle supports it, call this method to send
-    //kinematics and other info to somewhere (ex. log viewer, file, cloud etc)
-    virtual void sendTelemetry(float last_interval = -1)
-    {
-        //no default action
-        unused(last_interval);
-    }
-
     virtual void getStatusMessages(std::vector<std::string>& messages)
     {
         unused(messages);

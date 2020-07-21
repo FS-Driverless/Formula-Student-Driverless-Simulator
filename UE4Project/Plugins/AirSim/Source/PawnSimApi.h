@@ -87,12 +87,12 @@ public: //implementation of VehicleSimApiBase
     virtual void toggleTrace() override;
     virtual void setTraceLine(const std::vector<float>& color_rgba, float thickness) override;
 
-    virtual void updateRenderedState(float dt) override;
     virtual void updateRendering(float dt) override;
     virtual const msr::airlib::Kinematics::State* getGroundTruthKinematics() const override;
 
 protected: //additional interface for derived class
     virtual void pawnTick(float dt);
+    virtual void pawnSubtick(float dt);
     void setPoseInternal(const Pose& pose, bool ignore_collision);
     virtual msr::airlib::VehicleApiBase* getVehicleApiBase() const;
     msr::airlib::Kinematics* getKinematics();
@@ -185,4 +185,8 @@ private: //vars
 
     FColor trace_color_ = FColor::Purple;
     float trace_thickness_ = 3.0f;
+    int tickcount = 0;
+    float tickfrequencyavg = 0;
+    float tickmaxhz = 0;
+    float tickminhz = 999;
 };

@@ -32,18 +32,6 @@ void CarPawnSimApi::createVehicleApi(ACarPawn* pawn, const msr::airlib::GeoPoint
     pawn_api_ = std::unique_ptr<CarPawnApi>(new CarPawnApi(pawn, getGroundTruthKinematics(), vehicle_api_.get()));
 }
 
-
-//these are called on render ticks
-void CarPawnSimApi::updateRenderedState(float dt)
-{
-    PawnSimApi::updateRenderedState(dt);
-
-    vehicle_api_->getStatusMessages(vehicle_api_messages_);
-
-    //TODO: do we need this for cars?
-    if (getRemoteControlID() >= 0)
-        vehicle_api_->setRCData(getRCData());
-}
 void CarPawnSimApi::updateRendering(float dt)
 {
     PawnSimApi::updateRendering(dt);
@@ -52,13 +40,6 @@ void CarPawnSimApi::updateRendering(float dt)
 
     for (auto i = 0; i < vehicle_api_messages_.size(); ++i) {
         UAirBlueprintLib::LogMessage(FString(vehicle_api_messages_[i].c_str()), TEXT(""), LogDebugLevel::Success, 30);
-    }
-
-    try {
-        vehicle_api_->sendTelemetry(dt);
-    }
-    catch (std::exception &e) {
-        UAirBlueprintLib::LogMessage(FString(e.what()), TEXT(""), LogDebugLevel::Failure, 30);
     }
 }
 
@@ -134,7 +115,6 @@ void CarPawnSimApi::updateCarControls()
     UAirBlueprintLib::LogMessageString("Break: ", std::to_string(current_controls_.brake), LogDebugLevel::Informational);
     UAirBlueprintLib::LogMessageString("Steering: ", std::to_string(current_controls_.steering), LogDebugLevel::Informational);
     UAirBlueprintLib::LogMessageString("Handbrake: ", std::to_string(current_controls_.handbrake), LogDebugLevel::Informational);
-    UAirBlueprintLib::LogMessageString("Target Gear: ", std::to_string(current_controls_.manual_gear), LogDebugLevel::Informational);
 }
 
 //*** Start: UpdatableState implementation ***//

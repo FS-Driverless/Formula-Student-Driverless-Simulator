@@ -10,3 +10,9 @@ PawnEvents::PawnTickSignal& PawnEvents::getPawnTickSignal()
     return pawn_tick_signal_;
 
 }
+
+PawnEvents::PawnTickSignal& PawnEvents::getPawnSubtickSignal()
+{
+    return pawn_subtick_signal_;
+
+}

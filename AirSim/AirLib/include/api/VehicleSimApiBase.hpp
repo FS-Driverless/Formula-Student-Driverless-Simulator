@@ -21,14 +21,7 @@ public:
         UpdatableObject::update();
     }
 
-    //this method is called at every render tick when we want to transfer state from
-    //physics engine to render engine. As physics engine is halted while 
-    //this happens, this method should do minimal processing
-    virtual void updateRenderedState(float dt)
-    {
-        unused(dt);
-        //derived class should override if needed
-    }
+
     //called when render changes are required at every render tick
     virtual void updateRendering(float dt)
     {

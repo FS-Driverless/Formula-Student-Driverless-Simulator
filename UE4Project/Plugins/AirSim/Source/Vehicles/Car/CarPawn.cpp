@@ -76,6 +76,8 @@ ACarPawn::ACarPawn()
     last_gear_display_color_ = FColor(255, 255, 255, 255);
 
     is_low_friction_ = false;
+
+    OnCalculateCustomPhysics.BindUObject(this, &ACarPawn::SubstepTick);
 }
 
 void ACarPawn::setupVehicleMovementComponent()
@@ -230,6 +232,7 @@ void ACarPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void ACarPawn::Tick(float Delta)
 {
     Super::Tick(Delta);
+     UE_LOG(LogTemp, Warning, TEXT("Tick %f"), Delta );
 
     // update physics material
     updatePhysicsMaterial();
@@ -241,8 +244,18 @@ void ACarPawn::Tick(float Delta)
     updateInCarHUD();
     
     pawn_events_.getPawnTickSignal().emit(Delta);
+
+    UPrimitiveComponent* UpdatedPrimitive = Cast<UPrimitiveComponent>(GetVehicleMovementComponent()->UpdatedComponent);
+
+    UpdatedPrimitive->GetBodyInstance()->AddCustomPhysics(OnCalculateCustomPhysics);
 }
 
+void ACarPawn::SubstepTick(float DeltaTime, FBodyInstance* BodyInstance)
+{
+    pawn_events_.getPawnSubtickSignal().emit(DeltaTime);
+    UE_LOG(LogTemp, Warning, TEXT("Substep Tick %f"), DeltaTime );
+}
+ 
 void ACarPawn::BeginPlay()
 {
     Super::BeginPlay();

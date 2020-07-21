@@ -47,6 +47,7 @@ void PawnSimApi::initialize()
     //add listener for pawn's collision event
     params_.pawn_events->getCollisionSignal().connect_member(this, &PawnSimApi::onCollision);
     params_.pawn_events->getPawnTickSignal().connect_member(this, &PawnSimApi::pawnTick);
+    params_.pawn_events->getPawnSubtickSignal().connect_member(this, &PawnSimApi::pawnSubtick);
 }
 
 void PawnSimApi::setStartPosition(const FVector& position, const FRotator& rotator)
@@ -69,8 +70,20 @@ void PawnSimApi::pawnTick(float dt)
     //for custom physics engine, this method should be overridden and update should be
     //called from every physics tick
     update();
-    updateRenderedState(dt);
+    updateKinematics(dt);
     updateRendering(dt);
+    if(tickcount >= 10) {
+        UAirBlueprintLib::LogMessage(TEXT("Delta: "), FString::SanitizeFloat(tickfrequencyavg / tickcount) + " " + FString::SanitizeFloat(tickmaxhz) + " " + FString::SanitizeFloat(tickminhz), LogDebugLevel::Informational);
+        tickcount = 0;
+        tickfrequencyavg = 0;
+        tickmaxhz = 0;
+        tickminhz = 999;
+    }
+}
+
+void PawnSimApi::pawnSubtick(float dt)
+{
+    updateKinematics(dt);
 }
 
 void PawnSimApi::detectUsbRc()
@@ -477,6 +490,15 @@ bool PawnSimApi::canTeleportWhileMove()  const
 void PawnSimApi::updateKinematics(float dt)
 {
     //update kinematics from pawn's movement instead of physics engine
+    float hz = 1/dt;
+    tickfrequencyavg += hz;
+    if(hz > tickmaxhz) {
+        tickmaxhz = hz;
+    }
+    if(hz < tickminhz) {
+        tickminhz = hz;
+    }
+    tickcount++;
 
     auto next_kinematics = kinematics_->getState();
 
@@ -490,13 +512,6 @@ void PawnSimApi::updateKinematics(float dt)
 
     kinematics_->setState(next_kinematics);
     kinematics_->update();
-}
-
-void PawnSimApi::updateRenderedState(float dt)
-{
-    //by default we update kinematics from UE pawn
-    //if SimMod uses its own physics engine then this should be overriden
-    updateKinematics(dt);
 }
 
 void PawnSimApi::updateRendering(float dt)
