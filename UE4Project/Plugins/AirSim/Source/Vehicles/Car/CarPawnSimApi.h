@@ -84,6 +84,7 @@ public:
         const msr::airlib::CarApiBase::CarControls& keyboard_controls, UWheeledVehicleMovementComponent* movement);
 
     virtual void update() override;
+    void updatePawn();
 
     virtual void updateRenderedState(float dt) override;
     virtual void updateRendering(float dt) override;
@@ -110,6 +111,7 @@ public:
     int getCameraCount();
 
     APawn* getPawn();
+    msr::airlib::CarApiBase::CarState getPawnCarState() const;
 
     FVector getUUPosition() const;
     FRotator getUUOrientation() const;
@@ -133,8 +135,12 @@ public:
 
     virtual const msr::airlib::Kinematics::State* getGroundTruthKinematics() const override;
 
+    void updateMovement(const msr::airlib::CarApiBase::CarControls& controls);
+
+
 protected:
     virtual void resetImplementation() override;
+    void resetPawn();
     msr::airlib::Kinematics* getKinematics();
     virtual void pawnTick(float dt);
     void setPoseInternal(const Pose& pose, bool ignore_collision);
@@ -161,7 +167,10 @@ private:
     Params params_;
 
     std::unique_ptr<msr::airlib::CarApiBase> vehicle_api_;
-    std::unique_ptr<CarPawnApi> pawn_api_;
+    ACarPawn* pawn_;
+    UWheeledVehicleMovementComponent* movement_;
+    msr::airlib::CarApiBase::CarControls last_controls_;
+    const msr::airlib::Kinematics::State* pawn_kinematics_;
     std::vector<std::string> vehicle_api_messages_;
 
     //storing reference from pawn
