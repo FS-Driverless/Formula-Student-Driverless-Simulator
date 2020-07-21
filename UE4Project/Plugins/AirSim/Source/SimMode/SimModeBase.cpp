@@ -455,7 +455,7 @@ void ASimModeBase::setupVehiclesAndCamera()
             const auto& home_geopoint= msr::airlib::EarthUtils::nedToGeodetic(pawn_ned_pos, getSettings().origin_geopoint);
             const std::string vehicle_name = std::string(TCHAR_TO_UTF8(*(vehicle_pawn->GetName())));
 
-            PawnSimApi::Params pawn_sim_api_params(vehicle_pawn, &getGlobalNedTransform(),
+            CarPawnSimApi::Params pawn_sim_api_params(vehicle_pawn, &getGlobalNedTransform(),
                 getVehiclePawnEvents(vehicle_pawn), getVehiclePawnCameras(vehicle_pawn), pip_camera_class, 
                 home_geopoint, vehicle_name);
 
@@ -511,17 +511,17 @@ void ASimModeBase::initializeVehiclePawn(APawn* pawn)
     unused(pawn);
     //derived class should override this method to retrieve types of pawns they support
 }
-std::unique_ptr<PawnSimApi> ASimModeBase::createVehicleSimApi(
-    const PawnSimApi::Params& pawn_sim_api_params) const
+std::unique_ptr<CarPawnSimApi> ASimModeBase::createVehicleSimApi(
+    const CarPawnSimApi::Params& pawn_sim_api_params) const
 {
     unused(pawn_sim_api_params);
-    auto sim_api = std::unique_ptr<PawnSimApi>();
+    auto sim_api = std::unique_ptr<CarPawnSimApi>();
     sim_api->initialize();
 
     return sim_api;
 }
-msr::airlib::VehicleApiBase* ASimModeBase::getVehicleApi(const PawnSimApi::Params& pawn_sim_api_params,
-    const PawnSimApi* sim_api) const
+msr::airlib::VehicleApiBase* ASimModeBase::getVehicleApi(const CarPawnSimApi::Params& pawn_sim_api_params,
+    const CarPawnSimApi* sim_api) const
 {
     //derived class should override this method to retrieve types of pawns they support
     return nullptr;
@@ -535,7 +535,7 @@ void ASimModeBase::drawLidarDebugPoints()
         return;
 
     for (auto& sim_api : getApiProvider()->getVehicleSimApis()) {
-        PawnSimApi* pawn_sim_api = static_cast<PawnSimApi*>(sim_api);
+        CarPawnSimApi* pawn_sim_api = static_cast<CarPawnSimApi*>(sim_api);
         std::string vehicle_name = pawn_sim_api->getVehicleName();
 
         msr::airlib::VehicleApiBase* api = getApiProvider()->getVehicleApi(vehicle_name);
