@@ -134,7 +134,7 @@ class Operator:
         procenv['ROS_MASTER_URI'] = self.team['master']
 
         # Launch ROS bridge
-        self.interface_process = subprocess.Popen('ubuntu1804 run source /opt/ros/melodic/setup.bash; source ~/Formula-Student-Driverless-Simulator/ros/devel/setup.bash; roslaunch fsds_ros_bridge fsds_ros_bridge.launch mission_name:='+self.mission+' access_token:='+self.access_token, creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
+        self.interface_process = subprocess.Popen('ubuntu1804 run source /opt/ros/melodic/setup.bash; source ~/Formula-Student-Driverless-Simulator/ros/devel/setup.bash; roslaunch fsds_ros_bridge fsds_ros_bridge.launch competition_mode:=true mission_name:='+self.mission+' access_token:='+self.access_token, creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
 
         # Start referee state listener
         self.referee_state_listener() 
