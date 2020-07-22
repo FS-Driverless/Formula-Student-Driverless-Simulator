@@ -142,6 +142,8 @@ protected:
     void resetPawn();
     msr::airlib::Kinematics* getKinematics();
     virtual void pawnTick(float dt);
+    virtual void pawnSubtick(float dt);
+
     void setPoseInternal(const Pose& pose, bool ignore_collision);
 
 private:
