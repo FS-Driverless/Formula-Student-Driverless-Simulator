@@ -3,6 +3,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "Camera/CameraComponent.h"
+#include "WheeledVehicle.h"
 
 #include "AirBlueprintLib.h"
 #include "common/ClockFactory.hpp"
@@ -32,9 +33,9 @@ void PawnSimApi::initialize()
 
     setStartPosition(getUUPosition(), getUUOrientation());
 
-    initial_state_.tracing_enabled = getVehicleSetting()->enable_trace;
-    initial_state_.collisions_enabled = getVehicleSetting()->enable_collisions;
-    initial_state_.passthrough_enabled = getVehicleSetting()->enable_collision_passthrough;
+    // initial_state_.tracing_enabled = getVehicleSetting()->enable_trace;
+    // initial_state_.collisions_enabled = getVehicleSetting()->enable_collisions;
+    // initial_state_.passthrough_enabled = getVehicleSetting()->enable_collision_passthrough;
 
     initial_state_.collision_info = CollisionInfo();
 
@@ -83,7 +84,9 @@ void PawnSimApi::pawnTick(float dt)
 
 void PawnSimApi::pawnSubtick(float dt)
 {
+    update();
     updateKinematics(dt);
+    updateRendering(dt);
 }
 
 void PawnSimApi::detectUsbRc()
@@ -327,7 +330,11 @@ PawnSimApi::CollisionInfo PawnSimApi::getCollisionInfo() const
 
 FVector PawnSimApi::getUUPosition() const
 {
-    return params_.pawn->GetActorLocation(); // - state_.mesh_origin
+    auto carpawn = Cast<ACarPawn>(params_.pawn);
+    auto x = carpawn->GetVehicleMovementComponent();
+    UPrimitiveComponent* UpdatedPrimitive = Cast<UPrimitiveComponent>(x->UpdatedComponent);
+
+    return UpdatedPrimitive->GetBodyInstance()->GetUnrealWorldTransform_AssumesLocked().GetLocation(); // - state_.mesh_origin
 }
 
 FRotator PawnSimApi::getUUOrientation() const
@@ -509,6 +516,9 @@ void PawnSimApi::updateKinematics(float dt)
 
     next_kinematics.accelerations.linear = (next_kinematics.twist.linear - kinematics_->getTwist().linear) / dt;
     next_kinematics.accelerations.angular = (next_kinematics.twist.angular - kinematics_->getTwist().angular) / dt;
+
+    UE_LOG(LogTemp, Warning, TEXT("updateKinematics %f %f"), dt, next_kinematics.pose.position.x() );
+
 
     kinematics_->setState(next_kinematics);
     kinematics_->update();

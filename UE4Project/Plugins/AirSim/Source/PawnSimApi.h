@@ -18,6 +18,7 @@
 #include "api/VehicleApiBase.hpp"
 #include "api/VehicleSimApiBase.hpp"
 #include "common/common_utils/UniqueValueMap.hpp"
+#include "Vehicles/Car/CarPawn.h"
 
 
 #include "PawnEvents.h"
