@@ -163,6 +163,12 @@ UWheeledVehicleMovementComponent* ACarPawn::getVehicleMovementComponent() const
     return GetVehicleMovement();
 }
 
+FBodyInstance* ACarPawn::getBodyInstance() const
+{
+    UPrimitiveComponent* UpdatedPrimitive = Cast<UPrimitiveComponent>(GetVehicleMovementComponent()->UpdatedComponent);
+    return UpdatedPrimitive->GetBodyInstance();
+}
+
 void ACarPawn::initializeForBeginPlay()
 {
     //put camera little bit above vehicle

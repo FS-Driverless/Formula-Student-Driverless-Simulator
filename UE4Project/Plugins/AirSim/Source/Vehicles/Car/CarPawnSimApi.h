@@ -101,7 +101,6 @@ public:
     virtual const UnrealImageCapture* getImageCapture() const override;
     virtual std::vector<ImageCaptureBase::ImageResponse> getImages(const std::vector<ImageCaptureBase::ImageRequest>& request) const override;
     virtual std::vector<uint8_t> getImage(const std::string& camera_name, ImageCaptureBase::ImageType image_type) const override;
-    virtual Pose getPose() const override;
     virtual void setPose(const Pose& pose, bool ignore_collision) override;
 
     virtual msr::airlib::CameraInfo getCameraInfo(const std::string& camera_name) const override;
@@ -114,6 +113,12 @@ public:
 
     FVector getUUPosition() const;
     FRotator getUUOrientation() const;
+
+    // The body position is updated every physics iteration, every subtick
+    // This is in contrast to the normal UUPosition and UUOrientation that is only updated every tick.
+    FVector getUUBodyPosition() const;
+    FRotator getUUBodyOrientation() const;
+    FVector getUUBodyVelocity() const;
 
     const NedTransform& getNedTransform() const;
     void possess();

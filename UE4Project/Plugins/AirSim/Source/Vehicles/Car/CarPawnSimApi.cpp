@@ -28,7 +28,7 @@ CarPawnSimApi::CarPawnSimApi(const Params& params, const msr::airlib::CarApiBase
 void CarPawnSimApi::initialize()
 {
     Kinematics::State initial_kinematic_state = Kinematics::State::zero();;
-    initial_kinematic_state.pose = getPose();
+    initial_kinematic_state.pose = toPose(getUUPosition(), getUUOrientation().Quaternion());
     kinematics_.reset(new Kinematics(initial_kinematic_state));
 
     //initialize state
@@ -446,6 +446,22 @@ FRotator CarPawnSimApi::getUUOrientation() const
     return params_.pawn->GetActorRotation();
 }
 
+FVector CarPawnSimApi::getUUBodyPosition() const
+{
+    return pawn_->getBodyInstance()->GetUnrealWorldTransform_AssumesLocked().GetLocation();
+}
+
+FRotator CarPawnSimApi::getUUBodyOrientation() const
+{
+    return pawn_->getBodyInstance()->GetUnrealWorldTransform_AssumesLocked().Rotator();
+}
+
+FVector CarPawnSimApi::getUUBodyVelocity() const
+{
+    return pawn_->getBodyInstance()->GetUnrealWorldVelocity();
+}
+
+
 void CarPawnSimApi::toggleTrace()
 {
     state_.tracing_enabled = !state_.tracing_enabled;
@@ -522,10 +538,6 @@ void CarPawnSimApi::setCameraFoV(const std::string& camera_name, float fov_degre
 }
 
 //parameters in NED frame
-CarPawnSimApi::Pose CarPawnSimApi::getPose() const
-{
-    return toPose(getUUPosition(), getUUOrientation().Quaternion());
-}
 
 CarPawnSimApi::Pose CarPawnSimApi::toPose(const FVector& u_position, const FQuat& u_quat) const
 {
@@ -588,15 +600,15 @@ void CarPawnSimApi::updateKinematics(float dt)
 
     auto next_kinematics = kinematics_->getState();
 
-    next_kinematics.pose = getPose();
-    next_kinematics.twist.linear = getNedTransform().toLocalNedVelocity(getPawn()->GetVelocity());
+    next_kinematics.pose = toPose(getUUBodyPosition(), getUUBodyOrientation().Quaternion());
+    next_kinematics.twist.linear = getNedTransform().toLocalNedVelocity(getUUBodyVelocity());
     next_kinematics.twist.angular = msr::airlib::VectorMath::toAngularVelocity(
         kinematics_->getPose().orientation, next_kinematics.pose.orientation, dt);
 
     next_kinematics.accelerations.linear = (next_kinematics.twist.linear - kinematics_->getTwist().linear) / dt;
     next_kinematics.accelerations.angular = (next_kinematics.twist.angular - kinematics_->getTwist().angular) / dt;
 
-    UE_LOG(LogTemp, Warning, TEXT("updateKinematics %f %f"), dt, next_kinematics.pose.position.x());
+    UE_LOG(LogTemp, Warning, TEXT("updateKinematics DT: %f    X: %f    TLX: %f"), dt, next_kinematics.pose.position.x(), next_kinematics.twist.linear.x());
 
     kinematics_->setState(next_kinematics);
     kinematics_->update();
