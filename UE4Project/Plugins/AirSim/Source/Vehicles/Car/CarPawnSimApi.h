@@ -19,7 +19,6 @@
 #include "WheeledVehicleMovementComponent4W.h"
 
 #include "CarPawn.h"
-#include "CarPawnApi.h"
 #include "PawnEvents.h"
 #include "CarPawnSimApi.h"
 #include "vehicles/car/api/CarApiBase.hpp"
