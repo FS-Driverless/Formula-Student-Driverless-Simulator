@@ -86,12 +86,6 @@ void ASimModeCar::getExistingVehiclePawns(TArray<AActor*>& pawns) const
     UAirBlueprintLib::FindAllActor<TVehiclePawn>(this, pawns);
 }
 
-bool ASimModeCar::isVehicleTypeSupported(const std::string& vehicle_type) const
-{
-    return ((vehicle_type == AirSimSettings::kVehicleTypePhysXCar) ||
-            (vehicle_type == AirSimSettings::kVehicleTypeArduRover));
-}
-
 std::string ASimModeCar::getVehiclePawnPathName(const AirSimSettings::VehicleSetting& vehicle_setting) const
 {
     //decide which derived BP to use
@@ -116,18 +110,18 @@ void ASimModeCar::initializeVehiclePawn(APawn* pawn)
     auto vehicle_pawn = static_cast<TVehiclePawn*>(pawn);
     vehicle_pawn->initializeForBeginPlay();
 }
-std::unique_ptr<PawnSimApi> ASimModeCar::createVehicleSimApi(
-    const PawnSimApi::Params& pawn_sim_api_params) const
+std::unique_ptr<CarPawnSimApi> ASimModeCar::createVehicleSimApi(
+    const CarPawnSimApi::Params& pawn_sim_api_params) const
 {
     auto vehicle_pawn = static_cast<TVehiclePawn*>(pawn_sim_api_params.pawn);
-    auto vehicle_sim_api = std::unique_ptr<PawnSimApi>(new CarPawnSimApi(pawn_sim_api_params, 
+    auto vehicle_sim_api = std::unique_ptr<CarPawnSimApi>(new CarPawnSimApi(pawn_sim_api_params, 
         vehicle_pawn->getKeyBoardControls(), vehicle_pawn->getVehicleMovementComponent()));
     vehicle_sim_api->initialize();
     vehicle_sim_api->reset();
     return vehicle_sim_api;
 }
-msr::airlib::VehicleApiBase* ASimModeCar::getVehicleApi(const PawnSimApi::Params& pawn_sim_api_params,
-    const PawnSimApi* sim_api) const
+msr::airlib::VehicleApiBase* ASimModeCar::getVehicleApi(const CarPawnSimApi::Params& pawn_sim_api_params,
+    const CarPawnSimApi* sim_api) const
 {
     const auto car_sim_api = static_cast<const CarPawnSimApi*>(sim_api);
     return car_sim_api->getVehicleApi();

@@ -8,14 +8,11 @@
 #include "common/UpdatableObject.hpp"
 #include "common/Common.hpp"
 #include "common/Waiter.hpp"
-// #include "safety/SafetyEval.hpp"
 #include "common/CommonStructs.hpp"
 #include "common/ImageCaptureBase.hpp"
 #include "sensors/SensorCollection.hpp"
 #include "sensors/lidar/LidarBase.hpp"
 #include "sensors/imu/ImuBase.hpp"
-#include "sensors/barometer/BarometerBase.hpp"
-#include "sensors/magnetometer/MagnetometerBase.hpp"
 #include "sensors/distance/DistanceBase.hpp"
 #include "sensors/gss/GSSSimple.hpp"
 #include "sensors/gps/GpsBase.hpp"
@@ -65,17 +62,6 @@ public:
     {
         //no default action
         unused(last_interval);
-    }
-
-    //below APIs are used by FastPhysicsEngine
-    virtual real_T getActuation(unsigned int actuator_index) const
-    {
-        unused(actuator_index);
-        throw VehicleCommandNotImplementedException("getActuation API is not supported for this vehicle");
-    }
-    virtual size_t getActuatorCount() const
-    {
-        throw VehicleCommandNotImplementedException("getActuatorCount API is not supported for this vehicle");
     }
 
     virtual void getStatusMessages(std::vector<std::string>& messages)
@@ -150,48 +136,6 @@ public:
             throw VehicleControllerException(Utils::stringf("No IMU with name %s exist on vehicle", imu_name.c_str()));
 
         return imu->getOutput();
-    }
-
-    // Barometer API
-    virtual BarometerBase::Output getBarometerData(const std::string& barometer_name) const
-    {
-        const BarometerBase* barometer = nullptr;
-
-        uint count_barometers = getSensors().size(SensorBase::SensorType::Barometer);
-        for (uint i = 0; i < count_barometers; i++)
-        {
-            const BarometerBase* current_barometer = static_cast<const BarometerBase*>(getSensors().getByType(SensorBase::SensorType::Barometer, i));
-            if (current_barometer != nullptr && (current_barometer->getName() == barometer_name || barometer_name == ""))
-            {
-                barometer = current_barometer;
-                break;
-            }
-        }
-        if (barometer == nullptr)
-            throw VehicleControllerException(Utils::stringf("No barometer with name %s exist on vehicle", barometer_name.c_str()));
-
-        return barometer->getOutput();
-    }
-
-    // Magnetometer API
-    virtual MagnetometerBase::Output getMagnetometerData(const std::string& magnetometer_name) const
-    {
-        const MagnetometerBase* magnetometer = nullptr;
-
-        uint count_magnetometers = getSensors().size(SensorBase::SensorType::Magnetometer);
-        for (uint i = 0; i < count_magnetometers; i++)
-        {
-            const MagnetometerBase* current_magnetometer = static_cast<const MagnetometerBase*>(getSensors().getByType(SensorBase::SensorType::Magnetometer, i));
-            if (current_magnetometer != nullptr && (current_magnetometer->getName() == magnetometer_name || magnetometer_name == ""))
-            {
-                magnetometer = current_magnetometer;
-                break;
-            }
-        }
-        if (magnetometer == nullptr)
-            throw VehicleControllerException(Utils::stringf("No magnetometer with name %s exist on vehicle", magnetometer_name.c_str()));
-
-        return magnetometer->getOutput();
     }
 
     // Gps API

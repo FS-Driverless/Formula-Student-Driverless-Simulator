@@ -8,16 +8,12 @@ import time
 # Use below in settings.json with blocks environment
 """
 {
-	"SettingsVersion": 1.2,
-	"SimMode": "Car",
-	
+	"SettingsVersion": 1.2,	
 	"Vehicles": {
 		"Car1": {
-		  "VehicleType": "PhysXCar",
 		  "X": 4, "Y": 0, "Z": -2
 		},
 		"Car2": {
-		  "VehicleType": "PhysXCar",
 		  "X": -4, "Y": 0, "Z": -2
 		}
 

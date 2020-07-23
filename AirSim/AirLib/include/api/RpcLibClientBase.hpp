@@ -8,12 +8,9 @@
 #include "common/CommonStructs.hpp"
 #include "common/ImageCaptureBase.hpp"
 #include "sensors/imu/ImuBase.hpp"
-#include "sensors/barometer/BarometerBase.hpp"
-#include "sensors/magnetometer/MagnetometerBase.hpp"
 #include "sensors/gps/GpsBase.hpp"
 #include "sensors/distance/DistanceBase.hpp"
 #include "physics/Kinematics.hpp"
-#include "physics/Environment.hpp"
 #include "api/WorldSimApiBase.hpp"
 
 namespace msr { namespace airlib {
@@ -78,8 +75,6 @@ public:
     // sensor APIs
     msr::airlib::LidarData getLidarData(const std::string& lidar_name = "", const std::string& vehicle_name = "") const;
     msr::airlib::ImuBase::Output getImuData(const std::string& imu_name = "", const std::string& vehicle_name = "") const;
-    msr::airlib::BarometerBase::Output getBarometerData(const std::string& barometer_name = "", const std::string& vehicle_name = "") const;
-    msr::airlib::MagnetometerBase::Output getMagnetometerData(const std::string& magnetometer_name = "", const std::string& vehicle_name = "") const;
     msr::airlib::GpsBase::Output getGpsData(const std::string& gps_name = "", const std::string& vehicle_name = "") const;
     msr::airlib::DistanceBase::Output getDistanceSensorData(const std::string& distance_sensor_name = "", const std::string& vehicle_name = "") const;
     msr::airlib::GSSSimple::Output getGroundSpeedSensorData(const std::string& vehicle_name = "") const;
@@ -103,7 +98,6 @@ public:
     void simSetCameraFov(const std::string& camera_name, float fov_degrees, const std::string& vehicle_name = "");
 
     msr::airlib::Kinematics::State simGetGroundTruthKinematics(const std::string& vehicle_name = "") const;
-    msr::airlib::Environment::State simGetGroundTruthEnvironment(const std::string& vehicle_name = "") const;
 
 	std::vector<std::string> simSwapTextures(const std::string& tags, int tex_id = 0, int component_id = 0, int material_id = 0);
 

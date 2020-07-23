@@ -12,8 +12,7 @@
 #include "common/ClockFactory.hpp"
 #include "api/ApiServerBase.hpp"
 #include "api/ApiProvider.hpp"
-#include "PawnSimApi.h"
-#include "common/StateReporterWrapper.hpp"
+#include "Vehicles/Car/CarPawnSimApi.h"
 
 #include "SimModeBase.generated.h"
 
@@ -28,11 +27,15 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Refs")
     ACameraDirector* CameraDirector;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Debugging")
-    bool EnableReport = false;
 
-    UFUNCTION(BlueprintCallable, Category = "Recording")
-    bool toggleRecording();
+    UFUNCTION(BlueprintCallable, Category = "Api")
+    void startApiServer();
+    
+    UFUNCTION(BlueprintCallable, Category = "Api")
+    void stopApiServer();
+
+    UFUNCTION(BlueprintCallable, Category = "Api")
+    bool isApiServerStarted();
 
 public:	
     // Sets default values for this actor's properties
@@ -43,7 +46,6 @@ public:
 
     //additional overridable methods
     virtual void reset();
-    virtual std::string getDebugReport();
     virtual ECameraDirectorMode getInitialViewMode() const;
 
     virtual bool isPaused() const;
@@ -53,27 +55,19 @@ public:
     virtual void setTimeOfDay(bool is_enabled, const std::string& start_datetime, bool is_start_datetime_dst,
         float celestial_clock_speed, float update_interval_secs, bool move_sun);
 
-    virtual void startRecording();
-    virtual void stopRecording();
-    virtual bool isRecording() const;
-
-    void startApiServer();
-    void stopApiServer();
-    bool isApiServerStarted();
-
     const NedTransform& getGlobalNedTransform();
 
     msr::airlib::ApiProvider* getApiProvider() const
     {
         return api_provider_.get();
     }
-    const PawnSimApi* getVehicleSimApi(const std::string& vehicle_name = "") const
+    const CarPawnSimApi* getVehicleSimApi(const std::string& vehicle_name = "") const
     {
-        return static_cast<PawnSimApi*>(api_provider_->getVehicleSimApi(vehicle_name));
+        return static_cast<CarPawnSimApi*>(api_provider_->getVehicleSimApi(vehicle_name));
     }
-    PawnSimApi* getVehicleSimApi(const std::string& vehicle_name = "")
+    CarPawnSimApi* getVehicleSimApi(const std::string& vehicle_name = "")
     {
-        return static_cast<PawnSimApi*>(api_provider_->getVehicleSimApi(vehicle_name));
+        return static_cast<CarPawnSimApi*>(api_provider_->getVehicleSimApi(vehicle_name));
     }
 
 protected: //must overrides
@@ -81,15 +75,14 @@ protected: //must overrides
 
     virtual std::unique_ptr<msr::airlib::ApiServerBase> createApiServer() const;
     virtual void getExistingVehiclePawns(TArray<AActor*>& pawns) const;
-    virtual bool isVehicleTypeSupported(const std::string& vehicle_type) const;
     virtual std::string getVehiclePawnPathName(const AirSimSettings::VehicleSetting& vehicle_setting) const;
     virtual PawnEvents* getVehiclePawnEvents(APawn* pawn) const;
     virtual const common_utils::UniqueValueMap<std::string, APIPCamera*> getVehiclePawnCameras(APawn* pawn) const;
     virtual void initializeVehiclePawn(APawn* pawn);
-    virtual std::unique_ptr<PawnSimApi> createVehicleSimApi(
-        const PawnSimApi::Params& pawn_sim_api_params) const;
-    virtual msr::airlib::VehicleApiBase* getVehicleApi(const PawnSimApi::Params& pawn_sim_api_params,
-        const PawnSimApi* sim_api) const;
+    virtual std::unique_ptr<CarPawnSimApi> createVehicleSimApi(
+        const CarPawnSimApi::Params& pawn_sim_api_params) const;
+    virtual msr::airlib::VehicleApiBase* getVehicleApi(const CarPawnSimApi::Params& pawn_sim_api_params,
+        const CarPawnSimApi* sim_api) const;
 
 protected: //optional overrides
     virtual void setupVehiclesAndCamera();
@@ -98,7 +91,6 @@ protected: //optional overrides
     virtual void setupClockSpeed();
     void initializeCameraDirector(const FTransform& camera_transform, float follow_distance);
     void checkVehicleReady(); //checks if vehicle is available to use
-    virtual void updateDebugReport(msr::airlib::StateReporterWrapper& debug_reporter);
 
 protected: //Utility methods for derived classes
     virtual const msr::airlib::AirSimSettings& getSettings() const;
@@ -137,7 +129,6 @@ private:
     std::unique_ptr<msr::airlib::WorldSimApiBase> world_sim_api_;
     std::unique_ptr<msr::airlib::ApiProvider> api_provider_;
     std::unique_ptr<msr::airlib::ApiServerBase> api_server_;
-    msr::airlib::StateReporterWrapper debug_reporter_;
 
     std::vector<std::unique_ptr<msr::airlib::VehicleSimApiBase>> vehicle_sim_apis_;
 
@@ -149,7 +140,6 @@ private:
     void initializeTimeOfDay();
     void advanceTimeOfDay();
     void setSunRotation(FRotator rotation);
-    void setupPhysicsLoopPeriod();
     void showClockStats();
     void drawLidarDebugPoints();
 };

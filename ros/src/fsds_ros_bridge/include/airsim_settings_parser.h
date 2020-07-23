@@ -27,7 +27,6 @@ public:
     bool success();
 
 private:
-    std::string getSimMode();
     bool readSettingsTextFromFile(std::string settingsFilepath, std::string& settingsText);
     bool getSettingsText(std::string& settingsText);
     bool initializeSettings();

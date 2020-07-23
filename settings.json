@@ -1,16 +1,13 @@
 {
   "SeeDocsAt": "https://fs-online.github.io/Formula-Student-Driverless-Simulator/",
   "SettingsVersion": 1.2,
-  "SimMode": "Car",
   "ViewMode": "SpringArmChase",
   "ClockSpeed": 1.0,
-  "RecordUIVisible": false,
   "PawnPaths": {
     "DefaultCar": { "PawnBP": "Class'/AirSim/VehicleAdv/Cars/TechnionCar/TechnionCarPawn.TechnionCarPawn_C'" }
   },
   "Vehicles": {
     "FSCar": {
-      "VehicleType": "PhysXCar",
       "DefaultVehicleState": "",
       "EnableCollisionPassthrogh": false,
       "EnableCollisions": true,

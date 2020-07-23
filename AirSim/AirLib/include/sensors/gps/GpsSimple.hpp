@@ -107,12 +107,15 @@ private:
         //GNSS
         output.gnss.time_utc = static_cast<uint64_t>(clock()->nowNanos() / 1.0E3);
         output.gnss.velocity = ground_truth.kinematics->twist.linear;
+
+        auto geo_point = EarthUtils::nedToGeodetic(ground_truth.kinematics->pose.position, AirSimSettings::singleton().origin_geopoint);
+
         //add noise to the GPS position measurements depending on the velocity of the vehicle
         if ((gpsnoise) && (sqrt(pow(output.gnss.velocity.x(), 2) + pow(output.gnss.velocity.y(), 2) + pow(output.gnss.velocity.z(), 2))>0.5)) {
-            output.gnss.geo_point=generateErrors(ground_truth.environment->getState().geo_point, eph, epv);
+            output.gnss.geo_point=generateErrors(geo_point, eph, epv);
         }
         else {
-            output.gnss.geo_point=EarthUtils::nedToGeodetic(zero_vel_offset, ground_truth.environment->getState().geo_point);
+            output.gnss.geo_point=EarthUtils::nedToGeodetic(zero_vel_offset, geo_point);
         }
         output.gnss.eph = eph;
         output.is_valid = true;

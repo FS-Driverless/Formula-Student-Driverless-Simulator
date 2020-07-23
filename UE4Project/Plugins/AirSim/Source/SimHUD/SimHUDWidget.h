@@ -11,23 +11,14 @@ UCLASS()
 class AIRSIM_API USimHUDWidget : public UUserWidget
 {
     GENERATED_BODY()
-    
-public:
-    UFUNCTION(BlueprintCallable, Category = "Event handler")
-        void onToggleRecordingButtonClick();
 
 public:
-    typedef std::function<void (void)> OnToggleRecording;
-
 
     //TODO: Tick is not working
     //virtual void Tick_Implementation(FGeometry MyGeometry, float InDeltaTime) override;
     
-    void updateDebugReport(const std::string& text);
     void setReportVisible(bool is_visible);
     void toggleHelpVisibility();
-
-    void setOnToggleRecordingHandler(OnToggleRecording handler);
 
 
 public:
@@ -61,5 +52,5 @@ protected:
         bool setReportText(const FString& text);
 
 private:
-    OnToggleRecording on_toggle_recording_;
+    
 };

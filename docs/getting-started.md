@@ -38,7 +38,7 @@ Try driving the car around using the arrowkeys.
 
 ### From source using the Unreal Engine Editor
 
-If you want to run the unreal engine project from source you will need [unreal engine and visual studio 2019](software-install-instructions).
+If you want to run the unreal engine project from source you will need [unreal engine and visual studio 2019](software-install-instructions.md).
 On Ubuntu you can skip the visual studio 2019 part.
 
 #### Compiling the AirSim plugin

@@ -3,6 +3,7 @@
 	<arg name="host" default="localhost" />
 	<arg name="mission_name" default="trackdrive"/>
 	<arg name="track_name" default="A"/>
+	<arg name="competition_mode" default="false"/>
 	<arg name="access_token" default=""/>
 	<arg name="plot" default="false"/>
 	<arg name="rviz" default="false"/>
@@ -22,6 +23,7 @@
 			<param name="host_ip" type="string" value="$(arg host)" />
 			<param name="mission_name" type="string" value="$(arg mission_name)"/>
 			<param name="track_name" type="string" value="$(arg track_name)"/>
+			<param name="competition_mode" type="bool" value="$(arg competition_mode)" />
 			<env name="OPERATOR_ACCESS_TOKEN" value="$(arg access_token)"/>
 		</node>
 

@@ -32,12 +32,6 @@ bool AirSimSettingsParser::getSettingsText(std::string& settingsText)
     return success;
 }
 
-std::string AirSimSettingsParser::getSimMode()
-{
-    Settings& settings_json = Settings::loadJSonString(settingsText_);
-    return settings_json.getString("SimMode", "");
-}
-
 // mimics void ASimHUD::initializeSettings()
 bool AirSimSettingsParser::initializeSettings()
 {
@@ -47,10 +41,8 @@ bool AirSimSettingsParser::initializeSettings()
 
         // not sure where settings_json initialized in AirSimSettings::initializeSettings() is actually used
         Settings& settings_json = Settings::loadJSonString(settingsText_);
-        std::string simmode_name = settings_json.getString("SimMode", "");
-        std::cout << "simmode_name: " << simmode_name << std::endl; 
 
-        AirSimSettings::singleton().load(std::bind(&AirSimSettingsParser::getSimMode, this));
+        AirSimSettings::singleton().load();
     }
     else
     {

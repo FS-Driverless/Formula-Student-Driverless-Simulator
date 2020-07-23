@@ -31,14 +31,6 @@ public: //types
     };
 
 public:
-    virtual void reportState(StateReporter& reporter) override
-    {
-        //call base
-        UpdatableObject::reportState(reporter);
-
-        reporter.writeValue("Lidar-Timestamp", output_.time_stamp);
-        reporter.writeValue("Lidar-NumPoints", static_cast<int>(output_.point_cloud.size() / 3));
-    }
 
     const LidarData& getOutput() const
     {

@@ -38,7 +38,6 @@
     <ClInclude Include="include\common\Common.hpp" />
     <ClInclude Include="include\common\CommonStructs.hpp" />
     <ClInclude Include="include\common\ClockFactory.hpp" />
-    <ClInclude Include="include\common\common_utils\bitmap_image.hpp" />
     <ClInclude Include="include\common\common_utils\ColorUtils.hpp" />
     <ClInclude Include="include\common\common_utils\ctpl_stl.h" />
     <ClInclude Include="include\common\common_utils\EnumFlags.hpp" />
@@ -74,8 +73,6 @@
     <ClInclude Include="include\common\GeodeticConverter.hpp" />
     <ClInclude Include="include\common\LogFileWriter.hpp" />
     <ClInclude Include="include\common\ScalableClock.hpp" />
-    <ClInclude Include="include\common\StateReporter.hpp" />
-    <ClInclude Include="include\common\StateReporterWrapper.hpp" />
     <ClInclude Include="include\common\UpdatableContainer.hpp" />
     <ClInclude Include="include\common\UpdatableObject.hpp" />
     <ClInclude Include="include\common\VectorMath.hpp" />
@@ -84,48 +81,27 @@
     <ClInclude Include="include\api\VehicleConnectorBase.hpp" />
     <ClInclude Include="include\sensors\SensorFactory.hpp" />
     <ClInclude Include="include\vehicles\car\api\CarApiBase.hpp" />
-    <ClInclude Include="include\physics\DebugPhysicsBody.hpp" />
-    <ClInclude Include="include\physics\PhysicsBodyWorld.hpp" />
-    <ClInclude Include="include\physics\PhysicsWorld.hpp" />
-    <ClInclude Include="include\safety\CubeGeoFence.hpp" />
-    <ClInclude Include="include\safety\IGeoFence.hpp" />
-    <ClInclude Include="include\safety\ObstacleMap.hpp" />
     <ClInclude Include="include\common\PidController.hpp" />
     <ClInclude Include="include\vehicles\car\api\CarRpcLibAdapators.hpp" />
     <ClInclude Include="include\vehicles\car\api\CarRpcLibClient.hpp" />
     <ClInclude Include="include\vehicles\car\api\CarRpcLibServer.hpp" />
-    <ClInclude Include="include\safety\SafetyEval.hpp" />
     <ClInclude Include="include\common\Settings.hpp" />
-    <ClInclude Include="include\safety\SphereGeoFence.hpp" />
     <ClInclude Include="include\common\Waiter.hpp" />
-    <ClInclude Include="include\physics\Environment.hpp" />
-    <ClInclude Include="include\physics\FastPhysicsEngine.hpp" />
     <ClInclude Include="include\physics\Kinematics.hpp" />
-    <ClInclude Include="include\physics\PhysicsBody.hpp" />
-    <ClInclude Include="include\physics\PhysicsBodyVertex.hpp" />
-    <ClInclude Include="include\physics\PhysicsEngineBase.hpp" />
-    <ClInclude Include="include\physics\World.hpp" />
-    <ClInclude Include="include\sensors\barometer\BarometerBase.hpp" />
-    <ClInclude Include="include\sensors\barometer\BarometerSimple.hpp" />
-    <ClInclude Include="include\sensors\barometer\BarometerSimpleParams.hpp" />
     <ClInclude Include="include\sensors\gps\GpsBase.hpp" />
     <ClInclude Include="include\sensors\gps\GpsSimple.hpp" />
     <ClInclude Include="include\sensors\gps\GpsSimpleParams.hpp" />
     <ClInclude Include="include\sensors\imu\ImuBase.hpp" />
     <ClInclude Include="include\sensors\imu\ImuSimple.hpp" />
     <ClInclude Include="include\sensors\imu\ImuSimpleParams.hpp" />
-    <ClInclude Include="include\sensors\magnetometer\MagnetometerBase.hpp" />
-    <ClInclude Include="include\sensors\magnetometer\MagnetometerSimple.hpp" />
-    <ClInclude Include="include\sensors\magnetometer\MagnetometerSimpleParams.hpp" />
     <ClInclude Include="include\sensors\gss\GSSSimple.hpp" />
+
     <ClInclude Include="include\sensors\SensorBase.hpp" />
     <ClInclude Include="include\sensors\SensorCollection.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\api\RpcLibClientBase.cpp" />
     <ClCompile Include="src\api\RpcLibServerBase.cpp" />
-    <ClCompile Include="src\safety\ObstacleMap.cpp" />
-    <ClCompile Include="src\safety\SafetyEval.cpp" />
     <ClCompile Include="src\common\common_utils\FileSystem.cpp" />
     <ClCompile Include="src\vehicles\car\api\CarRpcLibClient.cpp" />
     <ClCompile Include="src\vehicles\car\api\CarRpcLibServer.cpp" />

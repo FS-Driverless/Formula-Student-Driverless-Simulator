@@ -7,7 +7,6 @@ STRICT_MODE_OFF //todo what does this do?
     STRICT_MODE_ON
 
 #include "statistics.h"
-#include "airsim_settings_parser.h"
 #include "common/AirSimSettings.hpp"
 #include "common/common_utils/FileSystem.hpp"
 #include "ros/ros.h"
@@ -156,6 +155,10 @@ private:
     sensor_msgs::NavSatFix get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
     sensor_msgs::Imu get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data);
     sensor_msgs::PointCloud2 get_lidar_msg_from_airsim(const std::string &lidar_name, const msr::airlib::LidarData& lidar_data) const;
+    static bool equalsMessage(const nav_msgs::Odometry& a, const nav_msgs::Odometry& b);
+
+
+    std::string readTextFromFile(std::string settingsFilepath);
 
 private:
     ros::ServiceServer reset_srvr_;
@@ -164,14 +167,16 @@ private:
     CarApiBase::Point2D car_start_pos; // In Unreal coordinates
 
 
-    AirSimSettingsParser airsim_settings_parser_;
     std::vector<std::string> lidar_names_vec_;
     std::vector<geometry_msgs::TransformStamped> static_tf_msg_vec_;
     std::string mission_name_; // rosparam obtained from launch file
     std::string track_name_; // rosparam obtained from launch file
+    bool competition_mode_;
 
     msr::airlib::CarRpcLibClient airsim_client_;
     msr::airlib::CarRpcLibClient airsim_client_lidar_;
+
+    nav_msgs::Odometry message_enu_previous_;
 
     ros::NodeHandle nh_;
     ros::NodeHandle nh_private_;

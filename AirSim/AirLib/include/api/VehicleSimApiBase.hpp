@@ -8,7 +8,6 @@
 #include "common/UpdatableObject.hpp"
 #include "common/ImageCaptureBase.hpp"
 #include "physics/Kinematics.hpp"
-#include "physics/Environment.hpp"
 #include "common/AirSimSettings.hpp"
 
 namespace msr { namespace airlib {
@@ -51,7 +50,6 @@ public:
     virtual Pose getPose() const = 0;
     virtual void setPose(const Pose& pose, bool ignore_collision) = 0;
     virtual const Kinematics::State* getGroundTruthKinematics() const = 0;
-    virtual const msr::airlib::Environment* getGroundTruthEnvironment() const = 0;
 
     virtual CameraInfo getCameraInfo(const std::string& camera_name) const = 0;
     virtual void setCameraOrientation(const std::string& camera_name, const Quaternionr& orientation) = 0;
@@ -61,7 +59,6 @@ public:
     virtual int getRemoteControlID() const = 0; //which RC to use, 0 is first one, -1 means disable RC (use keyborad)
     virtual RCData getRCData() const = 0; //get reading from RC from simulator's host OS
     virtual std::string getVehicleName() const = 0;
-    virtual std::string getRecordFileLine(bool is_header_line) const = 0;
     virtual void toggleTrace() = 0;
     virtual void setTraceLine(const std::vector<float>& color_rgba, float thickness) = 0;
 
