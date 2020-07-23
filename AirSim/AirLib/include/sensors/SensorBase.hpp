@@ -23,7 +23,8 @@ public:
         Imu = 2,
         Gps = 3,
         Distance = 5,
-        Lidar = 6
+        Lidar = 6,
+        GSS = 7,
     };
 
     SensorBase(const std::string& sensor_name = "")

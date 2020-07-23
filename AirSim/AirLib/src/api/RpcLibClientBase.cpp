@@ -175,6 +175,11 @@ msr::airlib::DistanceBase::Output RpcLibClientBase::getDistanceSensorData(const 
     return pimpl_->client.call("getDistanceSensorData", distance_sensor_name, vehicle_name).as<RpcLibAdapatorsBase::DistanceSensorData>().to();
 }
 
+msr::airlib::GSSSimple::Output RpcLibClientBase::getGroundSpeedSensorData(const std::string& vehicle_name) const
+{
+    return pimpl_->client.call("getGroundSpeedSensorData", vehicle_name).as<RpcLibAdapatorsBase::GSSData>().to();
+}
+
 vector<int> RpcLibClientBase::simGetLidarSegmentation(const std::string& lidar_name, const std::string& vehicle_name) const
 {
     return pimpl_->client.call("simGetLidarSegmentation", lidar_name, vehicle_name).as<vector<int>>();

@@ -25,8 +25,10 @@ public:
             return std::unique_ptr<ImuSimple>(new ImuSimple(*static_cast<const AirSimSettings::ImuSetting*>(sensor_setting)));
         case SensorBase::SensorType::Gps:
             return std::unique_ptr<GpsSimple>(new GpsSimple(*static_cast<const AirSimSettings::GpsSetting*>(sensor_setting)));
+        case SensorBase::SensorType::GSS:
+            return std::unique_ptr<GSSSimple>(new GSSSimple());
         default:
-            throw new std::invalid_argument("Unexpected sensor type");
+            throw new std::invalid_argument("Unexpected sensor type (C)");
         }
     }
 

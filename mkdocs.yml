@@ -17,6 +17,7 @@ nav:
     - "IMU": "imu.md"
     - "Lidar": "lidar.md"
     - "GPS": "gps.md"
+    - "GSS": "gss.md"
   - "#tech madness":
     - "ROS Bridge": "ros-bridge.md"
     - "ROS Bridge statistics": "statistics.md"

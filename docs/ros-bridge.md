@@ -22,6 +22,7 @@ The fsds_ros_bridge.launch launches the following nodes:
 |---|---|---|---|
 | `/fsds/gps` | This the current GPS coordinates of the drone in airsim. Read all about the gps simulation model [here](gps.md). Data is in the `fsds/FSCar` frame. | [sensor_msgs/NavSatFix](https://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html) | 10 |
 | `/fsds/imu` | Velocity, orientation and acceleration information. Read all about the IMU model [here](imu.md). Data is in the `fsds/FSCar` (enu) frame. | [sensor_msgs/Imu](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Imu.html)  | 250 |
+| `/fsds/gss` | Ground speed sensor provide linear velocity of the vehicle (`fsds/FSCar`). Velocity is m/s. | [geometry_msgs/TwistStamped](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)  | 100 |
 | `/fsds/testing_only/odom` | Ground truth car position and orientation in ENU frame about the CoG of the car (`fsds/FSCar`).  The units are `m` for distance. The orientation are expressed in terms of quaternions. The message is in the `fsds/map` frame. This is a frame that is not (yet) used anywhere else and is just here so you can easely reference it if needed. *THIS WILL NOT BE STREAMED DURING COMPETITION.* | [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)  | 250 |
 | `/fsds/testing_only/track` | Ground truth cone position and color with respect to the starting location of the car in ENU. Currently this only publishes the *initial position* of cones that are part of the track spline. Any cones placed manually in the world are not published here. Additionally, the track is published once and the message is latched (meaning it is always available for a newly created subscriber). *THIS WILL NOT BE STREAMED DURING COMPETITION.* | [fs_msgs/Track](https://github.com/FS-Online/fs_msgs/blob/master/msg/Track.msg)  | Latched |
 | `/fsds/camera/CAMERA_NAME` | One of this topic type will exist for every camera specified in the `settings.json` file. On this topic, camera frames are published. The format will be bgra8. `CAMERA_NAME` will be replaced by the corresponding in the `Cameras` object in the `settings.json` file. `IMAGE_TYPE` is determand by the `SensorType` field. When choosing 0, it will be 'Scene'. | [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)  | ~18 |
@@ -76,6 +77,11 @@ Transforms to the ground truth are disabled because this would take away the sta
   Default: 0.004 seconds (250hz).   
   Timer callback frequency for updating and publishing the imu messages.   
   This value must be equal or higher to the minimual sample rate of the sensor configured in the settings.json
+
+- `/fsds/ros_bridge/update_gss_every_n_sec` [double]   
+  Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   
+  Default: 0.01 seconds (100hz).   
+  Timer callback frequency for updating and publishing the ground speed sensor messages.
 
 - `/fsds/ros_bridge/update_odom_every_n_sec` [double]   
   Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`   

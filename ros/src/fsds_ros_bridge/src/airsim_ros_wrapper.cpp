@@ -56,10 +56,12 @@ void AirsimROSWrapper::initialize_statistics()
     getGpsDataStatistics = ros_bridge::Statistics("getGpsData");
     getCarStateStatistics = ros_bridge::Statistics("getCarState");
     getImuStatistics = ros_bridge::Statistics("getImu");
+    getGSSStatistics = ros_bridge::Statistics("getGSS");
     control_cmd_sub_statistics = ros_bridge::Statistics("control_cmd_sub");
     global_gps_pub_statistics = ros_bridge::Statistics("global_gps_pub");
     odom_pub_statistics = ros_bridge::Statistics("odom_pub");
     imu_pub_statistics = ros_bridge::Statistics("imu_pub");
+    gss_pub_statistics = ros_bridge::Statistics("gss_pub");
 
     // Populate statistics obj vector
     // statistics_obj_ptr = {&setCarControlsStatistics, &getGpsDataStatistics, &getCarStateStatistics, &control_cmd_sub_statistics, &global_gps_pub_statistics, &odom_local_ned_pub_statistics};
@@ -113,6 +115,7 @@ void AirsimROSWrapper::initialize_ros()
     double update_odom_every_n_sec;
     double update_gps_every_n_sec;
     double update_imu_every_n_sec;
+    double update_gss_every_n_sec;
     double publish_static_tf_every_n_sec;
     nh_private_.getParam("mission_name", mission_name_);
     nh_private_.getParam("track_name", track_name_);
@@ -120,6 +123,7 @@ void AirsimROSWrapper::initialize_ros()
     nh_private_.getParam("update_odom_every_n_sec", update_odom_every_n_sec);
     nh_private_.getParam("update_gps_every_n_sec", update_gps_every_n_sec);
     nh_private_.getParam("update_imu_every_n_sec", update_imu_every_n_sec);
+    nh_private_.getParam("update_gss_every_n_sec", update_gss_every_n_sec);
     nh_private_.getParam("publish_static_tf_every_n_sec", publish_static_tf_every_n_sec);
     
 
@@ -131,6 +135,7 @@ void AirsimROSWrapper::initialize_ros()
 
     gps_update_timer_ = nh_private_.createTimer(ros::Duration(update_gps_every_n_sec), &AirsimROSWrapper::gps_timer_cb, this);
     imu_update_timer_ = nh_private_.createTimer(ros::Duration(update_imu_every_n_sec), &AirsimROSWrapper::imu_timer_cb, this);
+    gss_update_timer_ = nh_private_.createTimer(ros::Duration(update_gss_every_n_sec), &AirsimROSWrapper::gss_timer_cb, this);
     statictf_timer_ = nh_private_.createTimer(ros::Duration(publish_static_tf_every_n_sec), &AirsimROSWrapper::statictf_cb, this);
 
     statistics_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::statistics_timer_cb, this);
@@ -171,6 +176,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         vehicle_name = curr_vehicle_name;
         global_gps_pub = nh_.advertise<sensor_msgs::NavSatFix>("gps", 10);
         imu_pub = nh_.advertise<sensor_msgs::Imu>("imu", 10);
+        gss_pub = nh_.advertise<geometry_msgs::TwistStamped>("gss", 10);
         control_cmd_sub = nh_.subscribe<fs_msgs::ControlCommand>("control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, vehicle_name));
 
         if(!competition_mode_) {
@@ -211,6 +217,11 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
                 std::cout << "Distance" << std::endl;
                 break;
             }
+            case msr::airlib::SensorBase::SensorType::GSS:
+            {
+                std::cout << "Ground Speed Sensor" << std::endl;
+                break;
+            }
             case msr::airlib::SensorBase::SensorType::Lidar:
             {
                 std::cout << "Lidar" << std::endl;
@@ -231,7 +242,8 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
             }
             default:
             {
-                throw std::invalid_argument("Unexpected sensor type");
+                std::cout << sensor_setting->sensor_name << std::endl;
+                throw std::invalid_argument("Unexpected sensor type (D)");
             }
             }
         }
@@ -520,6 +532,41 @@ void AirsimROSWrapper::imu_timer_cb(const ros::TimerEvent& event)
     }
 }
 
+void AirsimROSWrapper::gss_timer_cb(const ros::TimerEvent& event)
+{
+    try 
+    {
+        struct msr::airlib::GSSSimple::Output gss_data;
+        {
+            ros_bridge::Timer timer(&getGSSStatistics);
+            std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
+            gss_data = airsim_client_.getGroundSpeedSensorData(vehicle_name);
+            lck.unlock();
+        }
+
+        geometry_msgs::TwistStamped gss_msg;
+        gss_msg.header.frame_id = "fsds/" + vehicle_name;
+        gss_msg.header.stamp = make_ts(gss_data.time_stamp);
+
+        // Convert to ENU frame (minus signs)
+        gss_msg.twist.linear.x = gss_data.linear_velocity.x();
+        gss_msg.twist.linear.y = - gss_data.linear_velocity.y();
+        gss_msg.twist.linear.z = - gss_data.linear_velocity.z();
+
+        {
+            ros_bridge::ROSMsgCounter counter(&gss_pub_statistics);
+            gss_pub.publish(gss_msg);
+        }
+    }
+    catch (rpc::rpc_error& e)
+    {
+        std::cout << "error" << std::endl;
+        std::string msg = e.get_error().as<std::string>();
+        std::cout << "Exception raised by the API while getting gss data:" << std::endl
+                << msg << std::endl;
+    }
+}
+
 void AirsimROSWrapper::statictf_cb(const ros::TimerEvent& event)
 {
     for (auto& static_tf_msg : static_tf_msg_vec_)
@@ -680,10 +727,12 @@ void AirsimROSWrapper::PrintStatistics()
     getGpsDataStatistics.Print();
     getCarStateStatistics.Print();
     getImuStatistics.Print();
+    getGSSStatistics.Print();
     control_cmd_sub_statistics.Print();
     global_gps_pub_statistics.Print();
     odom_pub_statistics.Print();
     imu_pub_statistics.Print();
+    gss_pub_statistics.Print();
     
     for (auto &getLidarDataStatistics : getLidarDataVecStatistics)
     {
@@ -709,10 +758,12 @@ void AirsimROSWrapper::ResetStatistics()
     getGpsDataStatistics.Reset();
     getCarStateStatistics.Reset();
     getImuStatistics.Reset();
+    getGSSStatistics.Reset();
     control_cmd_sub_statistics.Reset();
     global_gps_pub_statistics.Reset();
     odom_pub_statistics.Reset();
     imu_pub_statistics.Reset();
+    gss_pub_statistics.Reset();
 
     for (auto &getLidarDataStatistics : getLidarDataVecStatistics)
     {

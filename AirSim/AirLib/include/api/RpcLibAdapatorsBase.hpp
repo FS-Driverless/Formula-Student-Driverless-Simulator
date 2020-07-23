@@ -655,6 +655,32 @@ public:
         }
     };
 
+    struct GSSData {
+
+        msr::airlib::TTimePoint time_stamp;
+        Vector3r linear_velocity;
+
+        MSGPACK_DEFINE_MAP(time_stamp, linear_velocity);
+
+        GSSData()
+        {}
+
+        GSSData(const msr::airlib::GSSSimple::Output& o)
+        {
+            time_stamp = o.time_stamp;
+            linear_velocity = o.linear_velocity;
+        }
+
+        msr::airlib::GSSSimple::Output to() const
+        {
+            msr::airlib::GSSSimple::Output s;
+            s.linear_velocity = linear_velocity.to();
+            s.time_stamp = time_stamp;
+ 
+            return s;
+        }
+    };
+
 
 };
 

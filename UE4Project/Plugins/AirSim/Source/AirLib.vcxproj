@@ -94,6 +94,7 @@
     <ClInclude Include="include\sensors\imu\ImuBase.hpp" />
     <ClInclude Include="include\sensors\imu\ImuSimple.hpp" />
     <ClInclude Include="include\sensors\imu\ImuSimpleParams.hpp" />
+    <ClInclude Include="include\sensors\gss\GSSSimple.hpp" />
     <ClInclude Include="include\sensors\SensorBase.hpp" />
     <ClInclude Include="include\sensors\SensorCollection.hpp" />
   </ItemGroup>
