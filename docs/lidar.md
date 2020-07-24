@@ -22,7 +22,7 @@ This is an example lidar:
 
 `Lidar1` is the name of the lidar. This value will be used in the ros topic name and coordinate frame.
 
-`X`, `Y` and `Z` are the position of the lidar relative the the center of the car in NED frame.
+`X`, `Y` and `Z` are the position of the lidar relative the [vehicle pawn center](vehicle_model.md) of the car in NED frame.
 
 `Roll`,`Pitch` and `Yaw` are rotations in degrees.
 

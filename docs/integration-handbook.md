@@ -80,7 +80,7 @@ To ensure the simulation will perform as expected, the sensor suite has some res
 Here you can read the requirements and restrictions that apply to every sensor.
 
 ### Camera
-**A this moment camera's are a bit broken. You can use the camera's but the framerate and topic names might change. See #43 and #85.**
+**Be warned, camera framerate cannot be guaranteed #43.**
 
 Every vehicle can have a maximum of 2 camera sensors. 
 These camera(s) can be placed anywhere on the vehicle that would be allowed by FSG 2020 rules. 
@@ -91,8 +91,6 @@ You can choose the resolution of the camera(s).
 In total, the camera’s can have 1232450 pixels. 
 Every dimension (width or height) must be at least 240px and no greater than 1600px. 
 The horizontal field of view (FoV) is configurable for each camera and must be at least 30 degrees and not be greater than 90 degrees. 
-The vertical FoV will be automatically calculated using the following formula: `vertical FoV = image height / image width * horizontal FoV`.
-
 The camera's auto exposure, motion blur and gamma settings will be equal for all teams.
 
 
@@ -112,6 +110,7 @@ For each lidar, during a single rotation, the number of collected points for 1 l
 The number of collected points per lidar per laser per second cannot exceed 20480.
 
 To ensure the simulation keeps running smoothly:
+
 * Every lidar is limited to collect 10000 points per scan.
 * The total number of points collected per second can be no larger than 100000
 

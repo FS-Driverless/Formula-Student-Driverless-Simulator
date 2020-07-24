@@ -69,23 +69,23 @@
           ],
           "X": 1.0,
           "Y": 0.06,
-          "Z": -2.20,
+          "Z": -1.20,
           "Pitch": 0.0,
           "Roll": 0.0,
-          "Yaw": 180
+          "Yaw": 0
         },
         "cam2": {
           "CaptureSettings": [
             {
-              "ImageType": 0,
+              "ImageType": 2,
               "Width": 785,
               "Height": 785,
               "FOV_Degrees": 90
             }
           ],
           "X": 1.0,
-          "Y": 0.06,
-          "Z": -2.20,
+          "Y": 0.56,
+          "Z": -1.20,
           "Pitch": 0.0,
           "Roll": 0.0,
           "Yaw": 0.0

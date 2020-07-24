@@ -16,6 +16,7 @@ nav:
     - "Vehicle model": "vehicle_model.md"
     - "IMU": "imu.md"
     - "Lidar": "lidar.md"
+    - "Camera": "camera.md"
     - "GPS": "gps.md"
     - "GSS": "gss.md"
   - "#tech madness":
