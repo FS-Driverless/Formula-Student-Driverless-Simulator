@@ -1,5 +1,7 @@
 # Formula Student Driverless Simulation
 
+[![Join the chat at https://gitter.im/Formula-Student-Driverless-Simulator/community](https://badges.gitter.im/Formula-Student-Driverless-Simulator/community.svg)](https://gitter.im/Formula-Student-Driverless-Simulator/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## [Documentation](https://fs-online.github.io/Formula-Student-Driverless-Simulator/) / [System overview](/docs/system-overview.md) / [Getting started guide](/docs/getting-started.md)
 
 ![Front picture](docs/images/fsds_pretty.png)
