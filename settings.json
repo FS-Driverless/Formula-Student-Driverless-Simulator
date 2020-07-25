@@ -3,7 +3,7 @@
   "SettingsVersion": 1.2,
   "ViewMode": "SpringArmChase",
   "ClockSpeed": 1.0,
-  "SpectatorPassword": "password",
+  "SpectatorServerPassword": "password",
   "PawnPaths": {
     "DefaultCar": { "PawnBP": "Class'/AirSim/VehicleAdv/Cars/TechnionCar/TechnionCarPawn.TechnionCarPawn_C'" }
   },

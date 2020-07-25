@@ -314,7 +314,7 @@ public: //fields
 
     // If the current game is running as a listen server, and a spectator connects,
     // it must proide this password to be allowed to enter.
-    std::string spectator_password = "password";
+    std::string spectator_server_password = "password";
 
     std::string clock_type = "";
     float clock_speed = 1.0f;
@@ -894,7 +894,7 @@ private:
         speed_unit_factor = settings_json.getFloat("SpeedUnitFactor", 1.0f);
         speed_unit_label = settings_json.getString("SpeedUnitLabel", "m\\s");
         log_messages_visible = settings_json.getBool("LogMessagesVisible", true);
-        spectator_password = settings_json.getString("SpectatorPassword", "password");
+        spectator_server_password = settings_json.getString("SpectatorServerPassword", "password");
 
         {   //load origin geopoint
             Settings origin_geopoint_json;
