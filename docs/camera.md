@@ -28,9 +28,9 @@ To add a camera to your vehicle, add the following json to the "Cameras" map in 
 `ImageType` describes the type of camera. 
 At this moment only rgb and depth cameras are supported.
 For rgb camera, set this value to 0 and for depth camera set the value to 2.
-Using depth camera (DepthPerspective) you get depth using a projection ray that hits that pixel.
 
-RGB images published in ros are encoded using `bgr8`, depth images published in ROS are encoded in `32FC1`.
+* Depth Cameras (aka DepthPerspective) act as follows: each pixel is given a float value in meters corresponding to the smallest distance from the camera to that point. Images published in ros are encoded in `32FC1`
+* RGB images are just your normal video camera. Images published in ros are encoded using `bgr8`
 
 `FOV_Degrees` describes [how much the camera sees](https://en.wikipedia.org/wiki/Field_of_view).
 The vertical FoV will be automatically calculated using the following formula: `vertical FoV = image height / image width * horizontal FoV`.
