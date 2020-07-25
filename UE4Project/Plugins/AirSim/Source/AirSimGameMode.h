@@ -19,6 +19,7 @@ public:
     
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+    virtual void PreLogin(const FString& Options, const FString& Address, const TSharedPtr& UniqueId, FString& ErrorMessage) override;
     virtual void PostLogin(APlayerController * NewPlayer) override;
 
     
