@@ -1,7 +1,7 @@
 # Getting started
 
 When running this simulator there are two main components: the simulator and the ros bridge.
-Your autonomous system and the ros bridge should use the same ros core, either by running on the same computer or through a network connection.
+Your autonomous system and the ros bridge should use the same ros core, either by running on the same computer or through a network connection. It is required that the simulator and the ros bridge have the same version!
 
 This page is an overview of the different methods to get these components up and running.
 
@@ -40,6 +40,12 @@ Try driving the car around using the arrowkeys.
 
 If you want to run the unreal engine project from source you will need [unreal engine and visual studio 2019](software-install-instructions.md).
 On Ubuntu you can skip the visual studio 2019 part.
+
+#### Get the repository
+
+You can either download the repo using the big green download button on the [github page of this project](https://github.com/FS-Online/Formula-Student-Driverless-Simulator) or clone the repository. For cloning, checkout the documentation on this further down this page.
+
+When downloading or cloning, by default you get the latest, unreleased version. This is probably not the version that you want. Make sure you select the version that you need! 
 
 #### Compiling the AirSim plugin
 The Unreal Engine project requires the AirSim plugin.
@@ -131,6 +137,8 @@ If you want to share the the clone directory with the Ubuntu WSL system, create 
 ```
 ln -s /mnt/c/Users/developer/Formula-Student-Driverless-Simulator ~/Formula-Student-Driverless-Simulator
 ```
+
+Now, checkout the version equal to the simulator. If you are running for example simulator packaged version beta-3, run `git checkout beta-3` to get the ros brige to the same version
 
 ### Preparing AirLib
 
