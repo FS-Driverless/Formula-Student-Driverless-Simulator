@@ -2,36 +2,45 @@
 The spectator provides an eye into the virtual world from an external computer.
 Through a network connection the virtual world state is replicated and shown on the screen.
 The user can operate the camera with its mouse and keyboard.
+Spectators are not able to interact with the world
 
-## Launching the spectator
+## Launching the server
 
 A simulator launched as 'server' will accept external viewers (spectators) to join the game.
-The spectators are not able to interact with the world.
+You can launch the simulation as a server in the main menu by pressing the 'TODO' button.
+
+The server will run on port 7777 port, make sure spectators can connect to it.
+In most cases you will need to add a firewall rule to allow TCP and UDP traffic.
+When behind a router you might need to do some port forwarding.
+
+To skip the menu and launch the game as server directly, you can use the following command:
+
+```
+FSDS.exe /Game/TrainingMap?listen
+```
+This opens the TrainingMap and allows external clients (spectators) to connect.
+
+Within the `settings.json` you can configure the server password like so:
+
+```
+{
+  "SpectatorPassword": "password",
+  ...
+```
+If the password is not configured in the settings.json, the password is set to `password`.
+At this moment it is not possible to start a server without password.
+
+## Launching the spectator
 Spectators can enter the ip of the server in the main menu to connect to a running simulator.
 Multiple simultaneous spectators in a single world should work as well.
+If a spectator loses connection to the server it will go back to the main menu.
 
-> If a spectator loses connection to the server it will go back to the main menu.
+To skip the menu and launch the spectator directly, you can use the following command:
 
-If you want to give access to clients from external computers you must ensure the specified port is accessible. 
-In most cases you will have to add a firewall rule to allow the traffic.
-When behind a router you might need to do some port forwarding.
-Both TCP and UDP traffic must be able to travel from client to server on port 7777.
-
-To skip the menu and launch the game as server or spectator directly, you can use the following commandline options:
-
-**Run the game as a server**
 ```
-FSDS.exe /Game/TrainingMap?listen -log
+FSDS.exe 0.0.0.0?password=123456
 ```
-This runs the simulator like normal but now external clients (spectators) are welcome to connect.
-
-
-**Running the spectator**
-```
-FSDS.exe 0.0.0.0 -log
-```
-Where `0.0.0.0` is replaced by the external ip of the server.
-
+Where `0.0.0.0` is replaced by the external ip of the server and `123456` is replaced by the server password.
 
 ## Using the spectator
 
