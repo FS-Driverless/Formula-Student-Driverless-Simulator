@@ -5,6 +5,9 @@ You probably only need parts of it.
 The other guides in this documentation will tell you what you need.
 
 ## Install Unreal Engine (Windows)
+Ensure your windows user has no special characters! 
+If it contains special characters there will be a conflict with your Win10 user folder name, and mess up unreal engine reading the directory path.
+
 Go to [unrealengine.com](https://www.unrealengine.com/) and download the epic installer.
 You need an account for this.
 Install the epic installer.
