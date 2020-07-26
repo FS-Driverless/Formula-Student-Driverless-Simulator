@@ -9,7 +9,7 @@
 #include "statistics.h"
 #include "rpc/rpc_error.h"
 #include <cv_bridge/cv_bridge.h>
-
+#include <math.h>
 
 
 
@@ -96,6 +96,30 @@ cv::Mat manual_decode_depth(const ImageResponse& img_response)
     return mat;
 }
 
+float roundUp(float numToRound, float multiple) 
+{
+    assert(multiple);
+    return ((numToRound + multiple - 1) / multiple) * multiple;
+}
+
+cv::Mat noisify_depthimage(cv::Mat in)
+{
+    cv::Mat out = in.clone();
+
+    // Blur
+    cv::Mat kernel = cv::Mat::ones( 7, 7, CV_32F ) / (float)(7 * 7);
+    cv::filter2D(in, out, -1 , kernel, cv::Point( -1, -1 ), 0, cv::BORDER_DEFAULT );
+
+    // Decrease depth resolution
+    for (int row = 0; row < in.rows; row++) {
+        for (int col = 0; col < in.cols; col++) {
+            float roundtarget = ceil(std::min(std::max(out.at<float>(row, col), 1.0f), 10.0f));
+            out.at<float>(row, col) = roundUp(out.at<float>(row, col), roundtarget);
+        }
+    }
+
+    return out;
+}
 
 void doDepthImageUpdate(const ros::TimerEvent&) {
     auto img_responses = getImage(ImageRequest(camera_name, ImageType::DepthPerspective, true, false));
@@ -106,7 +130,7 @@ void doDepthImageUpdate(const ros::TimerEvent&) {
 
     ImageResponse img_response = img_responses[0];
 
-    cv::Mat depth_img = manual_decode_depth(img_response);
+    cv::Mat depth_img = noisify_depthimage(manual_decode_depth(img_response));
     sensor_msgs::ImagePtr img_msg = cv_bridge::CvImage(std_msgs::Header(), "32FC1", depth_img).toImageMsg();
     img_msg->header.stamp = make_ts(img_response.time_stamp);
     img_msg->header.frame_id = "/fsds/camera/"+camera_name;    
