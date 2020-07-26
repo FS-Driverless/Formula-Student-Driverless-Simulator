@@ -77,7 +77,7 @@
         "cam2": {
           "CaptureSettings": [
             {
-              "ImageType": 2,
+              "ImageType": 0,
               "Width": 785,
               "Height": 785,
               "FOV_Degrees": 90
