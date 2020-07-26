@@ -46,8 +46,9 @@ for cameraname in settings['Vehicles']['FSCar']['Cameras']:
         required=True, output='screen',
         args=args({
           'camera_name': cameraname,
+          'depthcamera': camsettings["CaptureSettings"][0]["ImageType"] == 2,
           'framerate': CAMERA_FRAMERATE,
-          'host_ip': AIRSIM_HOSTIP
+          'host_ip': AIRSIM_HOSTIP,
         })))
     # launch.launch(
     #   roslaunch.core.Node(
