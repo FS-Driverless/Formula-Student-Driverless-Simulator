@@ -2,15 +2,14 @@
 
 The ground speed sensor is modeled around the Kistler ground speed (like the Kistler Correvit SFII).
 
-Velocity information is captured in the frame of the car in the NED frame.
+Velocity information is captured in the global world frame in ENU frame.
 
 At this moment no extra noise is added to the sensordata since the kistler 250hz data averaged into the 100hz is so close to ground truth that adding noise would be unrealistic.
 
 ## Ros
 When using the ros bridge, ground speed sensordata will be published on `/fsds/gss` with the `geometry_msgs/TwistStamped` message type.
 
-Appart from the header fields, only `x` and `z` of the `twist.linear` are populated. 
-All other values will be 0.
+Appart from the header fields, only `x`, `y` and `z` of the `twist.linear` are populated. 
 
 ```
 header:
