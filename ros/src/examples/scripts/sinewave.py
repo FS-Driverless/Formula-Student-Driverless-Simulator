@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import rospy, math
-from fsds_ros_bridge.msg import ControlCommand
+from fs_msgs.msg import ControlCommand
 
 # the number of seconds to do a full steering cycle (neutral -> full right -> full left -> neutroal)
 STEERING_PERIOD = 5
