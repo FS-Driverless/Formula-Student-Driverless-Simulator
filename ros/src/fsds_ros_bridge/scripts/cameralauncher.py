@@ -4,9 +4,14 @@ from os.path import expanduser
 import json 
 import signal
 import sys
+import rospy
 
 CAMERA_FRAMERATE = 30
-AIRSIM_HOSTIP = "localhost"
+
+rospy.init_node('cameralauncher', anonymous=True)
+AIRSIM_HOSTIP = rospy.get_param("~host_ip")
+
+print(AIRSIM_HOSTIP)
 
 settings = {}
 

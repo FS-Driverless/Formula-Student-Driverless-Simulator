@@ -1,7 +1,8 @@
 # Getting started
 
 When running this simulator there are two main components: the simulator and the ros bridge.
-Your autonomous system and the ros bridge should use the same ros core, either by running on the same computer or through a network connection. It is required that the simulator and the ros bridge have the same version!
+Your autonomous system and the ros bridge should use the same ros core, either by running on the same computer or through a network connection. 
+It is required that the simulator and the ros bridge have the same version!
 
 This page is an overview of the different methods to get these components up and running.
 
@@ -77,7 +78,8 @@ It might show an error like 'This project was made with a different version of t
 When asked to rebuild the 'Blocks' and 'AirSim' modules, choose 'Yes'.
 This is the step where the plugin part of AirSim is compiled.
 
-After some time Unreal Engine will start and you can launch the game.
+After some time Unreal Engine will start and you can launch the game. 
+Run the game in standalone mode or or selected viewport mode, simulate and eject mode do not support camera's.
 
 If you make changes to AirLib you have to run `build.cmd` again.
 
@@ -95,9 +97,9 @@ If you want to run it like it would run when packaged, choose 'Run as standalone
 The simulator exposes an RPC api that is used by the ros bridge to communicate with the vehicle.
 The ros bridge should preferable run on the same computer as the simulator to ensure low latency and high bandwidth.
 
-> It is theoretically possible to run the ros bridge on a different computer than the simulator.
-  However, this has not been tested recently and it might be broken.
-  You should look into the fsds_ros_bridge.launch file and check the `host_ip` variable.
+It is possible to run the ros bridge on a different computer than the simulator.
+To get this to work you should use the `host` argument in the `fsds_ros_bridge.launch` file.
+The ros bridge will connect to the simulator on port 41451.
 
 The ros bridge only works on Ubuntu.
 If you have the simulator running on windows we reccommend Windows Subsystem for Linux.
