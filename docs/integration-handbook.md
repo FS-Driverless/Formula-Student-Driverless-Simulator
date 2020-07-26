@@ -85,13 +85,16 @@ Here you can read the requirements and restrictions that apply to every sensor.
 Every vehicle can have a maximum of 2 camera sensors. 
 These camera(s) can be placed anywhere on the vehicle that would be allowed by FSG 2020 rules. 
 The camera body dimensions are a 4x4x4 cm cube with mounting points at any side except the front-facing side.
+You can have both rgb and depth camera's as described in the [camera docs](camera.md).
 
-All camera sensors output uncompressed RGBA8 images at 30 FPS. 
+All RGB camera sensors output images at around 20 FPS, depth camera's images will be published at around 5 FPS.
 You can choose the resolution of the camera(s). 
-In total, the camera’s can have 1232450 pixels. 
+In total, the camera’s can have 1232450 pixels.
 Every dimension (width or height) must be at least 240px and no greater than 1600px. 
 The horizontal field of view (FoV) is configurable for each camera and must be at least 30 degrees and not be greater than 90 degrees. 
 The camera's auto exposure, motion blur and gamma settings will be equal for all teams.
+
+The resolution for a single depth camera can be no larger then 1280 width x 720 height.
 
 
 ### Lidar
