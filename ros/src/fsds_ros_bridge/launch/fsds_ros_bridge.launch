@@ -27,7 +27,9 @@
 			<env name="OPERATOR_ACCESS_TOKEN" value="$(arg access_token)"/>
 		</node>
 
-		<node pkg="fsds_ros_bridge" name="cameralauncher" type="cameralauncher.py" output="screen"  required="true"/>
+		<node pkg="fsds_ros_bridge" name="cameralauncher" type="cameralauncher.py" output="screen"  required="true">
+			<param name="host_ip" type="string" value="$(arg host)" />
+		</node>
 
 	</group>
 

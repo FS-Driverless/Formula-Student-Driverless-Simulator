@@ -1,7 +1,8 @@
 # Getting started
 
 When running this simulator there are two main components: the simulator and the ros bridge.
-Your autonomous system and the ros bridge should use the same ros core, either by running on the same computer or through a network connection.
+Your autonomous system and the ros bridge should use the same ros core, either by running on the same computer or through a network connection. 
+It is required that the simulator and the ros bridge have the same version!
 
 This page is an overview of the different methods to get these components up and running.
 
@@ -41,6 +42,12 @@ Try driving the car around using the arrowkeys.
 If you want to run the unreal engine project from source you will need [unreal engine and visual studio 2019](software-install-instructions.md).
 On Ubuntu you can skip the visual studio 2019 part.
 
+#### Get the repository
+
+You can either download the repo using the big green download button on the [github page of this project](https://github.com/FS-Online/Formula-Student-Driverless-Simulator) or clone the repository. For cloning, checkout the documentation on this further down this page.
+
+When downloading or cloning, by default you get the latest, unreleased version. This is probably not the version that you want. Make sure you select the version that you need! 
+
 #### Compiling the AirSim plugin
 The Unreal Engine project requires the AirSim plugin.
 We have to compile this plugin first.
@@ -71,7 +78,8 @@ It might show an error like 'This project was made with a different version of t
 When asked to rebuild the 'Blocks' and 'AirSim' modules, choose 'Yes'.
 This is the step where the plugin part of AirSim is compiled.
 
-After some time Unreal Engine will start and you can launch the game.
+After some time Unreal Engine will start and you can launch the game. 
+Run the game in standalone mode or or selected viewport mode, simulate and eject mode do not support camera's.
 
 If you make changes to AirLib you have to run `build.cmd` again.
 
@@ -89,9 +97,9 @@ If you want to run it like it would run when packaged, choose 'Run as standalone
 The simulator exposes an RPC api that is used by the ros bridge to communicate with the vehicle.
 The ros bridge should preferable run on the same computer as the simulator to ensure low latency and high bandwidth.
 
-> It is theoretically possible to run the ros bridge on a different computer than the simulator.
-  However, this has not been tested recently and it might be broken.
-  You should look into the fsds_ros_bridge.launch file and check the `host_ip` variable.
+It is possible to run the ros bridge on a different computer than the simulator.
+To get this to work you should use the `host` argument in the `fsds_ros_bridge.launch` file.
+The ros bridge will connect to the simulator on port 41451.
 
 The ros bridge only works on Ubuntu.
 If you have the simulator running on windows we reccommend Windows Subsystem for Linux.
@@ -131,6 +139,8 @@ If you want to share the the clone directory with the Ubuntu WSL system, create 
 ```
 ln -s /mnt/c/Users/developer/Formula-Student-Driverless-Simulator ~/Formula-Student-Driverless-Simulator
 ```
+
+Now, checkout the version equal to the simulator. If you are running for example simulator packaged version beta-3, run `git checkout beta-3` to get the ros brige to the same version
 
 ### Preparing AirLib
 
