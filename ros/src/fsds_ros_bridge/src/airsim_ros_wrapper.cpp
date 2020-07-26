@@ -117,15 +117,16 @@ void AirsimROSWrapper::initialize_ros()
     double update_imu_every_n_sec;
     double update_gss_every_n_sec;
     double publish_static_tf_every_n_sec;
+    bool manual_mode;
     nh_private_.getParam("mission_name", mission_name_);
     nh_private_.getParam("track_name", track_name_);
     nh_private_.getParam("competition_mode", competition_mode_);
+    nh_private_.getParam("manual_mode", manual_mode);
     nh_private_.getParam("update_odom_every_n_sec", update_odom_every_n_sec);
     nh_private_.getParam("update_gps_every_n_sec", update_gps_every_n_sec);
     nh_private_.getParam("update_imu_every_n_sec", update_imu_every_n_sec);
     nh_private_.getParam("update_gss_every_n_sec", update_gss_every_n_sec);
     nh_private_.getParam("publish_static_tf_every_n_sec", publish_static_tf_every_n_sec);
-    
 
     create_ros_pubs_from_settings_json();
 
@@ -141,7 +142,7 @@ void AirsimROSWrapper::initialize_ros()
     statistics_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::statistics_timer_cb, this);
     go_signal_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::go_signal_timer_cb, this);
 
-    airsim_client_.enableApiControl(competition_mode_, vehicle_name);
+    airsim_client_.enableApiControl(!manual_mode, vehicle_name);
     airsim_client_.armDisarm(true, vehicle_name); 
 
     if(!competition_mode_) {
