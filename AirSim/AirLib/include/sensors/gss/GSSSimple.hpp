@@ -27,7 +27,7 @@ public:
         const GroundTruth& ground_truth = getGroundTruth();
 
         output.time_stamp = clock()->nowNanos();
-        output.linear_velocity = Vector3r(std::sqrt(std::pow(ground_truth.kinematics->twist.linear.x(), 2) + std::pow(ground_truth.kinematics->twist.linear.y(), 2)), 0, ground_truth.kinematics->twist.linear.z());
+        output.linear_velocity = Vector3r(ground_truth.kinematics->twist.linear.x(), ground_truth.kinematics->twist.linear.y(), ground_truth.kinematics->twist.linear.z());
 
         output_ = output;
     }
