@@ -52,7 +52,7 @@ private: //methods
         const GroundTruth& ground_truth = getGroundTruth();
 
         output.angular_velocity = ground_truth.kinematics->twist.angular;
-        ground_truth.kinematics->accelerations.linear - Vector3r(0, 0, EarthUtils::Gravity);;
+        output.linear_acceleration = ground_truth.kinematics->accelerations.linear - Vector3r(0, 0, EarthUtils::Gravity);
         output.orientation = ground_truth.kinematics->pose.orientation;
 
         //acceleration is in world frame so transform to body frame
