@@ -229,7 +229,7 @@ This is the bounding box of the vehicle (the part of the vehicle that interacts 
 The 3d models are not restricted to this size.
 
 Teams participating in FSOnline can provide their 3d vehicle models to be used during competition. 
-If you want the 3d model to be public, you can create a pr to this repo.
+If you want the 3d model to be public, you can create a pull request to this repository.
 If you want it to be kept private, [send an email to FSOnline](sijmen.huizenga@formulastudentonline.com) with the uasset files required for your car to drive.
 
 ## Competition deployment
