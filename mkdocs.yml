@@ -18,7 +18,7 @@ nav:
     - "Lidar": "lidar.md"
     - "Camera": "camera.md"
     - "GPS": "gps.md"
-    - "GSS": "gss.md"
+    - "GSS": "ground-speed-sensor.md"
   - "#tech madness":
     - "ROS Bridge": "ros-bridge.md"
     - "ROS Bridge statistics": "statistics.md"

@@ -228,6 +228,10 @@ All vehicles will have a width of 100cm, a length of 180cm and a height of 50cm.
 This is the bounding box of the vehicle (the part of the vehicle that interacts with the world)
 The 3d models are not restricted to this size.
 
+Teams participating in FSOnline can provide their 3d vehicle models to be used during competition. 
+If you want the 3d model to be public, you can create a pr to this repo.
+If you want it to be kept private, [send an email to FSOnline](sijmen.huizenga@formulastudentonline.com) with the uasset files required for your car to drive.
+
 ## Competition deployment
 A few weeks before the competition, each team will receive the ssh credentials to an Ubuntu google cloud instance.
 This instance will have 8 vCPU cores, 30 GB memory (configuration n1-standard-8), 1 Nvidia Tesla T4 video card and 100GB SSD disk.

@@ -121,3 +121,10 @@ Next, in the details pane:
 # 7. Selecting a car
 Update your settings.json `PawnPaths -> DefaultCar -> PawnBP` to point at the newly created pawn. 
 It should (tm) work.
+
+# 8. Sharing your vehicle with the world!
+
+Wouldn't it be amazing if other people could enjoy your vehicle 3d model as well?
+You are welcome to create a pull request with your vehicle and it might be added to the reop!
+Contribution will be given in the readme of the project.
+Please not that only GPLv2 licensed material is accepted into this repository.
