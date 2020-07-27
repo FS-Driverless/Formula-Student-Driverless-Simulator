@@ -126,5 +126,5 @@ It should (tm) work.
 
 Wouldn't it be amazing if other people could enjoy your team's vehicle 3d model as well?
 You are welcome to create a pull request with your vehicle and it might be added to the reop!
-Contribution will be given in the readme of the project.
+Submit the new model as a pull request which is up to date with the current project state, with the vehicle model and pawn files added. Contribution will be given in the readme of the project.
 Please not that only GPLv2 licensed material is accepted into this repository.
