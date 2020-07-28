@@ -54,12 +54,17 @@ AAirSimGameMode::AAirSimGameMode(const FObjectInitializer& ObjectInitializer)
     static IImageWrapperModule& ImageWrapperModule = FModuleManager::LoadModuleChecked<IImageWrapperModule>(TEXT("ImageWrapper"));
 }
 
+void AAirSimGameMode::InitGame(const FString & MapName, const FString & Options, FString & ErrorMessage)
+{
+    AGameModeBase::InitGame(MapName, Options, ErrorMessage);
+    initializeSettings();
+}
+
 void AAirSimGameMode::BeginPlay() 
 {
     try
     {
         UAirBlueprintLib::OnBeginPlay();
-        initializeSettings();
         setUnrealEngineSettings();
     }
     catch (std::exception &ex)
