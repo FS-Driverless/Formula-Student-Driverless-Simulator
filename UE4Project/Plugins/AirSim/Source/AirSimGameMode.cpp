@@ -54,12 +54,17 @@ AAirSimGameMode::AAirSimGameMode(const FObjectInitializer& ObjectInitializer)
     static IImageWrapperModule& ImageWrapperModule = FModuleManager::LoadModuleChecked<IImageWrapperModule>(TEXT("ImageWrapper"));
 }
 
+void AAirSimGameMode::InitGame(const FString & MapName, const FString & Options, FString & ErrorMessage)
+{
+    AGameModeBase::InitGame(MapName, Options, ErrorMessage);
+    initializeSettings();
+}
+
 void AAirSimGameMode::BeginPlay() 
 {
     try
     {
         UAirBlueprintLib::OnBeginPlay();
-        initializeSettings();
         setUnrealEngineSettings();
     }
     catch (std::exception &ex)
@@ -76,6 +81,16 @@ void AAirSimGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
     UAirBlueprintLib::OnEndPlay();
 
     Super::EndPlay(EndPlayReason);
+}
+
+void AAirSimGameMode::PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
+{
+    FString clientPassword = UGameplayStatics::ParseOption(Options, TEXT("password"));
+    std::string serverPassword = msr::airlib::AirSimSettings::singleton().spectator_server_password;
+    if(clientPassword != FString(serverPassword.c_str())) {
+        // login attamed is blocked if ErrorMessage is set to non-null string
+        ErrorMessage = FString(TEXT("Incorrect password"));
+    }
 }
 
 void AAirSimGameMode::PostLogin(APlayerController * newPlayer) {

@@ -5,6 +5,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Misc/MessageDialog.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/PlayerInput.h"
 #include "IImageWrapperModule.h"
@@ -46,6 +47,12 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Utils")
         static void LogMessage(const FString &prefix, const FString &suffix, LogDebugLevel level, float persist_sec = 60);
     static float GetWorldToMetersScale(const AActor* context);
+
+    UFUNCTION(BlueprintCallable, Category = "Utils")
+        static void showMessageAlertDialog(const FText& message, const FText& title)
+    {
+        FMessageDialog::Open(EAppMsgType::Ok, message, & title);
+    }
 
     template<typename T>
     static T* GetActorComponent(AActor* actor, FString name);
