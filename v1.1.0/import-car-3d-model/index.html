@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Import your 3d car model - Formula Student Driverless Simulator</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="../css/version-select.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Import your 3d car model";
+    var mkdocs_page_input_path = "import-car-3d-model.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Formula Student Driverless Simulator</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Introduction</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../system-overview/">System overview</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../integration-handbook/">Integration handbook</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Vehicle & Sensors</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../vehicle_model/">Vehicle model</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../imu/">IMU</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../lidar/">Lidar</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../camera/">Camera</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../gps/">GPS</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../ground-speed-sensor/">GSS</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">#tech madness</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="../ros-bridge/">ROS Bridge</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../statistics/">ROS Bridge statistics</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../joystick/">Joystick</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../operator/">Operator</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
+                    </li>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Import your 3d car model</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#preface-a-friendly-warning">Preface (a friendly warning)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#1-prepare-your-3d-model">1. Prepare your 3d model</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-importing-the-model-into-unreal-engine">2. Importing the model into unreal engine</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-styling-your-model">3. Styling your model</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-configuring-the-physics-asset">4. Configuring the physics asset</a>
+    </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../gcp-remote-workstation/">Google cloud remote workstation</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../software-install-instructions/">Software install instructions</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../how-to-release/">How to release</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Formula Student Driverless Simulator</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>#tech madness &raquo;</li>
+        
+      
+    
+    <li>Import your 3d car model</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/edit/master/docs/import-car-3d-model.md"> Edit on FS-Online/Formula-Student-Driverless-Simulator</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="how-to-import-your-car-3d-model">How to import your car 3d model</h1>
+<p>Import your own 3d model of your formula student car into the world and use it during simulation!</p>
+<h2 id="preface-a-friendly-warning">Preface (a friendly warning)</h2>
+<p>Without experience with blender and unreal engine this whole process is painfull.
+There are waaaay to many options and buttons in these tools and it never does what you want to do.
+If you want your 3d model to be added to this repository you can create a github ticket and ask verry nicely if someone wants to help.
+Maybe you find someone with some experience that will help you.
+Make sure you have your fbx model prepared beforehand (see below).</p>
+<p>Are you a great warrior forged in the fires of a collapsing star seeking for the ultimate challenge?
+Let me introduce you to the world of importing 3d model. </p>
+<p><img alt="" src="../images/goingonanadventure.gif" /></p>
+<h2 id="1-prepare-your-3d-model">1. Prepare your 3d model</h2>
+<p>First we have to get the 3d model prepared and exported to fbx format.
+Most 3d editing software support this format.
+This tutorial however only describes blender becuase it's free (yay) and relatively easy to use.</p>
+<p>Build your car and get it to the following structure:</p>
+<p><img alt="" src="../images/blender-structure.png" /></p>
+<p>There should be 1 object for the chassy and 4 child objects for the wheels.
+You do not need to define bones, those will be auto-created when importing to unreal.
+Give the wheels easy names because we will be using those names later on.</p>
+<p>Note: the car should be facing the positive x axis in blender.</p>
+<p>This is also the time to paint your car.
+Add surfuces, create textures and go crazy with paint.
+Export any textures to image format.</p>
+<p>Before we export the model, check that all deltra transforms have been applied and <a href="https://blender.stackexchange.com/questions/31769/how-to-set-the-current-scale-to-1/31771">all scales are set to 1</a>.
+Also don't forget to <a href="https://blender.stackexchange.com/a/153695/100133">recalculate normals</a></p>
+<p>Export the 3d model to FBX format using all default settings.
+Ensure you are only exporting meshes and armature.</p>
+<h2 id="2-importing-the-model-into-unreal-engine">2. Importing the model into unreal engine</h2>
+<p>Create a new folder in <code>AirSim Content/VehicleADV/Cars/</code> with the name of your car.
+Use all defaults, except:</p>
+<ul>
+<li>Check Skeletal Mesh</li>
+<li>Import content type: Geometry Only</li>
+<li>Skeleton 'None'</li>
+</ul>
+<p>Now you should see a mesh file, physics asset and skeleton.</p>
+<h2 id="3-styling-your-model">3. Styling your model</h2>
+<p>Go into the mesh file to style your car. 
+There are many ways to make your mesh fancy using materials and textures.
+Good luck Googling.</p>
+<h2 id="4-configuring-the-physics-asset">4. Configuring the physics asset</h2>
+<p>The physics asset defines which part of the vehicle interacts with the world.
+It is basically the collision model.</p>
+<p><strong>If you are not planning to use this car in an online competition</strong> then you can configure the bounding boxes as close to the mesh as you want.
+Some key settings to keep in mind:</p>
+<ul>
+<li>Each wheel bone needs it's own physics body.</li>
+<li>All wheel bodies need to be Physics Type 'Kinematic'</li>
+<li>Only the wheels should touch the ground.</li>
+</ul>
+<p>Take a look at <code>Suv_Pa</code> for an example:</p>
+<p><img alt="" src="../images/ue-suv_pa.png" /></p>
+<p><strong>If you are planning to use this car in an online competition (FSOnline)</strong> you must use create the bounding boxes exactly the following specification:</p>
+<ul>
+<li>Width: 100cm</li>
+<li>Length: 180cm</li>
+<li>Height: 50cm</li>
+</ul>
+<p>In competition all cars will be equal in behaviour. 
+So all bounding boxes must be equal.
+Below picture shows how bounding boxes can be bigger or smaller than the mesh.</p>
+<p><img alt="" src="../images/ue-equality.png" /></p>
+<p>All bounding boxes will be checked by:</p>
+<ol>
+<li>placing each vehicle into the virtual world using a SkeletalMeshActor</li>
+<li>Going into top view mode (Alt-J)</li>
+<li>Enabling Collision visualisation (Alt-C)</li>
+<li>Using the middle-mouse button measuring tool to check the width and length </li>
+</ol>
+<p>The following physics asset are examples of above specification:</p>
+<ul>
+<li><code>AirSim/Content/VehicleAdv/Cars/TechnionCar/RacingTechnion_PA.uasset</code></li>
+<li><code>AirSim/Content/VehicleAdv/Cars/ReferenceCar/ReferenceCar_Pa.uasset</code></li>
+<li><code>AirSim/Content/VehicleAdv/Cars/SuvCar/RacingSuv_Pa.uasset</code></li>
+</ul>
+<h1 id="5-create-an-animation">5. Create an animation</h1>
+<p>Go into your car folder and create a new Animation Blueprint.
+Choose <code>VehicleAnimInstance</code> as parent class and choose your cars skeleton as target.
+Now make it look like this:</p>
+<p><img alt="" src="../images/ue-anim.png" /></p>
+<h1 id="6-create-a-pawn">6. Create a pawn</h1>
+<p>Go into your car folder and create create a new Blueprint Class with base class CarPawn.
+This will be the actual pawn that will be controlled by the autonomous system.</p>
+<p>In the components browser, select 'Mesh'.
+Next, in the details pane, set 'Skeletal Mesh' to your car.
+Set 'Anim Class' to the animation class you created in step 5.</p>
+<p>In the components browser, select 'VehicleMovement'
+Next, in the details pane:</p>
+<ul>
+<li>Set <code>Mass</code> to <code>255,0</code></li>
+<li>In the <code>Wheel Setups</code> set the first two <code>Wheel Class</code> to <code>FormulaFrontWheel</code> and the last two <code>Wheel Class</code> to <code>FormulaBackWheel</code></li>
+<li>In <code>Wheel Setups</code> set the <code>Bone Name</code> of each wheel to the corresponding bone name as found in the skeleton. From top to bottom they are front left, front right, back left, back right</li>
+<li>From Drag Coefficient onwards all settings should be exactly equal to the settings in <code>SuvCarPawn</code>. Have fun copy-pasting.</li>
+</ul>
+<h1 id="7-selecting-a-car">7. Selecting a car</h1>
+<p>Update your settings.json <code>PawnPaths -&gt; DefaultCar -&gt; PawnBP</code> to point at the newly created pawn. 
+It should (tm) work.</p>
+<h1 id="8-sharing-your-vehicle-with-the-world">8. Sharing your vehicle with the world!</h1>
+<p>Wouldn't it be amazing if other people could enjoy your team's vehicle 3d model as well?
+You are welcome to create a pull request with your vehicle and it might be added to the base project repository!
+Submit the new model as a pull request which is up to date with the current project state, with the vehicle model and pawn files added. Contribution will be given in the readme of the project.
+Please note that only GPLv2 licensed material is accepted into this repository.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../gcp-remote-workstation/" class="btn btn-neutral float-right" title="Google cloud remote workstation">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../spectator/" class="btn btn-neutral" title="Spectator"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>GPLv2</p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../spectator/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../gcp-remote-workstation/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/version-select.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

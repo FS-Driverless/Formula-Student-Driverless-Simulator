@@ -88,6 +88,8 @@
                     </li>
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">Spectator</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#launching-the-server">Launching the server</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#launching-the-spectator">Launching the spectator</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#using-the-spectator">Using the spectator</a>
@@ -146,30 +148,38 @@
                 <h1 id="spectator">Spectator</h1>
 <p>The spectator provides an eye into the virtual world from an external computer.
 Through a network connection the virtual world state is replicated and shown on the screen.
-The user can operate the camera with its mouse and keyboard.</p>
-<h2 id="launching-the-spectator">Launching the spectator</h2>
+The user can operate the camera with its mouse and keyboard.
+Spectators are not able to interact with the world</p>
+<h2 id="launching-the-server">Launching the server</h2>
 <p>A simulator launched as 'server' will accept external viewers (spectators) to join the game.
-The spectators are not able to interact with the world.
-Spectators can enter the ip of the server in the main menu to connect to a running simulator.
-Multiple simultaneous spectators in a single world should work as well.</p>
-<blockquote>
-<p>If a spectator loses connection to the server it will go back to the main menu.</p>
-</blockquote>
-<p>If you want to give access to clients from external computers you must ensure the specified port is accessible. 
-In most cases you will have to add a firewall rule to allow the traffic.
-When behind a router you might need to do some port forwarding.
-Both TCP and UDP traffic must be able to travel from client to server on port 7777.</p>
-<p>To skip the menu and launch the game as server or spectator directly, you can use the following commandline options:</p>
-<p><strong>Run the game as a server</strong></p>
-<pre><code>FSDS.exe /Game/TrainingMap?listen -log
+You can launch the simulation as a server in the main menu by pressing the 'TODO' button.</p>
+<p>The server will run on port 7777 port, make sure spectators can connect to it.
+In most cases you will need to add a firewall rule to allow TCP and UDP traffic.
+When behind a router you might need to do some port forwarding.</p>
+<p>To skip the menu and launch the game as server directly, you can use the following command:</p>
+<pre><code>FSDS.exe /Game/TrainingMap?listen
 </code></pre>
 
-<p>This runs the simulator like normal but now external clients (spectators) are welcome to connect.</p>
-<p><strong>Running the spectator</strong></p>
-<pre><code>FSDS.exe 0.0.0.0 -log
+<p>This opens the TrainingMap and allows external clients (spectators) to connect.</p>
+<p>Within the <code>settings.json</code> you can configure the server password.
+Using the password is usefull to prevent trolls and curious people from connecting to the simulator and breaking the simulator.</p>
+<pre><code>{
+  &quot;SpectatorPassword&quot;: &quot;password&quot;,
+  ...
 </code></pre>
 
-<p>Where <code>0.0.0.0</code> is replaced by the external ip of the server.</p>
+<p>If the password is not configured in the settings.json, the password is set to <code>password</code>.
+At this moment it is not possible to start a server without password.</p>
+<h2 id="launching-the-spectator">Launching the spectator</h2>
+<p>Spectators can enter the ip of the server in the main menu to connect to a running simulator.
+Multiple simultaneous spectators in a single world should work as well.
+If a spectator loses connection to the server it will go back to the main menu.</p>
+<p>To skip the menu and launch the spectator directly, you can use the following command:</p>
+<pre><code>FSDS.exe 0.0.0.0?password=123456
+</code></pre>
+
+<p>Where <code>0.0.0.0</code> is replaced by the external ip of the server and <code>123456</code> is replaced by the server password.</p>
+<p><strong>If you enter a wrong password you are taken back to the main menu. No error will be shown.</strong></p>
 <h2 id="using-the-spectator">Using the spectator</h2>
 <p>When starting the spectator it will be launched in follow-car mode.
 In this mode the camera will always point at the vehicle.
