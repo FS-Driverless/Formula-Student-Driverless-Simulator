@@ -36,12 +36,10 @@ public:
 
     typedef msr::airlib::GeoPoint GeoPoint;
     typedef msr::airlib::Vector3r Vector3r;
-    typedef msr::airlib::Pose Pose;
     typedef msr::airlib::Quaternionr Quaternionr;
     typedef msr::airlib::CollisionInfo CollisionInfo;
     typedef msr::airlib::VectorMath VectorMath;
     typedef msr::airlib::real_T real_T;
-    typedef msr::airlib::Utils Utils;
     typedef msr::airlib::AirSimSettings::VehicleSetting VehicleSetting;
     typedef msr::airlib::ImageCaptureBase ImageCaptureBase;
 
