@@ -20,7 +20,8 @@ FSDS.exe /Game/TrainingMap?listen
 ```
 This opens the TrainingMap and allows external clients (spectators) to connect.
 
-Within the `settings.json` you can configure the server password like so:
+Within the `settings.json` you can configure the server password.
+Using the password is usefull to prevent trolls and curious people from connecting to the simulator and breaking the simulator.
 
 ```
 {
