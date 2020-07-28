@@ -78,11 +78,11 @@ void AAirSimGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
     Super::EndPlay(EndPlayReason);
 }
 
-void AAirSimGameMode::PreLogin(const FString& Options, const FString& Address, const TSharedPtr& UniqueId, FString& ErrorMessage)
+void AAirSimGameMode::PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
 {
-    FString clientPassword = ParseOption(Options, TEXT("password "));
+    FString clientPassword = UGameplayStatics::ParseOption(Options, TEXT("password"));
     std::string serverPassword = msr::airlib::AirSimSettings::singleton().spectator_server_password;
-    if(clientPassword != unrealString(serverPassword.c_str())) {
+    if(clientPassword != FString(serverPassword.c_str())) {
         // login attamed is blocked if ErrorMessage is set to non-null string
         ErrorMessage = FString(TEXT("Incorrect password"));
     }

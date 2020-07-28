@@ -42,6 +42,8 @@ FSDS.exe 0.0.0.0?password=123456
 ```
 Where `0.0.0.0` is replaced by the external ip of the server and `123456` is replaced by the server password.
 
+**If you enter a wrong password you are taken back to the main menu. No error will be shown.**
+
 ## Using the spectator
 
 When starting the spectator it will be launched in follow-car mode.
