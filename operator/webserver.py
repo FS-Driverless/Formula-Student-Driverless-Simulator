@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 from flask import Flask, request, abort, render_template, jsonify
+import logging
+import socket
 from datetime import datetime
 from threading import Timer
 import subprocess, time, signal, sys, os, errno, json, sys
@@ -41,33 +43,62 @@ class Operator:
         if self.simulation_process is not None:
             abort(400, description='Simulation already running.')
 
+        print("Creating logfile for run")
+
         # Get team config
         teamId = request.json['id']
         self.mission = request.json['mission']
+        track = request.json['track']
         for obj in self.team_config['teams']: 
             if obj['id'] == teamId: self.team = obj  
+
+        # Create log file. Create logs directory if it does not exist
+        filename = 'logs/{}_{}_{}.txt'.format(self.team['name'].lower().replace(' ', '-'), self.mission, str(datetime.now().strftime("%d-%m-%Y_%Hh%Mm%Ss")))
+        if not os.path.exists(os.path.dirname(filename)):
+            try:
+                os.makedirs(os.path.dirname(filename))
+            except OSError as exc: # Guard against race condition
+                if exc.errno != errno.EEXIST:
+                    raise
+
+        # Write to log file
+        self.log_file = open(filename, 'w')
+        self.log_file.write('Launching simulator '+track+'...\n')
+
+        print("Launching simulator...")
+       
 
         # Write team specific car settings to settings.json
         filename = os.path.realpath(os.path.dirname(__file__)) + '/../settings.json'
         with open(filename, 'w') as file:
             json.dump(self.team['car_settings'], file, sort_keys=True, indent=4, separators=(',', ': '))
 
-        # Launch Unreal Engine simulator
-        self.simulation_process = subprocess.Popen(['../simulator/FSDS.exe'], creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
-        time.sleep(7)
+        try:
+            # Launch Unreal Engine simulator
+            proc = subprocess.Popen(['../simulator/FSDS.exe', '/Game/'+track+'?listen'])
 
-        # Create connection with airsim car client
-        self.client = airsim.CarClient()
-        self.client.confirmConnection()
-        self.car_controls = airsim.CarControls()
+            time.sleep(7)
 
-        # Get referee state
-        ref =  self.client.getRefereeState()
-        self.doo_count = ref.doo_counter
-        self.lap_times = ref.laps 
+            # Create connection with airsim car client
+            self.client = airsim.CarClient()
+            self.client.confirmConnection()
 
-        log = '{}: {}'.format(str(datetime.now()), 'Launched simulator. Team: ' + self.team['name'] + '.')
-        return {'response': log}  
+            # Get referee state
+            ref =  self.client.getRefereeState()
+            self.doo_count = ref.doo_counter
+            self.lap_times = ref.laps 
+
+            self.simulation_process = proc
+            print("Launching simulator done")
+
+            log = '{}: {}'.format(str(datetime.now()), 'Launched simulator. Team: ' + self.team['name'] + '.')
+            self.logs.append(log)
+            return {'response': log}  
+        except:
+            e = sys.exc_info()[0]
+            print("Error while launching simulator", e)
+            self.shutdown_process(proc)
+            raise
 
     def exit_simulator(self):
         # Abort if empty request
@@ -88,29 +119,36 @@ class Operator:
         # Close airsim client connection
         print("Closing clients")
         self.client = None
-        self.car_controls = None
         self.referee_state_timer = None
 
         # Shutdown simulation processes
-        if self.simulation_process.poll() is None:
-            # Kill process created by simulation_process
-            os.system("taskkill /im Blocks* /F")
-
-            # Try to stop it gracefully.
-            os.kill(self.simulation_process.pid, signal.CTRL_BREAK_EVENT)
-            time.sleep(3)
-            # Still running?
-            if self.simulation_process.poll() is None:
-                # Kill it with fire
-                self.simulation_process.terminate()
-                # Wait for it to finish
-                self.simulation_process.wait()
-                #print self.simulation_process
-
-            self.simulation_process = None
+        self.shutdown_process(self.simulation_process)
+        self.simulation_process = None
     
         log = '{}: {}'.format(str(datetime.now()), 'Exited simulator.')
+        self.logs.append(log)
+        
         return {'response': log}  
+
+    def shutdown_process(self, proc):
+        if proc is None:
+            return
+        if proc.poll() is None:
+            # process has not (yet) terminated. 
+            
+            # Try to stop it gracefully.
+            os.kill(proc.pid, signal.CTRL_BREAK_EVENT)
+            time.sleep(3)
+
+            # Going to kill all related processes created by simulation_process
+            os.system("taskkill /im Blocks* /F")
+            
+            # Still running?
+            if proc.poll() is None:
+                # Kill it with fire
+                proc.terminate()
+                # Wait for it to finish
+                proc.wait()
 
     
     def mission_start(self):
@@ -129,32 +167,17 @@ class Operator:
         if self.interface_process is not None:
             abort(400, description='Mission already running.')
 
-        # Set ROS MASTER
-        procenv = os.environ.copy()
-        procenv['ROS_MASTER_URI'] = self.team['master']
-
         # Launch ROS bridge
-        self.interface_process = subprocess.Popen('ubuntu1804 run source /opt/ros/melodic/setup.bash; source ~/Formula-Student-Driverless-Simulator/ros/devel/setup.bash; roslaunch fsds_ros_bridge fsds_ros_bridge.launch competition_mode:=true mission_name:='+self.mission+' access_token:='+self.access_token, creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
+        localip = socket.gethostbyname(socket.gethostname())
+        print('ROS_IP = ' + localip)
+        print('ROS_MASTER_URI=' + self.team['master'])
+        self.interface_process = subprocess.Popen('ubuntu1804 run source /opt/ros/melodic/setup.bash; export ROS_IP='+localip+'; export ROS_MASTER_URI='+self.team['master']+'; source ~/Formula-Student-Driverless-Simulator/ros/devel/setup.bash; roslaunch fsds_ros_bridge fsds_ros_bridge.launch competition_mode:=true mission_name:='+self.mission+' access_token:='+self.access_token, creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
 
         # Start referee state listener
-        self.referee_state_listener() 
+        self.referee_state_listener()
 
-        # Create log message
         log = '{}: {}'.format(str(datetime.now()), 'Mission ' + self.mission + ' started.')
         self.logs.append(log)
-
-        # Create log file. Create logs directory if it does not exist
-        filename = 'logs/{}_{}_{}.txt'.format(self.team['name'].lower().replace(' ', '-'), self.mission, str(datetime.now().strftime("%d-%m-%Y_%Hh%Mm%Ss")))
-        if not os.path.exists(os.path.dirname(filename)):
-            try:
-                os.makedirs(os.path.dirname(filename))
-            except OSError as exc: # Guard against race condition
-                if exc.errno != errno.EEXIST:
-                    raise
-        
-        # Write to log file
-        self.log_file = open(filename, 'w')
-        self.log_file.write(log + '\n')
 
         return {'response': log}
 
@@ -193,9 +216,9 @@ class Operator:
         self.referee_state_timer.cancel()
 
         # Brake car
-        self.car_controls.brake = 1
-        self.client.setCarControls(self.car_controls)
-        self.car_controls.brake = 0 # Remove brake
+        car_controls = airsim.CarControls()
+        car_controls.brake = 1
+        self.client.setCarControls(car_controls)
 
         # Create log message
         log = '{}: {}'.format(str(datetime.now()), 'Mission ' + self.mission + ' stopped by ' + request.json['sender'] + '.')
@@ -207,30 +230,6 @@ class Operator:
         self.log_file.write(log + '\n')
         self.log_file.close()
         self.log_file = None
-
-        return {'response': log}
-
-    def mission_reset(self):
-        # Abort if empty request
-        if request.json is None or 'access_token' not in request.json:
-            abort(400, description='Empty request.')  
-
-        # Abort if access token is incorrect
-        if request.json['access_token'] != self.access_token:
-            abort(403, description='Incorrect access token')
-
-        if self.client is None:
-            abort(400, description='No connection to the AirSim client.')
-
-        # Reset simulator
-        self.client.reset()
-        
-        log = '{}: {}'.format(str(datetime.now()), 'Car reset.')
-
-        if self.interface_process is not None:
-            # Create log message and write to file
-            self.logs.append(log)
-            self.log_file.write(log + '\n')
 
         return {'response': log}
 
@@ -250,7 +249,7 @@ class Operator:
         }
 
     def referee_state_listener(self):
-        self.referee_state_timer = Timer(0.5, self.referee_state_listener)
+        self.referee_state_timer = Timer(1.5, self.referee_state_listener)
         self.referee_state_timer.start()
         ref = self.client.getRefereeState()
 
@@ -277,6 +276,9 @@ if __name__ == '__main__':
     operator = Operator()
 
     app = Flask(__name__)
+    werkzeuglogs = logging.getLogger('werkzeug')
+    werkzeuglogs.setLevel(logging.ERROR)
+
 
     @app.errorhandler(400)
     def bad_request(e):
@@ -286,12 +288,32 @@ if __name__ == '__main__':
     def unauthorized(e):
         return jsonify(error=str(e)), 403
 
-    app.add_url_rule('/', 'index', operator.index)
-    app.add_url_rule('/simulator/launch', 'launch', operator.launch_simulator, methods=['POST'])
-    app.add_url_rule('/simulator/exit', 'exit', operator.exit_simulator, methods=['POST'])
-    app.add_url_rule('/mission/start', 'mission_start', operator.mission_start, methods=['POST'])
-    app.add_url_rule('/mission/stop', 'mission_stop', operator.mission_stop, methods=['POST'])
-    app.add_url_rule('/mission/reset', 'mission_reset', operator.mission_reset, methods=['POST'])
-    app.add_url_rule('/poll', 'poll', operator.poll_server_state, methods=['POST'])
+    @app.errorhandler(500)
+    def unauthorized(e):
+        return jsonify(error=str(e)), 500
 
-    app.run()
+    @app.route("/")
+    def index():
+        return operator.index()
+
+    @app.route("/simulator/launch", methods=['POST'])
+    def launch_simulator():
+        return operator.launch_simulator()
+
+    @app.route("/simulator/exit",  methods=['POST'])
+    def exit():
+        return operator.exit_simulator()
+
+    @app.route("/mission/start",  methods=['POST'])
+    def mission_start():
+        return operator.mission_start()
+
+    @app.route("/mission/stop",  methods=['POST'])
+    def mission_stop():
+        return operator.mission_stop()
+
+    @app.route("/poll",  methods=['POST'])
+    def poll():
+        return operator.poll_server_state()
+
+    app.run(host= '0.0.0.0')

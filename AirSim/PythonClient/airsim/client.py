@@ -127,27 +127,10 @@ class VehicleClient:
         """
         Checks state of connection every 1 sec and reports it in Console so user can see the progress for connection.
         """
-        if self.ping():
-            print("Connected!")
+        if not self.ping():
+            print("Ping to simulator OK")
         else:
-             print("Ping returned false!")
-        server_ver = self.getServerVersion()
-        client_ver = self.getClientVersion()
-        server_min_ver = self.getMinRequiredServerVersion()
-        client_min_ver = self.getMinRequiredClientVersion()
-
-        ver_info = "Client Ver:" + str(client_ver) + " (Min Req: " + str(client_min_ver) + \
-              "), Server Ver:" + str(server_ver) + " (Min Req: " + str(server_min_ver) + ")"
-
-        if server_ver < server_min_ver:
-            print(ver_info, file=sys.stderr)
-            print("AirSim server is of older version and not supported by this client. Please upgrade!")
-        elif client_ver < client_min_ver:
-            print(ver_info, file=sys.stderr)
-            print("AirSim client is of older version and not supported by this server. Please upgrade!")
-        else:
-            print(ver_info)
-        print('')
+             print("Ping to simulator FAIL")
 
     def simSwapTextures(self, tags, tex_id = 0, component_id = 0, material_id = 0):
         """
@@ -1055,7 +1038,7 @@ class MultirotorClient(VehicleClient, object):
 
 # -----------------------------------  Car APIs ---------------------------------------------
 class CarClient(VehicleClient, object):
-    def __init__(self, ip = "", port = 41451, timeout_value = 3600):
+    def __init__(self, ip = "", port = 41451, timeout_value = 10):
         super(CarClient, self).__init__(ip, port, timeout_value)
 
     def setCarControls(self, controls, vehicle_name = ''):

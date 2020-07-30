@@ -11,14 +11,14 @@
         <nav class="navbar navbar-dark bg-primary">
             <a class="navbar-brand">Formula Student Driverless Simulation Operator</a>
             <form class="form-inline">
-                <input class="form-control mr-sm-2" id="access-token" placeholder="Access token" aria-label="Access token">
+                <input class="form-control mr-sm-2" id="access-token" placeholder="Access token" aria-label="Access token" type="password">
             </form>
         </nav>
         
         <div class="wrapper-top">
 
             <div class="team-selector">
-                <h5>Team Selector</h5>
+                <h5>Team</h5>
                 <div>
                     {% for team in teams %}
                     <div class="custom-control custom-radio">
@@ -36,9 +36,6 @@
                 <div class="simulator-launch-exit-button">
                     <button id="launch-exit" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Starts or stops the Unreal Engine simulator">LAUNCH simulator</button>
                 </div>
-                <div class="reset-button">
-                    <button id="reset" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Resets the car to its original position">RESET simulator</button>
-                </div>
             </div>
 
             <div class="column">
@@ -51,7 +48,7 @@
         <div class="wrapper-bottom">
             <div class="mission-selector">
                 <h5>
-                    Mission Selector
+                    Mission
                 </h5>
                 <div>
                     <div class="custom-control custom-radio">
@@ -64,6 +61,54 @@
                         <input class="custom-control-input" type="radio" name="mission-select" id="trackdrive" value="trackdrive">
                         <label class="custom-control-label" for="trackdrive">
                             Trackdrive
+                        </label>
+                    </div>
+                </div>
+                <br />
+                <h5>
+                    Track
+                </h5>
+                <div>
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="track-select" id="TrainingMap" value="TrainingMap">
+                        <label class="custom-control-label" for="TrainingMap">
+                            TrainingMap
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="track-select" id="CompetitionMapTestday1" value="Competition/CompetitionMapTestday1">
+                        <label class="custom-control-label" for="CompetitionMapTestday1">
+                            CompetitionMapTestday1
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="track-select" id="CompetitionMapTestday2" value="Competition/CompetitionMapTestday2">
+                        <label class="custom-control-label" for="CompetitionMapTestday2">
+                            CompetitionMapTestday2
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="track-select" id="CompetitionMapTestday3" value="Competition/CompetitionMapTestday3">
+                        <label class="custom-control-label" for="CompetitionMapTestday3">
+                            CompetitionMapTestday3
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="track-select" id="CompetitionMap1" value="Competition/CompetitionMap1">
+                        <label class="custom-control-label" for="CompetitionMap1">
+                            CompetitionMap1
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="track-select" id="CompetitionMap2" value="Competition/CompetitionMap2">
+                        <label class="custom-control-label" for="CompetitionMap2">
+                            CompetitionMap2
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="track-select" id="CompetitionMap3" value="Competition/CompetitionMap3">
+                        <label class="custom-control-label" for="CompetitionMap3">
+                            CompetitionMap3
                         </label>
                     </div>
                 </div>

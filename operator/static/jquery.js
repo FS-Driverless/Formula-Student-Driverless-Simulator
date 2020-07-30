@@ -1,8 +1,8 @@
 $(document).ready(function() {
 
     const logs = [];
-    let simulatorIsActive = false;
-    let interfaceIsActive = false;
+    let simulatorActive = false;
+    let missionActive = false;
     pollServer();
 
     /**
@@ -24,16 +24,16 @@ $(document).ready(function() {
                         }
                     });
 
-                    if (simulatorIsActive !== res.simulator_state) {
-                        simulatorIsActive = res.simulator_state;
-                        simulatorIsActive 
+                    if (simulatorActive !== res.simulator_state) {
+                        simulatorActive = res.simulator_state;
+                        simulatorActive 
                         ? $('#launch-exit').removeClass('btn-primary').addClass('btn-danger').text('EXIT simulator') 
                         : $('#launch-exit').removeClass('btn-danger').addClass('btn-primary').text('LAUNCH simulator');
                     }
 
-                    if (interfaceIsActive !== res.interface_state) {
-                        interfaceIsActive = res.interface_state;
-                        interfaceIsActive 
+                    if (missionActive !== res.interface_state) {
+                        missionActive = res.interface_state;
+                        missionActive 
                         ? $('#start-stop').removeClass('btn-primary').addClass('btn-danger').text('Send STOP signal') 
                         : $('#start-stop').removeClass('btn-danger').addClass('btn-primary').text('Send GO signal');
                     }
@@ -64,39 +64,51 @@ $(document).ready(function() {
             alert('Select a mission.');
             return
         }
-
     
-        simulatorIsActive 
-        ? 
-        $.ajax('simulator/exit', {
-            data: JSON.stringify({access_token: accessToken}),
-            contentType: 'application/json',
-            type: 'POST',
-            success: res => {
-                simulatorIsActive = false;
-                logs.push(res.response);
-                $('#launch-exit').removeClass('btn-danger').addClass('btn-primary').text('LAUNCH simulator') 
-                $('.log-window').append(`<p>${res.response}</p>`);
-            },
-            error: res => {
-                alert(res.responseJSON.error);
-            }
-        }) 
-        :
-        $.ajax('simulator/launch', {
-            data: JSON.stringify({id: selectedTeam, mission: selectedMission, access_token: accessToken}),
-            contentType: 'application/json',
-            type: 'POST',
-            success: res => {
-                simulatorIsActive = true;
-                logs.push(res.response);
-                $('#launch-exit').removeClass('btn-primary').addClass('btn-danger').text('EXIT simulator'); 
-                $('.log-window').append(`<p>${res.response}</p>`);
-            },
-            error: res => {
-                alert(res.responseJSON.error);
-            }
-        });
+        const selectedTrack = $("input:radio[name ='track-select']:checked").val();
+        if (selectedTrack === undefined) {
+            alert('Select a track.');
+            return
+        }
+
+        $('#launch-exit').prop('disabled', true);
+        $('#launch-exit').blur();
+        if(simulatorActive) {
+            $.ajax('simulator/exit', {
+                data: JSON.stringify({access_token: accessToken}),
+                contentType: 'application/json',
+                type: 'POST',
+                success: res => {
+                    simulatorActive = false;
+                    logs.push(res.response);
+                    $('#launch-exit').prop('disabled', false);
+                    $('#launch-exit').removeClass('btn-danger').addClass('btn-primary').text('LAUNCH simulator') 
+                    $('.log-window').append(`<p>${res.response}</p>`);
+                },
+                error: res => {
+                    $('#launch-exit').prop('disabled', false);
+                    alert(res.responseJSON.error);
+                }
+            }) 
+        } else {
+            $.ajax('simulator/launch', {
+                data: JSON.stringify({id: selectedTeam, mission: selectedMission, track: selectedTrack, access_token: accessToken}),
+                contentType: 'application/json',
+                type: 'POST',
+                success: res => {
+                    simulatorActive = true;
+                    logs.push(res.response);
+                    $('#launch-exit').prop('disabled', false);
+                    $('#launch-exit').removeClass('btn-primary').addClass('btn-danger').text('EXIT simulator'); 
+                    $('.log-window').append(`<p>${res.response}</p>`);
+                },
+                error: res => {
+                    $('#start-stop').prop('disabled', false);
+                    alert(res.responseJSON.error);
+                }
+            });
+        }
+       
     });
 
     /**
@@ -109,60 +121,42 @@ $(document).ready(function() {
             return
         }
 
-        interfaceIsActive
-        ?
-        $.ajax('mission/stop', {
-            data: JSON.stringify({access_token: accessToken,  sender: 'operator'}),
-            contentType: 'application/json',
-            type: 'POST',
-            success: res => {
-                interfaceIsActive = false;
-                logs.push(res.response);
-                $('#start-stop').removeClass('btn-danger').addClass('btn-primary').text('Send GO signal');
-                $('.log-window').append(`<p>${res.response}</p>`);
-            },
-            error: res => {
-                alert(res.responseJSON.error);
-            }
-        })     
-        :    
-        $.ajax('mission/start', {
-            data: JSON.stringify({access_token: accessToken}),
-            contentType: 'application/json',
-            type: 'POST',
-            success: res => {
-                interfaceIsActive = true;
-                logs.push(res.response);
-                $('#start-stop').removeClass('btn-primary').addClass('btn-danger').text('Send STOP signal'); 
-                $('.log-window').append(`<p>${res.response}</p>`);
-            },
-            error: res => {
-                alert(res.responseJSON.error);
-            }
-        });
-    });
-    
-    /**
-     * Reset button handler
-     */
-    $('#reset').click(function() {
-        const accessToken = $('#access-token').val();
-        if (accessToken === '') {
-            alert('Give an access token.');
-            return
+        $('#start-stop').prop('disabled', true);
+        $('#launch-exit').blur();
+        if(missionActive) {
+            $.ajax('mission/stop', {
+                data: JSON.stringify({access_token: accessToken,  sender: 'operator'}),
+                contentType: 'application/json',
+                type: 'POST',
+                success: res => {
+                    $('#start-stop').prop('disabled', false);
+                    missionActive = false;
+                    logs.push(res.response);
+                    $('#start-stop').removeClass('btn-danger').addClass('btn-primary').text('Send GO signal');
+                    $('.log-window').append(`<p>${res.response}</p>`);
+                },
+                error: res => {
+                    $('#start-stop').prop('disabled', false);
+                    alert(res.responseJSON.error);
+                }
+            })
+        } else {
+            $.ajax('mission/start', {
+                data: JSON.stringify({access_token: accessToken}),
+                contentType: 'application/json',
+                type: 'POST',
+                success: res => {
+                    $('#start-stop').prop('disabled', false);
+                    missionActive = true;
+                    logs.push(res.response);
+                    $('#start-stop').removeClass('btn-primary').addClass('btn-danger').text('Send STOP signal'); 
+                    $('.log-window').append(`<p>${res.response}</p>`);
+                },
+                error: res => {
+                    $('#start-stop').prop('disabled', false);
+                    alert(res.responseJSON.error);
+                }
+            });
         }
-    
-        $.ajax('mission/reset', {
-            data: JSON.stringify({access_token: accessToken}),
-            contentType: 'application/json',
-            type: 'POST',
-            success: function(res) {
-                logs.push(res.response);
-                $('.log-window').append(`<p>${res.response}</p>`);
-            },
-            error: res => {
-                alert(res.responseJSON.error);
-            }
-        });     
     });
 });
