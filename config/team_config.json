@@ -50,11 +50,11 @@
         {
             "id": "2",
             "name": "Team B",
-            "master": "http://localhost:11312 ",
+            "master": "http://autonomous-system-1:11311/",
             "car_settings": {
               "SeeDocsAt": "https://fs-online.github.io/Formula-Student-Driverless-Simulator/",
               "SettingsVersion": 1.2,
-              "ViewMode": "SpringArmChase",
+              "ViewMode": "NoDisplay",
               "ClockSpeed": 1.0,
               "SpectatorServerPassword": "password",
               "PawnPaths": {
@@ -84,7 +84,7 @@
                       "X": 0, "Y": 0, "Z": -1,
                       "Roll": 0, "Pitch": 0, "Yaw" : 0,
                       "NumberOfLasers": 4,
-                      "PointsPerScan": 4096,
+                      "PointsPerScan": 40096,
                       "VerticalFOVUpper": 5,
                       "VerticalFOVLower": -5,
                       "HorizontalFOVStart": -90,
@@ -98,7 +98,7 @@
                       "X": 0, "Y": 0, "Z": -2,
                       "Roll": 0, "Pitch": 0, "Yaw" : 0,
                       "NumberOfLasers": 4,
-                      "PointsPerScan": 4096,
+                      "PointsPerScan": 40096,
                       "VerticalFOVUpper": 5,
                       "VerticalFOVLower": -5,
                       "HorizontalFOVStart": -90,

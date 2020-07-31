@@ -113,7 +113,13 @@ class Operator:
 
     def config(self):
         # self.check_accesstoken()
-        return self.team
+        if self.team is None:
+            return {}
+        return {
+            'team': self.team,
+            'mission': self.mission,
+            'track': self.track,
+        }
 
     def shutdown_process(self, proc):
         if proc is None:
@@ -215,7 +221,7 @@ if __name__ == '__main__':
     def poll():
         return operator.poll_server_state()
 
-    @app.route("/config",  methods=['GET'])
+    @app.route("/config",  methods=['POST'])
     def config():
         return operator.config()
 
