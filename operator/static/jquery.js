@@ -68,7 +68,6 @@ $(document).ready(function() {
                     simulatorActive = false;
                     $('#launch-exit').prop('disabled', false);
                     $('#launch-exit').removeClass('btn-danger').addClass('btn-primary').text('LAUNCH simulator') 
-                    $('.log-window').append(`<p>${res.response}</p>`);
                 },
                 error: res => {
                     $('#launch-exit').prop('disabled', false);
