@@ -154,9 +154,10 @@ class Operator:
 
     def finished(self):
         if self.finished_signal_received:
-            return
+            return {}
         self.log("Received finished signal from autonomous system.")
         self.finished_signal_received = True
+        return {}
 
     def check_accesstoken(self):
         # Abort if empty request
@@ -233,5 +234,9 @@ if __name__ == '__main__':
     @app.route("/config",  methods=['POST'])
     def config():
         return operator.config()
+
+    @app.route("/finished",  methods=['POST'])
+    def finished():
+        return operator.finished()
 
     app.run(host= '0.0.0.0')
