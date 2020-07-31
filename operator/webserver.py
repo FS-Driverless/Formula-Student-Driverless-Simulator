@@ -19,6 +19,7 @@ class Operator:
         self.team = None
         self.mission = None
         self.track = None
+        self.finished_signal_received = False
 
         self.client_airsim = None
         self.referee_state_timer = None
@@ -56,6 +57,8 @@ class Operator:
         # Write to log file
         self.log_file = open(filename, 'w')
         self.log("created logfile " + filename)
+
+        self.finished_signal_received = False
 
         # Write team specific car settings to settings.json
         filename = os.path.realpath(os.path.dirname(__file__)) + '/../settings.json'
@@ -148,6 +151,12 @@ class Operator:
             'logs': self.logs,
             'simulator_state': True if self.simulation_process is not None else False,
         }
+
+    def finished(self):
+        if self.finished_signal_received:
+            return
+        self.log("Received finished signal from autonomous system.")
+        self.finished_signal_received = True
 
     def check_accesstoken(self):
         # Abort if empty request
