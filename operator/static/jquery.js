@@ -1,8 +1,6 @@
 $(document).ready(function() {
 
-    const logs = [];
     let simulatorActive = false;
-    let missionActive = false;
     pollServer();
 
     /**
@@ -17,25 +15,13 @@ $(document).ready(function() {
                 contentType: 'application/json',
                 type: 'POST',
                 success: res => {
-                    res.logs.forEach(log => {
-                        if (!logs.includes(log)) {
-                            logs.push(log);
-                            $('.log-window').append(`<p>${log}</p>`);
-                        }
-                    });
+                    $('.log-window').html(res.logs.map(log => `<p>${log}</p>`).join(""))
 
                     if (simulatorActive !== res.simulator_state) {
                         simulatorActive = res.simulator_state;
                         simulatorActive 
                         ? $('#launch-exit').removeClass('btn-primary').addClass('btn-danger').text('EXIT simulator') 
                         : $('#launch-exit').removeClass('btn-danger').addClass('btn-primary').text('LAUNCH simulator');
-                    }
-
-                    if (missionActive !== res.interface_state) {
-                        missionActive = res.interface_state;
-                        missionActive 
-                        ? $('#start-stop').removeClass('btn-primary').addClass('btn-danger').text('Send STOP signal') 
-                        : $('#start-stop').removeClass('btn-danger').addClass('btn-primary').text('Send GO signal');
                     }
                 },
             });
@@ -80,7 +66,6 @@ $(document).ready(function() {
                 type: 'POST',
                 success: res => {
                     simulatorActive = false;
-                    logs.push(res.response);
                     $('#launch-exit').prop('disabled', false);
                     $('#launch-exit').removeClass('btn-danger').addClass('btn-primary').text('LAUNCH simulator') 
                     $('.log-window').append(`<p>${res.response}</p>`);
@@ -97,13 +82,11 @@ $(document).ready(function() {
                 type: 'POST',
                 success: res => {
                     simulatorActive = true;
-                    logs.push(res.response);
                     $('#launch-exit').prop('disabled', false);
                     $('#launch-exit').removeClass('btn-primary').addClass('btn-danger').text('EXIT simulator'); 
-                    $('.log-window').append(`<p>${res.response}</p>`);
                 },
                 error: res => {
-                    $('#start-stop').prop('disabled', false);
+                    $('#launch-exit').prop('disabled', false);
                     alert(res.responseJSON.error);
                 }
             });
@@ -111,52 +94,4 @@ $(document).ready(function() {
        
     });
 
-    /**
-     * ROS bridge start stop button handler
-     */
-    $('#start-stop').click(() => {
-        const accessToken = $('#access-token').val();
-        if (accessToken === '') {
-            alert('Give an access token.');
-            return
-        }
-
-        $('#start-stop').prop('disabled', true);
-        $('#launch-exit').blur();
-        if(missionActive) {
-            $.ajax('mission/stop', {
-                data: JSON.stringify({access_token: accessToken,  sender: 'operator'}),
-                contentType: 'application/json',
-                type: 'POST',
-                success: res => {
-                    $('#start-stop').prop('disabled', false);
-                    missionActive = false;
-                    logs.push(res.response);
-                    $('#start-stop').removeClass('btn-danger').addClass('btn-primary').text('Send GO signal');
-                    $('.log-window').append(`<p>${res.response}</p>`);
-                },
-                error: res => {
-                    $('#start-stop').prop('disabled', false);
-                    alert(res.responseJSON.error);
-                }
-            })
-        } else {
-            $.ajax('mission/start', {
-                data: JSON.stringify({access_token: accessToken}),
-                contentType: 'application/json',
-                type: 'POST',
-                success: res => {
-                    $('#start-stop').prop('disabled', false);
-                    missionActive = true;
-                    logs.push(res.response);
-                    $('#start-stop').removeClass('btn-primary').addClass('btn-danger').text('Send STOP signal'); 
-                    $('.log-window').append(`<p>${res.response}</p>`);
-                },
-                error: res => {
-                    $('#start-stop').prop('disabled', false);
-                    alert(res.responseJSON.error);
-                }
-            });
-        }
-    });
 });
