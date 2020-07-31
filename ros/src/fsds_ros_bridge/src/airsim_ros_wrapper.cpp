@@ -803,6 +803,9 @@ void AirsimROSWrapper::finished_signal_cb(fs_msgs::FinishedSignalConstPtr msg)
     std::string operator_token(std::getenv("OPERATOR_TOKEN"));
     std::string operator_url(std::getenv("OPERATOR_URL"));
 
+    std::cout << operator_token << std::endl;
+    std::cout << operator_url << std::endl;
+
     // Send JSON HTTP POST request
     CURL *curl;
     CURLcode res;
