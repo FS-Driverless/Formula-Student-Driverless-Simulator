@@ -7,11 +7,12 @@ import urllib.request as request
 # this script is supposed to be evaluatd in a bash terminal like so;
 # eval `./bridgeconfig.py`
 
-access_token = "1234567890"
+operator_url = "http://10.164.0.3:5000"
+operator_token = "1234567890"
 
 def getconfig():
-    params = json.dumps({"access_token": access_token}).encode('utf8')
-    req = request.Request("http://10.164.0.3:5000/config", data=params, headers={'content-type': 'application/json'})
+    params = json.dumps({"access_token": operator_token}).encode('utf8')
+    req = request.Request(operator_url+"/config", data=params, headers={'content-type': 'application/json'})
     with request.urlopen(req) as response:
         return json.loads(response.read().decode())
 
@@ -39,7 +40,13 @@ localip = socket.gethostbyname(socket.gethostname())
 print("export ROS_IP=" + localip + ";")
 print("echo set ROS_IP to " + localip + ";")
 
+print("export OPERATOR_TOKEN="+ operator_token +";")
+print("echo 'set OPERATOR_TOKEN to *****';")
+
+print("export OPERATOR_URL=" + operator_url + ";")
+print("echo set OPERATOR_URL to " + operator_url + ";")
+
 print("echo mission: " + mission + ";")
 print("echo track: " + track + ";")
 
-print("roslaunch fsds_ros_bridge fsds_ros_bridge.launch competition_mode:=true mission_name:=" + mission + " access_token:=" + access_token + " host:=simulator")
+print("roslaunch fsds_ros_bridge fsds_ros_bridge.launch competition_mode:=true mission_name:=" + mission + "  host:=simulator")

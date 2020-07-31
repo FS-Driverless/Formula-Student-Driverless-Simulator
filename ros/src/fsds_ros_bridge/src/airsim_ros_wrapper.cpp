@@ -802,6 +802,7 @@ void AirsimROSWrapper::finished_signal_cb(fs_msgs::FinishedSignalConstPtr msg)
     // Get access token
     std::string operator_token(std::getenv("OPERATOR_TOKEN"));
     std::string operator_url(std::getenv("OPERATOR_URL"));
+    operator_url = operator_url + "/finished";
 
     std::cout << operator_token << std::endl;
     std::cout << operator_url << std::endl;
@@ -820,7 +821,7 @@ void AirsimROSWrapper::finished_signal_cb(fs_msgs::FinishedSignalConstPtr msg)
     headers = curl_slist_append(headers, "Content-Type: application/json");
     headers = curl_slist_append(headers, "charsets: utf-8");
 
-    curl_easy_setopt(curl, CURLOPT_URL, operator_url+"/finished");
+    curl_easy_setopt(curl, CURLOPT_URL, operator_url.c_str());
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST");
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_obj.c_str());
