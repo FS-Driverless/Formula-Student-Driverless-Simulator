@@ -1,26 +1,45 @@
-#!/usr/bin/env python
-
+#!/usr/bin/env python3
+import os
+import socket
 import json
+import urllib.request as request
+
+# this script is supposed to be evaluatd in a bash terminal like so;
+# eval `./bridgeconfig.py`
+
+access_token = "1234567890"
 
 def getconfig():
-    params = json.dumps({"access_token": "1234567890"}).encode('utf8')
-    req = urllib.request.Request("http://35.204.160.166/", data=params, headers={'content-type': 'application/json'})
-    with urllib.request.urlopen(req) as response:
-        return json.loads(url.read().decode())
+    params = json.dumps({"access_token": access_token}).encode('utf8')
+    req = request.Request("http://10.164.0.3:5000/config", data=params, headers={'content-type': 'application/json'})
+    with request.urlopen(req) as response:
+        return json.loads(response.read().decode())
 
 config = getconfig()
 
-if 'car_settings' not in config:
-    print("Simulator not running.")
-    return
+if 'team' not in config:
+    print("echo Simulator not running.")
+    exit()
 
-print("Current team: " + config['name'])
+print("echo Current team: " + config['team']['name'] + ";")
 
 # Write team specific car settings to settings.json
-filename = '~/Formula-Student-Driverless-Simulator/settings.json'
+filename = os.path.expanduser('~/Formula-Student-Driverless-Simulator/settings.json')
 with open(filename, 'w') as file:
-    json.dump(config['car_settings'], file, sort_keys=True, indent=4, separators=(',', ': ')) 
+    json.dump(config['team']['car_settings'], file, sort_keys=True, indent=4, separators=(',', ': '))
 
-print("export ROS_MASTER_URI=" + config['master'])
+masteruri = config['team']['master']
+mission = config['mission']
+track = config['track']
+
+print("export ROS_MASTER_URI=" + masteruri + ";")
+print("echo set ROS_MASTER_URI to " + masteruri + ";")
+
 localip = socket.gethostbyname(socket.gethostname())
-print("export ROS_IP=" + localip)
+print("export ROS_IP=" + localip + ";")
+print("echo set ROS_IP to " + localip + ";")
+
+print("echo mission: " + mission + ";")
+print("echo track: " + track + ";")
+
+print("roslaunch fsds_ros_bridge fsds_ros_bridge.launch competition_mode:=true mission_name:=" + mission + " access_token:=" + access_token + " host:=simulator")
