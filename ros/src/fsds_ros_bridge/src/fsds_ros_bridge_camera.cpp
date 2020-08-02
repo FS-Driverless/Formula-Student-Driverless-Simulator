@@ -75,7 +75,7 @@ void doImageUpdate(const ros::TimerEvent&)
     img_msg->data = img_response.image_data_uint8;
     img_msg->height = img_response.height;
     img_msg->width = img_response.width;
-    img_msg->step = img_response.width * 8; // image_width * num_bytes
+    img_msg->step = img_response.width * 3; // image_width * num_bytes
     img_msg->encoding = "bgr8";
     img_msg->is_bigendian = 0;
     img_msg->header.stamp = make_ts(img_response.time_stamp);
