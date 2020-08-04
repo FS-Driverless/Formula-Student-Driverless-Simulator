@@ -52,4 +52,5 @@ public:
 
 private:
     ASimModeBase* simmode_;
+    UClass* refereeBPClass_;
 };

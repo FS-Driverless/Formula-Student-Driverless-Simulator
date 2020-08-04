@@ -13,6 +13,7 @@
 #include "api/ApiServerBase.hpp"
 #include "api/ApiProvider.hpp"
 #include "Vehicles/Car/CarPawnSimApi.h"
+#include "Referee.h"
 
 #include "SimModeBase.generated.h"
 
@@ -69,6 +70,8 @@ public:
     {
         return static_cast<CarPawnSimApi*>(api_provider_->getVehicleSimApi(vehicle_name));
     }
+
+    UPROPERTY() UClass* refereeBP_class_;
 
 protected: //must overrides
     typedef msr::airlib::AirSimSettings AirSimSettings;

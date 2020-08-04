@@ -40,6 +40,9 @@ ASimModeBase::ASimModeBase()
 
     static ConstructorHelpers::FClassFinder<AActor> sky_sphere_class(TEXT("Blueprint'/Engine/EngineSky/BP_Sky_Sphere'"));
     sky_sphere_class_ = sky_sphere_class.Succeeded() ? sky_sphere_class.Class : nullptr;
+
+    static ConstructorHelpers::FClassFinder<AReferee> refereeBP_class(TEXT("Blueprint'/Game/FormulaStudentAssets/RefereeBP'"));
+    refereeBP_class_ = refereeBP_class.Succeeded() ? refereeBP_class.Class : nullptr;
 }
 
 void ASimModeBase::BeginPlay()
