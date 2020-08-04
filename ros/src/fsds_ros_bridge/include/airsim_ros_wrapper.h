@@ -172,6 +172,7 @@ private:
     std::string mission_name_; // rosparam obtained from launch file
     std::string track_name_; // rosparam obtained from launch file
     bool competition_mode_;
+    ros::Time go_timestamp_;
 
     msr::airlib::CarRpcLibClient airsim_client_;
     msr::airlib::CarRpcLibClient airsim_client_lidar_;
