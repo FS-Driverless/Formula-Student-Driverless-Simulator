@@ -29,7 +29,7 @@ public:
 
 	
 	UFUNCTION(BlueprintCallable, Category="Referee")
-	int32 ConeHit(FString coneName);
+	int32 ConeHit();
 
 	UFUNCTION(BlueprintCallable, Category="Referee")
 	int32 LapCompleted(float lapTime);
