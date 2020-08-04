@@ -49,4 +49,4 @@ print("echo set OPERATOR_URL to " + operator_url + ";")
 print("echo mission: " + mission + ";")
 print("echo track: " + track + ";")
 
-print("roslaunch fsds_ros_bridge fsds_ros_bridge.launch competition_mode:=true mission_name:=" + mission + "  host:=simulator")
+print("roslaunch fsds_ros_bridge fsds_ros_bridge.launch competition_mode:=false mission_name:=" + mission + " host:=simulator track_name:=" + track)
