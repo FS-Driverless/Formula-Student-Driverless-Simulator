@@ -141,6 +141,7 @@ void AirsimROSWrapper::initialize_ros()
 
     statistics_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::statistics_timer_cb, this);
     go_signal_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::go_signal_timer_cb, this);
+    go_timestamp_ = ros::Time::now();
 
     airsim_client_.enableApiControl(!manual_mode, vehicle_name);
     airsim_client_.armDisarm(true, vehicle_name); 
@@ -792,6 +793,7 @@ void AirsimROSWrapper::statistics_timer_cb(const ros::TimerEvent &event)
 void AirsimROSWrapper::go_signal_timer_cb(const ros::TimerEvent &event)
 {
     fs_msgs::GoSignal go_signal_msg;
+    go_signal_msg.header.stamp = go_timestamp_;
     go_signal_msg.mission = mission_name_;
     go_signal_msg.track = track_name_;
     go_signal_pub_.publish(go_signal_msg);
