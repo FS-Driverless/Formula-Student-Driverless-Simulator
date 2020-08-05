@@ -88,7 +88,7 @@ msr::airlib::CarApiBase::RefereeState WorldSimApi::getRefereeState() const
 {
     msr::airlib::CarApiBase::RefereeState result;
     UAirBlueprintLib::RunCommandOnGameThread([this, &result]() {
-        AReferee* referee = UAirBlueprintLib::FindActor<AReferee>(simmode_, FString("referee"));
+        AReferee* referee = (AReferee*) UGameplayStatics::GetActorOfClass(simmode_, simmode_->refereeBP_class_);
         result = referee ? referee->getState() : msr::airlib::CarApiBase::RefereeState();
     }, true);
     return result;
