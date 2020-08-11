@@ -4,8 +4,8 @@ import socket
 import json
 import urllib.request as request
 
-# this script is supposed to be evaluatd in a bash terminal like so;
-# eval `./bridgeconfig.py`
+# This script is supposed to be evaluatd in a bash terminal like so;
+# 
 
 operator_url = "http://10.164.0.3:5000"
 operator_token = "1234567890"

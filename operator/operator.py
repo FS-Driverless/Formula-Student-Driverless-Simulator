@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 from flask import Flask, request, abort, render_template, jsonify
-import logging
-import socket
+import socket, logging, subprocess, time, signal, sys, os, errno, json, sys
 from datetime import datetime
 from threading import Timer
-import subprocess, time, signal, sys, os, errno, json, sys
 sys.path.append('..\AirSim\PythonClient')
 import airsim.client as airsim
 
@@ -12,21 +10,43 @@ import airsim.client as airsim
 class Operator:
 
     def __init__(self):
-        self.simulation_process = None
-        self.log_file = None
+
+        # The list of log-lines shown in the operator web gui
         self.logs = []
 
+        # The team that is currently being simulated
         self.team = None
+
+        # The mission that the team should use
         self.mission = None
+
+        # The unreal engine map that is loaded when starting the simulator.
         self.track = None
-        self.competition_mode = None # Wether or not competition mode is enabled or disabled (boolean)
+
+        # The process descriptor of the simulator
+        self.simulation_process = None
+
+        # For every simulation launch, a new logfile is created and referee state (like lap times and DOO cones ) are stored.
+        # This is the file object for the current run.
+        self.log_file = None
+
+        # Wether or not competition mode is enabled or disabled (boolean)
+        self.competition_mode = None 
+
+        # Wether or not the finished signal is received
         self.finished_signal_received = False
 
+        # The rpc client connected to the simulation. Used to retrieve referee state.
         self.client_airsim = None
+        
+        # The timer that triggers periodic referee state updates.
         self.referee_state_timer = None
 
-        self.access_token = "monstera42"
-        self.spectator_token = "meadow42"
+        # Token used to authorize requests to the operator.
+        self.access_token = "1234567890"
+
+        # Password spectators can use to connect to the simulation
+        self.spectator_token = "password"
 
         with open('../config/team_config.json', 'r') as file:
             self.team_config = json.load(file)
@@ -120,7 +140,7 @@ class Operator:
         
         return {}  
 
-    def config(self):
+    def get_config(self):
         self.check_accesstoken()
         if self.team is None:
             return {}
@@ -238,10 +258,13 @@ if __name__ == '__main__':
     def poll():
         return operator.poll_server_state()
 
+    # Get information about the current run.
+    # Used by the bridge launcher to get details on how to launch the bridge.
     @app.route("/config",  methods=['POST'])
     def config():
-        return operator.config()
+        return operator.get_config()
 
+    # Used by the ros bridge to let the operator know the vehicle sent a finished signal.
     @app.route("/finished",  methods=['POST'])
     def finished():
         return operator.finished()

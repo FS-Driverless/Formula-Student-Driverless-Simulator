@@ -1,5 +1,4 @@
 {
-    "access_token": "1234567890",
     "teams": [
         {
             "id": "1",
@@ -10,7 +9,6 @@
                 "SettingsVersion": 1.2,
                 "ViewMode": "SpringArmChase",
                 "ClockSpeed": 1.0,
-                "SpectatorServerPassword": "password",
                 "PawnPaths": {
                   "DefaultCar": { "PawnBP": "Class'/AirSim/VehicleAdv/Cars/TechnionCar/TechnionCarPawn.TechnionCarPawn_C'" }
                 },
@@ -50,11 +48,11 @@
         {
             "id": "2",
             "name": "Team B",
-            "master": "http://autonomous-system-1:11311/",
+            "master": "http://autonomous-system-2:11311/",
             "car_settings": {
               "SeeDocsAt": "https://fs-online.github.io/Formula-Student-Driverless-Simulator/",
               "SettingsVersion": 1.2,
-              "ViewMode": "NoDisplay",
+              "ViewMode": "SpringArmChase",
               "ClockSpeed": 1.0,
               "SpectatorServerPassword": "password",
               "PawnPaths": {
