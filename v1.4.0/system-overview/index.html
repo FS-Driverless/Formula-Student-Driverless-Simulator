@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>System overview - Formula Student Driverless Simulator</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="../css/version-select.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "System overview";
+    var mkdocs_page_input_path = "system-overview.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Formula Student Driverless Simulator</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Introduction</span></p>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">System overview</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#autonomous-systems">Autonomous systems</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#the-operator">The Operator</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#the-ros-bridge">The ROS Bridge</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#the-virtual-world-unreal-engine-and-airsim">The virtual world (Unreal Engine and AirSim)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#the-spectator">The Spectator</a>
+    </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../integration-handbook/">Integration handbook</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Vehicle & Sensors</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../vehicle_model/">Vehicle model</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../imu/">IMU</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../lidar/">Lidar</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../camera/">Camera</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../gps/">GPS</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../ground-speed-sensor/">GSS</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">#tech madness</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../ros-bridge/">ROS Bridge</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../statistics/">ROS Bridge statistics</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../joystick/">Joystick</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../operator/">Operator</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../import-car-3d-model/">Import your 3d car model</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../gcp-remote-workstation/">Google cloud remote workstation</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../software-install-instructions/">Software install instructions</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../how-to-release/">How to release</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Formula Student Driverless Simulator</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Introduction &raquo;</li>
+        
+      
+    
+    <li>System overview</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/edit/master/docs/system-overview.md"> Edit on FS-Online/Formula-Student-Driverless-Simulator</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><em>This document is intended to read top-to-bottom. Do yourself a favour and read the whole thing without skipping ;)</em></p>
+<h1 id="formula-student-driverless-simulation-system-overview">Formula Student Driverless Simulation: System overview</h1>
+<p>FSDS is built around Unreal Engine 4 (the game engine) and the AirSim plugin.
+The game engine does all the graphical rendering, collision simulation and car movement simulation. 
+Autonomous systems connect to the simulation using ROS topics provided by the ros-bridge. 
+A separate component - the operator - will provide an interface to officials to controll the simulation during competition.</p>
+<p><img alt="System overview" src="../images/system-overview.png" /></p>
+<p><img alt="System Communication Diagram" src="../images/simplified-system-sequence-diagram.png" /></p>
+<h2 id="autonomous-systems">Autonomous systems</h2>
+<p>Every Autonomous System (AS) will run on its separated environment. 
+Ideally, this would be separate virtual machines but also Docker containers could be used.
+The ASs are expected to continuously run a ROS master.
+When the simulator is ready to do a drive for the given AS it will launch a ROS node connected to this AS's ROS master.
+This ROS node will exist outside of the AS's environment. Instead, it will run on the simulator computer.
+The simulator ROS node will publish sensor data and listen for car setpoints on a set of topics defined <a href="../ros-bridge/">here</a>.
+When the simulation is finished, the ROS node will disconnect from the AS's ROS master and sensor data stops coming in.</p>
+<p>During the competition, the teams will not be allowed to access their ASs.
+All remote access to the environments will be cut off completely.
+So every AS must be able to run multiple missions without human interference.
+To let the simulation know what is expected from it, the simulator will send signal messages a few seconds before the event start.
+These messages contain information about the mission (trackdrive, autocross, etc).
+When the AS receives a mission message it can expect to receive sensor data shortly after.
+Since the lap timer for all events start whenever the car crosses the start-line, the ASs can take all the time they need to launch their relevant algorithms for the mission (within a reasonable time).</p>
+<h2 id="the-operator">The Operator</h2>
+<p>The operator is a continuously running program that is like the spider in the web.</p>
+<p>The operator offers a web interface to the event's officials. 
+Using this web interface the officials can choose which team/car is going to drive and on which track.
+The official will also be able to send the start signal, view lap times, down or out cones, car off course's.
+There is also an emergency stop button in case the car is uncontrollable.</p>
+<p>Only 1 car at the time will be able to run on this AS.
+The official can select which team, and thus which AS, is currently selected.
+When the team changes, not only the AS but also the car inside the virtual world will change.
+The sensor suite (sensor types and locations, defined in a custom <code>settings.json</code> file) and the car livery (looks of the car) are updated.
+The operator keeps track of these details and passes them along to the virtual world to ensure accurate representation.</p>
+<p>When the operator wants to connect an AS to the simulated world, it launches the ROS bridge.
+Read more about the ROS bridge below.
+If the operator wants to disconnect the AS from the simulated world it stops the bridge node and the connections are stopped.</p>
+<p>During a mission, the operator keeps polling the world for 'referee state'.
+This is information that in a physical world would be relevant to the referee.
+Currently, this includes a list of down or out cones and the timestamp of when they went down or out, a list of lap times and a list of when the car went off-track.
+More information will for sure be added.</p>
+<p>What happens inside the simulation is stored in a single logbook.
+This includes all referee updates, which ASs were selected and which tracks were used.
+If something unexpected went wrong like a system's crash or error, a short description of what happened is included in this logbook.
+It gives a timeline of everything that happened to always go back afterwards and check what happened.
+The logbook is stored on disk so that in the event of a whole system crash we will still have the logbook.
+It is also shown within the referee's web interface.</p>
+<p>You can run the simulation stack yourself perfectly fine without the operator.
+The operator is just a tool for officials to easely manage the competition.</p>
+<h2 id="the-ros-bridge">The ROS Bridge</h2>
+<p>The ROS bridge node connects to the simulated world inside Unreal Engine using AirSim (more on that later).
+On the one hand, it requests sensor data and passes it along on ROS topics to the current AS.
+On the other hand, it receives car control commands from the AS and forwards it to the virtual world.
+So it acts as a bridge between the two.</p>
+<p>The node that is launched pointing at the AS's ROS master so that it can publish and subscribe to topics within the AS.
+Physically this node runs on the server where the Unreal world is being simulated.
+The node is launched by the operator.</p>
+<p>When the operator launches the ROS bridge it passes along some mission variables.
+This includes mission type (trackdrive or autocross) and information about how it can use data collected in previous runs.
+For example, first the AS will receive "autocross on track A" and it knows it cannot use any previous collected information.
+Then it receives "trackdrive on track A" and it knows it can use data collected in the first autocross drive to go faster.</p>
+<p>It is the responsibilty of the teams to detect when they are 'done'. 
+After the required number of laps, the car has to come to a full stop.
+If the AS wants to store things (like track information), this is the time to wrap those up.
+In case of a successfull run the official will instruct the operator to stop the ROS bridge and the AS won't receive sensor data anymore.
+When the official presses the emergency brake, the connection between the ROS bridge is stopped immediately and the operator will send one last car setpoint to make the car come to a stop. 
+Thers is no 'stop' signal from the simulator to the AS.</p>
+<p>At this point only ROS is supported, at this moment there are no plans to support other technologies.</p>
+<h2 id="the-virtual-world-unreal-engine-and-airsim">The virtual world (Unreal Engine and AirSim)</h2>
+<p>The actual simulation takes place inside an Unreal Engine 4 world.
+Unreal takes care of the heavy lifting involved with a real-life simulation.
+All physics, lighting and world-building are handled by Unreal.</p>
+<p>AirSim is used to connect Unreal with the operator and ROS bridge.
+This plugin is added inside the Unreal world and takes control of most of the game logic.
+It receives the sensor suite and simulates the sensors, it moves the car according to trajectory setpoints and exposes an RPC API for external management.
+This RPC API is used by the simulator to interact with the world.</p>
+<h2 id="the-spectator">The Spectator</h2>
+<p>The spectator provides an eye into the virtual world from an external computer.
+Through a network connection the virtual world state is replicated and shown on the screen.
+The user can operate the camera with its mouse and keyboard.
+Read more about usage of the spectator <a href="../spectator/">here</a>.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../getting-started/" class="btn btn-neutral float-right" title="Getting started">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>GPLv2</p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../getting-started/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/version-select.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
