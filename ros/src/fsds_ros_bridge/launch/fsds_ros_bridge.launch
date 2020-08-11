@@ -5,7 +5,6 @@
 	<arg name="track_name" default="A"/>
 	<arg name="competition_mode" default="false"/>
 	<arg name="manual_mode" default="false"/>
-	<arg name="access_token" default=""/>
 	<arg name="plot" default="false"/>
 	<arg name="rviz" default="false"/>
 	
@@ -26,7 +25,6 @@
 			<param name="track_name" type="string" value="$(arg track_name)"/>
 			<param name="competition_mode" type="bool" value="$(arg competition_mode)" />
 			<param name="manual_mode" type="bool" value="$(arg manual_mode)" />
-			<env name="OPERATOR_ACCESS_TOKEN" value="$(arg access_token)"/>
 		</node>
 
 		<node pkg="fsds_ros_bridge" name="cameralauncher" type="cameralauncher.py" output="screen"  required="true">

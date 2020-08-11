@@ -11,14 +11,14 @@
         <nav class="navbar navbar-dark bg-primary">
             <a class="navbar-brand">Formula Student Driverless Simulation Operator</a>
             <form class="form-inline">
-                <input class="form-control mr-sm-2" id="access-token" placeholder="Access token" aria-label="Access token">
+                <input class="form-control mr-sm-2" id="access-token" placeholder="Access token" aria-label="Access token" type="password">
             </form>
         </nav>
         
         <div class="wrapper-top">
 
             <div class="team-selector">
-                <h5>Team Selector</h5>
+                <h5>Team</h5>
                 <div>
                     {% for team in teams %}
                     <div class="custom-control custom-radio">
@@ -36,22 +36,13 @@
                 <div class="simulator-launch-exit-button">
                     <button id="launch-exit" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Starts or stops the Unreal Engine simulator">LAUNCH simulator</button>
                 </div>
-                <div class="reset-button">
-                    <button id="reset" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Resets the car to its original position">RESET simulator</button>
-                </div>
             </div>
 
-            <div class="column">
-                <h5>Mission Control</h5>
-                <div class="interface-start-stop-button">
-                    <button id="start-stop" type="button" class="btn btn-primary" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Allow or disallow the selected team's AS to control the car">Send GO signal</button>
-                </div>
-            </div>
         </div>
         <div class="wrapper-bottom">
             <div class="mission-selector">
                 <h5>
-                    Mission Selector
+                    Mission
                 </h5>
                 <div>
                     <div class="custom-control custom-radio">
@@ -67,6 +58,73 @@
                         </label>
                     </div>
                 </div>
+                <br />
+                <h5>
+                    Track
+                </h5>
+                <div>
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="track-select" id="TrainingMap" value="TrainingMap">
+                        <label class="custom-control-label" for="TrainingMap">
+                            TrainingMap
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="track-select" id="CompetitionMapTestday1" value="Competition/CompetitionMapTestday1">
+                        <label class="custom-control-label" for="CompetitionMapTestday1">
+                            CompetitionMapTestday1
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="track-select" id="CompetitionMapTestday2" value="Competition/CompetitionMapTestday2">
+                        <label class="custom-control-label" for="CompetitionMapTestday2">
+                            CompetitionMapTestday2
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="track-select" id="CompetitionMapTestday3" value="Competition/CompetitionMapTestday3">
+                        <label class="custom-control-label" for="CompetitionMapTestday3">
+                            CompetitionMapTestday3
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="track-select" id="CompetitionMap1" value="Competition/CompetitionMap1">
+                        <label class="custom-control-label" for="CompetitionMap1">
+                            CompetitionMap1
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="track-select" id="CompetitionMap2" value="Competition/CompetitionMap2">
+                        <label class="custom-control-label" for="CompetitionMap2">
+                            CompetitionMap2
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="track-select" id="CompetitionMap3" value="Competition/CompetitionMap3">
+                        <label class="custom-control-label" for="CompetitionMap3">
+                            CompetitionMap3
+                        </label>
+                    </div>
+                </div>
+                <br />
+                <h5>
+                    Competition mode
+                </h5>
+                <div>
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="compmode-select" id="comp-enabled" value="comp-enabled">
+                        <label class="custom-control-label" for="comp-enabled">
+                            Enabled (no ground truth topics)
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input class="custom-control-input" type="radio" name="compmode-select" id="comp-disabled" value="comp-disabled">
+                        <label class="custom-control-label" for="comp-disabled">
+                            Disabled
+                        </label>
+                    </div>
+                </div>
+                <br />
             </div>
             <div>
                 <h5 class="log-window-title">
@@ -82,6 +140,6 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
-        <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='operator.js') }}"></script>
     </body>
 </html>

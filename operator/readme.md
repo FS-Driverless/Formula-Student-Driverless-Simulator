@@ -1,3 +1,2 @@
 # Operator
-This folder contains the operator of the simulation.  
-[Read all about the operator here.](/docs/operator.md)
+This folder contains the FSDS Operator system. [Read all about it here.](/docs/operator.md)
