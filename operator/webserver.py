@@ -24,9 +24,14 @@ class Operator:
         self.client_airsim = None
         self.referee_state_timer = None
 
+        self.access_token = "1234567890"
+        self.spectator_token = "password"
+
         with open('../config/team_config.json', 'r') as file:
             self.team_config = json.load(file)
-            self.access_token = self.team_config['access_token']
+            for obj in self.team_config['teams']:
+                obj['car_settings']['SpectatorServerPassword'] = self.spectator_token
+            # self.access_token = self.team_config['access_token']
 
     def index(self):
         return render_template('index.html', teams=self.team_config['teams'], logs=self.logs)
@@ -115,7 +120,7 @@ class Operator:
         return {}  
 
     def config(self):
-        # self.check_accesstoken()
+        self.check_accesstoken()
         if self.team is None:
             return {}
         return {
