@@ -32,6 +32,7 @@ with open(filename, 'w') as file:
 masteruri = config['team']['master']
 mission = config['mission']
 track = config['track']
+compmode_enabled = config['competition_mode']
 
 print("export ROS_MASTER_URI=" + masteruri + ";")
 print("echo set ROS_MASTER_URI to " + masteruri + ";")
@@ -49,4 +50,4 @@ print("echo set OPERATOR_URL to " + operator_url + ";")
 print("echo mission: " + mission + ";")
 print("echo track: " + track + ";")
 
-print("roslaunch fsds_ros_bridge fsds_ros_bridge.launch competition_mode:=false mission_name:=" + mission + " host:=simulator track_name:=" + track)
+print("roslaunch fsds_ros_bridge fsds_ros_bridge.launch competition_mode:="+str(compmode_enabled)+" mission_name:=" + mission + " host:=simulator track_name:=" + track)
