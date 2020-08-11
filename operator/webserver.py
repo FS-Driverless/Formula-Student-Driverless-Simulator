@@ -19,19 +19,19 @@ class Operator:
         self.team = None
         self.mission = None
         self.track = None
+        self.competition_mode = None # Wether or not competition mode is enabled or disabled (boolean)
         self.finished_signal_received = False
 
         self.client_airsim = None
         self.referee_state_timer = None
 
-        self.access_token = "1234567890"
-        self.spectator_token = "password"
+        self.access_token = "monstera42"
+        self.spectator_token = "meadow42"
 
         with open('../config/team_config.json', 'r') as file:
             self.team_config = json.load(file)
             for obj in self.team_config['teams']:
                 obj['car_settings']['SpectatorServerPassword'] = self.spectator_token
-            # self.access_token = self.team_config['access_token']
 
     def index(self):
         return render_template('index.html', teams=self.team_config['teams'], logs=self.logs)
@@ -47,6 +47,7 @@ class Operator:
         teamId = request.json['id']
         self.mission = request.json['mission']
         self.track = request.json['track']
+        self.competition_mode = request.json['competition_mode']
         for obj in self.team_config['teams']: 
             if obj['id'] == teamId: 
                 self.team = obj  
@@ -127,6 +128,7 @@ class Operator:
             'team': self.team,
             'mission': self.mission,
             'track': self.track,
+            'competition_mode': self.competition_mode,
         }
 
     def shutdown_process(self, proc):

@@ -57,6 +57,12 @@ $(document).ready(function() {
             return
         }
 
+        const competitionMode = $("input:radio[name ='compmode-select']:checked").val();
+        if (competitionMode === undefined) {
+            alert('Select competitoin mode enabled / disabled.');
+            return
+        }
+
         $('#launch-exit').prop('disabled', true);
         $('#launch-exit').blur();
         if(simulatorActive) {
@@ -75,8 +81,9 @@ $(document).ready(function() {
                 }
             }) 
         } else {
+            console.log(competitionMode);
             $.ajax('simulator/launch', {
-                data: JSON.stringify({id: selectedTeam, mission: selectedMission, track: selectedTrack, access_token: accessToken}),
+                data: JSON.stringify({id: selectedTeam, mission: selectedMission, track: selectedTrack, access_token: accessToken, competition_mode: competitionMode == "comp-enabled"}),
                 contentType: 'application/json',
                 type: 'POST',
                 success: res => {
