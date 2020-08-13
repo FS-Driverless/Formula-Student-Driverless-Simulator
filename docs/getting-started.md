@@ -177,3 +177,21 @@ The ros bridge will read the settings from `~/Formula-Student-Driverless-Simulat
 Make sure this is the same configuration file as the simulator uses.
 
 [Read all about configuring the ros bridge here.](ros-bridge.md)
+
+## Connecting your autonomous system
+
+The ROS bridge of this simulator had to make use of several custom msgs (for control commands, the groundtruth track, etc). 
+These messages are defined in a ROS package called `fs_msgs` which is located in a separate, light [repository](https://github.com/FS-Online/fs_msgs). 
+To implement publishers and subscibers for these messages types in your autonomous pipeline, you will have to add the `fs_msgs` repository as a submodule in your codebase (inside de `src` directory of an existing **catkin workspace** as done in this repository) or clone it and build it somewhere else in your system.
+
+Now, all that is left to do is subscribe to the following topics to receive sensordata
+
+- `/fsds/gps`
+- `/fsds/imu`
+- `/fsds/camera/CAMERA_NAME`
+- `/fsds/camera/CAMERA_NAME/camera_info`
+- `/fsds/lidar/LIDAR_NAME`
+- `/fsds/testing_only/odom`
+- `/fsds/testing_only/track`
+
+and publish to the following topic `/fsds/control_command` to publish the vehicle control setpoints.

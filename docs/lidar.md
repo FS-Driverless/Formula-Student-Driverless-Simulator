@@ -29,6 +29,7 @@ This is an example lidar:
 `NumberOfLasers` is the - duh - the number of lasers in the lidar.
 The lasers are stacked vertically and rotate on the horizontal plane. 
 The lasers are distributed equally to cover the specified vertical field of view.
+Each laser has a range of 100 meters.
 
 The vertical field of view is specified by choosing the upper (`VerticalFOVUpper`) and lower (`VerticalFOVLower`) limit in degrees. 
 The lower limit specifies the vertical angle between the horizontal plane of the lidar and the most bottom laser. 
