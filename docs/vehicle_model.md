@@ -1,6 +1,7 @@
 # Vehicle Dynamic model
 
-One of the most controversial subjects of any competition simulator is the vehicle dynamic model. This is the piece of the simulation that actually changes the state of the vehicle. In building this simulator for the FSOnline competition, our design philosophy was the following:
+One of the most controversial subjects of any simulator is the vehicle dynamic model. This is the piece of the simulation that actually changes the state of the vehicle. 
+In building this simulator for the FSOnline competition, our design philosophy was the following:
 
 * **All teams will use the same vehicle dynamic model**. We are well aware that all teams have put effort into developing dynamic models of their own FSCar for controls and simulation purposes. However, we want the FSOnline DV Dynamic event to purely be a battle of autonomous software. Even if this will require teams to tweak their path planning and control algorithms, it will make sure that the winner of this event is truly the team that can take any race car and push it to its limits the most.
 
@@ -29,7 +30,7 @@ _Vehicle Layout Overview_
 ## Vehicle collision model
 
 The collision model (bounding box) defines which parts of the car interact with other parts of the world.
-For cars used in competition (FSOnline) the bounding boxes must use the following specification:
+The default vehicle (TechnionCarPawn) has the following bounding boxes:
 
 * Width: 100cm
 * Length: 180cm
@@ -46,7 +47,7 @@ The car may look smaller or bigger but they will hit cones all the same.
 ## Vehicle center of gravity
 
 The center of gravity of the car sits in the center of the collision model.
-For cars used in competition (FSOnline), the center of gravity is 25cm above the vehicle pawn center.
+The center of gravity of the default vehicle (TechnionCarPawn) is 25cm above the vehicle pawn center.
 In turn, when the car is stationary, the height offset between the world ground and the center of gravity is 25 cm.
 Within the _Vehicle Layout Overview_ picture the red dot represents the center of gravity.
 

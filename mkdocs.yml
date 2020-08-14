@@ -11,7 +11,6 @@ nav:
   - "Introduction":
     - "System overview": "system-overview.md"
     - "Getting started": "getting-started.md"
-    - "Integration handbook": "integration-handbook.md"
   - "Vehicle & Sensors":
     - "Vehicle model": "vehicle_model.md"
     - "IMU": "imu.md"
@@ -19,16 +18,18 @@ nav:
     - "Camera": "camera.md"
     - "GPS": "gps.md"
     - "GSS": "ground-speed-sensor.md"
-  - "#tech madness":
+  - "#tech-madness":
     - "ROS Bridge": "ros-bridge.md"
     - "ROS Bridge statistics": "statistics.md"
     - "Joystick": "joystick.md"
-    - "Operator": "operator.md"
-    - "Spectator": "spectator.md"
     - "Import your 3d car model": "import-car-3d-model.md"
     - "Google cloud remote workstation": "gcp-remote-workstation.md" 
     - "Software install instructions": "software-install-instructions.md"
     - "How to release": "how-to-release.md"
+  - "Competition tooling":
+    - "Operator": "operator.md"
+    - "System flow and signals": "competition-signals.md"
+    - "Spectator": "spectator.md"
 
 extra_css:
   - css\version-select.css

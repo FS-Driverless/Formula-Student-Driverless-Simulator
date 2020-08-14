@@ -2,7 +2,10 @@
 
 The GPS model in AirSim has been configured to mimic an average GPS receiver used during formula student competitions.
 
-The GPS operates at 10 Hz, this value can be altered with update_frequency parameter. 
+The GPS operates at 10 Hz, this value can be altered with update_frequency parameter.
+
+The GPS is located in the [vehicle pawn center](vehicle_model.md). 
+The GPS captures the position of the vehicle in the geodetic reference system, namely longitude [deg], latitude [deg], altitude [m].
 
 At this moment there is no artificial latency added.
 Still there will be some delay between the creation of the gps points and arrival at the autonomous system because of network latency.  
