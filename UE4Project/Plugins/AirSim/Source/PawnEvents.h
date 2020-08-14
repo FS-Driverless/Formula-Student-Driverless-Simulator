@@ -15,8 +15,11 @@ public: //types
 public:
     CollisionSignal& getCollisionSignal();
     PawnTickSignal& getPawnTickSignal();
+    PawnTickSignal& getPawnSubtickSignal();
 
 private:
     CollisionSignal collision_signal_;
     PawnTickSignal pawn_tick_signal_;
+    PawnTickSignal pawn_subtick_signal_;
+
 };

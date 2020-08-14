@@ -201,10 +201,6 @@ CollisionInfo RpcLibClientBase::simGetCollisionInfo(const std::string& vehicle_n
 
 
 //sim only
-Pose RpcLibClientBase::simGetVehiclePose(const std::string& vehicle_name) const
-{
-    return pimpl_->client.call("simGetVehiclePose", vehicle_name).as<RpcLibAdapatorsBase::Pose>().to();
-}
 void RpcLibClientBase::simSetVehiclePose(const Pose& pose, bool ignore_collision, const std::string& vehicle_name)
 {
     pimpl_->client.call("simSetVehiclePose", RpcLibAdapatorsBase::Pose(pose), ignore_collision, vehicle_name);

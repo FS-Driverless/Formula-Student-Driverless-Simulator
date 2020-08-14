@@ -145,10 +145,6 @@ RpcLibServerBase::RpcLibServerBase(ApiProvider* api_provider, const std::string&
         bind("simSetVehiclePose", [&](const RpcLibAdapatorsBase::Pose &pose, bool ignore_collision, const std::string& vehicle_name) -> void {
         getVehicleSimApi(vehicle_name)->setPose(pose.to(), ignore_collision);
     });
-    pimpl_->server.bind("simGetVehiclePose", [&](const std::string& vehicle_name) -> RpcLibAdapatorsBase::Pose {
-        const auto& pose = getVehicleSimApi(vehicle_name)->getPose();
-        return RpcLibAdapatorsBase::Pose(pose);
-    });
 
     pimpl_->server.bind("simSetTraceLine", [&](const std::vector<float>& color_rgba, float thickness, const std::string& vehicle_name) -> void {
         getVehicleSimApi(vehicle_name)->setTraceLine(color_rgba, thickness);

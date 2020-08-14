@@ -42,7 +42,6 @@ for x in range(3): # do few times
             print("Type %d, size %d, pos %s" % (response.image_type, len(response.image_data_uint8), pprint.pformat(response.camera_position)))
             airsim.write_file(os.path.normpath('/temp/cv_mode_' + str(x) + "_" + str(i) + '.png'), response.image_data_uint8)
 
-    pose = client.simGetVehiclePose()
     pp.pprint(pose)
 
     time.sleep(3)

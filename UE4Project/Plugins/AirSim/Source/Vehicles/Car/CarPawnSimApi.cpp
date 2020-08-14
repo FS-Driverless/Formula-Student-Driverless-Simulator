@@ -7,6 +7,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "Camera/CameraComponent.h"
+#include "WheeledVehicle.h"
 
 #include "common/ClockFactory.hpp"
 #include "PIPCamera.h"
@@ -27,7 +28,7 @@ CarPawnSimApi::CarPawnSimApi(const Params& params, const msr::airlib::CarApiBase
 void CarPawnSimApi::initialize()
 {
     Kinematics::State initial_kinematic_state = Kinematics::State::zero();;
-    initial_kinematic_state.pose = getPose();
+    initial_kinematic_state.pose = toPose(getUUPosition(), getUUOrientation().Quaternion());
     kinematics_.reset(new Kinematics(initial_kinematic_state));
 
     //initialize state
@@ -54,6 +55,8 @@ void CarPawnSimApi::initialize()
     //add listener for pawn's collision event
     params_.pawn_events->getCollisionSignal().connect_member(this, &CarPawnSimApi::onCollision);
     params_.pawn_events->getPawnTickSignal().connect_member(this, &CarPawnSimApi::pawnTick);
+    params_.pawn_events->getPawnSubtickSignal().connect_member(this, &CarPawnSimApi::pawnSubtick);
+
 
     createVehicleApi(static_cast<ACarPawn*>(params_.pawn), params_.home_geopoint);
 
@@ -76,6 +79,7 @@ void CarPawnSimApi::createVehicleApi(ACarPawn* pawn, const msr::airlib::GeoPoint
 void CarPawnSimApi::updateRenderedState(float dt)
 {
     updateKinematics(dt);
+
     vehicle_api_->getStatusMessages(vehicle_api_messages_);
 
     //TODO: do we need this for cars?
@@ -215,6 +219,13 @@ void CarPawnSimApi::pawnTick(float dt)
     //called from every physics tick
     update();
     updateRenderedState(dt);
+    updateRendering(dt);
+}
+
+void CarPawnSimApi::pawnSubtick(float dt)
+{
+    update();
+    updateKinematics(dt);
     updateRendering(dt);
 }
 
@@ -435,6 +446,22 @@ FRotator CarPawnSimApi::getUUOrientation() const
     return params_.pawn->GetActorRotation();
 }
 
+FVector CarPawnSimApi::getUUBodyPosition() const
+{
+    return pawn_->getBodyInstance()->GetUnrealWorldTransform_AssumesLocked().GetLocation();
+}
+
+FRotator CarPawnSimApi::getUUBodyOrientation() const
+{
+    return pawn_->getBodyInstance()->GetUnrealWorldTransform_AssumesLocked().Rotator();
+}
+
+FVector CarPawnSimApi::getUUBodyVelocity() const
+{
+    return pawn_->getBodyInstance()->GetUnrealWorldVelocity();
+}
+
+
 void CarPawnSimApi::toggleTrace()
 {
     state_.tracing_enabled = !state_.tracing_enabled;
@@ -511,10 +538,6 @@ void CarPawnSimApi::setCameraFoV(const std::string& camera_name, float fov_degre
 }
 
 //parameters in NED frame
-CarPawnSimApi::Pose CarPawnSimApi::getPose() const
-{
-    return toPose(getUUPosition(), getUUOrientation().Quaternion());
-}
 
 CarPawnSimApi::Pose CarPawnSimApi::toPose(const FVector& u_position, const FQuat& u_quat) const
 {
@@ -577,13 +600,15 @@ void CarPawnSimApi::updateKinematics(float dt)
 
     auto next_kinematics = kinematics_->getState();
 
-    next_kinematics.pose = getPose();
-    next_kinematics.twist.linear = getNedTransform().toLocalNedVelocity(getPawn()->GetVelocity());
+    next_kinematics.pose = toPose(getUUBodyPosition(), getUUBodyOrientation().Quaternion());
+    next_kinematics.twist.linear = getNedTransform().toLocalNedVelocity(getUUBodyVelocity());
     next_kinematics.twist.angular = msr::airlib::VectorMath::toAngularVelocity(
         kinematics_->getPose().orientation, next_kinematics.pose.orientation, dt);
 
     next_kinematics.accelerations.linear = (next_kinematics.twist.linear - kinematics_->getTwist().linear) / dt;
     next_kinematics.accelerations.angular = (next_kinematics.twist.angular - kinematics_->getTwist().angular) / dt;
+
+    UE_LOG(LogTemp, Warning, TEXT("updateKinematics DT: %f    X: %f    TLX: %f"), dt, next_kinematics.pose.position.x(), next_kinematics.twist.linear.x());
 
     kinematics_->setState(next_kinematics);
     kinematics_->update();

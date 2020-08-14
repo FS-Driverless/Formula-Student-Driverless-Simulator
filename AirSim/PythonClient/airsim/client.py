@@ -274,17 +274,6 @@ class VehicleClient:
         """
         self.client.call('simSetVehiclePose', pose, ignore_collison, vehicle_name)
 
-    def simGetVehiclePose(self, vehicle_name = ''):
-        """
-        Args:
-            vehicle_name (str, optional): Name of the vehicle to get the Pose of
-
-        Returns:
-            Pose:
-        """
-        pose = self.client.call('simGetVehiclePose', vehicle_name)
-        return Pose.from_msgpack(pose)
-
     def simSetTraceLine(self, color_rgba, thickness=1.0, vehicle_name = ''):
         """
         Modify the color and thickness of the line when Tracing is enabled
