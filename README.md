@@ -1,19 +1,17 @@
 # Formula Student Driverless Simulation
 
-## [Documentation](https://fs-online.github.io/Formula-Student-Driverless-Simulator/) / [System overview](/docs/system-overview.md) / [Getting started guide](/docs/getting-started.md) / [Chat](https://gitter.im/FS-Driverless/Formula-Student-Driverless-Simulator)
+## [Documentation](https://fs-driverless.github.io/Formula-Student-Driverless-Simulator/) / [System overview](/docs/system-overview.md) / [Getting started guide](/docs/getting-started.md) / [Chat](https://gitter.im/FS-Driverless/Formula-Student-Driverless-Simulator)
 
 ![Front picture](docs/images/fsds_pretty.png)
 
 This is a Formula Student Driverless Simulator (FSDS).
-It will provide a virtual environment where Autonomous Systems from different Formula Student teams can compete in time-trial challenges. 
-The first competition will take place during the driverless event, [FS-Online 2020](https://formulastudentonline.com/).
+FSDS is a community project with the goal to provide an end to end simulation for FS Driverless teams. 
+It simulates all commonly used sensors and can connects with ros. 
+This project has proven itsself during [FS-Online 2020](https://formulastudentonline.com/) where 4 driverless teams competed.
 
 **Problems?** Ask questions in [Jitter chat](https://gitter.im/FS-Driverless/Formula-Student-Driverless-Simulator) or [open an issue](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/issues)
 
-FSDS is brought to you by your friends at Formula Student Team Delft, MIT Driverless and FSEast.
-
-Are you participating in Formula Student Online? 
-Read the [integration guide](docs/integration-handbook.md) to get your autonomous systems connected to this simulator.
+FSDS has been originally developed by your friends at [Formula Student Team Delft](https://www.fsteamdelft.nl/), [MIT Driverless](http://driverless.mit.edu/) and [FSEast](https://fseast.eu).
 
 ## Repo Overview
 
