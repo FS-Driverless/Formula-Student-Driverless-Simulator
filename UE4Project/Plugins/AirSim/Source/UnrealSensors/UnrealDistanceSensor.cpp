@@ -4,10 +4,10 @@
 #include "UnrealDistanceSensor.h"
 #include "AirBlueprintLib.h"
 #include "common/Common.hpp"
-#include "NedTransform.h"
+#include "CoordFrameTransformer.h"
 
 UnrealDistanceSensor::UnrealDistanceSensor(const AirSimSettings::DistanceSetting& setting,
-    AActor* actor, const NedTransform* ned_transform)
+    AActor* actor, const CoordFrameTransformer* ned_transform)
     : DistanceSimple(setting), actor_(actor), ned_transform_(ned_transform)
 {
 }

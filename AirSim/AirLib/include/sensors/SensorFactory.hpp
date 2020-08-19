@@ -9,6 +9,7 @@
 //sensors
 #include "sensors/imu/ImuSimple.hpp"
 #include "sensors/gps/GpsSimple.hpp"
+#include "sensors/gss/GSSSimple.hpp"
 
 namespace msr { namespace airlib {
 

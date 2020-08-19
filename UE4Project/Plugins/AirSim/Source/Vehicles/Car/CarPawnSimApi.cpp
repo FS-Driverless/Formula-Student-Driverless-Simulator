@@ -10,7 +10,7 @@
 
 #include "common/ClockFactory.hpp"
 #include "PIPCamera.h"
-#include "NedTransform.h"
+#include "CoordFrameTransformer.h"
 #include "common/EarthUtils.hpp"
 
 #include "DrawDebugHelpers.h"
@@ -268,8 +268,8 @@ void CarPawnSimApi::createCamerasFromSettings()
 
         //get pose
         FVector position = transform.fromLocalNed(
-            NedTransform::Vector3r(setting.position.x(), setting.position.y(), setting.position.z()))
-            - transform.fromLocalNed(NedTransform::Vector3r(0.0, 0.0, 0.0));
+            CoordFrameTransformer::Vector3r(setting.position.x(), setting.position.y(), setting.position.z()))
+            - transform.fromLocalNed(CoordFrameTransformer::Vector3r(0.0, 0.0, 0.0));
         FTransform camera_transform(FRotator(setting.rotation.pitch, setting.rotation.yaw, setting.rotation.roll),
             position, FVector(1., 1., 1.));
 
@@ -316,7 +316,7 @@ void CarPawnSimApi::possess()
     controller->Possess(params_.pawn);
 }
 
-const NedTransform& CarPawnSimApi::getNedTransform() const
+const CoordFrameTransformer& CarPawnSimApi::getNedTransform() const
 {
     return ned_transform_;
 }

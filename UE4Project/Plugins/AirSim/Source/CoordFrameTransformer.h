@@ -17,7 +17,7 @@
     Vehicles are spawned at position specified in settings in global NED
 */
 
-class AIRSIM_API NedTransform
+class AIRSIM_API CoordFrameTransformer
 {
 public:
     typedef msr::airlib::Vector3r Vector3r;
@@ -25,8 +25,8 @@ public:
     typedef msr::airlib::Pose Pose;
 
 public:
-    NedTransform(const FTransform& global_transform, float world_to_meters);
-    NedTransform(const AActor* pivot, const NedTransform& global_transform);
+    CoordFrameTransformer(const FTransform& global_transform, float world_to_meters);
+    CoordFrameTransformer(const AActor* pivot, const CoordFrameTransformer& global_transform);
 
     //UU -> local NED
     Vector3r toLocalNed(const FVector& position) const;
@@ -48,14 +48,13 @@ public:
     // UU -> ROS FLU. UU is XYZ:FrontRightUp (left handed); ROS FLU is XYZ:FrontLeftUp (right handed)
     // used by simPlotApis:
     FQuat fromUUtoFLU(const FQuat& q) const;
-    FQuat fromGlobalNedToFLU(const Quaternionr& q) const;
 
     FVector getGlobalOffset() const;
     FVector getLocalOffset() const;
     FTransform getGlobalTransform() const;
 
 private:
-    NedTransform(const AActor* pivot, const FTransform& global_transform, float world_to_meters); //create only through static factory methods
+    CoordFrameTransformer(const AActor* pivot, const FTransform& global_transform, float world_to_meters); //create only through static factory methods
     FVector toFVector(const Vector3r& vec, float scale, bool convert_from_ned) const;
     Vector3r toVector3r(const FVector& vec, float scale, bool convert_to_ned) const;
 

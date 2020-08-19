@@ -53,7 +53,7 @@ void ASimModeBase::BeginPlay()
     //this must be done from within actor otherwise we don't get player start
     APlayerController* player_controller = this->GetWorld()->GetFirstPlayerController();
     FTransform player_start_transform = player_controller->GetViewTarget()->GetActorTransform();
-    global_ned_transform_.reset(new NedTransform(player_start_transform, 
+    global_ned_transform_.reset(new CoordFrameTransformer(player_start_transform, 
         UAirBlueprintLib::GetWorldToMetersScale(this)));
 
     world_sim_api_.reset(new WorldSimApi(this));
@@ -81,7 +81,7 @@ void ASimModeBase::BeginPlay()
     }
 }
 
-const NedTransform& ASimModeBase::getGlobalNedTransform()
+const CoordFrameTransformer& ASimModeBase::getGlobalNedTransform()
 {
     return *global_ned_transform_;
 }

@@ -4,12 +4,12 @@
 #include "UnrealLidarSensor.h"
 #include "AirBlueprintLib.h"
 #include "common/Common.hpp"
-#include "NedTransform.h"
+#include "CoordFrameTransformer.h"
 #include "DrawDebugHelpers.h"
 
 // ctor
 UnrealLidarSensor::UnrealLidarSensor(const AirSimSettings::LidarSetting& setting,
-    AActor* actor, const NedTransform* ned_transform)
+    AActor* actor, const CoordFrameTransformer* ned_transform)
     : LidarSimple(setting), actor_(actor), ned_transform_(ned_transform)
 {
     createLasers();
