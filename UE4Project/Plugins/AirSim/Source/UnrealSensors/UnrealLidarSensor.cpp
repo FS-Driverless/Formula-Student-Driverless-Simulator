@@ -114,7 +114,7 @@ bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const ms
     Vector3r end = VectorMath::rotateVector(VectorMath::front(), ray_q_w, true) * params.range + start;
    
     FHitResult hit_result = FHitResult(ForceInit);
-    bool is_hit = UAirBlueprintLib::GetObstacle(actor_, ned_transform_->fromLocalNed(start), ned_transform_->fromLocalNed(end), hit_result, actor_, ECC_Visibility);
+    bool is_hit = UAirBlueprintLib::GetObstacle(actor_, ned_transform_->fromLocalEnu(start), ned_transform_->fromLocalEnu(end), hit_result, actor_, ECC_Visibility);
 
     if (is_hit)
     {
@@ -146,15 +146,11 @@ bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const ms
 
 
         // point in vehicle intertial frame
-        Vector3r point_v_i = ned_transform_->toLocalNed(hit_result.ImpactPoint);
+        Vector3r point_v_i = ned_transform_->toLocalEnu(hit_result.ImpactPoint);
 
         // tranform to lidar frame
         point = VectorMath::transformToBodyFrame(point_v_i, lidar_pose + vehicle_pose, true);
         
-        // Convert to ENU frame
-        point.y() = - point.y();
-        point.z() = - point.z();
-
         return true;
     }
     else 

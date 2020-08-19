@@ -72,10 +72,10 @@ private: //methods
         // decision here. If the pose can change while obtaining the point-cloud (could happen for drones)
         // then the pose won't be very accurate either way.
         //
-        // TODO: Seems like pose is in vehicle inertial-frame (NOT in Global NED frame).
+        // TODO: Seems like pose is in vehicle inertial-frame (NOT in Global frame).
         //    That could be a bit unintuitive but seems consistent with the position/orientation returned as part of 
         //    ImageResponse for cameras and pose returned by getCameraInfo API.
-        //    Do we need to convert pose to Global NED frame before returning to clients?
+        //    Do we need to convert pose to Global frame before returning to clients?
         Pose lidar_pose = params_.relative_pose + ground_truth.kinematics->pose;
         getPointCloud(params_.relative_pose, // relative lidar pose
             ground_truth.kinematics->pose,   // relative vehicle pose

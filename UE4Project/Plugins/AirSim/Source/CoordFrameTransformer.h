@@ -10,11 +10,8 @@
     -------------------------
     We have following coordinate systems:
     (1) UU or Unreal Units or Unreal Coordinate system
-    (2) Global NED: This is NED transformation of UU with origin set to 0,0,0
-    (3) Local NED: This is NED transformation of UU with origin set to vehicle's spawning UU location
-    (4) Geo: This is GPS coordinate where UU origin is assigned some geo-coordinate
-
-    Vehicles are spawned at position specified in settings in global NED
+    (2) Global: This is transformation of UU with origin set to 0,0,0
+    (3) Local: This is transformation of UU with origin set to vehicle's spawning UU location
 */
 
 class AIRSIM_API CoordFrameTransformer
@@ -28,26 +25,22 @@ public:
     CoordFrameTransformer(const FTransform& global_transform, float world_to_meters);
     CoordFrameTransformer(const AActor* pivot, const CoordFrameTransformer& global_transform);
 
-    //UU -> local NED
-    Vector3r toLocalNed(const FVector& position) const;
-    Vector3r toLocalNedVelocity(const FVector& velocity) const;
-    Vector3r toGlobalNed(const FVector& position) const;
-    Quaternionr toNed(const FQuat& q) const;
-    float toNed(float length) const;
-    Pose toLocalNed(const FTransform& pose) const;
-    Pose toGlobalNed(const FTransform& pose) const;
+    //UU -> local ENU
+    Vector3r toLocalEnu(const FVector& position) const;
+    Vector3r toLocalEnuVelocity(const FVector& velocity) const;
+    Vector3r toGlobalEnu(const FVector& position) const;
+    Quaternionr toEnu(const FQuat& q) const;
+    float toEnu(float length) const;
+    Pose toLocalEnu(const FTransform& pose) const;
+    Pose toGlobalEnu(const FTransform& pose) const;
 
-    //local NED -> UU
-    FVector fromLocalNed(const Vector3r& position) const;
-    FVector fromGlobalNed(const Vector3r& position) const;
-    FQuat fromNed(const Quaternionr& q) const;
-    float fromNed(float length) const;
-    FTransform fromLocalNed(const Pose& pose) const;
-    FTransform fromGlobalNed(const Pose& pose) const;
-
-    // UU -> ROS FLU. UU is XYZ:FrontRightUp (left handed); ROS FLU is XYZ:FrontLeftUp (right handed)
-    // used by simPlotApis:
-    FQuat fromUUtoFLU(const FQuat& q) const;
+    //local ENU -> UU
+    FVector fromLocalEnu(const Vector3r& position) const;
+    FVector fromGlobalEnu(const Vector3r& position) const;
+    FQuat fromEnu(const Quaternionr& q) const;
+    float fromEnu(float length) const;
+    FTransform fromLocalEnu(const Pose& pose) const;
+    FTransform fromGlobalEnu(const Pose& pose) const;
 
     FVector getGlobalOffset() const;
     FVector getLocalOffset() const;
@@ -55,11 +48,11 @@ public:
 
 private:
     CoordFrameTransformer(const AActor* pivot, const FTransform& global_transform, float world_to_meters); //create only through static factory methods
-    FVector toFVector(const Vector3r& vec, float scale, bool convert_from_ned) const;
-    Vector3r toVector3r(const FVector& vec, float scale, bool convert_to_ned) const;
+    FVector toFVector(const Vector3r& vec, float scale) const;
+    Vector3r toVector3r(const FVector& vec, float scale) const;
 
 private:
     FTransform global_transform_;
     float world_to_meters_;
-    FVector local_ned_offset_;
+    FVector local_offset_;
 };

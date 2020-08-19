@@ -505,7 +505,7 @@ class VehicleClient:
 
     def simPlotPoints(self, points, color_rgba=[1.0, 0.0, 0.0, 1.0], size = 10.0, duration = -1.0, is_persistent = False):
         """
-        Plot a list of 3D points in World NED frame
+        Plot a list of 3D points in World frame
 
         Args:
             points (list[Vector3r]): List of Vector3r objects
@@ -518,7 +518,7 @@ class VehicleClient:
 
     def simPlotLineStrip(self, points, color_rgba=[1.0, 0.0, 0.0, 1.0], thickness = 5.0, duration = -1.0, is_persistent = False):
         """
-        Plots a line strip in World NED frame, defined from points[0] to points[1], points[1] to points[2], ... , points[n-2] to points[n-1]
+        Plots a line strip in World frame, defined from points[0] to points[1], points[1] to points[2], ... , points[n-2] to points[n-1]
 
         Args:
             points (list[Vector3r]): List of 3D locations of line start and end points, specified as Vector3r objects

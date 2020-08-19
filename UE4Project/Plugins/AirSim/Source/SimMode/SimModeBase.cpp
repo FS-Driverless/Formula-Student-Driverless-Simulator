@@ -395,13 +395,13 @@ FRotator ASimModeBase::toFRotator(const msr::airlib::AirSimSettings::Rotation& r
 
 void ASimModeBase::setupVehiclesAndCamera()
 {
-    //get UU origin of global NED frame
+    //get UU origin of global frame
     const FTransform uu_origin = getGlobalNedTransform().getGlobalTransform();
 
     //determine camera director camera default pose and spawn it
     const auto& camera_director_setting = getSettings().camera_director;
     FVector camera_director_position_uu = uu_origin.GetLocation() + 
-        getGlobalNedTransform().fromLocalNed(camera_director_setting.position);
+        getGlobalNedTransform().fromLocalEnu(camera_director_setting.position);
     FTransform camera_transform(toFRotator(camera_director_setting.rotation, FRotator::ZeroRotator), 
         camera_director_position_uu);
     initializeCameraDirector(camera_transform, camera_director_setting.follow_distance);
@@ -424,7 +424,7 @@ void ASimModeBase::setupVehiclesAndCamera()
                 FVector spawn_position = uu_origin.GetLocation();
                 msr::airlib::Vector3r settings_position = vehicle_setting.position;
                 if (!msr::airlib::VectorMath::hasNan(settings_position))
-                    spawn_position = getGlobalNedTransform().fromGlobalNed(settings_position);
+                    spawn_position = getGlobalNedTransform().fromGlobalEnu(settings_position);
                 FRotator spawn_rotation = toFRotator(vehicle_setting.rotation, uu_origin.Rotator());
 
                 //spawn vehicle pawn
@@ -454,7 +454,7 @@ void ASimModeBase::setupVehiclesAndCamera()
 
             //create vehicle sim api
             const auto& ned_transform = getGlobalNedTransform();
-            const auto& pawn_ned_pos = ned_transform.toLocalNed(vehicle_pawn->GetActorLocation());
+            const auto& pawn_ned_pos = ned_transform.toLocalEnu(vehicle_pawn->GetActorLocation());
             const auto& home_geopoint= msr::airlib::EarthUtils::nedToGeodetic(pawn_ned_pos, getSettings().origin_geopoint);
             const std::string vehicle_name = std::string(TCHAR_TO_UTF8(*(vehicle_pawn->GetName())));
 
@@ -558,11 +558,9 @@ void ASimModeBase::drawLidarDebugPoints()
                         return;
 
                     for (int j = 0; j < lidar_data.point_cloud.size(); j = j + 3) {
-                        // Lidar points are stored in ENU frame. Here we need them in NED frame. So we have ivnert Y and Z
-                        msr::airlib::Vector3r point(lidar_data.point_cloud[j], -1 * lidar_data.point_cloud[j + 1], -1 * lidar_data.point_cloud[j + 2]);
-
+                        msr::airlib::Vector3r point(lidar_data.point_cloud[j], lidar_data.point_cloud[j + 1], lidar_data.point_cloud[j + 2]);
                         msr::airlib::Vector3r point_w = msr::airlib::VectorMath::transformToWorldFrame(point, lidar_data.pose, true);
-                        FVector uu_point = pawn_sim_api->getNedTransform().fromLocalNed(point_w);
+                        FVector uu_point = pawn_sim_api->getNedTransform().fromLocalEnu(point_w);
 
 
                         DrawDebugPoint(

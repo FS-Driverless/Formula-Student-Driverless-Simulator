@@ -323,7 +323,7 @@ void APIPCamera::updateCaptureComponentSetting(USceneCaptureComponent2D* capture
     if (!std::isnan(setting.fov_degrees))
         capture->FOVAngle = setting.fov_degrees;
     if (capture->ProjectionType == ECameraProjectionMode::Orthographic && !std::isnan(setting.ortho_width))
-        capture->OrthoWidth = ned_transform.fromNed(setting.ortho_width);
+        capture->OrthoWidth = ned_transform.fromEnu(setting.ortho_width);
 
     updateCameraPostProcessingSetting(capture->PostProcessSettings, setting);
 }
@@ -338,14 +338,14 @@ void APIPCamera::updateCameraSetting(UCameraComponent* camera, const CaptureSett
     if (!std::isnan(setting.fov_degrees))
         camera->SetFieldOfView(setting.fov_degrees);
     if (camera->ProjectionMode == ECameraProjectionMode::Orthographic && !std::isnan(setting.ortho_width))
-        camera->SetOrthoWidth(ned_transform.fromNed(setting.ortho_width));
+        camera->SetOrthoWidth(ned_transform.fromEnu(setting.ortho_width));
 
     updateCameraPostProcessingSetting(camera->PostProcessSettings, setting);
 }
 
 msr::airlib::Pose APIPCamera::getPose() const
 {
-    return ned_transform_->toLocalNed(this->GetActorTransform());
+    return ned_transform_->toLocalEnu(this->GetActorTransform());
 }
 
 void APIPCamera::updateCameraPostProcessingSetting(FPostProcessSettings& obj, const CaptureSetting& setting)

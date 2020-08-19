@@ -21,7 +21,7 @@ To add a camera to your vehicle, add the following json to the "Cameras" map in 
 
 `Camera1` is the name of the camera. This name will be used in ros topics and in coordinate frame.
 
-`X`, `Y` and `Z` are the position of the lidar relative the [vehicle pawn center](vehicle_model.md) of the car in NED frame.
+`X`, `Y` and `Z` are the position of the lidar relative the [vehicle pawn center](vehicle_model.md) of the car in ENU frame.
 
 `Roll`,`Pitch` and `Yaw` are rotations in degrees.
 

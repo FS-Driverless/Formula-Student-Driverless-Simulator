@@ -78,7 +78,7 @@ WorldSimApi::Pose WorldSimApi::getObjectPose(const std::string& object_name) con
     Pose result;
     UAirBlueprintLib::RunCommandOnGameThread([this, &object_name, &result]() {
         AActor* actor = UAirBlueprintLib::FindActor<AActor>(simmode_, FString(object_name.c_str()));
-        result = actor ? simmode_->getGlobalNedTransform().toGlobalNed(FTransform(actor->GetActorRotation(), actor->GetActorLocation()))
+        result = actor ? simmode_->getGlobalNedTransform().toGlobalEnu(FTransform(actor->GetActorRotation(), actor->GetActorLocation()))
             : Pose::nanPose();
     }, true);
     return result;
@@ -98,7 +98,7 @@ bool WorldSimApi::setObjectPose(const std::string& object_name, const WorldSimAp
 {
     bool result;
     UAirBlueprintLib::RunCommandOnGameThread([this, &object_name, &pose, teleport, &result]() {
-        FTransform actor_transform = simmode_->getGlobalNedTransform().fromGlobalNed(pose);
+        FTransform actor_transform = simmode_->getGlobalNedTransform().fromGlobalEnu(pose);
         AActor* actor = UAirBlueprintLib::FindActor<AActor>(simmode_, FString(object_name.c_str()));
         if (actor) {
             if (teleport) 
@@ -173,7 +173,7 @@ void WorldSimApi::simPlotPoints(const std::vector<Vector3r>& points, const std::
     FLinearColor color {color_rgba[0], color_rgba[1], color_rgba[2], color_rgba[3]};
     for (const auto& point : points)
     {
-        DrawDebugPoint(simmode_->GetWorld(), simmode_->getGlobalNedTransform().fromGlobalNed(point), size, color.ToFColor(true), is_persistent, duration);
+        DrawDebugPoint(simmode_->GetWorld(), simmode_->getGlobalNedTransform().fromGlobalEnu(point), size, color.ToFColor(true), is_persistent, duration);
     }
 }
 
@@ -183,7 +183,7 @@ void WorldSimApi::simPlotLineStrip(const std::vector<Vector3r>& points, const st
     FLinearColor color {color_rgba[0], color_rgba[1], color_rgba[2], color_rgba[3]};
     for (size_t idx = 0; idx != points.size()-1; idx++)
     {
-        DrawDebugLine(simmode_->GetWorld(), simmode_->getGlobalNedTransform().fromGlobalNed(points[idx]), simmode_->getGlobalNedTransform().fromGlobalNed(points[idx+1]), color.ToFColor(true), is_persistent, duration, 0, thickness);
+        DrawDebugLine(simmode_->GetWorld(), simmode_->getGlobalNedTransform().fromGlobalEnu(points[idx]), simmode_->getGlobalNedTransform().fromGlobalEnu(points[idx+1]), color.ToFColor(true), is_persistent, duration, 0, thickness);
     }
 }
 
@@ -198,7 +198,7 @@ void WorldSimApi::simPlotLineList(const std::vector<Vector3r>& points, const std
     FLinearColor color {color_rgba[0], color_rgba[1], color_rgba[2], color_rgba[3]};
     for (int idx = 0; idx < points.size(); idx += 2)
     {
-        DrawDebugLine(simmode_->GetWorld(), simmode_->getGlobalNedTransform().fromGlobalNed(points[idx]), simmode_->getGlobalNedTransform().fromGlobalNed(points[idx+1]), color.ToFColor(true), is_persistent, duration, 0, thickness);
+        DrawDebugLine(simmode_->GetWorld(), simmode_->getGlobalNedTransform().fromGlobalEnu(points[idx]), simmode_->getGlobalNedTransform().fromGlobalEnu(points[idx+1]), color.ToFColor(true), is_persistent, duration, 0, thickness);
     }
 }
 
@@ -208,7 +208,7 @@ void WorldSimApi::simPlotArrows(const std::vector<Vector3r>& points_start, const
     FLinearColor color {color_rgba[0], color_rgba[1], color_rgba[2], color_rgba[3]};
     for (int idx = 0; idx < points_start.size(); idx += 1)
     {
-        DrawDebugDirectionalArrow(simmode_->GetWorld(), simmode_->getGlobalNedTransform().fromGlobalNed(points_start[idx]), simmode_->getGlobalNedTransform().fromGlobalNed(points_end[idx]), arrow_size, color.ToFColor(true), is_persistent, duration, 0, thickness);
+        DrawDebugDirectionalArrow(simmode_->GetWorld(), simmode_->getGlobalNedTransform().fromGlobalEnu(points_start[idx]), simmode_->getGlobalNedTransform().fromGlobalEnu(points_end[idx]), arrow_size, color.ToFColor(true), is_persistent, duration, 0, thickness);
     }
 }
 
@@ -218,7 +218,7 @@ void WorldSimApi::simPlotStrings(const std::vector<std::string>& strings, const 
     FLinearColor color {color_rgba[0], color_rgba[1], color_rgba[2], color_rgba[3]};
     for (int idx = 0; idx < positions.size(); idx += 1)
     {
-        DrawDebugString(simmode_->GetWorld(), simmode_->getGlobalNedTransform().fromGlobalNed(positions[idx]), FString(strings[idx].c_str()), NULL, color.ToFColor(true), duration, false, scale);
+        DrawDebugString(simmode_->GetWorld(), simmode_->getGlobalNedTransform().fromGlobalEnu(positions[idx]), FString(strings[idx].c_str()), NULL, color.ToFColor(true), duration, false, scale);
     }
 }
 
@@ -226,7 +226,7 @@ void WorldSimApi::simPlotTransforms(const std::vector<Pose>& poses, float scale,
 {
     for (const auto& pose : poses)
     {
-        DrawDebugCoordinateSystem(simmode_->GetWorld(), simmode_->getGlobalNedTransform().fromGlobalNed(pose.position), simmode_->getGlobalNedTransform().fromNed(pose.orientation).Rotator(), scale, is_persistent, duration, 0, thickness);
+        DrawDebugCoordinateSystem(simmode_->GetWorld(), simmode_->getGlobalNedTransform().fromGlobalEnu(pose.position), simmode_->getGlobalNedTransform().fromEnu(pose.orientation).Rotator(), scale, is_persistent, duration, 0, thickness);
     }
 }
 
@@ -236,8 +236,8 @@ void WorldSimApi::simPlotTransformsWithNames(const std::vector<Pose>& poses, con
     FLinearColor color {text_color_rgba[0], text_color_rgba[1], text_color_rgba[2], text_color_rgba[3]};
     for (int idx = 0; idx < poses.size(); idx += 1)
     {
-        DrawDebugCoordinateSystem(simmode_->GetWorld(), simmode_->getGlobalNedTransform().fromGlobalNed(poses[idx].position), simmode_->getGlobalNedTransform().fromNed(poses[idx].orientation).Rotator(), tf_scale, false, duration, 0, tf_thickness);
-        DrawDebugString(simmode_->GetWorld(), simmode_->getGlobalNedTransform().fromGlobalNed(poses[idx]).GetLocation(), FString(names[idx].c_str()), NULL, color.ToFColor(true), duration, false, text_scale);
+        DrawDebugCoordinateSystem(simmode_->GetWorld(), simmode_->getGlobalNedTransform().fromGlobalEnu(poses[idx].position), simmode_->getGlobalNedTransform().fromEnu(poses[idx].orientation).Rotator(), tf_scale, false, duration, 0, tf_thickness);
+        DrawDebugString(simmode_->GetWorld(), simmode_->getGlobalNedTransform().fromGlobalEnu(poses[idx]).GetLocation(), FString(names[idx].c_str()), NULL, color.ToFColor(true), duration, false, text_scale);
     }
 }
 
