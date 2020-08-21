@@ -274,8 +274,8 @@ public:
         double sin_c = sin(c), cos_c = cos(c);
         double lat_rad, lon_rad;
         if (!Utils::isApproximatelyZero(c)) { //avoids large changes?
-            lat_rad = asin(cos_c * home_geo_point.sin_lat + (y_rad * sin_c * home_geo_point.cos_lat) / c);
-            lon_rad = (home_geo_point.lon_rad + atan2(x_rad * sin_c, c * home_geo_point.cos_lat * cos_c - y_rad * home_geo_point.sin_lat * sin_c));
+            lat_rad = asin(cos_c * home_geo_point.sin_lat + (x_rad * sin_c * home_geo_point.cos_lat) / c);
+            lon_rad = (home_geo_point.lon_rad + atan2(y_rad * sin_c, c * home_geo_point.cos_lat * cos_c - x_rad * home_geo_point.sin_lat * sin_c));
 
             return GeoPoint(Utils::radiansToDegrees(lat_rad), Utils::radiansToDegrees(lon_rad), home_geo_point.home_geo_point.altitude + v.z());
         } else
