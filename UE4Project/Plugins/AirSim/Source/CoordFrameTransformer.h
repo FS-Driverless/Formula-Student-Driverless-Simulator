@@ -9,8 +9,8 @@
     Note on coordinate system
     -------------------------
     We have following coordinate systems:
-    (1) UU or Unreal Units or Unreal Coordinate system
-    (2) Global: This is transformation of UU with origin set to 0,0,0
+    (1) UU or Unreal Units or Unreal Coordinate system. This is X=North, Y=East, Z=Up.
+    (2) Global: This is transformation of UU with origin set to 0,0,0. This is ENU X=East, Y=North, Z=Up
     (3) Local: This is transformation of UU with origin set to vehicle's spawning UU location
 */
 

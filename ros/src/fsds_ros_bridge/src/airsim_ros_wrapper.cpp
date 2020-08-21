@@ -291,14 +291,13 @@ msr::airlib::Quaternionr AirsimROSWrapper::get_airlib_quat(const tf2::Quaternion
 
 nav_msgs::Odometry AirsimROSWrapper::get_odom_msg_from_airsim_state(const msr::airlib::CarApiBase::CarState& car_state) const
 {
-    // Convert to ENU frame (minus signs and quaternion inverse)
     nav_msgs::Odometry odom_enu_msg;
     odom_enu_msg.header.frame_id = "fsds/map";
     odom_enu_msg.header.stamp = ros::Time::now();
     odom_enu_msg.child_frame_id = "fsds/FSCar";
     odom_enu_msg.pose.pose.position.x = car_state.getPosition().x();
-    odom_enu_msg.pose.pose.position.y = - car_state.getPosition().y();
-    odom_enu_msg.pose.pose.position.z = - car_state.getPosition().z();
+    odom_enu_msg.pose.pose.position.y = car_state.getPosition().y();
+    odom_enu_msg.pose.pose.position.z = car_state.getPosition().z();
     tf::Quaternion odom_enu_tf_quat;
     odom_enu_tf_quat.setX(car_state.getOrientation().x());
     odom_enu_tf_quat.setY(car_state.getOrientation().y());
@@ -314,11 +313,11 @@ nav_msgs::Odometry AirsimROSWrapper::get_odom_msg_from_airsim_state(const msr::a
     odom_enu_msg.pose.pose.orientation.w = odom_enu_tf_quat.getW();
 
     odom_enu_msg.twist.twist.linear.x = car_state.kinematics_estimated.twist.linear.x();
-    odom_enu_msg.twist.twist.linear.y = - car_state.kinematics_estimated.twist.linear.y();
-    odom_enu_msg.twist.twist.linear.z = - car_state.kinematics_estimated.twist.linear.z();
+    odom_enu_msg.twist.twist.linear.y = car_state.kinematics_estimated.twist.linear.y();
+    odom_enu_msg.twist.twist.linear.z = car_state.kinematics_estimated.twist.linear.z();
     odom_enu_msg.twist.twist.angular.x = car_state.kinematics_estimated.twist.angular.x();
-    odom_enu_msg.twist.twist.angular.y = - car_state.kinematics_estimated.twist.angular.y();
-    odom_enu_msg.twist.twist.angular.z = - car_state.kinematics_estimated.twist.angular.z();
+    odom_enu_msg.twist.twist.angular.y = car_state.kinematics_estimated.twist.angular.y();
+    odom_enu_msg.twist.twist.angular.z = car_state.kinematics_estimated.twist.angular.z();
 
     return odom_enu_msg;
 }
@@ -367,7 +366,6 @@ sensor_msgs::PointCloud2 AirsimROSWrapper::get_lidar_msg_from_airsim(const std::
 // todo covariances
 sensor_msgs::Imu AirsimROSWrapper::get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data)
 {
-    // Convert to ENU frame here as well
     sensor_msgs::Imu imu_msg;
     tf::Quaternion imu_heading_enu_quat;
     imu_heading_enu_quat.setX(imu_data.orientation.x());
@@ -389,16 +387,15 @@ sensor_msgs::Imu AirsimROSWrapper::get_imu_msg_from_airsim(const msr::airlib::Im
 
     // Publish IMU ang rates in radians per second
     imu_msg.angular_velocity.x = imu_data.angular_velocity.x();
-    imu_msg.angular_velocity.y = -imu_data.angular_velocity.y();
-    imu_msg.angular_velocity.z = -imu_data.angular_velocity.z();
+    imu_msg.angular_velocity.y = imu_data.angular_velocity.y();
+    imu_msg.angular_velocity.z = imu_data.angular_velocity.z();
 
     // meters/s2^m
     imu_msg.linear_acceleration.x = imu_data.linear_acceleration.x();
-    imu_msg.linear_acceleration.y = -imu_data.linear_acceleration.y();
-    imu_msg.linear_acceleration.z = -imu_data.linear_acceleration.z();
+    imu_msg.linear_acceleration.y = imu_data.linear_acceleration.y();
+    imu_msg.linear_acceleration.z = imu_data.linear_acceleration.z();
 
     imu_msg.header.stamp = make_ts(imu_data.time_stamp);
-    // imu_msg.orientation_covariance = ;
 
     return imu_msg;
 }
@@ -550,10 +547,9 @@ void AirsimROSWrapper::gss_timer_cb(const ros::TimerEvent& event)
         gss_msg.header.frame_id = "fsds/" + vehicle_name;
         gss_msg.header.stamp = make_ts(gss_data.time_stamp);
 
-        // Convert to ENU frame (minus signs)
         gss_msg.twist.linear.x = gss_data.linear_velocity.x();
-        gss_msg.twist.linear.y = - gss_data.linear_velocity.y();
-        gss_msg.twist.linear.z = - gss_data.linear_velocity.z();
+        gss_msg.twist.linear.y = gss_data.linear_velocity.y();
+        gss_msg.twist.linear.z = gss_data.linear_velocity.z();
 
         {
             ros_bridge::ROSMsgCounter counter(&gss_pub_statistics);

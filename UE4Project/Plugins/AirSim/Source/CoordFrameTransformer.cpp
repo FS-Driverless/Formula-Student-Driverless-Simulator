@@ -40,7 +40,7 @@ CoordFrameTransformer::Vector3r CoordFrameTransformer::toGlobalEnu(const FVector
 }
 CoordFrameTransformer::Quaternionr CoordFrameTransformer::toEnu(const FQuat& q) const
 {
-    return Quaternionr(q.W, q.X, q.Y, q.Z);
+    return Quaternionr(q.W, q.X, -q.Y, -q.Z);
 }
 float CoordFrameTransformer::toEnu(float length) const
 {
@@ -69,7 +69,7 @@ FVector CoordFrameTransformer::fromGlobalEnu(const CoordFrameTransformer::Vector
 }
 FQuat CoordFrameTransformer::fromEnu(const Quaternionr& q) const
 {
-    return FQuat(q.x(), q.y(), q.z(), q.w());
+    return FQuat(q.x(), q.y(), -q.z(), -q.w());
 }
 FTransform CoordFrameTransformer::fromLocalEnu(const Pose& pose) const
 {
@@ -95,10 +95,10 @@ FTransform CoordFrameTransformer::getGlobalTransform() const
 
 FVector CoordFrameTransformer::toFVector(const Vector3r& vec, float scale) const
 {
-    return FVector(vec.x() * scale, vec.y() * scale, vec.z() * scale);
+    return FVector(vec.y() * scale, vec.x() * scale, vec.z() * scale);
 }
 
 CoordFrameTransformer::Vector3r CoordFrameTransformer::toVector3r(const FVector& vec, float scale) const
 {
-    return Vector3r(vec.X * scale, vec.Y * scale, vec.Z * scale);
+    return Vector3r(vec.Y * scale, vec.X * scale, vec.Z * scale);
 }

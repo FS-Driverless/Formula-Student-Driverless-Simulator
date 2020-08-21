@@ -301,7 +301,7 @@
                         <curve_0>
                             <axes>
                                 <x_axis>
-                                    <field>longitude</field>
+                                    <field>latitude</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -314,7 +314,7 @@
                                     <type>sensor_msgs/NavSatFix</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>latitude</field>
+                                    <field>longitude</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
