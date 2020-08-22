@@ -298,19 +298,11 @@ nav_msgs::Odometry AirsimROSWrapper::get_odom_msg_from_airsim_state(const msr::a
     odom_enu_msg.pose.pose.position.x = car_state.getPosition().x();
     odom_enu_msg.pose.pose.position.y = car_state.getPosition().y();
     odom_enu_msg.pose.pose.position.z = car_state.getPosition().z();
-    tf::Quaternion odom_enu_tf_quat;
-    odom_enu_tf_quat.setX(car_state.getOrientation().x());
-    odom_enu_tf_quat.setY(car_state.getOrientation().y());
-    odom_enu_tf_quat.setZ(car_state.getOrientation().z());
-    odom_enu_tf_quat.setW(car_state.getOrientation().w());
-    odom_enu_tf_quat = odom_enu_tf_quat.inverse();
 
-    
-
-    odom_enu_msg.pose.pose.orientation.x = odom_enu_tf_quat.getX();
-    odom_enu_msg.pose.pose.orientation.y = odom_enu_tf_quat.getY();
-    odom_enu_msg.pose.pose.orientation.z = odom_enu_tf_quat.getZ();
-    odom_enu_msg.pose.pose.orientation.w = odom_enu_tf_quat.getW();
+    odom_enu_msg.pose.pose.orientation.x = car_state.getOrientation().x();
+    odom_enu_msg.pose.pose.orientation.y = car_state.getOrientation().y();
+    odom_enu_msg.pose.pose.orientation.z = car_state.getOrientation().z();
+    odom_enu_msg.pose.pose.orientation.w = car_state.getOrientation().w();
 
     odom_enu_msg.twist.twist.linear.x = car_state.kinematics_estimated.twist.linear.x();
     odom_enu_msg.twist.twist.linear.y = car_state.kinematics_estimated.twist.linear.y();
@@ -367,23 +359,11 @@ sensor_msgs::PointCloud2 AirsimROSWrapper::get_lidar_msg_from_airsim(const std::
 sensor_msgs::Imu AirsimROSWrapper::get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data)
 {
     sensor_msgs::Imu imu_msg;
-    tf::Quaternion imu_heading_enu_quat;
-    imu_heading_enu_quat.setX(imu_data.orientation.x());
-    imu_heading_enu_quat.setY(imu_data.orientation.y());
-    imu_heading_enu_quat.setZ(imu_data.orientation.z());
-    imu_heading_enu_quat.setW(imu_data.orientation.w());
-    imu_heading_enu_quat = imu_heading_enu_quat.inverse();
 
-
-    imu_msg.orientation.x = imu_heading_enu_quat.getX();
-    imu_msg.orientation.y = imu_heading_enu_quat.getY();
-    imu_msg.orientation.z = imu_heading_enu_quat.getZ();
-    imu_msg.orientation.w = imu_heading_enu_quat.getW();
-
-    // Debug yaw
-    tf::Matrix3x3 m_enu(imu_heading_enu_quat);
-    double roll, pitch, yaw;
-    m_enu.getRPY(roll, pitch, yaw);
+    imu_msg.orientation.x = imu_data.orientation.x();
+    imu_msg.orientation.y = imu_data.orientation.y();
+    imu_msg.orientation.z = imu_data.orientation.z();
+    imu_msg.orientation.w = imu_data.orientation.w();
 
     // Publish IMU ang rates in radians per second
     imu_msg.angular_velocity.x = imu_data.angular_velocity.x();
