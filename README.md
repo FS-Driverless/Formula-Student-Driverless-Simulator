@@ -43,7 +43,7 @@ Many game assets like the surrounding world are based on assets from the [Formul
 These assets made this project look as cool as it does now.
 
 
-![Closing picture](docs/images/fsds_cam_view.png)
+![FSDS Preview](docs/images/fsds_pretty.png)
 
 
 ## License
