@@ -51,7 +51,7 @@ CoordFrameTransformer::Quaternionr CoordFrameTransformer::toEnu(const FQuat& q) 
     
     auto q1 = Quaternionr(q.W, q.X, q.Y, q.Z);
 
-    return msr::airlib::VectorMath::toQuaternion(msr::airlib::VectorMath::getRoll(q1), msr::airlib::VectorMath::getPitch(q1), - msr::airlib::VectorMath::getYaw(q1) + M_PI/2);
+    return msr::airlib::VectorMath::toQuaternion(msr::airlib::VectorMath::getPitch(q1), msr::airlib::VectorMath::getRoll(q1), - msr::airlib::VectorMath::getYaw(q1) + M_PI/2);
 }
 float CoordFrameTransformer::toEnu(float length) const
 {
