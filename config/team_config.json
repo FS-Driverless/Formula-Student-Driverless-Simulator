@@ -5,7 +5,7 @@
             "name": "Team A",
             "master": "http://autonomous-system-1:11311/",
             "car_settings": {
-                "SeeDocsAt": "https://fs-online.github.io/Formula-Student-Driverless-Simulator/",
+                "SeeDocsAt": "https://FS-Driverless.github.io/Formula-Student-Driverless-Simulator/",
                 "SettingsVersion": 1.2,
                 "ViewMode": "SpringArmChase",
                 "ClockSpeed": 1.0,
@@ -50,7 +50,7 @@
             "name": "Team B",
             "master": "http://autonomous-system-2:11311/",
             "car_settings": {
-              "SeeDocsAt": "https://fs-online.github.io/Formula-Student-Driverless-Simulator/",
+              "SeeDocsAt": "https://FS-Driverless.github.io/Formula-Student-Driverless-Simulator/",
               "SettingsVersion": 1.2,
               "ViewMode": "SpringArmChase",
               "ClockSpeed": 1.0,

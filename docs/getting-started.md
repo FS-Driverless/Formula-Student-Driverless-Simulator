@@ -23,16 +23,16 @@ Read [this tutorial](gcp-remote-workstation.md) on how to setup your virtual wor
 The simulator will load settings from the file `Formula-Student-Driverless-Simulator/settings.json` in your **home directory**.
 This file is required for the simulator to work and contains the sensor configuration of the car.
 If you clone the repo you will already have this file in place.
-If not, copy-paste the contents of the [settings.json file at the root of this repository](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/settings.json) into the `~/Formula-Student-Driverless-Simulator`.
+If not, copy-paste the contents of the [settings.json file at the root of this repository](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/blob/master/settings.json) into the `~/Formula-Student-Driverless-Simulator`.
 This should get you started with the default sensor configuration, feel free to try your own custom sensor suite.
 
 ### From release binaries
 
 The simulator is distributed as binaries on every release.
-[At this moment only windows binaries are released. For now, if you are on Ubuntu you will have to run the simulator from the Unreal Engine Editor.](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/issues/107)
+[At this moment only windows binaries are released. For now, if you are on Ubuntu you will have to run the simulator from the Unreal Engine Editor.](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/issues/107)
 During competition, the simulation will run on Windows because it offers a bit better performance and stability.
 
-Go to [releases](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/releases) and download the latest one.
+Go to [releases](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/releases) and download the latest one.
 Unzip it to anywhere on your computer and launch FSDS.exe.
 A window with a car should popup!
 Try driving the car around using the arrowkeys.
@@ -44,7 +44,7 @@ On Ubuntu you can skip the visual studio 2019 part.
 
 #### Get the repository
 
-You can either download the repo using the big green download button on the [github page of this project](https://github.com/FS-Online/Formula-Student-Driverless-Simulator) or clone the repository. For cloning, checkout the documentation on this further down this page.
+You can either download the repo using the big green download button on the [github page of this project](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator) or clone the repository. For cloning, checkout the documentation on this further down this page.
 
 When downloading or cloning, by default you get the latest, unreleased version. This is probably not the version that you want. Make sure you select the version that you need! 
 
@@ -120,12 +120,12 @@ Make sure you have git lfs installed!
 
 Ready? Lets clone the repo into your home directory:
 ```
-git clone git@github.com:FS-Online/Formula-Student-Driverless-Simulator.git --recurse-submodules
+git clone git@github.com:FS-Driverless/Formula-Student-Driverless-Simulator.git --recurse-submodules
 ```
 
 If you havn't setup your ssh keys, you can clone using https by running the following command:
 ```
-git clone https://github.com/FS-Online/Formula-Student-Driverless-Simulator.git --recurse-submodules
+git clone https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator.git --recurse-submodules
 ```
 
 **THE REPO HAS TO BE CLONED IN THE HOME DIRECTORY!**. So the repo location should be `$HOME/Formula-Student-Driverless-Simulator`.
@@ -181,7 +181,7 @@ Make sure this is the same configuration file as the simulator uses.
 ## Connecting your autonomous system
 
 The ROS bridge of this simulator had to make use of several custom msgs (for control commands, the groundtruth track, etc). 
-These messages are defined in a ROS package called `fs_msgs` which is located in a separate, light [repository](https://github.com/FS-Online/fs_msgs). 
+These messages are defined in a ROS package called `fs_msgs` which is located in a separate, light [repository](https://github.com/FS-Driverless/fs_msgs). 
 To implement publishers and subscibers for these messages types in your autonomous pipeline, you will have to add the `fs_msgs` repository as a submodule in your codebase (inside de `src` directory of an existing **catkin workspace** as done in this repository) or clone it and build it somewhere else in your system.
 
 Now, all that is left to do is subscribe to the following topics to receive sensordata

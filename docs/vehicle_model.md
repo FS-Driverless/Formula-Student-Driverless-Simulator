@@ -12,7 +12,7 @@ In building this simulator for the FSOnline competition, our design philosophy w
 
 Unreal Engine provides the [PhysXVehicles](https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/guide/Manual/Vehicles.html) that was developed by Nvidia. 
 This seemed like the perfect solution for our simulator, given that it complies with all the criteria of our design philosophy above. 
-Airsim simply interacts with the PhysXCar API in [these](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/tree/master/UE4Project/Plugins/AirSim/Source/Vehicles/Car) files.
+Airsim simply interacts with the PhysXCar API in [these](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/tree/master/UE4Project/Plugins/AirSim/Source/Vehicles/Car) files.
 
 ## Vehicle pawn center
 

@@ -24,10 +24,10 @@ The fsds_ros_bridge.launch launches the following nodes:
 | `/fsds/imu` | Velocity, orientation and acceleration information. Read all about the IMU model [here](imu.md). Data is in the `fsds/FSCar` (enu) frame. | [sensor_msgs/Imu](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Imu.html)  | 250 |
 | `/fsds/gss` | Ground speed sensor provide linear velocity of the vehicle (`fsds/FSCar`). Velocity is m/s. | [geometry_msgs/TwistStamped](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)  | 100 |
 | `/fsds/testing_only/odom` | Ground truth car position and orientation in ENU frame about the CoG of the car (`fsds/FSCar`).  The units are `m` for distance. The orientation are expressed in terms of quaternions. The message is in the `fsds/map` frame. This is a frame that is not (yet) used anywhere else and is just here so you can easely reference it if needed. *THIS WILL NOT BE STREAMED DURING COMPETITION.* | [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)  | 250 |
-| `/fsds/testing_only/track` | Ground truth cone position and color with respect to the starting location of the car in ENU. Currently this only publishes the *initial position* of cones that are part of the track spline. Any cones placed manually in the world are not published here. Additionally, the track is published once and the message is latched (meaning it is always available for a newly created subscriber). *THIS WILL NOT BE STREAMED DURING COMPETITION.* | [fs_msgs/Track](https://github.com/FS-Online/fs_msgs/blob/master/msg/Track.msg)  | Latched |
+| `/fsds/testing_only/track` | Ground truth cone position and color with respect to the starting location of the car in ENU. Currently this only publishes the *initial position* of cones that are part of the track spline. Any cones placed manually in the world are not published here. Additionally, the track is published once and the message is latched (meaning it is always available for a newly created subscriber). *THIS WILL NOT BE STREAMED DURING COMPETITION.* | [fs_msgs/Track](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/Track.msg)  | Latched |
 | `/fsds/camera/CAMERA_NAME` | One of this topic type will exist for every camera specified in the `settings.json` file. On this topic, camera frames are published. The format will be bgra8. `CAMERA_NAME` will be replaced by the corresponding in the `Cameras` object in the `settings.json` file. `IMAGE_TYPE` is determand by the `SensorType` field. When choosing 0, it will be 'Scene'. | [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)  | ~18 |
 | `/fsds/lidar/LIDARNAME` | Publishes the lidar points for each lidar sensor. All points are in the `fsds/LIDARNAME` frame. Transformations between the `fsds/LIDARNAME` and `fsds/FSCar` frame are being published regularly. More info on the lidar sensor can be found [here](lidar.md) | [sensor_msgs/PointCloud](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/PointCloud.html)  | ``RotationsPerSecond` param in `settings.json` |
-| `/fsds/signal/go` | GO signal that is sent every second by the ROS bridge.The car is only allowed to drive once this message has been received. If no GO signal is received for more than 4 seconds, the AS can assume that `fsds_ros_bridge` has been shut down. This message also includes the mission type and track. More info about signal topics can be found in the [integration handbook](integration-handbook.md) | [fs_msgs/GoSignal](https://github.com/FS-Online/fs_msgs/blob/master/msg/GoSignal.msg)  | 1 |
+| `/fsds/signal/go` | GO signal that is sent every second by the ROS bridge.The car is only allowed to drive once this message has been received. If no GO signal is received for more than 4 seconds, the AS can assume that `fsds_ros_bridge` has been shut down. This message also includes the mission type and track. More info about signal topics can be found in the [integration handbook](integration-handbook.md) | [fs_msgs/GoSignal](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/GoSignal.msg)  | 1 |
 | `/tf_static` | See [Coordinate frames and transforms](#coordinate-frames-and-transforms) | [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)   | 1 |
 
 
@@ -35,18 +35,18 @@ The fsds_ros_bridge.launch launches the following nodes:
 
 | Topic name | Description | Message |
 |---|---|---|
-| `/fsds/control_command` | This message includes the dimensionless values throttle, steering and brake. Throttle and brake range from 0 to 1. For steering `-1` steers full to the left and `+1` steers full to the right. The contents of this message fill the essential parts of the `msr::airlib::CarApiBase::CarControl` struct.  This is the only way to control the car when the airsim ROS client is connected (keyboard will no longer work!). | [fs_msgs/ControlCommand](https://github.com/FS-Online/fs_msgs/blob/master/msg/ControlCommand.msg) |
-| `/fsds/signal/finished` | Finished signal that is sent by the AS to stop the mission. The ros bridge will forward the signal to the operator which in turn will stop the ros bridge and finish the run. | [fs_msgs/FinishedSignal](https://github.com/FS-Online/fs_msgs/blob/master/msg/FinishedSignal.msg) |
+| `/fsds/control_command` | This message includes the dimensionless values throttle, steering and brake. Throttle and brake range from 0 to 1. For steering `-1` steers full to the left and `+1` steers full to the right. The contents of this message fill the essential parts of the `msr::airlib::CarApiBase::CarControl` struct.  This is the only way to control the car when the airsim ROS client is connected (keyboard will no longer work!). | [fs_msgs/ControlCommand](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/ControlCommand.msg) |
+| `/fsds/signal/finished` | Finished signal that is sent by the AS to stop the mission. The ros bridge will forward the signal to the operator which in turn will stop the ros bridge and finish the run. | [fs_msgs/FinishedSignal](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/FinishedSignal.msg) |
 
 
 ## Services
 
-- `/fsds/reset` [fsds_ros_bridge/Reset](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/srv/Reset.srv)   
+- `/fsds/reset` [fsds_ros_bridge/Reset](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/srv/Reset.srv)   
  Resets car to start location.
 
 ## Units
 
-If a topic streams a standard ROS message (like [sensor_msgs/Imu](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Imu.html)) then the units will be the recommended units in the message documentation. Custom messages (from the [fs_msgs](https://github.com/FS-Online/fs_msgs) package) use the units specified in the message documentation as well. If in doubt, interpret distances in meters, angles in radians and rates in m/s and rad/s, etc.
+If a topic streams a standard ROS message (like [sensor_msgs/Imu](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Imu.html)) then the units will be the recommended units in the message documentation. Custom messages (from the [fs_msgs](https://github.com/FS-Driverless/fs_msgs) package) use the units specified in the message documentation as well. If in doubt, interpret distances in meters, angles in radians and rates in m/s and rad/s, etc.
 
 ## Coordinate frames and transforms
 
@@ -111,9 +111,9 @@ Transforms to the ground truth are disabled because this would take away the sta
 ## Visualization
 This package contains some useful launch and config files which will help you in visualizing the data being streamed through the above topics.
 
-To open Rviz with [this](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/config/rviz/default.rviz) configuration file, run `roslaunch fsds_ros_bridge fsds_ros_bridge.launch rviz:=true`.
+To open Rviz with [this](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/config/rviz/default.rviz) configuration file, run `roslaunch fsds_ros_bridge fsds_ros_bridge.launch rviz:=true`.
 
-To open Multiplot with [this](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/config/multiplot/multiplot.xml) configuration file, run `roslaunch fsds_ros_bridge fsds_ros_bridge.launch plot:=true`.
+To open Multiplot with [this](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/config/multiplot/multiplot.xml) configuration file, run `roslaunch fsds_ros_bridge fsds_ros_bridge.launch plot:=true`.
 
 ## Monitoring
 Performance monitoring of the ROS Bridge is described [here](statistics.md)

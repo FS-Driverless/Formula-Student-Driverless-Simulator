@@ -7,7 +7,7 @@
 This is a Formula Student Driverless Simulator (FSDS).
 FSDS is a community project with the goal to provide an end to end simulation for FS Driverless teams. 
 It simulates all commonly used sensors and can connects with ros. 
-This project has proven itsself during [FS-Online 2020](https://formulastudentonline.com/) where 4 driverless teams competed.
+This project has proven itsself during [FS-Driverless 2020](https://formulastudentonline.com/) where 4 driverless teams competed.
 
 **Problems?** Ask questions in [Jitter chat](https://gitter.im/FS-Driverless/Formula-Student-Driverless-Simulator) or [open an issue](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/issues)
 
