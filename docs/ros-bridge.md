@@ -50,7 +50,7 @@ If a topic streams a standard ROS message (like [sensor_msgs/Imu](http://docs.ro
 
 ## Coordinate frames and transforms
 
-The primary frame is the `fsds/FSCar` frame, which is fixed at the center of the car following the ENU coordinate system convention.
+The primary frame is the `fsds/FSCar` frame, which is fixed at the center of the car following the [ROS coordinate system convention](https://www.ros.org/reps/rep-0103.html).
 The center of the car is the Unreal Engine car pawn position, which in turn is also the center of gravity.
 
 The ros bridge regularly publishes static transforms between the `fsds/FSCar` frame and each of the cameras and lidars.
@@ -61,7 +61,9 @@ The position and orientation of a camera named `Test` will become available in t
 The transforms published on the /tf_static topic are the transforms specified in the `settings.json`.
 
 Only static transforms within the vehicle are published.
-Transforms to the ground truth are disabled because this would take away the state estimation challenge of the competition.
+
+All positions and rotations published by the ros bridge are in line with [the ROS defaults](https://www.ros.org/reps/rep-0103.html).
+This is the same coordinate system as [everything else within the simulator](coordinate-frames.md).
 
 ## Parameters
 - `/fsds/ros_bridge/update_gps_every_n_sec` [double]   

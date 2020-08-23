@@ -68,8 +68,6 @@ private: //methods
 
         const GroundTruth& ground_truth = getGroundTruth();
 
-        auto coord_transformer = new CoordFrameTransformer(UAirBlueprintLib::GetWorldToMetersScale(this))
-
         // we can just add these two poses because they are in the same coordinate frame :)
         Pose lidar_pose = params_.relative_pose + ground_truth.kinematics->pose;
         getPointCloud(params_.relative_pose, // relative lidar pose

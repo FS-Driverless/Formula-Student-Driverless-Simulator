@@ -10,9 +10,8 @@
     -------------------------
     We have following coordinate systems:
     (1) UU or Unreal Units or Unreal Coordinate system. This is x=forward, y=right, z=up where north is X. Roll and Pitch are right handed, yaw is left handed.
-    (2) Global: This is transformation of UU with origin set to 0,0,0. This is ENU X=East, Y=North, Z=Up. Yaw is zero when pointing east.
-    (3) Local: This is transformation of UU with origin set to vehicle's spawning UU location
-    (4) Relative: This is a transformation in relation to a body (x forward, y left, z up)
+    (2) Global ENU: This is transformation of UU with origin set to 0,0,0.
+    (3) Local ENU: This is transformation of UU with origin set to vehicle's spawning UU location
 
 */
 
