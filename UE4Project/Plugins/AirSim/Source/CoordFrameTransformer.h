@@ -12,6 +12,8 @@
     (1) UU or Unreal Units or Unreal Coordinate system. This is X=North, Y=East, Z=Up.
     (2) Global: This is transformation of UU with origin set to 0,0,0. This is ENU X=East, Y=North, Z=Up
     (3) Local: This is transformation of UU with origin set to vehicle's spawning UU location
+    (4) Relative: This is a transformation in relation to a body (x forward, y left, z up)
+
 */
 
 class AIRSIM_API CoordFrameTransformer
@@ -41,6 +43,10 @@ public:
     float fromEnu(float length) const;
     FTransform fromLocalEnu(const Pose& pose) const;
     FTransform fromGlobalEnu(const Pose& pose) const;
+
+    // Relative -> UU
+    FVector relativeToUU(const Vector3r& position) const;
+    FRotator relativeToUU(float pitch, float yaw, float roll) const;
 
     FVector getGlobalOffset() const;
     FVector getLocalOffset() const;

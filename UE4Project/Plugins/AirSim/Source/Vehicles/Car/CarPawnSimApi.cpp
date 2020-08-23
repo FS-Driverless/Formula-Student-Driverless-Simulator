@@ -267,10 +267,10 @@ void CarPawnSimApi::createCamerasFromSettings()
         const auto& setting = camera_setting_pair.second;
 
         //get pose
-        FVector position = transform.fromLocalEnu(
+        FVector position = transform.relativeToUU(
             CoordFrameTransformer::Vector3r(setting.position.x(), setting.position.y(), setting.position.z()))
-            - transform.fromLocalEnu(CoordFrameTransformer::Vector3r(0.0, 0.0, 0.0));
-        FTransform camera_transform(FRotator(setting.rotation.pitch, setting.rotation.yaw, setting.rotation.roll),
+            - transform.relativeToUU(CoordFrameTransformer::Vector3r(0.0, 0.0, 0.0));
+        FTransform camera_transform(transform.relativeToUU(setting.rotation.pitch, setting.rotation.yaw, setting.rotation.roll),
             position, FVector(1., 1., 1.));
 
         //spawn and attach camera to pawn

@@ -88,6 +88,27 @@ FTransform CoordFrameTransformer::fromLocalEnu(const Pose& pose) const
 {
     return FTransform(fromEnu(pose.orientation), fromLocalEnu(pose.position));
 }
+
+FVector CoordFrameTransformer::relativeToUU(const CoordFrameTransformer::Vector3r& position) const
+{
+    // In relative coordinates: x=forward, Y=left and Z=up. 
+    // UU has X=forward, Y=right, Z=up
+    // So we have invert the Y
+    return FVector(position.x() * world_to_meters_, - position.y() * world_to_meters_, position.z() * world_to_meters_) + local_offset_;
+}
+
+FRotator CoordFrameTransformer::relativeToUU(float pitch, float yaw, float roll) const
+{
+    // Relative coordinate frame is right handed
+    // UU roll and pitch are right handed, yaw is left handed
+    // So we need to invert yaw.
+
+    // In relative coordinates: x=forward, Y=left and Z=up. 
+    // UU has X=forward, Y=right, Z=up
+    // So the Y axis is inverted, so we need to invert pitch.
+    return FRotator(-pitch, -yaw, roll);
+}
+
 FTransform CoordFrameTransformer::fromGlobalEnu(const Pose& pose) const
 {
     return FTransform(fromEnu(pose.orientation), fromGlobalEnu(pose.position));
