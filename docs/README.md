@@ -15,4 +15,4 @@ Please visit version v1.4.1 for a the code used during.
 That version also includes the integration guide describing the rules regarding sensors of FSOnline 2020.
 
 
-![Front picture](images/fsds_pretty.png)
+![Banner](images/banner.png)

@@ -2,7 +2,7 @@
 
 ## [Documentation](https://fs-driverless.github.io/Formula-Student-Driverless-Simulator/) / [System overview](/docs/system-overview.md) / [Getting started guide](/docs/getting-started.md) / [Chat](https://gitter.im/FS-Driverless/Formula-Student-Driverless-Simulator)
 
-![Front picture](docs/images/fsds_pretty.png)
+![Banner](docs/images/banner.png)
 
 This is a Formula Student Driverless Simulator (FSDS).
 FSDS is a community project with the goal to provide an end to end simulation for FS Driverless teams. 
@@ -43,7 +43,7 @@ Many game assets like the surrounding world are based on assets from the [Formul
 These assets made this project look as cool as it does now.
 
 
-![Closing picture](docs/images/fsds_cam_view.png)
+![FSDS Preview](docs/images/fsds_pretty.png)
 
 
 ## License
