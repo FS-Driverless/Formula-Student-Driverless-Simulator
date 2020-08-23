@@ -68,14 +68,9 @@ private: //methods
 
         const GroundTruth& ground_truth = getGroundTruth();
 
-        // calculate the pose before obtaining the point-cloud. Before/after is a bit arbitrary
-        // decision here. If the pose can change while obtaining the point-cloud (could happen for drones)
-        // then the pose won't be very accurate either way.
-        //
-        // TODO: Seems like pose is in vehicle inertial-frame (NOT in Global frame).
-        //    That could be a bit unintuitive but seems consistent with the position/orientation returned as part of 
-        //    ImageResponse for cameras and pose returned by getCameraInfo API.
-        //    Do we need to convert pose to Global frame before returning to clients?
+        auto coord_transformer = new CoordFrameTransformer(UAirBlueprintLib::GetWorldToMetersScale(this))
+
+        // we can just add these two poses because they are in the same coordinate frame :)
         Pose lidar_pose = params_.relative_pose + ground_truth.kinematics->pose;
         getPointCloud(params_.relative_pose, // relative lidar pose
             ground_truth.kinematics->pose,   // relative vehicle pose

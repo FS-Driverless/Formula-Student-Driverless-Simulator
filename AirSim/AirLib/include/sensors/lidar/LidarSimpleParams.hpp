@@ -22,9 +22,9 @@ struct LidarSimpleParams {
     real_T vertical_FOV_lower = -45;
 
     Pose relative_pose {
-        Vector3r(0,0,-1),                     // position - a little above vehicle
+        Vector3r(0, 0, 1),                     // position - a little above vehicle
         Quaternionr::Identity()               // orientation - by default Quaternionr(1, 0, 0, 0) 
-        };                       
+    };        
 
     bool draw_debug_points = false;
 
@@ -56,7 +56,7 @@ struct LidarSimpleParams {
         if (std::isnan(relative_pose.position.y()))
             relative_pose.position.y() = 0;
         if (std::isnan(relative_pose.position.z())) {
-            relative_pose.position.z() = -1;  // a little bit above for cars
+            relative_pose.position.z() = 1;  // a little bit above for cars
         }
 
         float pitch, roll, yaw;

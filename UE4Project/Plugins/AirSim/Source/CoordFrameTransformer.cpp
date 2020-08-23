@@ -39,19 +39,10 @@ CoordFrameTransformer::Vector3r CoordFrameTransformer::toGlobalEnu(const FVector
     return CoordFrameTransformer::toVector3r(position - global_transform_.GetLocation(), 1 / world_to_meters_);
 }
 CoordFrameTransformer::Quaternionr CoordFrameTransformer::toEnu(const FQuat& q) const
-{
-    // Q is left handed UU rotation like this: x=forward,y=right,z=up
-    // When Q is not rotated (w=1;x=0;y=0;z=0), in relation to a UU vector (X=North, Y=East, Z=Up), the rotation points forward (north) towards the positive X axis.
-    // When translating a vector to ENU, x and y are switched (see toVector3r, X=East, Y=North, Z=Up).
-    // So we have to switch roll and pitch (roll becomes pitch and pitch becomes roll) And also invert yaw
-    
-    // After this, a zero rotation would point forward (east) towards the positive Y axis.
-    // Rotations always need to point forward towards the positive x axis.
-    // So we rotate 90 degrees right on the z axis (yaw + 90)
-    
+{   
     auto q1 = Quaternionr(q.W, q.X, q.Y, q.Z);
 
-    return msr::airlib::VectorMath::toQuaternion(msr::airlib::VectorMath::getPitch(q1), msr::airlib::VectorMath::getRoll(q1), - msr::airlib::VectorMath::getYaw(q1) + M_PI/2);
+    return msr::airlib::VectorMath::toQuaternion(msr::airlib::VectorMath::getPitch(q1), - msr::airlib::VectorMath::getRoll(q1), - msr::airlib::VectorMath::getYaw(q1));
 }
 float CoordFrameTransformer::toEnu(float length) const
 {
@@ -81,7 +72,7 @@ FVector CoordFrameTransformer::fromGlobalEnu(const CoordFrameTransformer::Vector
 FQuat CoordFrameTransformer::fromEnu(const Quaternionr& q) const
 {    
     // inverse of toEnu
-    auto rot = msr::airlib::VectorMath::toQuaternion(msr::airlib::VectorMath::getRoll(q), msr::airlib::VectorMath::getPitch(q), - msr::airlib::VectorMath::getYaw(q) - M_PI/2);
+    auto rot = msr::airlib::VectorMath::toQuaternion(msr::airlib::VectorMath::getPitch(q), - msr::airlib::VectorMath::getRoll(q), - msr::airlib::VectorMath::getYaw(q));
     return FQuat(rot.x(), rot.y(), rot.z(), rot.w());
 }
 FTransform CoordFrameTransformer::fromLocalEnu(const Pose& pose) const
@@ -89,15 +80,7 @@ FTransform CoordFrameTransformer::fromLocalEnu(const Pose& pose) const
     return FTransform(fromEnu(pose.orientation), fromLocalEnu(pose.position));
 }
 
-FVector CoordFrameTransformer::relativeToUU(const CoordFrameTransformer::Vector3r& position) const
-{
-    // In relative coordinates: x=forward, Y=left and Z=up. 
-    // UU has X=forward, Y=right, Z=up
-    // So we have invert the Y
-    return FVector(position.x() * world_to_meters_, - position.y() * world_to_meters_, position.z() * world_to_meters_) + local_offset_;
-}
-
-FRotator CoordFrameTransformer::relativeToUU(float pitch, float yaw, float roll) const
+FRotator CoordFrameTransformer::fromEnu(float pitch, float yaw, float roll) const
 {
     // Relative coordinate frame is right handed
     // UU roll and pitch are right handed, yaw is left handed
@@ -106,7 +89,7 @@ FRotator CoordFrameTransformer::relativeToUU(float pitch, float yaw, float roll)
     // In relative coordinates: x=forward, Y=left and Z=up. 
     // UU has X=forward, Y=right, Z=up
     // So the Y axis is inverted, so we need to invert pitch.
-    return FRotator(-pitch, -yaw, roll);
+    return FRotator(pitch, -yaw, -roll);
 }
 
 FTransform CoordFrameTransformer::fromGlobalEnu(const Pose& pose) const
@@ -129,10 +112,10 @@ FTransform CoordFrameTransformer::getGlobalTransform() const
 
 FVector CoordFrameTransformer::toFVector(const Vector3r& vec, float scale) const
 {
-    return FVector(vec.y() * scale, vec.x() * scale, vec.z() * scale);
+    return FVector(vec.x() * scale, - vec.y() * scale, vec.z() * scale);
 }
 
 CoordFrameTransformer::Vector3r CoordFrameTransformer::toVector3r(const FVector& vec, float scale) const
 {
-    return Vector3r(vec.Y * scale, vec.X * scale, vec.Z * scale);
+    return Vector3r(vec.X * scale, - vec.Y * scale, vec.Z * scale);
 }
