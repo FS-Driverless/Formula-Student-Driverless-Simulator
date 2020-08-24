@@ -534,9 +534,8 @@ public:
     struct GpsData {
         msr::airlib::TTimePoint time_stamp;
         GnssReport gnss;
-        bool is_valid = false;
 
-        MSGPACK_DEFINE_MAP(time_stamp, gnss, is_valid);
+        MSGPACK_DEFINE_MAP(time_stamp, gnss);
 
         GpsData()
         {}
@@ -545,7 +544,6 @@ public:
         {
             time_stamp = s.time_stamp;
             gnss = s.gnss;
-            is_valid = s.is_valid;
         }
 
         msr::airlib::GpsBase::Output to() const
@@ -554,7 +552,6 @@ public:
 
             d.time_stamp = time_stamp;
             d.gnss = gnss.to();
-            d.is_valid = is_valid;
 
             return d;
         }

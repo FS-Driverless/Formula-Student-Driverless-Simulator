@@ -204,3 +204,5 @@ Now, all that is left to do is subscribe to the following topics to receive sens
 - `/fsds/testing_only/track`
 
 and publish to the following topic `/fsds/control_command` to publish the vehicle control setpoints.
+
+## Using the python client

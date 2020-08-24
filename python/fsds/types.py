@@ -1,6 +1,6 @@
 from __future__ import print_function
-import msgpackrpc #install as admin: pip install msgpack-rpc-python
-import numpy as np #pip install numpy
+import msgpackrpc # pip install msgpack-rpc-python
+import numpy as np # pip install numpy
 
 class MsgpackMixin:
     def __repr__(self):
@@ -388,7 +388,6 @@ class GnssReport(MsgpackMixin):
 class GpsData(MsgpackMixin):
     time_stamp = np.uint64(0)
     gnss = GnssReport()
-    is_valid = False
 
 class DistanceSensorData(MsgpackMixin):
     time_stamp = np.uint64(0)

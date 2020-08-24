@@ -85,7 +85,6 @@ public: //types
     struct Output {	//same as ROS message
         TTimePoint time_stamp;
         GnssReport gnss;
-        bool is_valid = false;
     };
 
 
