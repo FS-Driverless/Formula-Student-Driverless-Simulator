@@ -25,12 +25,8 @@ cd UnrealEngine
 ./Setup.sh && ./GenerateProjectFiles.sh && make	
 ```
 
-Run it by executing `./Engine/Binaries/Linux/UE4Editor`. The Unreal Editor should now open without errors. Once it has opened, press on Browse and open the FSDS project in `~/Driverless-Competition-Simulator/UE4Project/FSOnline.uproject`. The project should now open correctly. If it does not, make sure of the following:
- * you have cloned the repository inside your home folder (~/) and you have run `git lfs pull`.
- * within `~/Driverless-Competition-Simulator/AirSim/`, you have run `./setup.sh && ./build.sh`.
-
-We recommend adding the following alias to your ~/.bashrc to speed up the process of opening the repository in the future:
-`alias ue='~/UnrealEngine/Engine/Binaries/Linux/UE4Editor ~/Driverless-Competition-Simulator/UE4Project/FSOnline.uproject'`
+Run it by executing `./Engine/Binaries/Linux/UE4Editor`.
+The Unreal Editor should now open without errors. 
 
 ## Install visual studio 2019 (Windows)
 [Download visual studio 2019 (community edition)](https://visualstudio.microsoft.com/vs/)

@@ -71,7 +71,16 @@ The first time this takes quite a while. Go walk around a bit, maybe start playi
 
 #### Working with the Unreal Engine project
 
-Launch Unreal Engine and open the project file `Formula-Student-Driverless-Simulator/UE4Project/FSOnline.uproject`
+Launch Unreal Engine, press Browse and open the FSDS project in `~/Driverless-Competition-Simulator/UE4Project/FSOnline.uproject`. 
+The project should now open correctly. 
+If it does not, make sure of the following:
+
+ * you have cloned the repository inside your home folder (~/) 
+ * you have cloned with LFS enabed. If not, run `git lfs install` and `git lfs pull` to download the large files.
+ * within `~/Driverless-Competition-Simulator/AirSim/`, you have run `build.cmd` on Windows and `./setup.sh && ./build.sh` on Ubuntu.
+
+On Ubuntu, we recommend adding the following alias to your ~/.bashrc to speed up the process of opening the repository in the future:
+`alias ue='~/UnrealEngine/Engine/Binaries/Linux/UE4Editor ~/Driverless-Competition-Simulator/UE4Project/FSOnline.uproject'`
 
 It might show an error like 'This project was made with a different version of the Unreal Engine'. In that case select `more options` and `skip conversion`.
 
@@ -135,7 +144,7 @@ I know yes it is ugly but it works. If you are bothered by it I would welcome yo
 If this folder already exists as a result of any previous step, move the existing folder out of the way and merge the content afterwards.
 
 If you are on Windows and cloned this repository in a Windows directory, go into the cloned repo and run `git config core.fileMode false` to ignore file mode changes. 
-If you want to share the the clone directory with the Ubuntu WSL system, create a symlink within WSL like so:
+If you want to share the the cloned directory with the Ubuntu WSL system, create a symlink within WSL like so:
 ```
 ln -s /mnt/c/Users/developer/Formula-Student-Driverless-Simulator ~/Formula-Student-Driverless-Simulator
 ```
