@@ -68,5 +68,5 @@ You can debug the input values from the joy driver by checking the `/joy` topic.
   Listens to joystick input which is then mapped to the control command msg. The mapping should feel intuitive but in case something is unclear, it is described in detail in `/ros/src/fsds_ros_bridge/src/joystick.cpp`
 
 ## Publishers:
-- `/fsds_ros_bridge/VEHICLE_NAME/control_command` [fs_msgs/ControlCommand](https://github.com/FS-Online/fs_msgs/blob/master/msg/ControlCommand.msg) 
+- `/fsds_ros_bridge/VEHICLE_NAME/control_command` [fs_msgs/ControlCommand](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/ControlCommand.msg) 
 
