@@ -61,3 +61,13 @@ To create a new viewpoint, add a new `CameraActor` to the world and place it whe
 Next, add a `AirsimSpectatorTeleportTrigger` to the world.
 In the settings, set the camera to the one you just created.
 Whenever the vehicle touches this trigger object, the spectator will be teleported to the selected camera (in follow-car mode).
+
+## Running the spectator from Unreal Editor
+During development you can use the following steps to run the spectator directly from the unreal editor, skipping the main menu:
+
+1. In your `settings.json`, set the `SpectatorServerPassword` to an empty string like so: `"SpectatorServerPassword": ""`.
+2. In the run configuration, set the number of players to 2 and Net Mode to `Play As Listen Server`.
+3. Play. Both play in selected viewport and play as standalone game work.
+
+![spectator from editor](images/spectator-from-editor.png)
+
