@@ -56,8 +56,8 @@ while True:
 Full example [here](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/tree/master/python/examples/gss.py).
 
 
-## Ros
-When using the ros bridge, ground speed sensordata will be published on `/fsds/gss` with the `geometry_msgs/TwistStamped` message type.
+## ROS
+When using the ROS bridge, ground speed sensordata will be published on `/fsds/gss` with the `geometry_msgs/TwistStamped` message type.
 Make sure you have added the sensor to your settings.json file.
 
 Appart from the header fields, only `x`, `y` and `z` of the `twist.linear` are populated. 

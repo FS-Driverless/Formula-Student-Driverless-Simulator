@@ -262,8 +262,7 @@ class ImageRequest(MsgpackMixin):
     compress = False
 
     def __init__(self, camera_name, image_type, pixels_as_float = False, compress = True):
-        # todo: in future remove str(), it's only for compatibility to pre v1.2
-        self.camera_name = str(camera_name)
+        self.camera_name = camera_name
         self.image_type = image_type
         self.pixels_as_float = pixels_as_float
         self.compress = compress
