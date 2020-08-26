@@ -89,3 +89,5 @@ def parse_lidarData(self, point_cloud):
 points = parse_lidarData(lidardata.point_cloud)
 print("point 0  X: %f  Y: %f  Z: %f" % (points[0][0], points[0][1], points[0][2]))
 ```
+
+Full example [here](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/tree/master/python/examples/lidar.py).

@@ -41,6 +41,11 @@ client.enableApiControl(True)
 car_controls = fsds.CarControls()
 car_controls.throttle = 1
 client.setCarControls(car_controls)
+
+time.sleep(5)
+
+# Places the vehicle back at it's original position
+client.reset()
 ```
 
 [Find more examples here.](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/tree/master/python/examples)
