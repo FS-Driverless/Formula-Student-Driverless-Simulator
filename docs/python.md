@@ -52,6 +52,16 @@ A full example of an autonomous system that can finish a lap [can be found here]
 
 [Find more examples here.](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/tree/master/python/examples)
 
+## Sensors
+
+Documentation on requesting and processing sensordata can be found in the respective sensor documentation pages:
+
+* [Lidar](lidar.md)
+* [Camera](camera.md)
+* [GPS](gps.md)
+* [IMU](imu.md)
+* [Ground Speed Sensor](ground-speed-sensor.md)
+
 ## Getting ground truth information
 
 Using the following function you get get the real, latest position of the car:
