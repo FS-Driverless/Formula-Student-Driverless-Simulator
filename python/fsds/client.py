@@ -462,6 +462,15 @@ class FSDSClient:
         """
         return GpsData.from_msgpack(self.client.call('getGpsData', gps_name, vehicle_name))
 
+    def getGroundSpeedSensorData(self, vehicle_name = 'FSCar'):
+        """
+        Args:
+            vehicle_name (str, optional): Name of vehicle to which the sensor corresponds to. Default FSCar.
+        Returns:
+            GroundSpeedSensorData:
+        """
+        return GroundSpeedSensorData.from_msgpack(self.client.call('getGroundSpeedSensorData', vehicle_name))
+
     def getDistanceSensorData(self, distance_sensor_name = '', vehicle_name = 'FSCar'):
         """
         Args:

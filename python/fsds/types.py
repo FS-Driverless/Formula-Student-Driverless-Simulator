@@ -389,6 +389,10 @@ class GpsData(MsgpackMixin):
     time_stamp = np.uint64(0)
     gnss = GnssReport()
 
+class GroundSpeedSensorData(MsgpackMixin):
+    time_stamp = np.uint64(0)
+    linear_velocity = Vector3r()
+
 class DistanceSensorData(MsgpackMixin):
     time_stamp = np.uint64(0)
     distance = Quaternionr()
