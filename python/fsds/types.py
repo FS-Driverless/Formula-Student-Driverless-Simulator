@@ -268,11 +268,11 @@ class EnvironmentState(MsgpackMixin):
 
 class CarState(MsgpackMixin):
     speed = 0.0
-    gear = 0
-    rpm = 0.0
-    maxrpm = 0.0
-    handbrake = False
-    collision = CollisionInfo()
+    gear = 0 # deprecated, will be deleted
+    rpm = 0.0 # deprecated, will be deleted
+    maxrpm = 0.0 # deprecated, will be deleted
+    handbrake = False # deprecated, will be deleted
+    collision = CollisionInfo() # deprecated, will be deleted
     kinematics_estimated = KinematicsState()
     timestamp = np.uint64(0)
 

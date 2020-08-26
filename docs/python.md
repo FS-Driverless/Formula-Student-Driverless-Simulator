@@ -51,3 +51,35 @@ client.reset()
 A full example of an autonomous system that can finish a lap [can be found here](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/tree/master/python/examples/autonomous_example.py)
 
 [Find more examples here.](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/tree/master/python/examples)
+
+## Getting ground truth information
+
+Using the following function you get get the real, latest position of the car:
+
+```
+state = client.getCarState()
+
+# velocity in m/s in the car's reference frame
+print(state.speed)
+
+# nanosecond timestamp of the latest physics update
+print(state.timestamp)
+
+# position (meter) in global reference frame.
+print(state.kinematics_estimated.position)
+
+# orientation (Quaternionr) in global reference frame.
+print(state.kinematics_estimated.orientation)
+
+# m/s
+print(state.kinematics_estimated.linear_velocity)
+
+# rad/s
+print(state.kinematics_estimated.angular_velocity)
+
+# m/s^2
+print(state.kinematics_estimated.linear_acceleration)
+
+# rad/s^2
+print(state.kinematics_estimated.angular_acceleration)
+```
