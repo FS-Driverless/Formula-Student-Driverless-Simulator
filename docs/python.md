@@ -48,4 +48,6 @@ time.sleep(5)
 client.reset()
 ```
 
+A full example of an autonomous system that can finish a lap [can be found here](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/tree/master/python/examples/autonomous_example.py)
+
 [Find more examples here.](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/tree/master/python/examples)
