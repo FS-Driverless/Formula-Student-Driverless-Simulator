@@ -56,11 +56,11 @@ void UnrealLidarSensor::getPointCloud(const msr::airlib::Pose& lidar_pose, const
     }
 
     // normalize FOV start/end
-    const float laser_start = std::fmod(360.0f + params.horizontal_FOV_start, 360.0f);
-    const float laser_end = std::fmod(360.0f + params.horizontal_FOV_end, 360.0f);
+    const float laser_start = std::fmod(params.horizontal_FOV_start, 360.0f);
+    const float laser_end = std::fmod(params.horizontal_FOV_end, 360.0f);
 
     // calculate needed angle/distance between each point
-    const float angle_distance_of_laser_measure = std::abs(laser_end - laser_start) / float(points_to_scan_with_one_laser);
+    const float angle_distance_of_laser_measure = (laser_end - laser_start) / float(points_to_scan_with_one_laser);
 
     // shoot lasers
     for (auto laser = 0u; laser < params.number_of_lasers; ++laser)
@@ -69,7 +69,7 @@ void UnrealLidarSensor::getPointCloud(const msr::airlib::Pose& lidar_pose, const
 
         for (auto i = 0u; i < points_to_scan_with_one_laser; ++i)
         {
-            const float horizontal_angle = std::fmod(laser_end - angle_distance_of_laser_measure * i, 360.0f);
+            const float horizontal_angle = std::fmod(laser_start + angle_distance_of_laser_measure * i, 360.0f);
        
             Vector3r point;
             int segmentationID = -1;
