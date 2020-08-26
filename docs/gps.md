@@ -25,23 +25,40 @@ See GpsSimple.hpp (/AirSim/AirLib/include/sensors/gps/GpsSimple.hpp) and [GpsSim
 
 ## Add the gps to the car
 In your `settings.json`, add the following to the `Sensors` object within the vehicle configuration:
-```
+```json
 "Gps" : {
     "SensorType": 3,
     "Enabled": true
 },
 ```
-At the moment no configuration is allowed
+The key of the object, in this case `Gps` is the name of the sensor: this gps sensor is named `Gps`.
+Use this name to retrieve sensordata.
+
+At the moment no accuracy-configuration is supported.
 
 ## Python client
 
-```
-gps_data = client.getGpsData(gps_name = "", vehicle_name = "")
+```python
+# Args:
+#   gps_name (str, optional): Name of GPS to get data from, specified in settings.json. When no name is provided the last gps will be used.
+#   vehicle_name (str, optional): Name of vehicle to which the sensor corresponds to.
+# Returns:
+#   time_stamp (np.uint64): nanosecond timestamp of when the gps position was captured
+#   gnss:
+#     eph (float): Standard deviation of horizontal position error (meters)
+#     epv (float): Standard deviation of vertical position error (meters)
+#     geo_point: The altitude, latitude and longitude of the gps
+#       latitude (float)
+#       longitude (float)
+#       altitude (float)
+#     velocity (Vector3r): Velocity in three directions (x_val, y_val and z_val) in meter/second
+#     time_utc (np.uint64): UTC millisecond timestamp of when the gps position was captured
+gps_data = client.getGpsData(gps_name = '', vehicle_name = 'FSCar')
 ```
 
-An example to show how to collect gps data:
+An example of how to collect gps data:
 
-```
+```python
 import time
 import fsds
 
@@ -52,27 +69,17 @@ client = fsds.FSDSClient()
 client.confirmConnection()
 
 while True:
-    gps = client.getGpsData(gps_name='Gps', vehicle_name='FSCar')
+    gps = client.getGpsData()
 
-    # nanosecond timestamp of when the gps position was captured
     print("timestamp nano: ", gps.time_stamp)
-
-    # UTC millisecond timestamp of when the gps position was captured
     print("timestamp utc:  ", gps.gnss.time_utc)
-
-    # Standard deviation of horizontal position error (meters)
     print("eph: ", gps.gnss.eph)
-
-    # Standard deviation of vertical position error (meters)
     print("epv: ", gps.gnss.epv)
-
-    # The altitude, latitude and longitude of the gps
     print("geo point: ", gps.gnss.geo_point)
-
-    # velocity in three directions (x_val, y_val and z_val) in meter/second
     print("velocity: ", gps.gnss.velocity)
 
     print()
 
     time.sleep(1)
 ```
+Full example [here](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/tree/master/python/examples/gps.py).

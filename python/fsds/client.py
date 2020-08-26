@@ -46,7 +46,7 @@ class FSDSClient:
     def getMinRequiredClientVersion(self):
         return self.client.call('getMinRequiredClientVersion')
 
-    def enableApiControl(self, is_enabled, vehicle_name = ''):
+    def enableApiControl(self, is_enabled, vehicle_name = 'FSCar'):
         """
         Enables or disables API control for vehicle corresponding to vehicle_name
 
@@ -56,7 +56,7 @@ class FSDSClient:
         """
         self.client.call('enableApiControl', is_enabled, vehicle_name)
 
-    def isApiControlEnabled(self, vehicle_name = ''):
+    def isApiControlEnabled(self, vehicle_name = 'FSCar'):
         """
         Returns true if API control is established.
 
@@ -70,7 +70,7 @@ class FSDSClient:
         """
         return self.client.call('isApiControlEnabled', vehicle_name)
 
-    def armDisarm(self, arm, vehicle_name = ''):
+    def armDisarm(self, arm, vehicle_name = 'FSCar'):
         """
         Arms or disarms vehicle
 
@@ -110,7 +110,7 @@ class FSDSClient:
         """
         self.client.call('simContinueForTime', seconds)
 
-    def getHomeGeoPoint(self, vehicle_name = ''):
+    def getHomeGeoPoint(self, vehicle_name = 'FSCar'):
         """
         Get the Home location of the vehicle
 
@@ -195,7 +195,7 @@ class FSDSClient:
     # camera control
     # simGetImage returns compressed png in array of bytes
     # image_type uses one of the ImageType members
-    def simGetImage(self, camera_name, image_type, vehicle_name = ''):
+    def simGetImage(self, camera_name, image_type, vehicle_name = 'FSCar'):
         """
         Get a single image
 
@@ -223,7 +223,7 @@ class FSDSClient:
     # camera control
     # simGetImage returns compressed png in array of bytes
     # image_type uses one of the ImageType members
-    def simGetImages(self, requests, vehicle_name = ''):
+    def simGetImages(self, requests, vehicle_name = 'FSCar'):
         """
         Get multiple images
 
@@ -252,7 +252,7 @@ class FSDSClient:
         responses_raw = self.client.call('simGetMeshPositionVertexBuffers')
         return [MeshPositionVertexBuffersResponse.from_msgpack(response_raw) for response_raw in responses_raw]
 
-    def simGetCollisionInfo(self, vehicle_name = ''):
+    def simGetCollisionInfo(self, vehicle_name = 'FSCar'):
         """
         Args:
             vehicle_name (str, optional): Name of the Vehicle to get the info of
@@ -262,7 +262,7 @@ class FSDSClient:
         """
         return CollisionInfo.from_msgpack(self.client.call('simGetCollisionInfo', vehicle_name))
 
-    def simSetVehiclePose(self, pose, ignore_collison, vehicle_name = ''):
+    def simSetVehiclePose(self, pose, ignore_collison, vehicle_name = 'FSCar'):
         """
         Set the pose of the vehicle
 
@@ -275,7 +275,7 @@ class FSDSClient:
         """
         self.client.call('simSetVehiclePose', pose, ignore_collison, vehicle_name)
 
-    def simGetVehiclePose(self, vehicle_name = ''):
+    def simGetVehiclePose(self, vehicle_name = 'FSCar'):
         """
         Args:
             vehicle_name (str, optional): Name of the vehicle to get the Pose of
@@ -286,7 +286,7 @@ class FSDSClient:
         pose = self.client.call('simGetVehiclePose', vehicle_name)
         return Pose.from_msgpack(pose)
 
-    def simSetTraceLine(self, color_rgba, thickness=1.0, vehicle_name = ''):
+    def simSetTraceLine(self, color_rgba, thickness=1.0, vehicle_name = 'FSCar'):
         """
         Modify the color and thickness of the line when Tracing is enabled
 
@@ -387,7 +387,7 @@ class FSDSClient:
         """
         self.client.call('simPrintLogMessage', message, message_param, severity)
 
-    def simGetCameraInfo(self, camera_name, vehicle_name = ''):
+    def simGetCameraInfo(self, camera_name, vehicle_name = 'FSCar'):
         """
         Get details about the camera
 
@@ -401,7 +401,7 @@ class FSDSClient:
         # TODO: below str() conversion is only needed for legacy reason and should be removed in future
         return CameraInfo.from_msgpack(self.client.call('simGetCameraInfo', str(camera_name), vehicle_name))
 
-    def simSetCameraOrientation(self, camera_name, orientation, vehicle_name = ''):
+    def simSetCameraOrientation(self, camera_name, orientation, vehicle_name = 'FSCar'):
         """
         - Control the orientation of a selected camera
 
@@ -413,7 +413,7 @@ class FSDSClient:
         # TODO: below str() conversion is only needed for legacy reason and should be removed in future
         self.client.call('simSetCameraOrientation', str(camera_name), orientation, vehicle_name)
 
-    def simSetCameraFov(self, camera_name, fov_degrees, vehicle_name = ''):
+    def simSetCameraFov(self, camera_name, fov_degrees, vehicle_name = 'FSCar'):
         """
         - Control the field of view of a selected camera
 
@@ -425,7 +425,7 @@ class FSDSClient:
         # TODO: below str() conversion is only needed for legacy reason and should be removed in future
         self.client.call('simSetCameraFov', str(camera_name), fov_degrees, vehicle_name)
 
-    def simGetGroundTruthKinematics(self, vehicle_name = ''):
+    def simGetGroundTruthKinematics(self, vehicle_name = 'FSCar'):
         """
         Get Ground truth kinematics of the vehicle
 
@@ -440,10 +440,10 @@ class FSDSClient:
     simGetGroundTruthKinematics.__annotations__ = {'return': KinematicsState}
 
     # sensor APIs
-    def getImuData(self, imu_name = '', vehicle_name = ''):
+    def getImuData(self, imu_name = '', vehicle_name = 'FSCar'):
         """
         Args:
-            imu_name (str, optional): Name of IMU to get data from, specified in settings.json
+            imu_name (str, optional): Name of IMU to get data from, specified in settings.json. When no name is provided the last imu will be used.
             vehicle_name (str, optional): Name of vehicle to which the sensor corresponds to
 
         Returns:
@@ -451,7 +451,7 @@ class FSDSClient:
         """
         return ImuData.from_msgpack(self.client.call('getImuData', imu_name, vehicle_name))
 
-    def getGpsData(self, gps_name = '', vehicle_name = ''):
+    def getGpsData(self, gps_name = '', vehicle_name = 'FSCar'):
         """
         Args:
             gps_name (str, optional): Name of GPS to get data from, specified in settings.json
@@ -462,7 +462,7 @@ class FSDSClient:
         """
         return GpsData.from_msgpack(self.client.call('getGpsData', gps_name, vehicle_name))
 
-    def getDistanceSensorData(self, distance_sensor_name = '', vehicle_name = ''):
+    def getDistanceSensorData(self, distance_sensor_name = '', vehicle_name = 'FSCar'):
         """
         Args:
             distance_sensor_name (str, optional): Name of Distance Sensor to get data from, specified in settings.json
@@ -473,7 +473,7 @@ class FSDSClient:
         """
         return DistanceSensorData.from_msgpack(self.client.call('getDistanceSensorData', distance_sensor_name, vehicle_name))
 
-    def getLidarData(self, lidar_name = '', vehicle_name = ''):
+    def getLidarData(self, lidar_name = '', vehicle_name = 'FSCar'):
         """
         Args:
             lidar_name (str, optional): Name of Lidar to get data from, specified in settings.json
@@ -484,7 +484,7 @@ class FSDSClient:
         """
         return LidarData.from_msgpack(self.client.call('getLidarData', lidar_name, vehicle_name))
 
-    def simGetLidarSegmentation(self, lidar_name = '', vehicle_name = ''):
+    def simGetLidarSegmentation(self, lidar_name = '', vehicle_name = 'FSCar'):
         """
         Returns Segmentation ID of each point's collided object in the last Lidar update
 
@@ -600,7 +600,7 @@ class FSDSClient:
         """
         self.client.call('simPlotTransformsWithNames', poses, names, tf_scale, tf_thickness, text_scale, text_color_rgba, duration)
 
-    def cancelLastTask(self, vehicle_name = ''):
+    def cancelLastTask(self, vehicle_name = 'FSCar'):
         """
         Cancel previous Async task
 
@@ -623,7 +623,7 @@ class FSDSClient:
         """
         return self.client.call('waitOnLastTask', timeout_sec)
 
-    def setCarControls(self, controls, vehicle_name = ''):
+    def setCarControls(self, controls, vehicle_name = 'FSCar'):
         """
         Control the car using throttle, steering, brake, etc.
 
@@ -633,7 +633,7 @@ class FSDSClient:
         """
         self.client.call('setCarControls', controls, vehicle_name)
 
-    def getCarState(self, vehicle_name = ''):
+    def getCarState(self, vehicle_name = 'FSCar'):
         """
         Args:
             vehicle_name (str, optional): Name of vehicle
@@ -644,7 +644,7 @@ class FSDSClient:
         state_raw = self.client.call('getCarState', vehicle_name)
         return CarState.from_msgpack(state_raw)
 
-    def getCarControls(self, vehicle_name=''):
+    def getCarControls(self, vehicle_name = 'FSCar'):
         """
         Args:
             vehicle_name (str, optional): Name of vehicle

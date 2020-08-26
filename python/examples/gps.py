@@ -1,6 +1,20 @@
 import sys
 import os
 
+"""
+This example shows how to retrieve gps sensordata.
+Before running this you must add the sensor to your vehicle.
+Add the following to your settings.json file in the Sensors section:
+
+    "Gps" : {
+        "SensorType": 3,
+        "Enabled": true
+    },
+
+
+"""
+
+
 ## adds the fsds package located the parent directory to the pyhthon path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
