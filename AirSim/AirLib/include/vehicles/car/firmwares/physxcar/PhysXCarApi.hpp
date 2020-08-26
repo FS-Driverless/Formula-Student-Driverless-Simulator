@@ -55,14 +55,6 @@ public:
         return home_geopoint_;
     }
 
-    virtual bool armDisarm(bool arm) override
-    {
-        //TODO: implement arming for car
-        unused(arm);
-        return true;
-    }
-
-
 public:
     virtual void setCarControls(const CarControls& controls) override
     {

@@ -29,25 +29,6 @@ class ImageType:
     SurfaceNormals = 6
     Infrared = 7
 
-class DrivetrainType:
-    MaxDegreeOfFreedom = 0
-    ForwardOnly = 1
-
-class LandedState:
-    Landed = 0
-    Flying = 1
-
-class WeatherParameter:
-    Rain = 0
-    Roadwetness = 1
-    Snow = 2
-    RoadSnow = 3
-    MapleLeaf = 4
-    RoadLeaf = 5
-    Dust = 6
-    Fog = 7
-    Enabled = 8
-
 class Vector3r(MsgpackMixin):
     x_val = 0.0
     y_val = 0.0
@@ -207,53 +188,11 @@ class Pose(MsgpackMixin):
     def nanPose():
         return Pose(Vector3r.nanVector3r(), Quaternionr.nanQuaternionr())
 
-
-class CollisionInfo(MsgpackMixin):
-    has_collided = False
-    normal = Vector3r()
-    impact_point = Vector3r()
-    position = Vector3r()
-    penetration_depth = 0.0
-    time_stamp = 0.0
-    object_name = ""
-    object_id = -1
-
 class GeoPoint(MsgpackMixin):
     latitude = 0.0
     longitude = 0.0
     altitude = 0.0
 
-class YawMode(MsgpackMixin):
-    is_rate = True
-    yaw_or_rate = 0.0
-    def __init__(self, is_rate = True, yaw_or_rate = 0.0):
-        self.is_rate = is_rate
-        self.yaw_or_rate = yaw_or_rate
-
-class RCData(MsgpackMixin):
-    timestamp = 0
-    pitch, roll, throttle, yaw = (0.0,)*4 #init 4 variable to 0.0
-    switch1, switch2, switch3, switch4 = (0,)*4
-    switch5, switch6, switch7, switch8 = (0,)*4
-    is_initialized = False
-    is_valid = False
-    def __init__(self, timestamp = 0, pitch = 0.0, roll = 0.0, throttle = 0.0, yaw = 0.0, switch1 = 0,
-                 switch2 = 0, switch3 = 0, switch4 = 0, switch5 = 0, switch6 = 0, switch7 = 0, switch8 = 0, is_initialized = False, is_valid = False):
-        self.timestamp = timestamp
-        self.pitch = pitch
-        self.roll = roll
-        self.throttle = throttle
-        self.yaw = yaw
-        self.switch1 = switch1
-        self.switch2 = switch2
-        self.switch3 = switch3
-        self.switch4 = switch4
-        self.switch5 = switch5
-        self.switch6 = switch6
-        self.switch7 = switch7
-        self.switch8 = switch8
-        self.is_initialized = is_initialized
-        self.is_valid = is_valid
 
 class ImageRequest(MsgpackMixin):
     camera_name = '0'
@@ -347,24 +286,8 @@ class RefereeState(MsgpackMixin):
     initial_position = Point2D()
     cones = []
 
-class MultirotorState(MsgpackMixin):
-    collision = CollisionInfo()
-    kinematics_estimated = KinematicsState()
-    gps_location = GeoPoint()
-    timestamp = np.uint64(0)
-    landed_state = LandedState.Landed
-    rc_data = RCData()
-    ready = False
-    ready_message = ""
-    can_arm = False
-
 class ProjectionMatrix(MsgpackMixin):
     matrix = []
-
-class CameraInfo(MsgpackMixin):
-    pose = Pose()
-    fov = -1
-    proj_mat = ProjectionMatrix()
 
 class LidarData(MsgpackMixin):
     point_cloud = []
@@ -391,111 +314,3 @@ class GpsData(MsgpackMixin):
 class GroundSpeedSensorData(MsgpackMixin):
     time_stamp = np.uint64(0)
     linear_velocity = Vector3r()
-
-class DistanceSensorData(MsgpackMixin):
-    time_stamp = np.uint64(0)
-    distance = Quaternionr()
-    min_distance = Quaternionr()
-    max_distance = Quaternionr()
-    relative_pose = Pose()
-
-class PIDGains():
-    """
-    Struct to store values of PID gains. Used to transmit controller gain values while instantiating
-    AngleLevel/AngleRate/Velocity/PositionControllerGains objects.
-    
-    Attributes:
-        kP (float): Proportional gain
-        kI (float): Integrator gain
-        kD (float): Derivative gain
-    """
-    def __init__(self, kp, ki, kd):
-        self.kp = kp
-        self.ki = ki
-        self.kd = kd
-
-    def to_list(self):
-        return [self.kp, self.ki, self.kd]
-
-class AngleRateControllerGains():
-    """
-    Struct to contain controller gains used by angle level PID controller
-    
-    Attributes:
-        roll_gains (PIDGains): kP, kI, kD for roll axis
-        pitch_gains (PIDGains): kP, kI, kD for pitch axis
-        yaw_gains (PIDGains): kP, kI, kD for yaw axis
-    """
-    def __init__(self, roll_gains = PIDGains(0.25, 0, 0),
-                       pitch_gains = PIDGains(0.25, 0, 0),
-                       yaw_gains = PIDGains(0.25, 0, 0)):
-        self.roll_gains = roll_gains
-        self.pitch_gains = pitch_gains
-        self.yaw_gains = yaw_gains
-    
-    def to_lists(self):
-        return [self.roll_gains.kp, self.pitch_gains.kp, self.yaw_gains.kp], [self.roll_gains.ki, self.pitch_gains.ki, self.yaw_gains.ki], [self.roll_gains.kd, self.pitch_gains.kd, self.yaw_gains.kd]
-
-class AngleLevelControllerGains():
-    """
-    Struct to contain controller gains used by angle rate PID controller
-    
-    Attributes:
-        roll_gains (PIDGains): kP, kI, kD for roll axis
-        pitch_gains (PIDGains): kP, kI, kD for pitch axis
-        yaw_gains (PIDGains): kP, kI, kD for yaw axis
-    """
-    def __init__(self, roll_gains = PIDGains(2.5, 0, 0),
-                       pitch_gains = PIDGains(2.5, 0, 0),
-                       yaw_gains = PIDGains(2.5, 0, 0)):
-        self.roll_gains = roll_gains
-        self.pitch_gains = pitch_gains
-        self.yaw_gains = yaw_gains
-    
-    def to_lists(self):
-        return [self.roll_gains.kp, self.pitch_gains.kp, self.yaw_gains.kp], [self.roll_gains.ki, self.pitch_gains.ki, self.yaw_gains.ki], [self.roll_gains.kd, self.pitch_gains.kd, self.yaw_gains.kd]
-
-class VelocityControllerGains():
-    """
-    Struct to contain controller gains used by velocity PID controller
-    
-    Attributes:
-        x_gains (PIDGains): kP, kI, kD for X axis
-        y_gains (PIDGains): kP, kI, kD for Y axis
-        z_gains (PIDGains): kP, kI, kD for Z axis
-    """
-    def __init__(self, x_gains = PIDGains(0.2, 0, 0),
-                       y_gains = PIDGains(0.2, 0, 0),
-                       z_gains = PIDGains(2.0, 2.0, 0)):
-        self.x_gains = x_gains
-        self.y_gains = y_gains
-        self.z_gains = z_gains
-    
-    def to_lists(self):
-        return [self.x_gains.kp, self.y_gains.kp, self.z_gains.kp], [self.x_gains.ki, self.y_gains.ki, self.z_gains.ki], [self.x_gains.kd, self.y_gains.kd, self.z_gains.kd]
-
-class PositionControllerGains():
-    """
-    Struct to contain controller gains used by position PID controller
-    
-    Attributes:
-        x_gains (PIDGains): kP, kI, kD for X axis
-        y_gains (PIDGains): kP, kI, kD for Y axis
-        z_gains (PIDGains): kP, kI, kD for Z axis
-    """
-    def __init__(self, x_gains = PIDGains(0.25, 0, 0),
-                       y_gains = PIDGains(0.25, 0, 0),
-                       z_gains = PIDGains(0.25, 0, 0)):
-        self.x_gains = x_gains
-        self.y_gains = y_gains
-        self.z_gains = z_gains
-    
-    def to_lists(self):
-        return [self.x_gains.kp, self.y_gains.kp, self.z_gains.kp], [self.x_gains.ki, self.y_gains.ki, self.z_gains.ki], [self.x_gains.kd, self.y_gains.kd, self.z_gains.kd]
-
-class MeshPositionVertexBuffersResponse(MsgpackMixin):
-    position = Vector3r()
-    orientation = Quaternionr()
-    vertices = 0.0
-    indices = 0.0
-    name = ''

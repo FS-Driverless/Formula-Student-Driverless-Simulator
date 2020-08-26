@@ -32,7 +32,6 @@ class VehicleApiBase : public UpdatableObject {
 public:
     virtual void enableApiControl(bool is_enabled) = 0;
     virtual bool isApiControlEnabled() const = 0;
-    virtual bool armDisarm(bool arm) = 0;
     virtual GeoPoint getHomeGeoPoint() const = 0;
 
     virtual void update() override
