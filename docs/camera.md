@@ -45,8 +45,6 @@ The vertical FoV will be automatically calculated using the following formula: `
 
 ## Python
 
-### Getting color images
-
 ```python
 """
 Args:
