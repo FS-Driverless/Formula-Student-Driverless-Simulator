@@ -22,6 +22,7 @@ nav:
     - "ROS Bridge": "ros-bridge.md"
     - "ROS Bridge statistics": "statistics.md"
     - "Joystick": "joystick.md"
+    - "Coordinate frames": "coordinate-frames.md"
     - "Import your 3d car model": "import-car-3d-model.md"
     - "Google cloud remote workstation": "gcp-remote-workstation.md" 
     - "Software install instructions": "software-install-instructions.md"

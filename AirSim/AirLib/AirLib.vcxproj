@@ -70,7 +70,6 @@
     <ClInclude Include="include\common\FirstOrderFilter.hpp" />
     <ClInclude Include="include\common\FrequencyLimiter.hpp" />
     <ClInclude Include="include\common\GaussianMarkov.hpp" />
-    <ClInclude Include="include\common\GeodeticConverter.hpp" />
     <ClInclude Include="include\common\LogFileWriter.hpp" />
     <ClInclude Include="include\common\ScalableClock.hpp" />
     <ClInclude Include="include\common\UpdatableContainer.hpp" />

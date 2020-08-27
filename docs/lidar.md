@@ -26,7 +26,7 @@ This is an example lidar:
 `Lidar1` is the name of the lidar. 
 This name will be used to reference the camera when collecing the latest pointcloud.
 
-`X`, `Y` and `Z` are the position of the lidar relative the [vehicle pawn center](vehicle_model.md) of the car in NED frame.
+`X`, `Y` and `Z` are the position of the lidar relative the [vehicle pawn center](vehicle_model.md) of the car in ENU frame.
 
 `Roll`,`Pitch` and `Yaw` are rotations in degrees.
 

@@ -23,6 +23,7 @@ public:
 public:
     virtual void update() override
     {
+        SensorBase::update();
         Output output;
         const GroundTruth& ground_truth = getGroundTruth();
 
@@ -39,7 +40,7 @@ public:
     virtual ~GSSSimple() = default;
 
     virtual void resetImplementation() override {
-
+        update();
     }
 
 private:

@@ -4,7 +4,7 @@
 #include "UnrealSensors/UnrealDistanceSensor.h"
 #include "UnrealSensors/UnrealLidarSensor.h"
 
-UnrealSensorFactory::UnrealSensorFactory(AActor* actor, const NedTransform* ned_transform)
+UnrealSensorFactory::UnrealSensorFactory(AActor* actor, const CoordFrameTransformer* ned_transform)
 {
     setActor(actor, ned_transform);
 }
@@ -26,7 +26,7 @@ std::unique_ptr<msr::airlib::SensorBase> UnrealSensorFactory::createSensorFromSe
     }
 }
 
-void UnrealSensorFactory::setActor(AActor* actor, const NedTransform* ned_transform)
+void UnrealSensorFactory::setActor(AActor* actor, const CoordFrameTransformer* ned_transform)
 {
     actor_ = actor;
     ned_transform_ = ned_transform;
