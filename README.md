@@ -28,7 +28,7 @@ This node can connect 1 autonomous system with the simulated world.
 There is only code located that is shared between operator, fsds_ros_bridge and UE4 plugin.
 When AirSim is compiled, the AirLib binaries are placed within `/UE4Project/Plugins/AirSim/Source/AirLib`.
 
-`/operator` is a python project that offers a web gui for officials to control the simulation, stores lap times and chooses what car is currently connected to the world.
+`/operator` is a python project that offers a web GUI for officials to control the simulation, stores lap times and chooses what car is currently connected to the world.
 It launches the fsds_ros_bridge to connect an autonomous system to the Unreal world and stops the bridge when the autonomous system is no longer allowed to control the car.
 
 This repo uses LFS for some large files. All files bigger than 90MB are added to LFS.
