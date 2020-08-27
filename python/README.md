@@ -1,7 +1,7 @@
 # Python API for FSDS
 
 This package contains Python APIs for Formula Student Driverless Simulator.
-It connects to the rpc api to retrieve sensordata and send vehicle controll setpoints.
+It connects to the RPC API to retrieve sensor data and send vehicle control setpoints.
 
 ## Dependencies
 This package depends on msgpack, numpy and opencv-contrib. Install the dependencies like this:
