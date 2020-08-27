@@ -7,7 +7,7 @@
 #include <vector>
 #include <memory>
 #include "PIPCamera.h"
-#include "NedTransform.h"
+#include "CoordFrameTransformer.h"
 #include "common/AirSimSettings.hpp"
 #include "SimJoyStick/SimJoyStick.h"
 #include "api/VehicleApiBase.hpp"
@@ -45,7 +45,7 @@ public:
 
     struct Params {
         APawn* pawn; 
-        const NedTransform* global_transform;
+        const CoordFrameTransformer* global_transform;
         PawnEvents* pawn_events;
         common_utils::UniqueValueMap<std::string, APIPCamera*> cameras;
         UClass* pip_camera_class;
@@ -56,7 +56,7 @@ public:
         {
         }
 
-        Params(APawn* pawn_val, const NedTransform* global_transform_val, PawnEvents* pawn_events_val,
+        Params(APawn* pawn_val, const CoordFrameTransformer* global_transform_val, PawnEvents* pawn_events_val,
             const common_utils::UniqueValueMap<std::string, APIPCamera*> cameras_val, UClass* pip_camera_class_val,
             const msr::airlib::GeoPoint home_geopoint_val,
             std::string vehicle_name_val)
@@ -113,7 +113,7 @@ public:
     FVector getUUPosition() const;
     FRotator getUUOrientation() const;
 
-    const NedTransform& getNedTransform() const;
+    const CoordFrameTransformer& getNedTransform() const;
     void possess();
     void setRCForceFeedback(float rumble_strength, float auto_center);
 
@@ -183,7 +183,7 @@ private:
     msr::airlib::GeoPoint home_geo_point_;
 
     std::string vehicle_name_;
-    NedTransform ned_transform_;
+    CoordFrameTransformer ned_transform_;
 
     FVector ground_trace_end_;
     FVector ground_margin_;

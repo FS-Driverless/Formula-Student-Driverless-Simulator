@@ -56,7 +56,7 @@ public:
     virtual void setTimeOfDay(bool is_enabled, const std::string& start_datetime, bool is_start_datetime_dst,
         float celestial_clock_speed, float update_interval_secs, bool move_sun);
 
-    const NedTransform& getGlobalNedTransform();
+    const CoordFrameTransformer& getGlobalNedTransform();
 
     msr::airlib::ApiProvider* getApiProvider() const
     {
@@ -128,7 +128,7 @@ private:
     float tod_update_interval_secs_;
     bool tod_move_sun_;
 
-    std::unique_ptr<NedTransform> global_ned_transform_;
+    std::unique_ptr<CoordFrameTransformer> global_ned_transform_;
     std::unique_ptr<msr::airlib::WorldSimApiBase> world_sim_api_;
     std::unique_ptr<msr::airlib::ApiProvider> api_provider_;
     std::unique_ptr<msr::airlib::ApiServerBase> api_server_;

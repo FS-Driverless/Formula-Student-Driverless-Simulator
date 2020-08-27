@@ -291,34 +291,25 @@ msr::airlib::Quaternionr AirsimROSWrapper::get_airlib_quat(const tf2::Quaternion
 
 nav_msgs::Odometry AirsimROSWrapper::get_odom_msg_from_airsim_state(const msr::airlib::CarApiBase::CarState& car_state) const
 {
-    // Convert to ENU frame (minus signs and quaternion inverse)
     nav_msgs::Odometry odom_enu_msg;
     odom_enu_msg.header.frame_id = "fsds/map";
     odom_enu_msg.header.stamp = ros::Time::now();
     odom_enu_msg.child_frame_id = "fsds/FSCar";
     odom_enu_msg.pose.pose.position.x = car_state.getPosition().x();
-    odom_enu_msg.pose.pose.position.y = - car_state.getPosition().y();
-    odom_enu_msg.pose.pose.position.z = - car_state.getPosition().z();
-    tf::Quaternion odom_enu_tf_quat;
-    odom_enu_tf_quat.setX(car_state.getOrientation().x());
-    odom_enu_tf_quat.setY(car_state.getOrientation().y());
-    odom_enu_tf_quat.setZ(car_state.getOrientation().z());
-    odom_enu_tf_quat.setW(car_state.getOrientation().w());
-    odom_enu_tf_quat = odom_enu_tf_quat.inverse();
+    odom_enu_msg.pose.pose.position.y = car_state.getPosition().y();
+    odom_enu_msg.pose.pose.position.z = car_state.getPosition().z();
 
-    
-
-    odom_enu_msg.pose.pose.orientation.x = odom_enu_tf_quat.getX();
-    odom_enu_msg.pose.pose.orientation.y = odom_enu_tf_quat.getY();
-    odom_enu_msg.pose.pose.orientation.z = odom_enu_tf_quat.getZ();
-    odom_enu_msg.pose.pose.orientation.w = odom_enu_tf_quat.getW();
+    odom_enu_msg.pose.pose.orientation.x = car_state.getOrientation().x();
+    odom_enu_msg.pose.pose.orientation.y = car_state.getOrientation().y();
+    odom_enu_msg.pose.pose.orientation.z = car_state.getOrientation().z();
+    odom_enu_msg.pose.pose.orientation.w = car_state.getOrientation().w();
 
     odom_enu_msg.twist.twist.linear.x = car_state.kinematics_estimated.twist.linear.x();
-    odom_enu_msg.twist.twist.linear.y = - car_state.kinematics_estimated.twist.linear.y();
-    odom_enu_msg.twist.twist.linear.z = - car_state.kinematics_estimated.twist.linear.z();
+    odom_enu_msg.twist.twist.linear.y = car_state.kinematics_estimated.twist.linear.y();
+    odom_enu_msg.twist.twist.linear.z = car_state.kinematics_estimated.twist.linear.z();
     odom_enu_msg.twist.twist.angular.x = car_state.kinematics_estimated.twist.angular.x();
-    odom_enu_msg.twist.twist.angular.y = - car_state.kinematics_estimated.twist.angular.y();
-    odom_enu_msg.twist.twist.angular.z = - car_state.kinematics_estimated.twist.angular.z();
+    odom_enu_msg.twist.twist.angular.y = car_state.kinematics_estimated.twist.angular.y();
+    odom_enu_msg.twist.twist.angular.z = car_state.kinematics_estimated.twist.angular.z();
 
     return odom_enu_msg;
 }
@@ -367,38 +358,24 @@ sensor_msgs::PointCloud2 AirsimROSWrapper::get_lidar_msg_from_airsim(const std::
 // todo covariances
 sensor_msgs::Imu AirsimROSWrapper::get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data)
 {
-    // Convert to ENU frame here as well
     sensor_msgs::Imu imu_msg;
-    tf::Quaternion imu_heading_enu_quat;
-    imu_heading_enu_quat.setX(imu_data.orientation.x());
-    imu_heading_enu_quat.setY(imu_data.orientation.y());
-    imu_heading_enu_quat.setZ(imu_data.orientation.z());
-    imu_heading_enu_quat.setW(imu_data.orientation.w());
-    imu_heading_enu_quat = imu_heading_enu_quat.inverse();
 
-
-    imu_msg.orientation.x = imu_heading_enu_quat.getX();
-    imu_msg.orientation.y = imu_heading_enu_quat.getY();
-    imu_msg.orientation.z = imu_heading_enu_quat.getZ();
-    imu_msg.orientation.w = imu_heading_enu_quat.getW();
-
-    // Debug yaw
-    tf::Matrix3x3 m_enu(imu_heading_enu_quat);
-    double roll, pitch, yaw;
-    m_enu.getRPY(roll, pitch, yaw);
+    imu_msg.orientation.x = imu_data.orientation.x();
+    imu_msg.orientation.y = imu_data.orientation.y();
+    imu_msg.orientation.z = imu_data.orientation.z();
+    imu_msg.orientation.w = imu_data.orientation.w();
 
     // Publish IMU ang rates in radians per second
     imu_msg.angular_velocity.x = imu_data.angular_velocity.x();
-    imu_msg.angular_velocity.y = -imu_data.angular_velocity.y();
-    imu_msg.angular_velocity.z = -imu_data.angular_velocity.z();
+    imu_msg.angular_velocity.y = imu_data.angular_velocity.y();
+    imu_msg.angular_velocity.z = imu_data.angular_velocity.z();
 
     // meters/s2^m
     imu_msg.linear_acceleration.x = imu_data.linear_acceleration.x();
-    imu_msg.linear_acceleration.y = -imu_data.linear_acceleration.y();
-    imu_msg.linear_acceleration.z = -imu_data.linear_acceleration.z();
+    imu_msg.linear_acceleration.y = imu_data.linear_acceleration.y();
+    imu_msg.linear_acceleration.z = imu_data.linear_acceleration.z();
 
     imu_msg.header.stamp = make_ts(imu_data.time_stamp);
-    // imu_msg.orientation_covariance = ;
 
     return imu_msg;
 }
@@ -550,10 +527,9 @@ void AirsimROSWrapper::gss_timer_cb(const ros::TimerEvent& event)
         gss_msg.header.frame_id = "fsds/" + vehicle_name;
         gss_msg.header.stamp = make_ts(gss_data.time_stamp);
 
-        // Convert to ENU frame (minus signs)
         gss_msg.twist.linear.x = gss_data.linear_velocity.x();
-        gss_msg.twist.linear.y = - gss_data.linear_velocity.y();
-        gss_msg.twist.linear.z = - gss_data.linear_velocity.z();
+        gss_msg.twist.linear.y = gss_data.linear_velocity.y();
+        gss_msg.twist.linear.z = gss_data.linear_velocity.z();
 
         {
             ros_bridge::ROSMsgCounter counter(&gss_pub_statistics);
@@ -651,10 +627,10 @@ void AirsimROSWrapper::append_static_lidar_tf(const std::string& vehicle_name, c
     lidar_tf_msg.header.frame_id = "fsds/" + vehicle_name;
     lidar_tf_msg.child_frame_id = "fsds/" + lidar_name;
     lidar_tf_msg.transform.translation.x = lidar_setting.position.x();
-    lidar_tf_msg.transform.translation.y = - lidar_setting.position.y();
-    lidar_tf_msg.transform.translation.z = - lidar_setting.position.z();
+    lidar_tf_msg.transform.translation.y = lidar_setting.position.y();
+    lidar_tf_msg.transform.translation.z = lidar_setting.position.z();
     tf2::Quaternion quat;
-    quat.setRPY(math_common::deg2rad(lidar_setting.rotation.roll), -math_common::deg2rad(lidar_setting.rotation.pitch), -math_common::deg2rad(lidar_setting.rotation.yaw));
+    quat.setRPY(math_common::deg2rad(lidar_setting.rotation.roll), math_common::deg2rad(lidar_setting.rotation.pitch), math_common::deg2rad(lidar_setting.rotation.yaw));
     lidar_tf_msg.transform.rotation.x = quat.x();
     lidar_tf_msg.transform.rotation.y = quat.y();
     lidar_tf_msg.transform.rotation.z = quat.z();
@@ -669,10 +645,10 @@ void AirsimROSWrapper::append_static_camera_tf(const std::string& vehicle_name, 
     static_cam_tf_body_msg.header.frame_id = "fsds/" + vehicle_name;
     static_cam_tf_body_msg.child_frame_id = "fsds/" + camera_name;
     static_cam_tf_body_msg.transform.translation.x = camera_setting.position.x();
-    static_cam_tf_body_msg.transform.translation.y = - camera_setting.position.y();
-    static_cam_tf_body_msg.transform.translation.z = - camera_setting.position.z();
+    static_cam_tf_body_msg.transform.translation.y = camera_setting.position.y();
+    static_cam_tf_body_msg.transform.translation.z = camera_setting.position.z();
     tf2::Quaternion quat;
-    quat.setRPY(math_common::deg2rad(camera_setting.rotation.roll), -math_common::deg2rad(camera_setting.rotation.pitch), -math_common::deg2rad(camera_setting.rotation.yaw));
+    quat.setRPY(math_common::deg2rad(camera_setting.rotation.roll), math_common::deg2rad(camera_setting.rotation.pitch), math_common::deg2rad(camera_setting.rotation.yaw));
     static_cam_tf_body_msg.transform.rotation.x = quat.x();
     static_cam_tf_body_msg.transform.rotation.y = quat.y();
     static_cam_tf_body_msg.transform.rotation.z = quat.z();

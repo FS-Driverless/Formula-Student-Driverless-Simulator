@@ -25,7 +25,7 @@ public: //types
         // - array of floats that represent [x,y,z] coordinate for each point hit within the range
         //       x0, y0, z0, x1, y1, z1, ..., xn, yn, zn
         //       TODO: Do we need an intensity place-holder [x,y,z, intensity]?
-        // - in lidar local NED coordinates
+        // - in lidar local coordinates
         // - in meters
         vector<real_T> point_cloud;
     };

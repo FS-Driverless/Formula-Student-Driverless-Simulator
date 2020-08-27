@@ -208,7 +208,7 @@ public: //types
         bool is_fpv_vehicle = false;
 
         //nan means use player start
-        Vector3r position = VectorMath::nanVector(); //in global NED
+        Vector3r position = VectorMath::nanVector(); //in global
         Rotation rotation = Rotation::nanRotation();
 
         std::map<std::string, CameraSetting> cameras;
