@@ -179,7 +179,15 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         global_gps_pub = nh_.advertise<sensor_msgs::NavSatFix>("gps", 10);
         imu_pub = nh_.advertise<sensor_msgs::Imu>("imu", 10);
         gss_pub = nh_.advertise<geometry_msgs::TwistStamped>("gss", 10);
-        control_cmd_sub = nh_.subscribe<fs_msgs::ControlCommand>("control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, vehicle_name), NULL, ros::TransportHints().udp());
+
+        bool UDP_control;
+        nh_private_.getParam("UDP_control", UDP_control);
+
+        if(UDP_control){
+            control_cmd_sub = nh_.subscribe<fs_msgs::ControlCommand>("control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, vehicle_name), NULL, ros::TransportHints().udp());
+        } else {
+            control_cmd_sub = nh_.subscribe<fs_msgs::ControlCommand>("control_command", 1, boost::bind(&AirsimROSWrapper::car_control_cb, this, _1, vehicle_name));
+        }
 
         if(!competition_mode_) {
             odom_pub = nh_.advertise<nav_msgs::Odometry>("testing_only/odom", 10);

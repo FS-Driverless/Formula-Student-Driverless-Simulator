@@ -36,6 +36,7 @@ Go to [releases](https://github.com/FS-Online/Formula-Student-Driverless-Simulat
 Unzip it to anywhere on your computer and launch FSDS.exe.
 A window with a car should popup!
 Try driving the car around using the arrowkeys.
+If you get a black screen with some buttons, make sure the folder with the binary is in your user folder (Windows: `C:\Users\username\Formula-Student-Driverless-Simulator`, Linux: `~/Formula-Student-Driverless-Simulator`)
 
 ### From source using the Unreal Engine Editor
 
@@ -96,6 +97,7 @@ If you want to run it like it would run when packaged, choose 'Run as standalone
 
 The simulator exposes an RPC api that is used by the ros bridge to communicate with the vehicle.
 The ros bridge should preferable run on the same computer as the simulator to ensure low latency and high bandwidth.
+**Note that if you are using 2 local machines, there are some limitations** [check this](local-setup.md)
 
 It is possible to run the ros bridge on a different computer than the simulator.
 To get this to work you should use the `host` argument in the `fsds_ros_bridge.launch` file.
