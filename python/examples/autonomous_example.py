@@ -21,7 +21,7 @@ Use the following settings.json:
         "Lidar": {
           "SensorType": 6,
           "Enabled": true,
-          "X": 1.3, "Y": 0, "Z": -0.1,
+          "X": 1.3, "Y": 0, "Z": 0.1,
           "Roll": 0, "Pitch": 0, "Yaw" : 0,
           "NumberOfLasers": 1,
           "PointsPerScan": 500,

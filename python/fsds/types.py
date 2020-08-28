@@ -266,6 +266,16 @@ class EnvironmentState(MsgpackMixin):
     temperature = 0.0
     air_density = 0.0
 
+class CollisionInfo(MsgpackMixin):
+    has_collided = False
+    normal = Vector3r()
+    impact_point = Vector3r()
+    position = Vector3r()
+    penetration_depth = 0.0
+    time_stamp = 0.0
+    object_name = ""
+    object_id = -1
+
 class CarState(MsgpackMixin):
     speed = 0.0
     gear = 0 # deprecated, will be deleted

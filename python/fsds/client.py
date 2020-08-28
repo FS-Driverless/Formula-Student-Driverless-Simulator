@@ -132,6 +132,16 @@ class FSDSClient:
     simGetGroundTruthKinematics.__annotations__ = {'return': KinematicsState}
 
     # sensor APIs
+    def getLidarData(self, lidar_name = '', vehicle_name = 'FSCar'):
+        """
+        Args:
+            lidar_name (str, optional): Name of Lidar to get data from, specified in settings.json
+            vehicle_name (str, optional): Name of vehicle to which the sensor corresponds to
+        Returns:
+            LidarData:
+        """
+        return LidarData.from_msgpack(self.client.call('getLidarData', lidar_name, vehicle_name))
+
     def getImuData(self, imu_name = '', vehicle_name = 'FSCar'):
         """
         Args:
