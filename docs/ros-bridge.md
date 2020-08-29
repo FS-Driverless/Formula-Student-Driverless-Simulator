@@ -2,7 +2,7 @@
 
 ![In action](images/fsds_ros_bridge.png)
 
-A ROS wrapper over the AirSim C++ **Car** client library. This code is based on the [original AirSim ROS wrapper for the *Multirotor* API](https://github.com/microsoft/AirSim/tree/master/ros/src/airsim_ros_interface) and provides an interface between AirSim + Unreal Engine and your ros-based autonomous system. 
+A ROS wrapper over the AirSim C++ **Car** client library. This code is based on the [original AirSim ROS wrapper for the *Multirotor* API](https://github.com/microsoft/AirSim/tree/master/ros/src/airsim_ros_interface) and provides an interface between AirSim + Unreal Engine and your ROS-based autonomous system. 
 
 The fsds_ros_bridge is supposed to be launched pointing at the Autonomous System's ROS master so that it can publish and subscribe to topics within the autonomous system. 
 Physically this node should run on the airsim simulation server (that is the one that also runs the Unreal) project.
@@ -27,7 +27,7 @@ The fsds_ros_bridge.launch launches the following nodes:
 | `/fsds/testing_only/track` | Ground truth cone position and color with respect to the starting location of the car in ENU. Currently this only publishes the *initial position* of cones that are part of the track spline. Any cones placed manually in the world are not published here. Additionally, the track is published once and the message is latched (meaning it is always available for a newly created subscriber). | [fs_msgs/Track](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/Track.msg)  | Latched |
 | `/fsds/camera/CAMERA_NAME` | Camera images. See [./camera.md](camera docs). | [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)  | ~18 |
 | `/fsds/lidar/LIDARNAME` | Publishes the lidar points for each lidar sensor. All points are in the `fsds/LIDARNAME` frame. Transformations between the `fsds/LIDARNAME` and `fsds/FSCar` frame are being published regularly. More info on the lidar sensor can be found [here](lidar.md) | [sensor_msgs/PointCloud](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/PointCloud.html)  | ``RotationsPerSecond` param in `settings.json` |
-| `/fsds/signal/go` | GO signal that is sent every second by the ROS bridge.The car is only allowed to drive once this message has been received. If no GO signal is received for more than 4 seconds, the AS can assume that `fsds_ros_bridge` has been shut down. This message also includes the mission type and track. More info about signal topics can be found in the [integration handbook](integration-handbook.md) | [fs_msgs/GoSignal](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/GoSignal.msg)  | 1 |
+| `/fsds/signal/go` | GO signal that is sent every second by the ROS bridge.The car is only allowed to drive once this message has been received. If no GO signal is received for more than 4 seconds, the AS can assume that `fsds_ros_bridge` has been shut down. This message also includes the mission type and track. More info about signal topics can be found in the [competition-signals guide](competition-signals.md) | [fs_msgs/GoSignal](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/GoSignal.msg)  | 1 |
 | `/tf_static` | See [Coordinate frames and transforms](#coordinate-frames-and-transforms) | [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)   | 1 |
 
 
@@ -36,7 +36,7 @@ The fsds_ros_bridge.launch launches the following nodes:
 | Topic name | Description | Message |
 |---|---|---|
 | `/fsds/control_command` | This message includes the dimensionless values throttle, steering and brake. Throttle and brake range from 0 to 1. For steering `-1` steers full to the left and `+1` steers full to the right. The contents of this message fill the essential parts of the `msr::airlib::CarApiBase::CarControl` struct.  This is the only way to control the car when the airsim ROS client is connected (keyboard will no longer work!). | [fs_msgs/ControlCommand](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/ControlCommand.msg) |
-| `/fsds/signal/finished` | Finished signal that is sent by the AS to stop the mission. The ros bridge will forward the signal to the operator which in turn will stop the ros bridge and finish the run. | [fs_msgs/FinishedSignal](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/FinishedSignal.msg) |
+| `/fsds/signal/finished` | Finished signal that is sent by the AS to stop the mission. The ROS bridge will forward the signal to the operator which in turn will stop the ROS bridge and finish the run. | [fs_msgs/FinishedSignal](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/FinishedSignal.msg) |
 
 
 ## Services
@@ -53,7 +53,7 @@ If a topic streams a standard ROS message (like [sensor_msgs/Imu](http://docs.ro
 The primary frame is the `fsds/FSCar` frame, which is fixed at the center of the car following the [ROS coordinate system convention](https://www.ros.org/reps/rep-0103.html).
 The center of the car is the Unreal Engine car pawn position, which in turn is also the center of gravity.
 
-The ros bridge regularly publishes static transforms between the `fsds/FSCar` frame and each of the cameras and lidars.
+The ROS bridge regularly publishes static transforms between the `fsds/FSCar` frame and each of the cameras and lidars.
 Naming of these frames is `fsds/SENSORNAME`.
 For example, a lidar named `Example` will publish it's points in the `fsds/Example` frame.
 The position and orientation of a camera named `Test` will become available in the frame `/fsds/Test`.
@@ -62,7 +62,7 @@ The transforms published on the /tf_static topic are the transforms specified in
 
 Only static transforms within the vehicle are published.
 
-All positions and rotations published by the ros bridge are in line with [the ROS defaults](https://www.ros.org/reps/rep-0103.html).
+All positions and rotations published by the ROS bridge are in line with [the ROS defaults](https://www.ros.org/reps/rep-0103.html).
 This is the same coordinate system as [everything else within the simulator](coordinate-frames.md).
 
 ## Parameters
