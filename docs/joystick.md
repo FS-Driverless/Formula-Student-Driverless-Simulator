@@ -1,7 +1,7 @@
 # Joystick Controller Node 
 
 If you are interested in driving the car around to gather training data without having to rely on your autonomous system, you can use an XBox controller to do so. 
-Make sure you have [built the ROS workspace](getting-started.md).
+Make sure you have [built the ROS workspace](getting-started-with-ros.md).
 
 Simply run:
 

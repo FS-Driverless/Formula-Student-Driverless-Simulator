@@ -144,7 +144,6 @@ void AirsimROSWrapper::initialize_ros()
     go_timestamp_ = ros::Time::now();
 
     airsim_client_.enableApiControl(!manual_mode, vehicle_name);
-    airsim_client_.armDisarm(true, vehicle_name); 
 
     if(!competition_mode_) {
         publish_track();

@@ -7,3 +7,7 @@ simulator/
 
 # compiled mkdocs html
 site
+
+# compiled python files
+*.pyc
+__pycache__/

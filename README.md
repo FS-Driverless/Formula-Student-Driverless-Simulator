@@ -24,8 +24,10 @@ The AirSim server uses the AirLib shared code (see `/AirSim/AirLib`).
 `/ros` is a ROS workspace that contains the `fsds_ros_bridge`. 
 This node can connect 1 autonomous system with the simulated world.
 
+`/python` is a python client to connect with the simulator.
+
 `/AirSim` is a slimmed-down, hard-fork of the [AirSim](https://github.com/microsoft/AirSim) project.
-There is only code located that is shared between operator, fsds_ros_bridge and UE4 plugin.
+There is only C++ code located that is shared between ros-bridge and Unreal Engine.
 When AirSim is compiled, the AirLib binaries are placed within `/UE4Project/Plugins/AirSim/Source/AirLib`.
 
 `/operator` is a python project that offers a web GUI for officials to control the simulation, stores lap times and chooses what car is currently connected to the world.

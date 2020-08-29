@@ -105,7 +105,7 @@ private:
         const GroundTruth& ground_truth = getGroundTruth();
         
         //GNSS
-        output.gnss.time_utc = static_cast<uint64_t>(clock()->nowNanos() / 1.0E3);
+        output.gnss.time_utc = static_cast<uint64_t>(clock()->nowNanos() / 1.0E6);
         output.gnss.velocity = ground_truth.kinematics->twist.linear;
 
         auto geo_point = EarthUtils::nedToGeodetic(ground_truth.kinematics->pose.position, AirSimSettings::singleton().origin_geopoint);
@@ -118,7 +118,6 @@ private:
             output.gnss.geo_point=EarthUtils::nedToGeodetic(zero_vel_offset, geo_point);
         }
         output.gnss.eph = eph;
-        output.is_valid = true;
         output.gnss.epv = epv;
 
         output.time_stamp = clock()->nowNanos();
