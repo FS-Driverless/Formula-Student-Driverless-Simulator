@@ -65,6 +65,7 @@ Everything setup.sh does is also included in build.cmd.
 ```
 cd ros
 catkin init
+catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release #(Optional)
 catkin build
 ```
 
@@ -80,6 +81,8 @@ roslaunch fsds_ros_bridge fsds_ros_bridge.launch
 
 The ROS bridge will read the settings from `~/Formula-Student-Driverless-Simulator/settings.json`.
 Make sure this is the same configuration file as the simulator uses.
+
+**Note that if you are using 2 local machines, there are some limitations** [check this](local-setup.md)
 
 [Read all about configuring the ROS bridge here.](ros-bridge.md)
 
