@@ -58,7 +58,9 @@
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
                     </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../integration-handbook/">Integration handbook</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started-with-ros/">Getting started with ROS</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started-with-python/">Getting started with Python</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Vehicle & Sensors</span></p>
@@ -75,12 +77,16 @@
                     </li>
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">GSS</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#ros">Ros</a>
+    <li class="toctree-l2"><a class="reference internal" href="#add-the-sensor-to-the-car">Add the sensor to the car</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#python">Python</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#ros">ROS</a>
     </li>
     </ul>
                     </li>
                 </ul>
-                <p class="caption"><span class="caption-text">#tech madness</span></p>
+                <p class="caption"><span class="caption-text">#tech-madness</span></p>
                 <ul>
                     <li class="toctree-l1"><a class="reference internal" href="../ros-bridge/">ROS Bridge</a>
                     </li>
@@ -88,9 +94,7 @@
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../joystick/">Joystick</a>
                     </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../operator/">Operator</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../coordinate-frames/">Coordinate frames</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../import-car-3d-model/">Import your 3d car model</a>
                     </li>
@@ -99,6 +103,15 @@
                     <li class="toctree-l1"><a class="reference internal" href="../software-install-instructions/">Software install instructions</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../how-to-release/">How to release</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Competition tooling</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../operator/">Operator</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../competition-signals/">System flow and signals</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
                     </li>
                 </ul>
       </div>
@@ -129,7 +142,7 @@
     <li>GSS</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/edit/master/docs/ground-speed-sensor.md"> Edit on FS-Online/Formula-Student-Driverless-Simulator</a>
+        <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/edit/master/docs/ground-speed-sensor.md"> Edit on FS-Driverless/Formula-Student-Driverless-Simulator</a>
       
     </li>
   </ul>
@@ -143,10 +156,52 @@
 <p>The ground speed sensor is modeled around the Kistler ground speed (like the Kistler Correvit SFII).</p>
 <p>Velocity information is captured in the global world frame in ENU frame.</p>
 <p>At this moment no extra noise is added to the sensordata since the kistler 250hz data averaged into the 100hz is so close to ground truth that adding noise would be unrealistic.</p>
-<h2 id="ros">Ros</h2>
-<p>When using the ros bridge, ground speed sensordata will be published on <code>/fsds/gss</code> with the <code>geometry_msgs/TwistStamped</code> message type.</p>
+<h2 id="add-the-sensor-to-the-car">Add the sensor to the car</h2>
+<p>In your <code>settings.json</code>, add the following to the <code>Sensors</code> object within the vehicle configuration:</p>
+<pre><code class="json">&quot;GSS&quot; : {
+  &quot;SensorType&quot;: 7,
+  &quot;Enabled&quot;: true
+}
+</code></pre>
+
+<p>A car can have no more then 1 gss.
+Therefore, the name of the gss (in this example <code>GSS</code>) doesn't matter; for requesting gss data you don't need to pass a sensorname.</p>
+<h2 id="python">Python</h2>
+<pre><code class="python"># Args:
+#   vehicle_name (str, optional): Name of vehicle to which the sensor corresponds to.
+# Returns:
+#   time_stamp (np.uint64): nanosecond timestamp of when the gss data was captured
+#   linear_velocity (Vector3r): velocity in m/s of the car in world reference frame
+gss_data = client.getGroundSpeedSensorData(vehicle_name = 'FSCar')
+</code></pre>
+
+<p>An example of how to collect gss data:</p>
+<pre><code class="python">import time
+import fsds
+
+# connect to the AirSim simulator 
+client = fsds.FSDSClient()
+
+# Check network connection
+client.confirmConnection()
+
+while True:
+    gss = client.getGroundSpeedSensorData(vehicle_name='FSCar')
+
+    print(&quot;timestamp nano: &quot;, gss.time_stamp)
+    print(&quot;linear_velocity: &quot;, gss.linear_velocity)
+
+    print()
+
+    time.sleep(1)
+</code></pre>
+
+<p>Full example <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/tree/master/python/examples/gss.py">here</a>.</p>
+<h2 id="ros">ROS</h2>
+<p>When using the ROS bridge, ground speed sensordata will be published on <code>/fsds/gss</code> with the <code>geometry_msgs/TwistStamped</code> message type.
+Make sure you have added the sensor to your settings.json file.</p>
 <p>Appart from the header fields, only <code>x</code>, <code>y</code> and <code>z</code> of the <code>twist.linear</code> are populated. </p>
-<pre><code>header:
+<pre><code class="yaml">header:
   seq: 5747
   stamp:
     secs: 1595325426

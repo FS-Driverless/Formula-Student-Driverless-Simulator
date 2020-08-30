@@ -58,7 +58,9 @@
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
                     </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../integration-handbook/">Integration handbook</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started-with-ros/">Getting started with ROS</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started-with-python/">Getting started with Python</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Vehicle & Sensors</span></p>
@@ -76,7 +78,7 @@
                     <li class="toctree-l1"><a class="reference internal" href="../ground-speed-sensor/">GSS</a>
                     </li>
                 </ul>
-                <p class="caption"><span class="caption-text">#tech madness</span></p>
+                <p class="caption"><span class="caption-text">#tech-madness</span></p>
                 <ul class="current">
                     <li class="toctree-l1"><a class="reference internal" href="../ros-bridge/">ROS Bridge</a>
                     </li>
@@ -84,9 +86,7 @@
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../joystick/">Joystick</a>
                     </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../operator/">Operator</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../coordinate-frames/">Coordinate frames</a>
                     </li>
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">Import your 3d car model</a>
     <ul class="current">
@@ -107,6 +107,15 @@
                     <li class="toctree-l1"><a class="reference internal" href="../software-install-instructions/">Software install instructions</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../how-to-release/">How to release</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Competition tooling</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../operator/">Operator</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../competition-signals/">System flow and signals</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
                     </li>
                 </ul>
       </div>
@@ -130,14 +139,14 @@
     
       
         
-          <li>#tech madness &raquo;</li>
+          <li>#tech-madness &raquo;</li>
         
       
     
     <li>Import your 3d car model</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/edit/master/docs/import-car-3d-model.md"> Edit on FS-Online/Formula-Student-Driverless-Simulator</a>
+        <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/edit/master/docs/import-car-3d-model.md"> Edit on FS-Driverless/Formula-Student-Driverless-Simulator</a>
       
     </li>
   </ul>
@@ -200,15 +209,7 @@ Some key settings to keep in mind:</p>
 </ul>
 <p>Take a look at <code>Suv_Pa</code> for an example:</p>
 <p><img alt="" src="../images/ue-suv_pa.png" /></p>
-<p><strong>If you are planning to use this car in an online competition (FSOnline)</strong> you must use create the bounding boxes exactly the following specification:</p>
-<ul>
-<li>Width: 100cm</li>
-<li>Length: 180cm</li>
-<li>Height: 50cm</li>
-</ul>
-<p>In competition all cars will be equal in behaviour. 
-So all bounding boxes must be equal.
-Below picture shows how bounding boxes can be bigger or smaller than the mesh.</p>
+<p>Below picture shows how bounding boxes can be bigger or smaller than the mesh.</p>
 <p><img alt="" src="../images/ue-equality.png" /></p>
 <p>All bounding boxes will be checked by:</p>
 <ol>
@@ -243,8 +244,12 @@ Next, in the details pane:</p>
 <li>From Drag Coefficient onwards all settings should be exactly equal to the settings in <code>SuvCarPawn</code>. Have fun copy-pasting.</li>
 </ul>
 <h1 id="7-selecting-a-car">7. Selecting a car</h1>
-<p>Update your settings.json <code>PawnPaths -&gt; DefaultCar -&gt; PawnBP</code> to point at the newly created pawn. 
-It should (tm) work.</p>
+<p>Update your settings.json <code>PawnPaths -&gt; DefaultCar -&gt; PawnBP</code> field in the <code>settings.json</code> to point at the newly created pawn. 
+Currently the following values are supported:</p>
+<ul>
+<li><code>Class'/AirSim/VehicleAdv/Cars/TechnionCar/TechnionCarPawn.TechnionCarPawn_C'</code></li>
+<li><code>Class'/AirSim/VehicleAdv/Cars/SuvCar/SuvCarPawn.SuvCarPawn_C'</code> </li>
+</ul>
 <h1 id="8-sharing-your-vehicle-with-the-world">8. Sharing your vehicle with the world!</h1>
 <p>Wouldn't it be amazing if other people could enjoy your team's vehicle 3d model as well?
 You are welcome to create a pull request with your vehicle and it might be added to the base project repository!
@@ -260,7 +265,7 @@ Please note that only GPLv2 licensed material is accepted into this repository.<
         <a href="../gcp-remote-workstation/" class="btn btn-neutral float-right" title="Google cloud remote workstation">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../spectator/" class="btn btn-neutral" title="Spectator"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../coordinate-frames/" class="btn btn-neutral" title="Coordinate frames"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -288,7 +293,7 @@ Please note that only GPLv2 licensed material is accepted into this repository.<
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../spectator/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../coordinate-frames/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
         <span style="margin-left: 15px"><a href="../gcp-remote-workstation/" style="color: #fcfcfc">Next &raquo;</a></span>

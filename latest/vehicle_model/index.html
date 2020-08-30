@@ -58,7 +58,9 @@
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
                     </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../integration-handbook/">Integration handbook</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started-with-ros/">Getting started with ROS</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started-with-python/">Getting started with Python</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Vehicle & Sensors</span></p>
@@ -86,7 +88,7 @@
                     <li class="toctree-l1"><a class="reference internal" href="../ground-speed-sensor/">GSS</a>
                     </li>
                 </ul>
-                <p class="caption"><span class="caption-text">#tech madness</span></p>
+                <p class="caption"><span class="caption-text">#tech-madness</span></p>
                 <ul>
                     <li class="toctree-l1"><a class="reference internal" href="../ros-bridge/">ROS Bridge</a>
                     </li>
@@ -94,9 +96,7 @@
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../joystick/">Joystick</a>
                     </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../operator/">Operator</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../coordinate-frames/">Coordinate frames</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../import-car-3d-model/">Import your 3d car model</a>
                     </li>
@@ -105,6 +105,15 @@
                     <li class="toctree-l1"><a class="reference internal" href="../software-install-instructions/">Software install instructions</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../how-to-release/">How to release</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Competition tooling</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../operator/">Operator</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../competition-signals/">System flow and signals</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
                     </li>
                 </ul>
       </div>
@@ -135,7 +144,7 @@
     <li>Vehicle model</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/edit/master/docs/vehicle_model.md"> Edit on FS-Online/Formula-Student-Driverless-Simulator</a>
+        <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/edit/master/docs/vehicle_model.md"> Edit on FS-Driverless/Formula-Student-Driverless-Simulator</a>
       
     </li>
   </ul>
@@ -146,7 +155,8 @@
             <div class="section">
               
                 <h1 id="vehicle-dynamic-model">Vehicle Dynamic model</h1>
-<p>One of the most controversial subjects of any competition simulator is the vehicle dynamic model. This is the piece of the simulation that actually changes the state of the vehicle. In building this simulator for the FSOnline competition, our design philosophy was the following:</p>
+<p>One of the most controversial subjects of any simulator is the vehicle dynamic model. This is the piece of the simulation that actually changes the state of the vehicle. 
+In building this simulator for the FSOnline competition, our design philosophy was the following:</p>
 <ul>
 <li>
 <p><strong>All teams will use the same vehicle dynamic model</strong>. We are well aware that all teams have put effort into developing dynamic models of their own FSCar for controls and simulation purposes. However, we want the FSOnline DV Dynamic event to purely be a battle of autonomous software. Even if this will require teams to tweak their path planning and control algorithms, it will make sure that the winner of this event is truly the team that can take any race car and push it to its limits the most.</p>
@@ -160,7 +170,7 @@
 </ul>
 <p>Unreal Engine provides the <a href="https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/guide/Manual/Vehicles.html">PhysXVehicles</a> that was developed by Nvidia. 
 This seemed like the perfect solution for our simulator, given that it complies with all the criteria of our design philosophy above. 
-Airsim simply interacts with the PhysXCar API in <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/tree/master/UE4Project/Plugins/AirSim/Source/Vehicles/Car">these</a> files.</p>
+Airsim simply interacts with the PhysXCar API in <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/tree/master/UE4Project/Plugins/AirSim/Source/Vehicles/Car">these</a> files.</p>
 <h2 id="vehicle-pawn-center">Vehicle pawn center</h2>
 <p>Just like everything inside the simulated world, the vehicle has a position within the world (x, y, z).
 Relative to this point the rest of the vehicle is constructed.
@@ -172,7 +182,7 @@ In below image the blue dot represents the location of the pawn center:</p>
 <em>Vehicle Layout Overview</em></p>
 <h2 id="vehicle-collision-model">Vehicle collision model</h2>
 <p>The collision model (bounding box) defines which parts of the car interact with other parts of the world.
-For cars used in competition (FSOnline) the bounding boxes must use the following specification:</p>
+The default vehicle (TechnionCarPawn) has the following bounding boxes:</p>
 <ul>
 <li>Width: 100cm</li>
 <li>Length: 180cm</li>
@@ -185,7 +195,7 @@ The car may look smaller or bigger but they will hit cones all the same.</p>
 <p><img alt="" src="../images/ue-equality.png" /></p>
 <h2 id="vehicle-center-of-gravity">Vehicle center of gravity</h2>
 <p>The center of gravity of the car sits in the center of the collision model.
-For cars used in competition (FSOnline), the center of gravity is 25cm above the vehicle pawn center.
+The center of gravity of the default vehicle (TechnionCarPawn) is 25cm above the vehicle pawn center.
 In turn, when the car is stationary, the height offset between the world ground and the center of gravity is 25 cm.
 Within the <em>Vehicle Layout Overview</em> picture the red dot represents the center of gravity.</p>
 <h2 id="more-properties-of-competition-vehicles">More properties of competition vehicles</h2>
@@ -208,7 +218,7 @@ You can view and edit these configuratoin files using the Unreal Editor in <code
         <a href="../imu/" class="btn btn-neutral float-right" title="IMU">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../integration-handbook/" class="btn btn-neutral" title="Integration handbook"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../getting-started-with-python/" class="btn btn-neutral" title="Getting started with Python"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -236,7 +246,7 @@ You can view and edit these configuratoin files using the Unreal Editor in <code
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../integration-handbook/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../getting-started-with-python/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
         <span style="margin-left: 15px"><a href="../imu/" style="color: #fcfcfc">Next &raquo;</a></span>

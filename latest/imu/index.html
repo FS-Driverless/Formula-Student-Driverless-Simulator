@@ -58,7 +58,9 @@
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
                     </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../integration-handbook/">Integration handbook</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started-with-ros/">Getting started with ROS</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started-with-python/">Getting started with Python</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Vehicle & Sensors</span></p>
@@ -67,6 +69,10 @@
                     </li>
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">IMU</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#add-an-imu-to-the-car">Add an IMU to the car</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#python-client">Python client</a>
+    </li>
     </ul>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../lidar/">Lidar</a>
@@ -78,7 +84,7 @@
                     <li class="toctree-l1"><a class="reference internal" href="../ground-speed-sensor/">GSS</a>
                     </li>
                 </ul>
-                <p class="caption"><span class="caption-text">#tech madness</span></p>
+                <p class="caption"><span class="caption-text">#tech-madness</span></p>
                 <ul>
                     <li class="toctree-l1"><a class="reference internal" href="../ros-bridge/">ROS Bridge</a>
                     </li>
@@ -86,9 +92,7 @@
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../joystick/">Joystick</a>
                     </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../operator/">Operator</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../coordinate-frames/">Coordinate frames</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../import-car-3d-model/">Import your 3d car model</a>
                     </li>
@@ -97,6 +101,15 @@
                     <li class="toctree-l1"><a class="reference internal" href="../software-install-instructions/">Software install instructions</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../how-to-release/">How to release</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Competition tooling</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../operator/">Operator</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../competition-signals/">System flow and signals</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
                     </li>
                 </ul>
       </div>
@@ -127,7 +140,7 @@
     <li>IMU</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/edit/master/docs/imu.md"> Edit on FS-Online/Formula-Student-Driverless-Simulator</a>
+        <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/edit/master/docs/imu.md"> Edit on FS-Driverless/Formula-Student-Driverless-Simulator</a>
       
     </li>
   </ul>
@@ -137,13 +150,67 @@
           <div role="main">
             <div class="section">
               
-                <h2 id="imu-sensor">IMU Sensor</h2>
-<p>The IMU sensor in FSDS is using AirSim's built in IMU sensor simulation, that has been modelled and parametrized according to MPU 6000 IMU from <a href="https://www.invensense.com/wp-content/uploads/2015/02/MPU-6000-Datasheet1.pdf">InvenSense</a></p>
-<p>The maximum achievable internal IMU frequency is 1000 Hz, ouputing information of the vehicle's 3-axis angular velocity, 3-axis linear acceleration, as well as its orientation in quaternions. </p>
-<p>IMU gyroscope and accelomter bias and accuracy parameters can be found and fine-tuned in AirLib/include/sensors/imu/ImuSimpleParams.hpp, or can be initialized with custom parameters in your <code>settings.json</code> file. </p>
+                <h1 id="imu-sensor">IMU Sensor</h1>
+<p>The IMU captures the acceleration, orientation and angular rate of the vehicle.
+The IMU sensor in FSDS is using AirSim's built in IMU sensor simulation, that has been modelled and parametrized according to MPU 6000 IMU from <a href="https://www.invensense.com/wp-content/uploads/2015/02/MPU-6000-Datasheet1.pdf">InvenSense</a>.</p>
+<p>The maximum achievable internal IMU frequency is 1000 Hz, ouputing information of the vehicle's 3-axis angular velocity, 3-axis linear acceleration, as well as its orientation in quaternions. 
+Keep in mind that at the moment the car position inside the simulation is updated at the simulator's framerate.
+IMU noise is added every time the IMU frame is requested.
+Requesting imu frequency at a higher rate then the simulators framerate will result in different data every time but all based on the same ground truth position.</p>
+<p>IMU gyroscope and accelomter bias and accuracy parameters can be found and fine-tuned in AirLib/include/sensors/imu/ImuSimpleParams.hpp.
+There is an <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/issues/238">open issue</a> to make these configurable throught the <code>settings.json</code>.</p>
 <p>The angular velocity, linear acceleration outputs as well as their biases have artificially introduced Gaussian noise (0 mean, standard deviation of 1) updated on each IMU cycle. </p>
 <p>All of the IMU measurements are timestamped.</p>
+<p>The IMU is located in the <a href="../vehicle_model/">vehicle pawn center</a>. </p>
 <p>See ImuSimple.hpp (/AirSim/AirLib/include/sensors/imu/ImuSimple.hpp) and [ImuSimpleParams.hpp] /AirSim/AirLib/include/sensors/imu/ImuSimpleParams.hpp for the implementation of the IMU model.</p>
+<h2 id="add-an-imu-to-the-car">Add an IMU to the car</h2>
+<p>In your <code>settings.json</code>, add the following to the <code>Sensors</code> object within the vehicle configuration:</p>
+<pre><code class="json">&quot;Imu&quot; : {
+    &quot;SensorType&quot;: 2,
+    &quot;Enabled&quot;: true
+},
+</code></pre>
+
+<p>The key of the object, in this case <code>Imu</code> is the name of the sensor: this imu sensor is named <code>Imu</code>.
+Use this name to retrieve sensordata.</p>
+<p>At the moment no configuration of noise is supported.</p>
+<h2 id="python-client">Python client</h2>
+<pre><code class="python"># Args:
+#   imu_name (str, optional): Name of IMU to get data from, specified in settings.json. When no name is provided the last imu will be used.
+#   vehicle_name (str, optional): Name of vehicle to which the sensor corresponds to.
+# 
+# Returns:
+#   time_stamp (np.uint64) nanosecond timestamp of when the imu data was captured
+#   orientation (Quaternionr) rotation of the sensor, relative to the northpole. It's like a compass
+#   angular_velocity (Vector3r) how fast the car is rotating along it's three axis in radians/second
+#   linear_acceleration (Vector3r) how fast the car is accelerating in meters/s2^m
+#   
+imu_data = client.getImuData(imu_name = '', vehicle_name = 'FSCar')
+</code></pre>
+
+<p>An example of how to collect imu data:</p>
+<pre><code class="python">import time
+import fsds
+
+# connect to the AirSim simulator 
+client = fsds.FSDSClient()
+
+# Check network connection
+client.confirmConnection()
+
+while True:
+    imu = client.getImuData(imu_name = 'Imu', vehicle_name = 'FSCar')
+
+    print(&quot;timestamp nano: &quot;, imu.time_stamp)
+    print(&quot;orientation: &quot;, imu.orientation)
+    print(&quot;angular velocity: &quot;, imu.angular_velocity)
+    print(&quot;linear acceleration: &quot;, imu.linear_acceleration)
+    print()
+
+    time.sleep(1)
+</code></pre>
+
+<p>Full example <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/tree/master/python/examples/imu.py">here</a>.</p>
               
             </div>
           </div>

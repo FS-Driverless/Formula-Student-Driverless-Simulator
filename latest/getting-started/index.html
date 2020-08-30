@@ -58,41 +58,27 @@
                     </li>
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">Getting started</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#running-the-simulator">Running the simulator</a>
+    <li class="toctree-l2"><a class="reference internal" href="#from-release-binaries">From release binaries</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#from-source-using-the-unreal-engine-editor">From source using the Unreal Engine Editor</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#from-release-binaries">From release binaries</a>
+    <li class="toctree-l3"><a class="reference internal" href="#1-get-the-repository">1. Get the repository</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#from-source-using-the-unreal-engine-editor">From source using the Unreal Engine Editor</a>
-        <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#get-the-repository">Get the repository</a>
+    <li class="toctree-l3"><a class="reference internal" href="#2-compiling-the-airsim-plugin">2. Compiling the AirSim plugin</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#compiling-the-airsim-plugin">Compiling the AirSim plugin</a>
+    <li class="toctree-l3"><a class="reference internal" href="#3-working-with-the-unreal-engine-project">3. Working with the Unreal Engine project</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#working-with-the-unreal-engine-project">Working with the Unreal Engine project</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#launching-the-game">Launching the game</a>
+    <li class="toctree-l3"><a class="reference internal" href="#4-launching-the-game">4. Launching the game</a>
     </li>
         </ul>
     </li>
-        </ul>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#running-the-ros-bridge">Running the Ros Bridge</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#requirements">Requirements</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#cloning-the-repository">Cloning the repository</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#preparing-airlib">Preparing AirLib</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#building-the-workspace">Building the workspace</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#launching-the-ros-bridge">Launching the ros bridge</a>
-    </li>
-        </ul>
+    <li class="toctree-l2"><a class="reference internal" href="#next-steps">Next steps</a>
     </li>
     </ul>
                     </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../integration-handbook/">Integration handbook</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started-with-ros/">Getting started with ROS</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started-with-python/">Getting started with Python</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Vehicle & Sensors</span></p>
@@ -110,7 +96,7 @@
                     <li class="toctree-l1"><a class="reference internal" href="../ground-speed-sensor/">GSS</a>
                     </li>
                 </ul>
-                <p class="caption"><span class="caption-text">#tech madness</span></p>
+                <p class="caption"><span class="caption-text">#tech-madness</span></p>
                 <ul>
                     <li class="toctree-l1"><a class="reference internal" href="../ros-bridge/">ROS Bridge</a>
                     </li>
@@ -118,9 +104,7 @@
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../joystick/">Joystick</a>
                     </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../operator/">Operator</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../coordinate-frames/">Coordinate frames</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../import-car-3d-model/">Import your 3d car model</a>
                     </li>
@@ -129,6 +113,15 @@
                     <li class="toctree-l1"><a class="reference internal" href="../software-install-instructions/">Software install instructions</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../how-to-release/">How to release</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Competition tooling</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../operator/">Operator</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../competition-signals/">System flow and signals</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
                     </li>
                 </ul>
       </div>
@@ -159,7 +152,7 @@
     <li>Getting started</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/edit/master/docs/getting-started.md"> Edit on FS-Online/Formula-Student-Driverless-Simulator</a>
+        <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/edit/master/docs/getting-started.md"> Edit on FS-Driverless/Formula-Student-Driverless-Simulator</a>
       
     </li>
   </ul>
@@ -170,42 +163,43 @@
             <div class="section">
               
                 <h1 id="getting-started">Getting started</h1>
-<p>When running this simulator there are two main components: the simulator and the ros bridge.
-Your autonomous system and the ros bridge should use the same ros core, either by running on the same computer or through a network connection. 
-It is required that the simulator and the ros bridge have the same version!</p>
-<p>This page is an overview of the different methods to get these components up and running.</p>
-<h2 id="running-the-simulator">Running the simulator</h2>
-<p>To run the simulation smoothly you need quite a fast windows computer with a modern videocard.
-We highly recommend the following computer specs. You might be able to run with less power but everything will be slower.
+<p>When running this simulator there are two steps: running the simulator and connecting your autonomous system.
+This page helps you run the simulation.
+After you have finished this page you can go on and connect your autonomous system. </p>
+<p>To run the simulation smoothly you need quite a fast Windows computer with a modern videocard.
+We highly recommend the following computer specs. 
+You might be able to run with less power but everything will be slower.
 For developing this project, you need quite a good computer because Unreal Engine is a heavy baby.</p>
 <ul>
 <li>8 core 2.3Ghz CPU</li>
 <li>12 GB memory</li>
 <li>30GB free SSD storage (120GB when building the unreal project from source)</li>
-<li>Recent NVidia card with Vulkan support and 3 GB of memory. (You can check the video card drivers by running <code>vulkaninfo</code>)</li>
+<li>Recent NVidia card with Vulkan support and 3 GB of memory. (You can check the video card drivers by running <code>vulkaninfo</code>). Different brand video cards might work but have not been tested.</li>
 </ul>
 <p>If your computer does not suffice you can use a remote workstation on Google Cloud Platform.
 Read <a href="../gcp-remote-workstation/">this tutorial</a> on how to setup your virtual workstation.</p>
 <p>The simulator will load settings from the file <code>Formula-Student-Driverless-Simulator/settings.json</code> in your <strong>home directory</strong>.
 This file is required for the simulator to work and contains the sensor configuration of the car.
 If you clone the repo you will already have this file in place.
-If not, copy-paste the contents of the <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/blob/master/settings.json">settings.json file at the root of this repository</a> into the <code>~/Formula-Student-Driverless-Simulator</code>.
+If not, copy-paste the contents of the <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/blob/master/settings.json">settings.json file at the root of this repository</a> into the <code>~/Formula-Student-Driverless-Simulator</code>.
 This should get you started with the default sensor configuration, feel free to try your own custom sensor suite.</p>
-<h3 id="from-release-binaries">From release binaries</h3>
+<h2 id="from-release-binaries">From release binaries</h2>
 <p>The simulator is distributed as binaries on every release.
-<a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/issues/107">At this moment only windows binaries are released. For now, if you are on Ubuntu you will have to run the simulator from the Unreal Engine Editor.</a>
+<a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/issues/107">At this moment only windows binaries are released. For now, if you are on Ubuntu you will have to run the simulator from the Unreal Engine Editor.</a>
 During competition, the simulation will run on Windows because it offers a bit better performance and stability.</p>
-<p>Go to <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/releases">releases</a> and download the latest one.
+<p>Go to <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/releases">releases</a> and download the latest one.
 Unzip it to anywhere on your computer and launch FSDS.exe.
 A window with a car should popup!
 Try driving the car around using the arrowkeys.</p>
-<h3 id="from-source-using-the-unreal-engine-editor">From source using the Unreal Engine Editor</h3>
-<p>If you want to run the unreal engine project from source you will need <a href="../software-install-instructions/">unreal engine and visual studio 2019</a>.
-On Ubuntu you can skip the visual studio 2019 part.</p>
-<h4 id="get-the-repository">Get the repository</h4>
-<p>You can either download the repo using the big green download button on the <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator">github page of this project</a> or clone the repository. For cloning, checkout the documentation on this further down this page.</p>
+<h2 id="from-source-using-the-unreal-engine-editor">From source using the Unreal Engine Editor</h2>
+<p>Instead of running the simulator from release binaries, you can compile it manually using unreal engine.
+This is usefull if you want to get the latest changes or if you want to make changes to the maps or the simulation itself.
+If you want to run the unreal engine project from source you will need <a href="../software-install-instructions/">unreal engine and visual studio 2019</a>.
+On Ubuntu you can skip the visual studio 2019 part, but you still need Unreal Engine.</p>
+<h3 id="1-get-the-repository">1. Get the repository</h3>
+<p>You can either download the repo using the big green download button on the <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator">github page of this project</a> or clone the repository. For cloning, checkout the documentation on this further down this page. Make sure you clone the repository in your <strong>home directory</strong>.</p>
 <p>When downloading or cloning, by default you get the latest, unreleased version. This is probably not the version that you want. Make sure you select the version that you need! </p>
-<h4 id="compiling-the-airsim-plugin">Compiling the AirSim plugin</h4>
+<h3 id="2-compiling-the-airsim-plugin">2. Compiling the AirSim plugin</h3>
 <p>The Unreal Engine project requires the AirSim plugin.
 We have to compile this plugin first.
 The AirSim plugin is made up of AirLib (/AirSim/AirLib) and the plugin code (/UE4Project/Plugins/AirSim/Source).
@@ -222,8 +216,17 @@ AirLib is the shared code between the ros wrapper and the AirSim Unreal Engine p
   After compilation it places the files in the UE4Project so that these files can be used durcing compilation of the plugin.</p>
 </blockquote>
 <p>The first time this takes quite a while. Go walk around a bit, maybe start playing <a href="https://factoryidle.com/">factoryidle</a>. </p>
-<h4 id="working-with-the-unreal-engine-project">Working with the Unreal Engine project</h4>
-<p>Launch Unreal Engine and open the project file <code>Formula-Student-Driverless-Simulator/UE4Project/FSOnline.uproject</code></p>
+<h3 id="3-working-with-the-unreal-engine-project">3. Working with the Unreal Engine project</h3>
+<p>Launch Unreal Engine, press Browse and open the FSDS project in <code>~/Driverless-Competition-Simulator/UE4Project/FSOnline.uproject</code>. 
+The project should now open correctly. 
+If it does not, make sure of the following:</p>
+<ul>
+<li>you have cloned the repository inside your home folder (~/) </li>
+<li>you have cloned with LFS enabed. If not, run <code>git lfs install</code> and <code>git lfs pull</code> to download the large files.</li>
+<li>within <code>~/Driverless-Competition-Simulator/AirSim/</code>, you have run <code>build.cmd</code> on Windows and <code>./setup.sh &amp;&amp; ./build.sh</code> on Ubuntu.</li>
+</ul>
+<p>On Ubuntu, we recommend adding the following alias to your ~/.bashrc to speed up the process of opening the repository in the future:
+<code>alias ue='~/UnrealEngine/Engine/Binaries/Linux/UE4Editor ~/Formula-Student-Driverless-Simulator/UE4Project/FSOnline.uproject'</code></p>
 <p>It might show an error like 'This project was made with a different version of the Unreal Engine'. In that case select <code>more options</code> and <code>skip conversion</code>.</p>
 <p>When asked to rebuild the 'Blocks' and 'AirSim' modules, choose 'Yes'.
 This is the step where the plugin part of AirSim is compiled.</p>
@@ -233,70 +236,16 @@ Run the game in standalone mode or or selected viewport mode, simulate and eject
 <p>If you make changes to the plugin code or AirLib, you only have to recompile the plugin.
 This can be done from within the Unreal Editor. go to to <code>Window</code> -&gt; <code>Developer tools</code> -&gt; <code>Modules</code>.
 Search for <code>AirSim</code> and click <code>Recompile</code>.</p>
-<h4 id="launching-the-game">Launching the game</h4>
+<h3 id="4-launching-the-game">4. Launching the game</h3>
 <p>To run the game, click the big Play button.
 If you want to run it like it would run when packaged, choose 'Run as standalone game'.</p>
-<h2 id="running-the-ros-bridge">Running the Ros Bridge</h2>
-<p>The simulator exposes an RPC api that is used by the ros bridge to communicate with the vehicle.
-The ros bridge should preferable run on the same computer as the simulator to ensure low latency and high bandwidth.</p>
-<p>It is possible to run the ros bridge on a different computer than the simulator.
-To get this to work you should use the <code>host</code> argument in the <code>fsds_ros_bridge.launch</code> file.
-The ros bridge will connect to the simulator on port 41451.</p>
-<p>The ros bridge only works on Ubuntu.
-If you have the simulator running on windows we reccommend Windows Subsystem for Linux.
-This offers a virtual Ubuntu machine within Windows.
-You can read <a href="../software-install-instructions/">here how to install it</a>. 
-While you are at it you might also want to <a href="../software-install-instructions/">install Xming</a> so you can run rviz and rqt_plot from within WSL.</p>
-<h3 id="requirements">Requirements</h3>
-<p>The ros bridge requires <a href="../software-install-instructions/">ROS Melodic to be installed</a>, as well as the following dependencies:</p>
-<pre><code>sudo apt-get install ros-melodic-tf2-geometry-msgs python-catkin-tools ros-melodic-rqt-multiplot ros-melodic-joy ros-melodic-cv-bridge ros-melodic-image-transport libyaml-cpp-dev libcurl4-openssl-dev
-</code></pre>
-
-<p>Make sure you have git lfs installed!</p>
-<h3 id="cloning-the-repository">Cloning the repository</h3>
-<p>Ready? Lets clone the repo into your home directory:</p>
-<pre><code>git clone git@github.com:FS-Online/Formula-Student-Driverless-Simulator.git --recurse-submodules
-</code></pre>
-
-<p>If you havn't setup your ssh keys, you can clone using https by running the following command:</p>
-<pre><code>git clone https://github.com/FS-Online/Formula-Student-Driverless-Simulator.git --recurse-submodules
-</code></pre>
-
-<p><strong>THE REPO HAS TO BE CLONED IN THE HOME DIRECTORY!</strong>. So the repo location should be <code>$HOME/Formula-Student-Driverless-Simulator</code>.
-Why you ask? Because we couldn't get relative paths in the C++ code to work so now we have hard-coded some paths to the home directory.
-I know yes it is ugly but it works. If you are bothered by it I would welcome you to open a pr with a fix.</p>
-<p>If this folder already exists as a result of any previous step, move the existing folder out of the way and merge the content afterwards.</p>
-<p>If you are on Windows and cloned this repository in a Windows directory, go into the cloned repo and run <code>git config core.fileMode false</code> to ignore file mode changes. 
-If you want to share the the clone directory with the Ubuntu WSL system, create a symlink within WSL like so:</p>
-<pre><code>ln -s /mnt/c/Users/developer/Formula-Student-Driverless-Simulator ~/Formula-Student-Driverless-Simulator
-</code></pre>
-
-<p>Now, checkout the version equal to the simulator. If you are running for example simulator packaged version beta-3, run <code>git checkout beta-3</code> to get the ros brige to the same version</p>
-<h3 id="preparing-airlib">Preparing AirLib</h3>
-<p>AirLib is the shared code between the ros wrapper and the AirSim Unreal Engine plugin.
-We need to stage the source before we can compile it together with the wrapper.</p>
-<p>If you are working in a WSL shared folder where previously build.cmd was ran, you can skip this step.</p>
-<p>Open an Ubuntu terminal and run <code>AirSim/setup.sh</code>.
-This will download the nessesary libraries required to compile AirLib.
-You will only need to run this once.</p>
-<p>Everything setup.sh does is also included in build.cmd.</p>
-<h3 id="building-the-workspace">Building the workspace</h3>
-<pre><code>cd ros
-catkin init
-catkin build
-</code></pre>
-
-<h3 id="launching-the-ros-bridge">Launching the ros bridge</h3>
-<p>The ros bridge consists of a few nodes to achieve the highest performance and keep the codebase clean.
-Everything can be launched using the <code>fsds_ros_bridge.launch</code> launchfile.</p>
-<pre><code>cd ros
-source devel/setup.bash
-roslaunch fsds_ros_bridge fsds_ros_bridge.launch
-</code></pre>
-
-<p>The ros bridge will read the settings from <code>~/Formula-Student-Driverless-Simulator/settings.json</code>.
-Make sure this is the same configuration file as the simulator uses.</p>
-<p><a href="../ros-bridge/">Read all about configuring the ros bridge here.</a></p>
+<h2 id="next-steps">Next steps</h2>
+<p>Now you are ready to connect your autonomous system.
+At the moment there are two integration methods:</p>
+<ul>
+<li><a href="../getting-started-with-ros/">Use the ROS bridge</a> to connect your ROS autonomous system to the bridge.</li>
+<li><a href="../getting-started-with-python/">Use the Python client</a> to interact with the simulator.</li>
+</ul>
               
             </div>
           </div>
@@ -304,7 +253,7 @@ Make sure this is the same configuration file as the simulator uses.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../integration-handbook/" class="btn btn-neutral float-right" title="Integration handbook">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../getting-started-with-ros/" class="btn btn-neutral float-right" title="Getting started with ROS">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../system-overview/" class="btn btn-neutral" title="System overview"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -338,7 +287,7 @@ Make sure this is the same configuration file as the simulator uses.</p>
         <span><a href="../system-overview/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../integration-handbook/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../getting-started-with-ros/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

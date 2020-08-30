@@ -58,7 +58,9 @@
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
                     </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../integration-handbook/">Integration handbook</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started-with-ros/">Getting started with ROS</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started-with-python/">Getting started with Python</a>
                     </li>
                 </ul>
                 <p class="caption"><span class="caption-text">Vehicle & Sensors</span></p>
@@ -69,6 +71,10 @@
                     </li>
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">Lidar</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#adding-a-lidar-to-the-vehicle">Adding a lidar to the vehicle.</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#python">Python</a>
+    </li>
     </ul>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../camera/">Camera</a>
@@ -78,7 +84,7 @@
                     <li class="toctree-l1"><a class="reference internal" href="../ground-speed-sensor/">GSS</a>
                     </li>
                 </ul>
-                <p class="caption"><span class="caption-text">#tech madness</span></p>
+                <p class="caption"><span class="caption-text">#tech-madness</span></p>
                 <ul>
                     <li class="toctree-l1"><a class="reference internal" href="../ros-bridge/">ROS Bridge</a>
                     </li>
@@ -86,9 +92,7 @@
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../joystick/">Joystick</a>
                     </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../operator/">Operator</a>
-                    </li>
-                    <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
+                    <li class="toctree-l1"><a class="reference internal" href="../coordinate-frames/">Coordinate frames</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../import-car-3d-model/">Import your 3d car model</a>
                     </li>
@@ -97,6 +101,15 @@
                     <li class="toctree-l1"><a class="reference internal" href="../software-install-instructions/">Software install instructions</a>
                     </li>
                     <li class="toctree-l1"><a class="reference internal" href="../how-to-release/">How to release</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Competition tooling</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../operator/">Operator</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../competition-signals/">System flow and signals</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
                     </li>
                 </ul>
       </div>
@@ -127,7 +140,7 @@
     <li>Lidar</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/FS-Online/Formula-Student-Driverless-Simulator/edit/master/docs/lidar.md"> Edit on FS-Online/Formula-Student-Driverless-Simulator</a>
+        <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/edit/master/docs/lidar.md"> Edit on FS-Driverless/Formula-Student-Driverless-Simulator</a>
       
     </li>
   </ul>
@@ -138,6 +151,7 @@
             <div class="section">
               
                 <h1 id="lidar">Lidar</h1>
+<h2 id="adding-a-lidar-to-the-vehicle">Adding a lidar to the vehicle.</h2>
 <p>The lidar sensors are configured in the setting.json.
 This is an example lidar:</p>
 <pre><code>&quot;Lidar1&quot;: {
@@ -156,18 +170,22 @@ This is an example lidar:</p>
 }
 </code></pre>
 
-<p><code>Lidar1</code> is the name of the lidar. This value will be used in the ros topic name and coordinate frame.</p>
-<p><code>X</code>, <code>Y</code> and <code>Z</code> are the position of the lidar relative the <a href="../vehicle_model/">vehicle pawn center</a> of the car in NED frame.</p>
+<p><code>Lidar1</code> is the name of the lidar. 
+This name will be used to reference the camera when collecing the latest pointcloud.</p>
+<p><code>X</code>, <code>Y</code> and <code>Z</code> are the position of the lidar relative the <a href="../vehicle_model/">vehicle pawn center</a> of the car in ENU frame.</p>
 <p><code>Roll</code>,<code>Pitch</code> and <code>Yaw</code> are rotations in degrees.</p>
 <p><code>NumberOfLasers</code> is the - duh - the number of lasers in the lidar.
 The lasers are stacked vertically and rotate on the horizontal plane. 
-The lasers are distributed equally to cover the specified vertical field of view.</p>
+The lasers are distributed equally to cover the specified vertical field of view.
+Each laser has a range of 100 meters.</p>
 <p>The vertical field of view is specified by choosing the upper (<code>VerticalFOVUpper</code>) and lower (<code>VerticalFOVLower</code>) limit in degrees. 
 The lower limit specifies the vertical angle between the horizontal plane of the lidar and the most bottom laser. 
 The upper limit specifies the vertical angle between the horizontal plane of the lidar and most upper laser. </p>
 <p>The horizontal field of view of the lidar is specified with an upper (<code>HorizontalFOVStart</code>) and lower (<code>HorizontalFOVEnd</code>) limit in degree as well.
 The lower limit specifies the counterclockwise angle on a top view (negative yaw) from the direction the lidar is pointing towards.
-The upper limit specifies the clockwise angle on a top view (positive yaw) from the direction the lidar is pointing towards. </p>
+The upper limit specifies the clockwise angle on a top view (positive yaw) from the direction the lidar is pointing towards.</p>
+<p>The following image shows how the horizontal field of view start and end behave:
+<img alt="" src="../images/lidar_horizontal_fov.png" /></p>
 <p><code>RotationsPerSecond</code> specifies how fast the lasers spins and how often a pointcloud is captured.
 There might be slight variations in the actual lidar frequency vs the configured rotation frequency.</p>
 <p><code>PointsPerScan</code> is the number of firings per scan within the field of view.
@@ -175,6 +193,38 @@ If all lasers hit, the returned pointcloud will contain this number of points in
 <p><code>DrawDebugPoints</code> enables visualization of the lidar hits inside the unreal engine game.
 This is known to impact performance quite a bit. 
 it is recommended to to only use this during debugging.</p>
+<h2 id="python">Python</h2>
+<pre><code class="python">lidardata = client.getLidarData(self, lidar_name = '', vehicle_name = 'FSCar')
+</code></pre>
+
+<p>Calls the simulator API to retrieve the Lidar data.
+The API returns a pointcloud as a flat array of floats along with the timestamp of the capture and lidar pose.
+Lasers without a hit, shot into the air or too far away, are not included in the pointcloud.
+Every floats point represent [x, y, z] coordinate for each point hit within the range in the last scan, relative to the location of the lidar in meters.</p>
+<p>Args</p>
+<ul>
+<li>lidar_name (str, optional): Name of Lidar to get data from, specified in settings.json. With no name provided selects the last lidar in the settings.json.</li>
+<li>vehicle_name (str, optional): Name of vehicle to which the sensor corresponds to, by default FSCar.</li>
+</ul>
+<p>Returns</p>
+<ul>
+<li>point_cloud (array of float): The points in the pointcloud.</li>
+<li>time_stamp (np.uint64): nanosecond timestamp of when the gps position was captured</li>
+<li>pose (Pose): position (Vector3r) and orientation (Quaternionr) of the location of the lidar at the moment of capture in global reference frame</li>
+</ul>
+<p>To convert the flat list of float points into a list of xyz coordinates, you can use the following example function:</p>
+<pre><code class="python">def parse_lidarData(self, point_cloud):
+    &quot;&quot;&quot;
+    Takes an array of float points and converts it into an array with 3-item arrays representing x, y and z
+    &quot;&quot;&quot;
+    points = numpy.array(point_cloud, dtype=numpy.dtype('f4'))
+    return numpy.reshape(points, (int(points.shape[0]/3), 3))
+
+points = parse_lidarData(lidardata.point_cloud)
+print(&quot;point 0  X: %f  Y: %f  Z: %f&quot; % (points[0][0], points[0][1], points[0][2]))
+</code></pre>
+
+<p>Full example <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/tree/master/python/examples/lidar.py">here</a>.</p>
               
             </div>
           </div>

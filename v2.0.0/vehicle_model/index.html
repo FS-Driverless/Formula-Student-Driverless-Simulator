@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Vehicle model - Formula Student Driverless Simulator</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="../css/version-select.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Vehicle model";
+    var mkdocs_page_input_path = "vehicle_model.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Formula Student Driverless Simulator</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Introduction</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../system-overview/">System overview</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started-with-ros/">Getting started with ROS</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../getting-started-with-python/">Getting started with Python</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Vehicle & Sensors</span></p>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Vehicle model</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#vehicle-pawn-center">Vehicle pawn center</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#vehicle-collision-model">Vehicle collision model</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#vehicle-center-of-gravity">Vehicle center of gravity</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#more-properties-of-competition-vehicles">More properties of competition vehicles</a>
+    </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../imu/">IMU</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../lidar/">Lidar</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../camera/">Camera</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../gps/">GPS</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../ground-speed-sensor/">GSS</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">#tech-madness</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../ros-bridge/">ROS Bridge</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../statistics/">ROS Bridge statistics</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../joystick/">Joystick</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../coordinate-frames/">Coordinate frames</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../import-car-3d-model/">Import your 3d car model</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../gcp-remote-workstation/">Google cloud remote workstation</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../software-install-instructions/">Software install instructions</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../how-to-release/">How to release</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Competition tooling</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../operator/">Operator</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../competition-signals/">System flow and signals</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Formula Student Driverless Simulator</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Vehicle & Sensors &raquo;</li>
+        
+      
+    
+    <li>Vehicle model</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/edit/master/docs/vehicle_model.md"> Edit on FS-Driverless/Formula-Student-Driverless-Simulator</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="vehicle-dynamic-model">Vehicle Dynamic model</h1>
+<p>One of the most controversial subjects of any simulator is the vehicle dynamic model. This is the piece of the simulation that actually changes the state of the vehicle. 
+In building this simulator for the FSOnline competition, our design philosophy was the following:</p>
+<ul>
+<li>
+<p><strong>All teams will use the same vehicle dynamic model</strong>. We are well aware that all teams have put effort into developing dynamic models of their own FSCar for controls and simulation purposes. However, we want the FSOnline DV Dynamic event to purely be a battle of autonomous software. Even if this will require teams to tweak their path planning and control algorithms, it will make sure that the winner of this event is truly the team that can take any race car and push it to its limits the most.</p>
+</li>
+<li>
+<p><strong>The dynamic model will have a high enough fidelity such that it is virtually impossible to overfit to it/reverse the plant or run open loop</strong>. This will force teams to use system identification techniques similar to the ones that are used on a real car and no cheating or unfair advantage will be given to any teams.</p>
+</li>
+<li>
+<p><strong>A third-party, open-source model would be ideal</strong>. This way, not even the developers of the simulation (Formula Student Team Delft) would have an edge over other teams. Everyone has access to the same code and has had no experience working with it or been involved in developing it.</p>
+</li>
+</ul>
+<p>Unreal Engine provides the <a href="https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/guide/Manual/Vehicles.html">PhysXVehicles</a> that was developed by Nvidia. 
+This seemed like the perfect solution for our simulator, given that it complies with all the criteria of our design philosophy above. 
+Airsim simply interacts with the PhysXCar API in <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/tree/master/UE4Project/Plugins/AirSim/Source/Vehicles/Car">these</a> files.</p>
+<h2 id="vehicle-pawn-center">Vehicle pawn center</h2>
+<p>Just like everything inside the simulated world, the vehicle has a position within the world (x, y, z).
+Relative to this point the rest of the vehicle is constructed.
+The collision box, the center of gravity and the sensor positions all are relative to this center point.</p>
+<p>The center position is located at the bottom of the car and on the horizontal plane in the geometric center.
+When car is stationary the height offset between the world track and the pawn position is 0.
+In below image the blue dot represents the location of the pawn center:</p>
+<p><img alt="vehicle layout 4 angles" src="../images/vehicle-layout.png" />
+<em>Vehicle Layout Overview</em></p>
+<h2 id="vehicle-collision-model">Vehicle collision model</h2>
+<p>The collision model (bounding box) defines which parts of the car interact with other parts of the world.
+The default vehicle (TechnionCarPawn) has the following bounding boxes:</p>
+<ul>
+<li>Width: 100cm</li>
+<li>Length: 180cm</li>
+<li>Height: 50cm</li>
+</ul>
+<p>The bounding boxes will be centered ontop of the vehicle pawn center. 
+In the Vehicle Layout Overview picture above the orange lines show the bounding box. 
+These boundries are unrealted to the vehicle 3d model.
+The car may look smaller or bigger but they will hit cones all the same.</p>
+<p><img alt="" src="../images/ue-equality.png" /></p>
+<h2 id="vehicle-center-of-gravity">Vehicle center of gravity</h2>
+<p>The center of gravity of the car sits in the center of the collision model.
+The center of gravity of the default vehicle (TechnionCarPawn) is 25cm above the vehicle pawn center.
+In turn, when the car is stationary, the height offset between the world ground and the center of gravity is 25 cm.
+Within the <em>Vehicle Layout Overview</em> picture the red dot represents the center of gravity.</p>
+<h2 id="more-properties-of-competition-vehicles">More properties of competition vehicles</h2>
+<ul>
+<li>Mass: 255 kg</li>
+<li>Max speed: ~27 m/s</li>
+<li>Drag coefficient: 0.3 [-]</li>
+</ul>
+<p><img alt="SUVCarPawn" src="../images/vehicle_dynamic_model.png" /></p>
+<h1 id="how-to-configure-vehicle-properties">How to configure vehicle properties?</h1>
+<p>All vehicle proprties are set in the unreal vehicle pawn classes.
+You can view and edit these configuratoin files using the Unreal Editor in <code>/UE4Project/Plugins/AirSim/Content/VehicleAdv/</code>.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../imu/" class="btn btn-neutral float-right" title="IMU">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../getting-started-with-python/" class="btn btn-neutral" title="Getting started with Python"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>GPLv2</p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../getting-started-with-python/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../imu/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../js/version-select.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
