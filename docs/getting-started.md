@@ -162,6 +162,7 @@ Everything setup.sh does is also included in build.cmd.
 ```
 cd ros
 catkin init
+catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release #(Optional)
 catkin build
 ```
 
