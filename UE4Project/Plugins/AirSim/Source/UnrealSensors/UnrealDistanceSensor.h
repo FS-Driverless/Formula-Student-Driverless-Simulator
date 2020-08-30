@@ -6,7 +6,7 @@
 #include "common/Common.hpp"
 #include "GameFramework/Actor.h"
 #include "sensors/distance/DistanceSimple.hpp"
-#include "NedTransform.h"
+#include "CoordFrameTransformer.h"
 
 class UnrealDistanceSensor : public msr::airlib::DistanceSimple {
 public:
@@ -14,7 +14,7 @@ public:
 
 public:
     UnrealDistanceSensor(const AirSimSettings::DistanceSetting& setting,
-        AActor* actor, const NedTransform* ned_transform);
+        AActor* actor, const CoordFrameTransformer* ned_transform);
 
 protected:
     virtual msr::airlib::real_T getRayLength(const msr::airlib::Pose& pose) override;
@@ -26,5 +26,5 @@ private:
 
 private:
     AActor* actor_;
-    const NedTransform* ned_transform_;
+    const CoordFrameTransformer* ned_transform_;
 };

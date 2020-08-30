@@ -10,7 +10,7 @@
 
 #include "common/ClockFactory.hpp"
 #include "PIPCamera.h"
-#include "NedTransform.h"
+#include "CoordFrameTransformer.h"
 #include "common/EarthUtils.hpp"
 
 #include "DrawDebugHelpers.h"
@@ -203,7 +203,7 @@ void CarPawnSimApi::setStartPosition(const FVector& position, const FRotator& ro
     initial_state_.last_debug_position = initial_state_.start_location;
 
     //compute our home point
-    Vector3r nedWrtOrigin = ned_transform_.toGlobalNed(initial_state_.start_location);
+    Vector3r nedWrtOrigin = ned_transform_.toGlobalEnu(initial_state_.start_location);
     home_geo_point_ = msr::airlib::EarthUtils::nedToGeodetic(nedWrtOrigin, 
         AirSimSettings::singleton().origin_geopoint);
 }
@@ -267,10 +267,10 @@ void CarPawnSimApi::createCamerasFromSettings()
         const auto& setting = camera_setting_pair.second;
 
         //get pose
-        FVector position = transform.fromLocalNed(
-            NedTransform::Vector3r(setting.position.x(), setting.position.y(), setting.position.z()))
-            - transform.fromLocalNed(NedTransform::Vector3r(0.0, 0.0, 0.0));
-        FTransform camera_transform(FRotator(setting.rotation.pitch, setting.rotation.yaw, setting.rotation.roll),
+        FVector position = transform.fromLocalEnu(
+            CoordFrameTransformer::Vector3r(setting.position.x(), setting.position.y(), setting.position.z()))
+            - transform.fromLocalEnu(CoordFrameTransformer::Vector3r(0.0, 0.0, 0.0));
+        FTransform camera_transform(transform.fromEnu(setting.rotation.pitch, setting.rotation.yaw, setting.rotation.roll),
             position, FVector(1., 1., 1.));
 
         //spawn and attach camera to pawn
@@ -293,9 +293,9 @@ void CarPawnSimApi::onCollision(class UPrimitiveComponent* MyComp, class AActor*
 
     state_.collision_info.has_collided = true;
     state_.collision_info.normal = Vector3r(Hit.ImpactNormal.X, Hit.ImpactNormal.Y, - Hit.ImpactNormal.Z);
-    state_.collision_info.impact_point = ned_transform_.toLocalNed(Hit.ImpactPoint);
-    state_.collision_info.position = ned_transform_.toLocalNed(getUUPosition());
-    state_.collision_info.penetration_depth = ned_transform_.toNed(Hit.PenetrationDepth);
+    state_.collision_info.impact_point = ned_transform_.toLocalEnu(Hit.ImpactPoint);
+    state_.collision_info.position = ned_transform_.toLocalEnu(getUUPosition());
+    state_.collision_info.penetration_depth = ned_transform_.toEnu(Hit.PenetrationDepth);
     state_.collision_info.time_stamp = msr::airlib::ClockFactory::get()->nowNanos();
     state_.collision_info.object_name = std::string(Other ? TCHAR_TO_UTF8(*(Other->GetName())) : "(null)");
     state_.collision_info.object_id = comp ? comp->CustomDepthStencilValue : -1;
@@ -316,7 +316,7 @@ void CarPawnSimApi::possess()
     controller->Possess(params_.pawn);
 }
 
-const NedTransform& CarPawnSimApi::getNedTransform() const
+const CoordFrameTransformer& CarPawnSimApi::getNedTransform() const
 {
     return ned_transform_;
 }
@@ -474,7 +474,7 @@ void CarPawnSimApi::plot(std::istream& s, FColor color, const Vector3r& offset)
         Vector3r current_point(x, y, z);
         current_point += offset;
         if (!VectorMath::hasNan(last_point)) {
-            DrawDebugLine(params_.pawn->GetWorld(), ned_transform_.fromLocalNed(last_point), ned_transform_.fromLocalNed(current_point), color, true, -1.0F, 0, 3.0F);
+            DrawDebugLine(params_.pawn->GetWorld(), ned_transform_.fromLocalEnu(last_point), ned_transform_.fromLocalEnu(current_point), color, true, -1.0F, 0, 3.0F);
         }
         last_point = current_point;
     }
@@ -486,8 +486,8 @@ msr::airlib::CameraInfo CarPawnSimApi::getCameraInfo(const std::string& camera_n
     msr::airlib::CameraInfo camera_info;
 
     const APIPCamera* camera = getCamera(camera_name);
-    camera_info.pose.position = ned_transform_.toLocalNed(camera->GetActorLocation());
-    camera_info.pose.orientation = ned_transform_.toNed(camera->GetActorRotation().Quaternion());
+    camera_info.pose.position = ned_transform_.toLocalEnu(camera->GetActorLocation());
+    camera_info.pose.orientation = ned_transform_.toEnu(camera->GetActorRotation().Quaternion());
     camera_info.fov = camera->GetCameraComponent()->FieldOfView;
     camera_info.proj_mat = camera->getProjectionMatrix(APIPCamera::ImageType::Scene);
     return camera_info;
@@ -497,7 +497,7 @@ void CarPawnSimApi::setCameraOrientation(const std::string& camera_name, const m
 {
     UAirBlueprintLib::RunCommandOnGameThread([this, camera_name, orientation]() {
         APIPCamera* camera = getCamera(camera_name);
-        FQuat quat = ned_transform_.fromNed(orientation);
+        FQuat quat = ned_transform_.fromEnu(orientation);
         camera->setCameraOrientation(quat.Rotator());
     }, true);
 }
@@ -510,7 +510,7 @@ void CarPawnSimApi::setCameraFoV(const std::string& camera_name, float fov_degre
     }, true);
 }
 
-//parameters in NED frame
+//parameters in local frame
 CarPawnSimApi::Pose CarPawnSimApi::getPose() const
 {
     return toPose(getUUPosition(), getUUOrientation().Quaternion());
@@ -518,8 +518,8 @@ CarPawnSimApi::Pose CarPawnSimApi::getPose() const
 
 CarPawnSimApi::Pose CarPawnSimApi::toPose(const FVector& u_position, const FQuat& u_quat) const
 {
-    const Vector3r& position = ned_transform_.toLocalNed(u_position);
-    const Quaternionr& orientation = ned_transform_.toNed(u_quat);
+    const Vector3r& position = ned_transform_.toLocalEnu(u_position);
+    const Quaternionr& orientation = ned_transform_.toEnu(u_quat);
     return Pose(position, orientation);
 }
 
@@ -533,11 +533,11 @@ void CarPawnSimApi::setPose(const Pose& pose, bool ignore_collision)
 void CarPawnSimApi::setPoseInternal(const Pose& pose, bool ignore_collision)
 {
     //translate to new CarPawnSimApi position & orientation from NED to NEU
-    FVector position = ned_transform_.fromLocalNed(pose.position);
+    FVector position = ned_transform_.fromLocalEnu(pose.position);
     state_.current_position = position;
 
     //quaternion formula comes from http://stackoverflow.com/a/40334755/207661
-    FQuat orientation = ned_transform_.fromNed(pose.orientation);
+    FQuat orientation = ned_transform_.fromEnu(pose.orientation);
 
     bool enable_teleport = ignore_collision || canTeleportWhileMove();
 
@@ -578,7 +578,7 @@ void CarPawnSimApi::updateKinematics(float dt)
     auto next_kinematics = kinematics_->getState();
 
     next_kinematics.pose = getPose();
-    next_kinematics.twist.linear = getNedTransform().toLocalNedVelocity(getPawn()->GetVelocity());
+    next_kinematics.twist.linear = getNedTransform().toLocalEnuVelocity(getPawn()->GetVelocity());
     next_kinematics.twist.angular = msr::airlib::VectorMath::toAngularVelocity(
         kinematics_->getPose().orientation, next_kinematics.pose.orientation, dt);
 

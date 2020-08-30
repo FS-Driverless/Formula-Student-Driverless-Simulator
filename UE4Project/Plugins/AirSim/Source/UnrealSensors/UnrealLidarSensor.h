@@ -6,7 +6,7 @@
 #include "common/Common.hpp"
 #include "GameFramework/Actor.h"
 #include "sensors/lidar/LidarSimple.hpp"
-#include "NedTransform.h"
+#include "CoordFrameTransformer.h"
 
 // UnrealLidarSensor implementation that uses Ray Tracing in Unreal.
 // The implementation uses a model similar to CARLA Lidar implementation.
@@ -17,7 +17,7 @@ public:
 
 public:
     UnrealLidarSensor(const AirSimSettings::LidarSetting& setting,
-        AActor* actor, const NedTransform* ned_transform);
+        AActor* actor, const CoordFrameTransformer* ned_transform);
 
 protected:
     virtual void getPointCloud(const msr::airlib::Pose& lidar_pose, const msr::airlib::Pose& vehicle_pose,
@@ -34,7 +34,7 @@ private:
 
 private:
     AActor* actor_;
-    const NedTransform* ned_transform_;
+    const CoordFrameTransformer* ned_transform_;
 
     msr::airlib::vector<msr::airlib::real_T> laser_angles_;
 };

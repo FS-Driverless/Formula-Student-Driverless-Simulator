@@ -263,11 +263,11 @@ void APIPCamera::setCameraFoV(float fov_degrees)
 }
 
 
-void APIPCamera::setupCameraFromSettings(const APIPCamera::CameraSetting& camera_setting, const NedTransform& ned_transform)
+void APIPCamera::setupCameraFromSettings(const APIPCamera::CameraSetting& camera_setting, const CoordFrameTransformer& ned_transform)
 {
     //TODO: should we be ignoring position and orientation settings here?
 
-    //TODO: can we eliminate storing NedTransform?
+    //TODO: can we eliminate storing CoordFrameTransformer?
     ned_transform_ = &ned_transform;
 
     gimbal_stabilization_ = Utils::clip(camera_setting.gimbal.stabilization, 0.0f, 1.0f);
@@ -304,7 +304,7 @@ void APIPCamera::setupCameraFromSettings(const APIPCamera::CameraSetting& camera
 }
 
 void APIPCamera::updateCaptureComponentSetting(USceneCaptureComponent2D* capture, UTextureRenderTarget2D* render_target, 
-    bool auto_format, const EPixelFormat& pixel_format, const CaptureSetting& setting, const NedTransform& ned_transform)
+    bool auto_format, const EPixelFormat& pixel_format, const CaptureSetting& setting, const CoordFrameTransformer& ned_transform)
 {
     if (auto_format)
     {
@@ -323,12 +323,12 @@ void APIPCamera::updateCaptureComponentSetting(USceneCaptureComponent2D* capture
     if (!std::isnan(setting.fov_degrees))
         capture->FOVAngle = setting.fov_degrees;
     if (capture->ProjectionType == ECameraProjectionMode::Orthographic && !std::isnan(setting.ortho_width))
-        capture->OrthoWidth = ned_transform.fromNed(setting.ortho_width);
+        capture->OrthoWidth = ned_transform.fromEnu(setting.ortho_width);
 
     updateCameraPostProcessingSetting(capture->PostProcessSettings, setting);
 }
 
-void APIPCamera::updateCameraSetting(UCameraComponent* camera, const CaptureSetting& setting, const NedTransform& ned_transform)
+void APIPCamera::updateCameraSetting(UCameraComponent* camera, const CaptureSetting& setting, const CoordFrameTransformer& ned_transform)
 {
     //if (!std::isnan(setting.target_gamma))
     //    camera-> = setting.target_gamma;
@@ -338,14 +338,14 @@ void APIPCamera::updateCameraSetting(UCameraComponent* camera, const CaptureSett
     if (!std::isnan(setting.fov_degrees))
         camera->SetFieldOfView(setting.fov_degrees);
     if (camera->ProjectionMode == ECameraProjectionMode::Orthographic && !std::isnan(setting.ortho_width))
-        camera->SetOrthoWidth(ned_transform.fromNed(setting.ortho_width));
+        camera->SetOrthoWidth(ned_transform.fromEnu(setting.ortho_width));
 
     updateCameraPostProcessingSetting(camera->PostProcessSettings, setting);
 }
 
 msr::airlib::Pose APIPCamera::getPose() const
 {
-    return ned_transform_->toLocalNed(this->GetActorTransform());
+    return ned_transform_->toLocalEnu(this->GetActorTransform());
 }
 
 void APIPCamera::updateCameraPostProcessingSetting(FPostProcessSettings& obj, const CaptureSetting& setting)
