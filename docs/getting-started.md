@@ -30,6 +30,7 @@ Go to [releases](https://github.com/FS-Driverless/Formula-Student-Driverless-Sim
 Unzip it to anywhere on your computer and launch FSDS.exe.
 A window with a car should popup!
 Try driving the car around using the arrowkeys.
+If you get a black screen with some buttons, make sure the folder with the binary is in your user folder (Windows: `C:\Users\username\Formula-Student-Driverless-Simulator`, Linux: `~/Formula-Student-Driverless-Simulator`)
 
 ## From source using the Unreal Engine Editor
 Instead of running the simulator from release binaries, you can compile it manually using unreal engine.
