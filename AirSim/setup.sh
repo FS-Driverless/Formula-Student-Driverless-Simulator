@@ -87,22 +87,6 @@ else
     echo "Already have good version of cmake: $cmake_ver"
 fi
 
-# Download rpclib
-if [ ! -d "external/rpclib/rpclib-2.2.1" ]; then
-    echo "*********************************************************************************************"
-    echo "Downloading rpclib..."
-    echo "*********************************************************************************************"
-
-    wget  https://github.com/rpclib/rpclib/archive/v2.2.1.zip
-
-    # remove previous versions
-    rm -rf "external/rpclib"
-
-    mkdir -p "external/rpclib"
-    unzip v2.2.1.zip -d external/rpclib
-    rm v2.2.1.zip
-fi
-
 echo "Installing Eigen library..."
 
 if [ ! -d "AirLib/deps/eigen3" ]; then
