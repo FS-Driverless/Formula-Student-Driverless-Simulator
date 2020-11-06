@@ -41,7 +41,7 @@ The fsds_ros_bridge.launch launches the following nodes:
 
 ## Services
 
-- `/fsds/reset` [fsds_ros_bridge/Reset](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/srv/Reset.srv)   
+- `/fsds/reset` [fs_msgs/Reset](https://github.com/FS-Driverless/fs_msgs/blob/master/srv/Reset.srv)   
  Resets car to start location.
 
 ## Units

@@ -14,7 +14,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include "vehicles/car/api/CarRpcLibClient.hpp"
 #include "yaml-cpp/yaml.h"
 #include <fs_msgs/ControlCommand.h>
-#include <fsds_ros_bridge/Reset.h>
+#include <fs_msgs/Reset.h>
 #include <fs_msgs/GoSignal.h>
 #include <fs_msgs/FinishedSignal.h>
 #include <fs_msgs/Track.h>
@@ -135,7 +135,7 @@ private:
     // void set_zero_vel_cmd();
 
     /// ROS service callbacks
-    bool reset_srv_cb(fsds_ros_bridge::Reset::Request& request, fsds_ros_bridge::Reset::Response& response);
+    bool reset_srv_cb(fs_msgs::Reset::Request& request, fs_msgs::Reset::Response& response);
 
     // methods which parse setting json ang generate ros pubsubsrv
     void create_ros_pubs_from_settings_json();
