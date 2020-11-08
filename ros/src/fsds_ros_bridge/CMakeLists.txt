@@ -38,17 +38,6 @@ find_package(catkin REQUIRED COMPONENTS
   fs_msgs
 )
 
-add_service_files(
-  FILES
-  Reset.srv
-)
-
-generate_messages(
-  DEPENDENCIES
-  std_msgs
-  geometry_msgs
-)
-
 catkin_package(
   INCLUDE_DIRS include
   # LIBRARIES airsim_ros
