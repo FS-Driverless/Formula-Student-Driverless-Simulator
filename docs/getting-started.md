@@ -25,14 +25,12 @@ This should get you started with the default sensor configuration, feel free to 
 
 ## From release binaries
 
-The simulator is distributed as binaries on every release.
-[At this moment only windows binaries are released. For now, if you are on Ubuntu you will have to run the simulator from the Unreal Engine Editor.](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/issues/107)
-During competition, the simulation will run on Windows because it offers a bit better performance and stability.
-
+Pre-compiled binaries are available for every release.
 Go to [releases](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/releases) and download the latest one.
 Unzip it to anywhere on your computer and launch FSDS.exe.
 A window with a car should popup!
 Try driving the car around using the arrowkeys.
+If you get a black screen with some buttons, make sure the folder with the binary is in your user folder (Windows: `C:\Users\username\Formula-Student-Driverless-Simulator`, Linux: `~/Formula-Student-Driverless-Simulator`)
 
 ## From source using the Unreal Engine Editor
 Instead of running the simulator from release binaries, you can compile it manually using unreal engine.

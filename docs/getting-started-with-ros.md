@@ -65,6 +65,7 @@ Everything setup.sh does is also included in build.cmd.
 ```
 cd ros
 catkin init
+catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release #(Optional)
 catkin build
 ```
 
@@ -102,7 +103,41 @@ Now, all that is left to do is subscribe to the following topics to receive sens
 and publish to the following topic `/fsds/control_command` to publish the vehicle control setpoints.
 
 ## Multiple computers
-The ROS bridge should preferable run on the same computer as the simulator to ensure low latency and high bandwidth.
-However, it is possible to run the ROS bridge on a different computer than the simulator.
-To get this to work you should use the `host` argument in the `fsds_ros_bridge.launch` file.
-The ROS bridge will connect to the simulator on port 41451.
+If you have 2 computer, you can run the simulator and your autonomous system each on their own computer.
+But where does the ROS-bridge run? You have 2 options:
+
+1. Run the ROS bridge on the same computer as your autonomous system.
+   The ROS bridge will connect to the simulator using a TCP connection to send control commands and receive sensor data.
+   The ROS bridge will use local ROS topics to communicate with the autonomous system.
+   Use the `host` argument in the `fsds_ros_bridge.launch` file to tell the ROS bridge where the simulator is at.
+   Ensure firewall rules allow the ROS bridge to connect to the simulator on port 41451.
+
+2. Run the ROS bridge on the same computer as the simulator.
+   Your autonomous system would use ROS multi-computer networking to publish/subscribe to FSDS topics.
+   Follow [this tutorial](http://wiki.ros.org/ROS/NetworkSetup) and [this one](http://wiki.ros.org/ROS/Tutorials/ MultipleMachines) on the ROS Wiki to learn how to do this.
+
+If you have never worked with a multi-computer ROS networking before, option 1 is probably the way to go.
+
+If you are running the simulator on Windows, option 1 is the easiest as well.
+You can run the ROS bridge within WSL and use option 2 but there are some constraints, see below.
+
+## Notes on running the ROS bridge in WSL.
+
+It is possible to run the ROS bridge in Windows Subsystem Linux (WSL).
+However, when using WSL with a multi-computer ROS setup, [things get weird](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/issues/227).
+The problem is that everything crashes when you run the ROS bridge in WSL and try to send control commands via ROS from a different computer on the network.
+To work around this problem, you should know:
+
+**The only way to reliably have a ROS bridge in WSL receive control commands from another computer is to send these messages using UDP from a C++ node.**
+
+To enable UDP on the control setpoint topic, set the `UDP_control` argument like so:
+
+```
+roslaunch fsds_ros_bridge fsds_ros_bridge.launch UDP_control:=true
+```
+
+UDP is only supported in roscpp. If you are using a Python node to send controll commands, UDP won't help a thing.
+
+This setup has been tested on WSL 1 (Ubuntu 18.04), second machine (Ubuntu 18.04) with ROS melodic on both machines.
+
+If you are using WSL 2 and you manage to get ROS to work with 2 machines, please help us understand how by writing a comment on [this](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/issues/227) issue.

@@ -47,6 +47,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include <unordered_map>
 #include <fstream>
 #include <curl/curl.h>
+#include <ros/transport_hints.h>
 // #include "nodelet/nodelet.h"
 #define printVariableNameAndValue(x) std::cout << "The name of variable **" << (#x) << "** and the value of variable is => " << x << "\n"
 

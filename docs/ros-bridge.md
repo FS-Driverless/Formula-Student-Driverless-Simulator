@@ -103,10 +103,15 @@ This is the same coordinate system as [everything else within the simulator](coo
   Default: `false`, during competition set to `true`
   If competition mode is enabled, the `testing_only` topics won't be available.
 
-- `/fsds/ros_bridge/manul_mode` [bool]
+- `/fsds/ros_bridge/manual_mode` [bool]
   Set in: `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
   Default: `false`
-  Do not enable vehicle api control. You can controll the car using the keyboard in the simulator.
+  Do not enable vehicle api control. You can control the car using the keyboard in the simulator.
+
+- `/fsds/ros_bridge/UDP_control` [bool]
+  Set in `$(fsds_ros_bridge)/launch/fsds_ros_bridge.launch`
+  Default: `false`
+  Force UDP connection for the `fsds/controlCommand` topic when running the `fsds_ros_bridge` in WSL
 
 ## Visualization
 This package contains some useful launch and config files which will help you in visualizing the data being streamed through the above topics.
