@@ -41,6 +41,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_service_files(
   FILES
   Reset.srv
+  SetLocalPosition.srv
 )
 
 generate_messages(
