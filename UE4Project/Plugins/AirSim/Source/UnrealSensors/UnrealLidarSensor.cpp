@@ -4,12 +4,12 @@
 #include "UnrealLidarSensor.h"
 #include "AirBlueprintLib.h"
 #include "common/Common.hpp"
-#include "NedTransform.h"
+#include "CoordFrameTransformer.h"
 #include "DrawDebugHelpers.h"
 
 // ctor
 UnrealLidarSensor::UnrealLidarSensor(const AirSimSettings::LidarSetting& setting,
-    AActor* actor, const NedTransform* ned_transform)
+    AActor* actor, const CoordFrameTransformer* ned_transform)
     : LidarSimple(setting), actor_(actor), ned_transform_(ned_transform)
 {
     createLasers();
@@ -56,11 +56,11 @@ void UnrealLidarSensor::getPointCloud(const msr::airlib::Pose& lidar_pose, const
     }
 
     // normalize FOV start/end
-    const float laser_start = std::fmod(360.0f + params.horizontal_FOV_start, 360.0f);
-    const float laser_end = std::fmod(360.0f + params.horizontal_FOV_end, 360.0f);
+    const float laser_start = std::fmod(params.horizontal_FOV_start, 360.0f);
+    const float laser_end = std::fmod(params.horizontal_FOV_end, 360.0f);
 
     // calculate needed angle/distance between each point
-    const float angle_distance_of_laser_measure = std::abs(laser_end - laser_start) / float(points_to_scan_with_one_laser);
+    const float angle_distance_of_laser_measure = (laser_end - laser_start) / float(points_to_scan_with_one_laser);
 
     // shoot lasers
     for (auto laser = 0u; laser < params.number_of_lasers; ++laser)
@@ -69,7 +69,7 @@ void UnrealLidarSensor::getPointCloud(const msr::airlib::Pose& lidar_pose, const
 
         for (auto i = 0u; i < points_to_scan_with_one_laser; ++i)
         {
-            const float horizontal_angle = std::fmod(laser_end - angle_distance_of_laser_measure * i, 360.0f);
+            const float horizontal_angle = std::fmod(laser_start + angle_distance_of_laser_measure * i, 360.0f);
        
             Vector3r point;
             int segmentationID = -1;
@@ -114,7 +114,7 @@ bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const ms
     Vector3r end = VectorMath::rotateVector(VectorMath::front(), ray_q_w, true) * params.range + start;
    
     FHitResult hit_result = FHitResult(ForceInit);
-    bool is_hit = UAirBlueprintLib::GetObstacle(actor_, ned_transform_->fromLocalNed(start), ned_transform_->fromLocalNed(end), hit_result, actor_, ECC_Visibility);
+    bool is_hit = UAirBlueprintLib::GetObstacle(actor_, ned_transform_->fromLocalEnu(start), ned_transform_->fromLocalEnu(end), hit_result, actor_, ECC_Visibility);
 
     if (is_hit)
     {
@@ -146,15 +146,11 @@ bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const ms
 
 
         // point in vehicle intertial frame
-        Vector3r point_v_i = ned_transform_->toLocalNed(hit_result.ImpactPoint);
+        Vector3r point_v_i = ned_transform_->toLocalEnu(hit_result.ImpactPoint);
 
         // tranform to lidar frame
         point = VectorMath::transformToBodyFrame(point_v_i, lidar_pose + vehicle_pose, true);
         
-        // Convert to ENU frame
-        point.y() = - point.y();
-        point.z() = - point.z();
-
         return true;
     }
     else 

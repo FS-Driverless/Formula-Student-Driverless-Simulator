@@ -17,6 +17,7 @@
 #include "Kismet/KismetStringLibrary.h"
 #include "Engine/World.h"
 
+#include "Modules/ModuleManager.h"
 #include "Runtime/Landscape/Classes/LandscapeComponent.h"
 #include "common/AirSimSettings.hpp"
 #include <string>

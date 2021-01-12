@@ -66,7 +66,6 @@ public:
     void simPlotTransforms(const vector<Pose>& poses, float scale, float thickness, float duration, bool is_persistent);
     void simPlotTransformsWithNames(const vector<Pose>& poses, const vector<std::string>& names, float tf_scale, float tf_thickness, float text_scale, const vector<float>& text_color_rgba, float duration);
 
-    bool armDisarm(bool arm, const std::string& vehicle_name = "");
     bool isApiControlEnabled(const std::string& vehicle_name = "") const;
     void enableApiControl(bool is_enabled, const std::string& vehicle_name = "");
 

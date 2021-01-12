@@ -26,6 +26,7 @@ cd UnrealEngine
 ```
 
 Run it by executing `./Engine/Binaries/Linux/UE4Editor`.
+The Unreal Editor should now open without errors. 
 
 ## Install visual studio 2019 (Windows)
 [Download visual studio 2019 (community edition)](https://visualstudio.microsoft.com/vs/)

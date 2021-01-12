@@ -1,8 +1,8 @@
 site_name: Formula Student Driverless Simulator
 theme: readthedocs
 site_description: A virtual world where Autonomous Systems from different Formula Student teams can compete in time-trial challenges
-repo_name: FS-Online/Formula-Student-Driverless-Simulator
-repo_url: https://github.com/FS-Online/Formula-Student-Driverless-Simulator
+repo_name: FS-Driverless/Formula-Student-Driverless-Simulator
+repo_url: https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator
 edit_uri: 
 copyright: GPLv2
 
@@ -11,7 +11,8 @@ nav:
   - "Introduction":
     - "System overview": "system-overview.md"
     - "Getting started": "getting-started.md"
-    - "Integration handbook": "integration-handbook.md"
+    - "Getting started with ROS": "getting-started-with-ros.md"
+    - "Getting started with Python": "getting-started-with-python.md"
   - "Vehicle & Sensors":
     - "Vehicle model": "vehicle_model.md"
     - "IMU": "imu.md"
@@ -19,16 +20,19 @@ nav:
     - "Camera": "camera.md"
     - "GPS": "gps.md"
     - "GSS": "ground-speed-sensor.md"
-  - "#tech madness":
+  - "#tech-madness":
     - "ROS Bridge": "ros-bridge.md"
     - "ROS Bridge statistics": "statistics.md"
     - "Joystick": "joystick.md"
-    - "Operator": "operator.md"
-    - "Spectator": "spectator.md"
+    - "Coordinate frames": "coordinate-frames.md"
     - "Import your 3d car model": "import-car-3d-model.md"
     - "Google cloud remote workstation": "gcp-remote-workstation.md" 
     - "Software install instructions": "software-install-instructions.md"
     - "How to release": "how-to-release.md"
+  - "Competition tooling":
+    - "Operator": "operator.md"
+    - "System flow and signals": "competition-signals.md"
+    - "Spectator": "spectator.md"
 
 extra_css:
   - css\version-select.css

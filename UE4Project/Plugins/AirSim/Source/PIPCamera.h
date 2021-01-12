@@ -8,7 +8,7 @@
 #include "common/ImageCaptureBase.hpp"
 #include "common/common_utils/Utils.hpp"
 #include "common/AirSimSettings.hpp"
-#include "NedTransform.h"
+#include "CoordFrameTransformer.h"
 
 #include "PIPCamera.generated.h"
 
@@ -40,7 +40,7 @@ public:
 
     void setCameraTypeEnabled(ImageType type, bool enabled);
     bool getCameraTypeEnabled(ImageType type) const;
-    void setupCameraFromSettings(const APIPCamera::CameraSetting& camera_setting, const NedTransform& ned_transform);
+    void setupCameraFromSettings(const APIPCamera::CameraSetting& camera_setting, const CoordFrameTransformer& ned_transform);
     void setCameraOrientation(const FRotator& rotator);
     void setCameraFoV(float fov_degrees);
 
@@ -65,7 +65,7 @@ private: //members
     std::vector<bool> camera_type_enabled_;
     FRotator gimbald_rotator_;
     float gimbal_stabilization_;
-    const NedTransform* ned_transform_;
+    const CoordFrameTransformer* ned_transform_;
     TMap<int, EPixelFormat> image_type_to_pixel_format_map_;
 
 private: //methods
@@ -76,8 +76,8 @@ private: //methods
     static unsigned int imageTypeCount();
     void enableCaptureComponent(const ImageType type, bool is_enabled);
     static void updateCaptureComponentSetting(USceneCaptureComponent2D* capture, UTextureRenderTarget2D* render_target, 
-        bool auto_format, const EPixelFormat& pixel_format, const CaptureSetting& setting, const NedTransform& ned_transform);
+        bool auto_format, const EPixelFormat& pixel_format, const CaptureSetting& setting, const CoordFrameTransformer& ned_transform);
     void setNoiseMaterial(int image_type, UObject* outer, FPostProcessSettings& obj, const NoiseSetting& settings);
     static void updateCameraPostProcessingSetting(FPostProcessSettings& obj, const CaptureSetting& setting);
-    static void updateCameraSetting(UCameraComponent* camera, const CaptureSetting& setting, const NedTransform& ned_transform);
+    static void updateCameraSetting(UCameraComponent* camera, const CaptureSetting& setting, const CoordFrameTransformer& ned_transform);
 };

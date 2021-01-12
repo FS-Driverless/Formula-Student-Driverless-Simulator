@@ -326,9 +326,11 @@ public:
 	{
 		// these values are rotations between -pi and pi
 
+		// pitch_start, roll_start, yaw_start
 		RealT p_s, r_s, y_s;
 		toEulerianAngle(start, p_s, r_s, y_s);
 
+		// pitch_end, roll_end, yaw_end
 		// these values are rotations between -pi and pi.
 		RealT p_e, r_e, y_e;
 		toEulerianAngle(end, p_e, r_e, y_e);

@@ -45,7 +45,7 @@ $ pip install -r requirements.txt
 ```
 
 Next, download a packaged version of the simulator
-Go to the [releases](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/releases) and download the latest version.
+Go to the [releases](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/releases) and download the latest version.
 Extract the zip to the `simulator` folder at the root of this project.
 The result should be that the following files and folders exist inside the `simulator` folder:
 
@@ -64,7 +64,7 @@ By default, the web interface binds to all ip's of the machine on port 5000.
 ## Running the bridge launcher
 
 The ros bridge will most likely not run on the same computer as the simulator as the ros bridge works best on Ubuntu and the simulator best on Windows.
-It is discouraged to run the ros bridge on WSL during competition, see [#199](https://github.com/FS-Online/Formula-Student-Driverless-Simulator/issues/199).
+It is discouraged to run the ros bridge on WSL during competition, see [#199](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/issues/199).
 
 To help you quickly start the ros bridge with the configuration parameters set in the operator you can use the bridge launcher.
 This script will request the configuration from the operator using an http api call and launch the bridge accordingly.

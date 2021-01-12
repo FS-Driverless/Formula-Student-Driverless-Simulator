@@ -145,10 +145,6 @@ void RpcLibClientBase::confirmConnection()
     std::cout << "Connected to the simulator!" << std::endl;
 }
 
-bool RpcLibClientBase::armDisarm(bool arm, const std::string& vehicle_name)
-{
-    return pimpl_->client.call("armDisarm", arm, vehicle_name).as<bool>();
-}
 
 msr::airlib::GeoPoint RpcLibClientBase::getHomeGeoPoint(const std::string& vehicle_name) const
 {
