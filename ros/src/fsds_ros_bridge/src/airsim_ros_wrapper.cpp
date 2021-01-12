@@ -132,6 +132,7 @@ void AirsimROSWrapper::initialize_ros()
 
     if(!competition_mode_) {
         odom_update_timer_ = nh_private_.createTimer(ros::Duration(update_odom_every_n_sec), &AirsimROSWrapper::odom_cb, this);
+		extra_info_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::extra_info_cb, this);
     }
 
     gps_update_timer_ = nh_private_.createTimer(ros::Duration(update_gps_every_n_sec), &AirsimROSWrapper::gps_timer_cb, this);
@@ -141,7 +142,6 @@ void AirsimROSWrapper::initialize_ros()
 
     statistics_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::statistics_timer_cb, this);
     go_signal_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::go_signal_timer_cb, this);
-	extra_info_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::extra_info_cb, this);
     go_timestamp_ = ros::Time::now();
 
     airsim_client_.enableApiControl(!manual_mode, vehicle_name);
