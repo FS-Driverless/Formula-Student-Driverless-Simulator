@@ -836,6 +836,8 @@ void AirsimROSWrapper::extra_info_cb(const ros::TimerEvent & event){
 	fs_msgs::ExtraInfo extra_info_msg;
 	extra_info_msg.doo_counter = state.doo_counter;
 	extra_info_msg.laps = state.laps.size();
+
+	extra_info_pub.publish(extra_info_msg);
 }
 
 bool AirsimROSWrapper::equalsMessage(const nav_msgs::Odometry& a, const nav_msgs::Odometry& b) {
