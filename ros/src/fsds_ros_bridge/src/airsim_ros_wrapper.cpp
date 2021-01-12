@@ -141,6 +141,7 @@ void AirsimROSWrapper::initialize_ros()
 
     statistics_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::statistics_timer_cb, this);
     go_signal_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::go_signal_timer_cb, this);
+	extra_info_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::extra_info_cb, this);
     go_timestamp_ = ros::Time::now();
 
     airsim_client_.enableApiControl(!manual_mode, vehicle_name);
@@ -191,6 +192,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         if(!competition_mode_) {
             odom_pub = nh_.advertise<nav_msgs::Odometry>("testing_only/odom", 10);
             track_pub = nh_.advertise<fs_msgs::Track>("testing_only/track", 10, true);
+			extra_info_pub = nh_.advertise<fs_msgs::ExtraInfo>("testing_only/extra_info", 10, true);
         }
         
         // iterate over camera map std::map<std::string, CameraSetting> cameras;
@@ -816,6 +818,24 @@ void AirsimROSWrapper::finished_signal_cb(fs_msgs::FinishedSignalConstPtr msg)
 
     curl_easy_cleanup(curl);
     curl_global_cleanup();
+}
+
+void AirsimROSWrapper::extra_info_cb(const ros::TimerEvent & event){
+	CarApiBase::RefereeState state;
+    try{
+        std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
+        state = airsim_client_.getRefereeState();
+        lck.unlock();
+    } catch (rpc::rpc_error& e)
+    {
+        std::string msg = e.get_error().as<std::string>();
+        std::cout << "Exception raised by the API, something went wrong while retrieving referee state for sending extra info." << std::endl
+                  << msg << std::endl;
+    }
+
+	fs_msgs::ExtraInfo extra_info_msg;
+	extra_info_msg.doo_counter = state.doo_counter;
+	extra_info_msg.laps = state.laps.size();
 }
 
 bool AirsimROSWrapper::equalsMessage(const nav_msgs::Odometry& a, const nav_msgs::Odometry& b) {
