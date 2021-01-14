@@ -274,7 +274,7 @@ ros::Time AirsimROSWrapper::make_ts(uint64_t unreal_ts)
 
 // todo add reset by vehicle_name API to airlib
 // todo not async remove waitonlasttask
-bool AirsimROSWrapper::reset_srv_cb(fsds_ros_bridge::Reset::Request& request, fsds_ros_bridge::Reset::Response& response)
+bool AirsimROSWrapper::reset_srv_cb(fs_msgs::Reset::Request& request, fs_msgs::Reset::Response& response)
 {
     std::lock_guard<std::recursive_mutex> guard(car_control_mutex_);
 
