@@ -261,6 +261,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
     }
 
     reset_srvr_ = nh_.advertiseService("reset", &AirsimROSWrapper::reset_srv_cb, this);
+    set_local_position_srvr = nh_.advertiseService("set_local_position", &AirsimROSWrapper::set_local_position_srv_cb, this);
 
     initialize_airsim();
 }
@@ -281,6 +282,15 @@ bool AirsimROSWrapper::reset_srv_cb(fs_msgs::Reset::Request& request, fs_msgs::R
 
     airsim_client_.reset();
     return true; //todo
+}
+
+bool AirsimROSWrapper::set_local_position_srv_cb(fsds_ros_bridge::SetLocalPosition::Request& request, fsds_ros_bridge::SetLocalPosition::Response& response)
+{
+    auto quaternion = msr::airlib::VectorMathf::toQuaternion(0, 0, request.yaw * M_PI / 180);
+    msr::airlib::Vector3r vec3r {request.x, request.y, request.z};
+
+    airsim_client_.simSetVehiclePose(msr::airlib::Pose {vec3r, quaternion}, true, "FSCar");
+    return true;
 }
 
 tf2::Quaternion AirsimROSWrapper::get_tf2_quat(const msr::airlib::Quaternionr& airlib_quat) const
