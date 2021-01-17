@@ -18,6 +18,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include <fs_msgs/GoSignal.h>
 #include <fs_msgs/FinishedSignal.h>
 #include <fs_msgs/Track.h>
+#include <fs_msgs/ExtraInfo.h>
 #include <chrono>
 #include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -128,6 +129,7 @@ private:
     void lidar_timer_cb(const ros::TimerEvent& event, const std::string& camera_name, const int lidar_index);
     void statistics_timer_cb(const ros::TimerEvent& event);
     void go_signal_timer_cb(const ros::TimerEvent& event);
+	void extra_info_cb(const ros::TimerEvent & event);
 
     /// ROS subscriber callbacks
     void finished_signal_cb(fs_msgs::FinishedSignalConstPtr msg);
@@ -203,6 +205,7 @@ private:
     ros::Timer statistics_timer_;
     ros::Timer go_signal_timer_;
     ros::Timer statictf_timer_;
+	ros::Timer extra_info_timer_;
 
     std::vector<ros::Publisher> lidar_pub_vec_;
 
@@ -215,6 +218,7 @@ private:
     ros::Publisher gss_pub;
     ros::Publisher track_pub;
     ros::Publisher go_signal_pub_;
+	ros::Publisher extra_info_pub;
     
     /// ROS subscribers
     ros::Subscriber control_cmd_sub;

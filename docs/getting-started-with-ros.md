@@ -99,6 +99,7 @@ Now, all that is left to do is subscribe to the following topics to receive sens
 - `/fsds/lidar/LIDAR_NAME`
 - `/fsds/testing_only/odom`
 - `/fsds/testing_only/track`
+- `/fsds/testing_only/extra_info`
 
 and publish to the following topic `/fsds/control_command` to publish the vehicle control setpoints.
 
