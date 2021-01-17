@@ -38,6 +38,13 @@ find_package(catkin REQUIRED COMPONENTS
   fs_msgs
 )
 
+add_service_files(
+  FILES
+  SetLocalPosition.srv
+)
+
+generate_messages()
+
 catkin_package(
   INCLUDE_DIRS include
   # LIBRARIES airsim_ros

@@ -287,7 +287,7 @@ bool AirsimROSWrapper::set_local_position_srv_cb(fsds_ros_bridge::SetLocalPositi
     auto quaternion = msr::airlib::VectorMathf::toQuaternion(0, 0, request.yaw * M_PI / 180);
     msr::airlib::Vector3r vec3r {request.x, request.y, request.z};
 
-    airsim_client_.simSetVehiclePose(msr::airlib::Pose {vec3r, quaternion}, true, request.vehicle_name);
+    airsim_client_.simSetVehiclePose(msr::airlib::Pose {vec3r, quaternion}, true, "FSCar");
     return true;
 }
 
