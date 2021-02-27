@@ -18,7 +18,6 @@ RUN apt-get install \
 	-y --no-install-recommends
 RUN pip3 install --upgrade pip
 RUN pip3 install setuptools wheel
-#RUN pip3 install airsim
 
 # Enable Vulkan support
 ARG VULKAN_VERSION="1.2.148"

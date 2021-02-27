@@ -9,7 +9,7 @@ def main():
     build_docker_image(args)
 
 def build_docker_image(args):
-    dockerfile = 'Dockerfile_binary'
+    dockerfile = 'Dockerfile'
     if not args.target_image:
         args.target_image = 'fsdsairsim_binary' + ':vulkan-ubuntu18.04'
 
