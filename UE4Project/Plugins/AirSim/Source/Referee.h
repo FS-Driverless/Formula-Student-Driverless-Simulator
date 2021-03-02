@@ -42,6 +42,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Referee")
 	void AppendBigOrangeCone(FTransform cone);
+	
+	UFUNCTION(BlueprintCallable, Category="Referee")
+	void AppendSmallOrangeCone(FTransform cone);
 
 	UFUNCTION(BlueprintCallable, Category="Referee")
 	void LoadStartPos(FVector pos);

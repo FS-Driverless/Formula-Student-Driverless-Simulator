@@ -64,6 +64,14 @@ void AReferee::AppendBigOrangeCone(FTransform transform){
 	state.cones.push_back(cone);
 }
 
+void AReferee::AppendSmallOrangeCone(FTransform transform){
+	msr::airlib::CarApiBase::Cone cone;
+	cone.location.x = transform.GetTranslation().X;
+	cone.location.y = transform.GetTranslation().Y;
+	cone.color = msr::airlib::CarApiBase::ConeColor::OrangeSmall;
+	state.cones.push_back(cone);
+}
+
 void AReferee::LoadStartPos(FVector pos) {
 	msr::airlib::CarApiBase::Point2D point;
 	point.x = pos.X;
