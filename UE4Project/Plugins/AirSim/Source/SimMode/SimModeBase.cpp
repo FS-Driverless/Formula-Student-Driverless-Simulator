@@ -423,8 +423,8 @@ void ASimModeBase::setupVehiclesAndCamera()
                 //compute initial pose
                 FVector spawn_position = uu_origin.GetLocation();
                 msr::airlib::Vector3r settings_position = vehicle_setting.position;
-                if (!msr::airlib::VectorMath::hasNan(settings_position))
-                    spawn_position = getGlobalNedTransform().fromGlobalEnu(settings_position);
+                //if (!msr::airlib::VectorMath::hasNan(settings_position))
+                    //spawn_position = getGlobalNedTransform().fromGlobalEnu(settings_position);
                 FRotator spawn_rotation = toFRotator(vehicle_setting.rotation, uu_origin.Rotator());
 
                 //spawn vehicle pawn
