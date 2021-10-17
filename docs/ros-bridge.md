@@ -36,7 +36,7 @@ The fsds_ros_bridge.launch launches the following nodes:
 
 | Topic name | Description | Message |
 |---|---|---|
-| `/fsds/control_command` | This message includes the dimensionless values throttle, steering and brake. Throttle and brake range from 0 to 1. For steering `-1` steers full to the left and `+1` steers full to the right. The contents of this message fill the essential parts of the `msr::airlib::CarApiBase::CarControl` struct.  This is the only way to control the car when the airsim ROS client is connected (keyboard will no longer work!). | [fs_msgs/ControlCommand](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/ControlCommand.msg) |
+| `/fsds/control_command` | This message includes the dimensionless values throttle, steering and brake. Throttle and brake range from 0 to 1. For steering `-1` steers full to the left and `+1` steers full to the right. Maximum steering angle is by default 25 degrees. The contents of this message fill the essential parts of the `msr::airlib::CarApiBase::CarControl` struct.  This is the only way to control the car when the airsim ROS client is connected (keyboard will no longer work!). | [fs_msgs/ControlCommand](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/ControlCommand.msg) |
 | `/fsds/signal/finished` | Finished signal that is sent by the AS to stop the mission. The ROS bridge will forward the signal to the operator which in turn will stop the ROS bridge and finish the run. | [fs_msgs/FinishedSignal](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/FinishedSignal.msg) |
 
 
