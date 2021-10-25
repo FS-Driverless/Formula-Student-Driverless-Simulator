@@ -25,26 +25,41 @@ jobs:
 
     # Runs a set of commands using the runners shell
     - name: Setup ROS
-      uses: betwo/github-setup-catkin@v1.0.0
+      uses: betwo/github-setup-catkin@v1.3.0
       with:
         # Version range or exact version of ROS version to use, using SemVer's version range syntax.
-        ros-version: # optional, default is melodic
+        ros-version: 'melodic'
+        build-tool: 'catkin_tools'
         # Root directory of the catkin workspace
-        workspace: ./ros 
+        workspace: ./ros
+      env:
+       ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      
     - name: Install ROS deps
       run: sudo apt-get install python-catkin-tools ros-melodic-tf2-geometry-msgs ros-melodic-tf python-catkin-tools ros-melodic-rqt-multiplot ros-melodic-joy ros-melodic-cv-bridge ros-melodic-image-transport libyaml-cpp-dev libcurl4-openssl-dev
+      env:
+       ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      
     - name: Compilation settings
       run: |
         sudo apt-get install gcc-8 g++-8
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 700 --slave /usr/bin/g++ g++ /usr/bin/g++-7
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 800 --slave /usr/bin/g++ g++ /usr/bin/g++-8
+      env:
+       ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      
     - name: Setup AirSim 
       run: |
         ./setup.sh
         ./build.sh
-      working-directory: ./AirSim 
+      working-directory: ./AirSim
+      env:
+       ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+       
     - name: Build catkin ws
       run: |
         set -ex o pipefail
         catkin build 
       working-directory: ./ros 
+      env:
+       ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
