@@ -64,22 +64,22 @@ def generate_launch_description():
             on_exit=launch.actions.Shutdown(),
             parameters=[
                 {
-                    'update_odom_every_n_sec': '0.004'
+                    'update_odom_every_n_sec': 0.004
                 },
                 {
-                    'update_imu_every_n_sec': '0.004'
+                    'update_imu_every_n_sec': 0.004
                 },
                 {
-                    'update_gps_every_n_sec': '0.1'
+                    'update_gps_every_n_sec': 0.1
                 },
                 {
-                    'update_gss_every_n_sec': '0.01'
+                    'update_gss_every_n_sec': 0.01
                 },
                 {
-                    'publish_static_tf_every_n_sec': '1'
+                    'publish_static_tf_every_n_sec': 1.0
                 },
                 {
-                    'update_lidar_every_n_sec': '0.1'
+                    'update_lidar_every_n_sec': 0.1
                 },
                 {
                     'host_ip': launch.substitutions.LaunchConfiguration('host')

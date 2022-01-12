@@ -111,9 +111,21 @@ void AirsimROSWrapper::publish_track() {
     track_pub->publish(track);
 }
 
+void AirsimROSWrapper::declare_ros_parameters(){
+    nh_private_->declare_parameter<std::string>("mission_name", "");
+    nh_private_->declare_parameter<std::string>("track_name", "");
+    nh_private_->declare_parameter<bool>("competition_mode", false);
+    nh_private_->declare_parameter<bool>("manual_mode", false);
+    nh_private_->declare_parameter<double>("update_odom_every_n_sec", 0.004);
+    nh_private_->declare_parameter<double>("update_gps_every_n_sec", 0.1);
+    nh_private_->declare_parameter<double>("update_imu_every_n_sec", 0.004);
+    nh_private_->declare_parameter<double>("update_gss_every_n_sec", 0.01);
+    nh_private_->declare_parameter<double>("publish_static_tf_every_n_sec", 1.0);
+}
+
+
 void AirsimROSWrapper::initialize_ros()
 {
-
     // ros params
     double update_odom_every_n_sec;
     double update_gps_every_n_sec;
@@ -121,10 +133,13 @@ void AirsimROSWrapper::initialize_ros()
     double update_gss_every_n_sec;
     double publish_static_tf_every_n_sec;
     bool manual_mode;
+
+    declare_ros_parameters();
     nh_private_->get_parameter("mission_name", mission_name_);
     nh_private_->get_parameter("track_name", track_name_);
     nh_private_->get_parameter("competition_mode", competition_mode_);
     nh_private_->get_parameter("manual_mode", manual_mode);
+    RCLCPP_INFO_STREAM(nh_private_->get_logger(), "Manual mode: " << manual_mode);
     nh_private_->get_parameter("update_odom_every_n_sec", update_odom_every_n_sec);
     nh_private_->get_parameter("update_gps_every_n_sec", update_gps_every_n_sec);
     nh_private_->get_parameter("update_imu_every_n_sec", update_imu_every_n_sec);
