@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Joystick - Formula Student Driverless Simulator</title>
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="../css/version-select.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Joystick";
+    var mkdocs_page_input_path = "joystick.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Formula Student Driverless Simulator</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Introduction</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../system-overview/">System overview</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../getting-started/">Getting started</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../getting-started-with-ros/">Getting started with ROS</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../getting-started-with-python/">Getting started with Python</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Vehicle & Sensors</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../vehicle_model/">Vehicle model</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../imu/">IMU</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../lidar/">Lidar</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../camera/">Camera</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../gps/">GPS</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../ground-speed-sensor/">GSS</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">#tech-madness</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../ros-bridge/">ROS Bridge</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../statistics/">ROS Bridge statistics</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Joystick</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#joystick-controller-node">Joystick Controller Node</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#help-it-doesnt-work">HELP it doesn't work</a></li>
+        
+            <li><a class="toctree-l4" href="#testing">testing</a></li>
+        
+            <li><a class="toctree-l4" href="#subscribers">Subscribers:</a></li>
+        
+            <li><a class="toctree-l4" href="#publishers">Publishers:</a></li>
+        
+        </ul>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../docker_ubuntu/">Docker</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../coordinate-frames/">Coordinate frames</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../import-car-3d-model/">Import your 3d car model</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../gcp-remote-workstation/">Google cloud remote workstation</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../software-install-instructions/">Software install instructions</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../how-to-release/">How to release</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Competition tooling</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../operator/">Operator</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../competition-signals/">System flow and signals</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../spectator/">Spectator</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Formula Student Driverless Simulator</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>#tech-madness &raquo;</li>
+        
+      
+    
+    <li>Joystick</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/edit/master/docs/joystick.md"> Edit on FS-Driverless/Formula-Student-Driverless-Simulator</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="joystick-controller-node">Joystick Controller Node</h1>
+<p>If you are interested in driving the car around to gather training data without having to rely on your autonomous system, you can use an XBox controller to do so. 
+Make sure you have <a href="../getting-started-with-ros/">built the ROS workspace</a>.</p>
+<p>Simply run:</p>
+<pre><code>cd ros
+source devel/setup.bash
+roslaunch joystick joystick.launch
+</code></pre>
+
+<p>This node gets input from a joystick xbox controller (see http://wiki.ros.org/joy) and sends the values to the lowlevel controls (hardware) on topic /fsds_ros_bridge/FSCar/control_command </p>
+<ul>
+<li>The right trigger (RT) controls the acceleration (gas) </li>
+<li>The left trigger (LT) controls brake (negative acceleration).</li>
+<li>The x-axis of the left stick controlls the steering angle.</li>
+<li>Pressing and holding the B button enables boost mode.</li>
+</ul>
+<p>When the joy driver initializes it sometimes sends very high values. 
+This would cause the car to move unpredictably.
+Therefore the controller is 'locked' when it is starts and when the controller is re-plugged in.
+To unlock both triggers must be fully pressed (gas and brake) after which commands will be sent.</p>
+<p>This node checks if the controller is plugged in by polling the linux device filename. 
+If the controller is unplugged the file disapears and this node will start sending break.</p>
+<p>When the controller is locked or the controller is unplugged the node will continuously sending break setpoints at 10hz.</p>
+<p>During normal operation the maximum setpoints are limited quite a bit to make the car better controllable.
+If you enable boost mode (press B) you get more power and the car will move faster.
+To configure the vlaue mappings between xbox controller and car setpoints, go into <code>src/joystick.cpp</code> and change the value of the variables.</p>
+<h2 id="help-it-doesnt-work">HELP it doesn't work</h2>
+<p>Make sure you run this on a computer that has the xbox controller attached!
+You can check if the controller is available by running the below command.</p>
+<pre><code>$ sudo ls /dev/input/js0
+crwxrwxrwx 1 root 993 13, 0 Nov  8 14:43 /dev/input/js0
+</code></pre>
+
+<p>If you get permisison erros you have to give ROS more permissions. Run</p>
+<pre><code>sudo chmod 777 /dev/input/js0
+</code></pre>
+
+<p>If the device is connected but not available at js0 it might be mapped to another device.
+Find the correct device by running</p>
+<pre><code>sudo ls -al /dev/input/js*
+</code></pre>
+
+<p>When you find the correct device mapping, update the launchfile accordingly.</p>
+<p>The message</p>
+<pre><code>[ERROR] Couldn't open joystick force feedback!
+</code></pre>
+
+<p>is normal. Nothing to worry about. It is a warning that always happens with wired xbox controllers.</p>
+<h2 id="testing">testing</h2>
+<p>To test this node on your computer just attach an xbox controller and run it as described above.
+Now chek the /fsds_ros_bridge/FSCar/control_command topic and you should see values corresponding to your controller movements.
+You can debug the input values from the joy driver by checking the <code>/joy</code> topic.</p>
+<h2 id="subscribers">Subscribers:</h2>
+<ul>
+<li><code>/joy</code> <a href="http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Joy.html">sensor_msgs/Joy</a> <br />
+  Listens to joystick input which is then mapped to the control command msg. The mapping should feel intuitive but in case something is unclear, it is described in detail in <code>/ros/src/fsds_ros_bridge/src/joystick.cpp</code></li>
+</ul>
+<h2 id="publishers">Publishers:</h2>
+<ul>
+<li><code>/fsds_ros_bridge/VEHICLE_NAME/control_command</code> <a href="https://github.com/FS-Driverless/fs_msgs/blob/master/msg/ControlCommand.msg">fs_msgs/ControlCommand</a> </li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../docker_ubuntu/" class="btn btn-neutral float-right" title="Docker">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../statistics/" class="btn btn-neutral" title="ROS Bridge statistics"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>GPLv2</p>
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../statistics/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../docker_ubuntu/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+      <script src="../js/version-select.js" defer></script>
+
+</body>
+</html>
