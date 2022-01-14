@@ -6,12 +6,11 @@
 
 using dseconds = std::chrono::duration<double>;
 
-AirsimROSWrapper::AirsimROSWrapper(const std::shared_ptr<rclcpp::Node>& nh, const std::shared_ptr<rclcpp::Node>& nh_private, const std::string& host_ip) : nh_(nh),
-                                                                                                                               nh_private_(nh_private),
-                                                                                                                            //    lidar_async_spinner_(1, &lidar_timer_cb_queue_), // same as above, but for lidar
-                                                                                                                               airsim_client_(host_ip),
-                                                                                                                               airsim_client_lidar_(host_ip),
-                                                                                                                               static_tf_pub_(this->nh_private_)
+AirsimROSWrapper::AirsimROSWrapper(const std::shared_ptr<rclcpp::Node>& nh, const std::string& host_ip) 
+                                                                                                  : nh_(nh),
+                                                                                                    airsim_client_(host_ip),
+                                                                                                    airsim_client_lidar_(host_ip),
+                                                                                                    static_tf_pub_(this->nh_)
 {
     try {
         auto settingsText = this->readTextFromFile(common_utils::FileSystem::getConfigFilePath());
@@ -121,34 +120,34 @@ void AirsimROSWrapper::initialize_ros()
     double publish_static_tf_every_n_sec;
     bool manual_mode;
 
-    mission_name_                 = nh_private_->declare_parameter<std::string>("mission_name"                 , "");
-    track_name_                   = nh_private_->declare_parameter<std::string>("track_name"                   , "");
-    competition_mode_             = nh_private_->declare_parameter<bool>       ("competition_mode"             , false);
-    manual_mode                   = nh_private_->declare_parameter<bool>       ("manual_mode"                  , false);
-    update_odom_every_n_sec       = nh_private_->declare_parameter<double>     ("update_odom_every_n_sec"      , 0.004);
-    update_gps_every_n_sec        = nh_private_->declare_parameter<double>     ("update_gps_every_n_sec"       , 0.1);
-    update_imu_every_n_sec        = nh_private_->declare_parameter<double>     ("update_imu_every_n_sec"       , 0.004);
-    update_gss_every_n_sec        = nh_private_->declare_parameter<double>     ("update_gss_every_n_sec"       , 0.01);
-    publish_static_tf_every_n_sec = nh_private_->declare_parameter<double>     ("publish_static_tf_every_n_sec", 1.0);
+    mission_name_                 = nh_->declare_parameter<std::string>("mission_name"                 , "");
+    track_name_                   = nh_->declare_parameter<std::string>("track_name"                   , "");
+    competition_mode_             = nh_->declare_parameter<bool>       ("competition_mode"             , false);
+    manual_mode                   = nh_->declare_parameter<bool>       ("manual_mode"                  , false);
+    update_odom_every_n_sec       = nh_->declare_parameter<double>     ("update_odom_every_n_sec"      , 0.004);
+    update_gps_every_n_sec        = nh_->declare_parameter<double>     ("update_gps_every_n_sec"       , 0.1);
+    update_imu_every_n_sec        = nh_->declare_parameter<double>     ("update_imu_every_n_sec"       , 0.004);
+    update_gss_every_n_sec        = nh_->declare_parameter<double>     ("update_gss_every_n_sec"       , 0.01);
+    publish_static_tf_every_n_sec = nh_->declare_parameter<double>     ("publish_static_tf_every_n_sec", 1.0);
 
-    RCLCPP_INFO_STREAM(nh_private_->get_logger(), "Manual mode: " << manual_mode);
+    RCLCPP_INFO_STREAM(nh_->get_logger(), "Manual mode: " << manual_mode);
 
 
     create_ros_pubs_from_settings_json();
 
     if(!competition_mode_) {
-        odom_update_timer_ = nh_private_->create_wall_timer(dseconds{update_odom_every_n_sec}, std::bind(&AirsimROSWrapper::odom_cb, this));
-		extra_info_timer_ = nh_private_->create_wall_timer(dseconds{1}, std::bind(&AirsimROSWrapper::extra_info_cb, this));
+        odom_update_timer_ = nh_->create_wall_timer(dseconds{update_odom_every_n_sec}, std::bind(&AirsimROSWrapper::odom_cb, this));
+		extra_info_timer_ = nh_->create_wall_timer(dseconds{1}, std::bind(&AirsimROSWrapper::extra_info_cb, this));
     }
 
-    gps_update_timer_ = nh_private_->create_wall_timer(dseconds{update_gps_every_n_sec}, std::bind(&AirsimROSWrapper::gps_timer_cb, this));
-    imu_update_timer_ = nh_private_->create_wall_timer(dseconds{update_imu_every_n_sec}, std::bind(&AirsimROSWrapper::imu_timer_cb, this));
-    gss_update_timer_ = nh_private_->create_wall_timer(dseconds{update_gss_every_n_sec}, std::bind(&AirsimROSWrapper::gss_timer_cb, this));
-    statictf_timer_ = nh_private_->create_wall_timer(dseconds{publish_static_tf_every_n_sec}, std::bind(&AirsimROSWrapper::statictf_cb, this));
+    gps_update_timer_ = nh_->create_wall_timer(dseconds{update_gps_every_n_sec}, std::bind(&AirsimROSWrapper::gps_timer_cb, this));
+    imu_update_timer_ = nh_->create_wall_timer(dseconds{update_imu_every_n_sec}, std::bind(&AirsimROSWrapper::imu_timer_cb, this));
+    gss_update_timer_ = nh_->create_wall_timer(dseconds{update_gss_every_n_sec}, std::bind(&AirsimROSWrapper::gss_timer_cb, this));
+    statictf_timer_ = nh_->create_wall_timer(dseconds{publish_static_tf_every_n_sec}, std::bind(&AirsimROSWrapper::statictf_cb, this));
 
-    statistics_timer_ = nh_private_->create_wall_timer(dseconds{1}, std::bind(&AirsimROSWrapper::statistics_timer_cb, this));
-    go_signal_timer_ = nh_private_->create_wall_timer(dseconds{1}, std::bind(&AirsimROSWrapper::go_signal_timer_cb, this));
-    go_timestamp_ = nh_private_->get_clock()->now();
+    statistics_timer_ = nh_->create_wall_timer(dseconds{1}, std::bind(&AirsimROSWrapper::statistics_timer_cb, this));
+    go_signal_timer_ = nh_->create_wall_timer(dseconds{1}, std::bind(&AirsimROSWrapper::go_signal_timer_cb, this));
+    go_timestamp_ = nh_->get_clock()->now();
 
     airsim_client_.enableApiControl(!manual_mode, vehicle_name);
 
@@ -187,7 +186,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         gss_pub = nh_->create_publisher<geometry_msgs::msg::TwistStamped>("gss", 10);
 
         bool UDP_control;
-        nh_private_->get_parameter("UDP_control", UDP_control);
+        nh_->get_parameter("UDP_control", UDP_control);
 
         if(UDP_control){
             control_cmd_sub = nh_->create_subscription<fs_msgs::msg::ControlCommand>("control_command", 1, std::bind(&AirsimROSWrapper::car_control_cb, this, std::placeholders::_1));
@@ -253,7 +252,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
                 auto lidar_index = lidar_pub_vec_.size() -1;
 
                 auto x = [this, sensor_name, lidar_index]() { this->lidar_timer_cb(sensor_name, lidar_index); };
-                airsim_lidar_update_timers_.push_back(nh_private_->create_wall_timer(dseconds{double(1) / double(lidar_setting.horizontal_rotation_frequency)}, x));
+                airsim_lidar_update_timers_.push_back(nh_->create_wall_timer(dseconds{double(1) / double(lidar_setting.horizontal_rotation_frequency)}, x));
                 break;
             }
             default:
@@ -306,7 +305,7 @@ nav_msgs::msg::Odometry AirsimROSWrapper::get_odom_msg_from_airsim_state(const m
 {
     nav_msgs::msg::Odometry odom_enu_msg;
     odom_enu_msg.header.frame_id = "fsds/map";
-    odom_enu_msg.header.stamp = nh_private_->get_clock()->now();
+    odom_enu_msg.header.stamp = nh_->get_clock()->now();
     odom_enu_msg.child_frame_id = "fsds/FSCar";
     odom_enu_msg.pose.pose.position.x = car_state.getPosition().x();
     odom_enu_msg.pose.pose.position.y = car_state.getPosition().y();
@@ -509,7 +508,7 @@ void AirsimROSWrapper::imu_timer_cb()
         imu_msg.linear_acceleration_covariance[4] = imu_data.sigma_vrw*imu_data.sigma_vrw;
         imu_msg.linear_acceleration_covariance[8] = imu_data.sigma_vrw*imu_data.sigma_vrw;
         imu_msg.header.frame_id = "fsds/" + vehicle_name;
-        // imu_msg.header.stamp = nh_private_->get_clock()->now();
+        // imu_msg.header.stamp = nh_->get_clock()->now();
         {
             ros_bridge::ROSMsgCounter counter(&imu_pub_statistics);
             imu_pub->publish(imu_msg);
@@ -562,7 +561,7 @@ void AirsimROSWrapper::statictf_cb()
 {
     for (auto& static_tf_msg : static_tf_msg_vec_)
     {
-        static_tf_msg.header.stamp = nh_private_->get_clock()->now();
+        static_tf_msg.header.stamp = nh_->get_clock()->now();
         static_tf_pub_.sendTransform(static_tf_msg);
     }
 }
@@ -684,7 +683,7 @@ void AirsimROSWrapper::lidar_timer_cb(const std::string& lidar_name, const int l
         }
         lidar_msg = get_lidar_msg_from_airsim(lidar_name, lidar_data);     // todo make const ptr msg to avoid copy
         lidar_msg.header.frame_id = "fsds/" + lidar_name;
-        lidar_msg.header.stamp = nh_private_->get_clock()->now();
+        lidar_msg.header.stamp = nh_->get_clock()->now();
 
         {
             ros_bridge::ROSMsgCounter counter(&lidar_pub_vec_statistics[lidar_index]);

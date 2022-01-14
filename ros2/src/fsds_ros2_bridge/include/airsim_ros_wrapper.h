@@ -75,7 +75,7 @@ struct SimpleMatrix
 class AirsimROSWrapper
 {
 public:
-    AirsimROSWrapper(const std::shared_ptr<rclcpp::Node>& nh, const std::shared_ptr<rclcpp::Node>& nh_private, const std::string& host_ip);
+    AirsimROSWrapper(const std::shared_ptr<rclcpp::Node>& nh, const std::string& host_ip);
     ~AirsimROSWrapper(){};
 
     void initialize_airsim();
@@ -184,7 +184,6 @@ private:
     nav_msgs::msg::Odometry message_enu_previous_;
 
     std::shared_ptr<rclcpp::Node> nh_;
-    std::shared_ptr<rclcpp::Node> nh_private_;
 
     // todo not sure if async spinners shuold be inside this class, or should be instantiated in fsds_ros2_bridge.cpp, and cb queues should be public
     // todo for multiple drones with multiple sensors, this won't scale. make it a part of MultiRotorROS?
