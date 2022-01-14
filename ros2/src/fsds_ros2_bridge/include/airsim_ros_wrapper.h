@@ -80,7 +80,6 @@ public:
 
     void initialize_airsim();
     void initialize_ros();
-    void declare_ros_parameters();
     void publish_track();
     void initialize_statistics();
 
