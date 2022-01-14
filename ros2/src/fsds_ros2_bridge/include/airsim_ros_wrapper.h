@@ -135,7 +135,7 @@ private:
     /// ROS subscriber callbacks
     void finished_signal_cb(const fs_msgs::msg::FinishedSignal& msg);
 
-    rclcpp::Time make_ts(uint64_t unreal_ts);
+    rclcpp::Time make_ts(uint64_t unreal_ts) const;
     // void set_zero_vel_cmd();
 
     /// ROS service callbacks

@@ -147,7 +147,8 @@ void AirsimROSWrapper::initialize_ros()
 
     statistics_timer_ = nh_->create_wall_timer(dseconds{1}, std::bind(&AirsimROSWrapper::statistics_timer_cb, this));
     go_signal_timer_ = nh_->create_wall_timer(dseconds{1}, std::bind(&AirsimROSWrapper::go_signal_timer_cb, this));
-    go_timestamp_ = nh_->get_clock()->now();
+    
+    go_timestamp_ = make_ts(airsim_client_.getCarState().timestamp);
 
     airsim_client_.enableApiControl(!manual_mode, vehicle_name);
 
@@ -269,7 +270,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
     initialize_airsim();
 }
 
-rclcpp::Time AirsimROSWrapper::make_ts(uint64_t unreal_ts)
+rclcpp::Time AirsimROSWrapper::make_ts(uint64_t unreal_ts) const
 {
    // unreal timestamp is a unix nanosecond timestamp just like ros.
    // We can do direct translation as long as ros is not running in simulated time mode.
@@ -305,7 +306,7 @@ nav_msgs::msg::Odometry AirsimROSWrapper::get_odom_msg_from_airsim_state(const m
 {
     nav_msgs::msg::Odometry odom_enu_msg;
     odom_enu_msg.header.frame_id = "fsds/map";
-    odom_enu_msg.header.stamp = nh_->get_clock()->now();
+    odom_enu_msg.header.stamp = make_ts(car_state.timestamp);
     odom_enu_msg.child_frame_id = "fsds/FSCar";
     odom_enu_msg.pose.pose.position.x = car_state.getPosition().x();
     odom_enu_msg.pose.pose.position.y = car_state.getPosition().y();
@@ -508,7 +509,7 @@ void AirsimROSWrapper::imu_timer_cb()
         imu_msg.linear_acceleration_covariance[4] = imu_data.sigma_vrw*imu_data.sigma_vrw;
         imu_msg.linear_acceleration_covariance[8] = imu_data.sigma_vrw*imu_data.sigma_vrw;
         imu_msg.header.frame_id = "fsds/" + vehicle_name;
-        // imu_msg.header.stamp = nh_->get_clock()->now();
+        imu_msg.header.stamp = make_ts(imu_data.time_stamp);
         {
             ros_bridge::ROSMsgCounter counter(&imu_pub_statistics);
             imu_pub->publish(imu_msg);
@@ -559,9 +560,17 @@ void AirsimROSWrapper::gss_timer_cb()
 
 void AirsimROSWrapper::statictf_cb()
 {
+    msr::airlib::CarApiBase::CarState state;
+    {
+        ros_bridge::Timer timer(&getCarStateStatistics);
+        std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
+        state = airsim_client_.getCarState(vehicle_name);
+        lck.unlock();
+    }
+
     for (auto& static_tf_msg : static_tf_msg_vec_)
     {
-        static_tf_msg.header.stamp = nh_->get_clock()->now();
+        static_tf_msg.header.stamp = make_ts(state.timestamp);
         static_tf_pub_.sendTransform(static_tf_msg);
     }
 }
@@ -683,7 +692,7 @@ void AirsimROSWrapper::lidar_timer_cb(const std::string& lidar_name, const int l
         }
         lidar_msg = get_lidar_msg_from_airsim(lidar_name, lidar_data);     // todo make const ptr msg to avoid copy
         lidar_msg.header.frame_id = "fsds/" + lidar_name;
-        lidar_msg.header.stamp = nh_->get_clock()->now();
+        lidar_msg.header.stamp = make_ts(lidar_data.time_stamp);
 
         {
             ros_bridge::ROSMsgCounter counter(&lidar_pub_vec_statistics[lidar_index]);
