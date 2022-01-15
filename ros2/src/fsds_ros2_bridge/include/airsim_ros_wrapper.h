@@ -25,6 +25,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <geometry_msgs/msg/twist_stamped.hpp>
 #include <geometry_msgs/msg/twist.hpp>
+#include <rosgraph_msgs/msg/clock.hpp>
 #include <iostream>
 #include <math.h>
 #include <math_common.h>
@@ -131,6 +132,7 @@ private:
     void statistics_timer_cb();
     void go_signal_timer_cb();
 	void extra_info_cb();
+	void clock_timer_cb();
 
     /// ROS subscriber callbacks
     void finished_signal_cb(const fs_msgs::msg::FinishedSignal& msg);
@@ -206,6 +208,7 @@ private:
     rclcpp::TimerBase::SharedPtr go_signal_timer_;
     rclcpp::TimerBase::SharedPtr statictf_timer_;
 	rclcpp::TimerBase::SharedPtr extra_info_timer_;
+	rclcpp::TimerBase::SharedPtr clock_timer_;
 
     std::vector<std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>>> lidar_pub_vec_;
 
@@ -218,6 +221,7 @@ private:
     std::shared_ptr<rclcpp::Publisher<fs_msgs::msg::Track>> track_pub;
     std::shared_ptr<rclcpp::Publisher<fs_msgs::msg::GoSignal>> go_signal_pub_;
 	std::shared_ptr<rclcpp::Publisher<fs_msgs::msg::ExtraInfo>> extra_info_pub;
+	std::shared_ptr<rclcpp::Publisher<rosgraph_msgs::msg::Clock>> clock_pub;
     
     /// ROS subscribers
     std::shared_ptr<rclcpp::Subscription<std::remove_cv_t<std::remove_reference_t<const fs_msgs::msg::ControlCommand &>>, std::allocator<void>, rclcpp::message_memory_strategy::MessageMemoryStrategy<std::remove_cv_t<std::remove_reference_t<const fs_msgs::msg::ControlCommand &>>, std::allocator<void>>>> control_cmd_sub;

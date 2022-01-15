@@ -139,6 +139,7 @@ void AirsimROSWrapper::initialize_ros()
         odom_update_timer_ = nh_->create_wall_timer(dseconds{update_odom_every_n_sec}, std::bind(&AirsimROSWrapper::odom_cb, this));
 		extra_info_timer_ = nh_->create_wall_timer(dseconds{1}, std::bind(&AirsimROSWrapper::extra_info_cb, this));
     }
+    clock_timer_ = nh_->create_wall_timer(dseconds{0.01}, std::bind(&AirsimROSWrapper::clock_timer_cb, this));
 
     gps_update_timer_ = nh_->create_wall_timer(dseconds{update_gps_every_n_sec}, std::bind(&AirsimROSWrapper::gps_timer_cb, this));
     imu_update_timer_ = nh_->create_wall_timer(dseconds{update_imu_every_n_sec}, std::bind(&AirsimROSWrapper::imu_timer_cb, this));
@@ -182,6 +183,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         set_nans_to_zeros_in_pose(*vehicle_setting);
 
         vehicle_name = curr_vehicle_name;
+        clock_pub = nh_->create_publisher<rosgraph_msgs::msg::Clock>("/clock", 10);
         global_gps_pub = nh_->create_publisher<sensor_msgs::msg::NavSatFix>("gps", 10);
         imu_pub = nh_->create_publisher<sensor_msgs::msg::Imu>("imu", 10);
         gss_pub = nh_->create_publisher<geometry_msgs::msg::TwistStamped>("gss", 10);
@@ -830,6 +832,31 @@ void AirsimROSWrapper::finished_signal_cb(const fs_msgs::msg::FinishedSignal& ms
 
     curl_easy_cleanup(curl);
     curl_global_cleanup();
+}
+
+void AirsimROSWrapper::clock_timer_cb(){
+    // I'm really sorry for this code, but airsim_client_ doesn't seem to expose
+    // a method to get just the time, so it's necessary to request data from some
+    // sensor and use its timestamp to get the current simulation time.
+    try{
+        struct msr::airlib::GSSSimple::Output gss_data;
+        {
+            ros_bridge::Timer timer(&getGSSStatistics);
+            std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
+            gss_data = airsim_client_.getGroundSpeedSensorData(vehicle_name);
+            lck.unlock();
+
+            rosgraph_msgs::msg::Clock clock_msg;
+            clock_msg.clock = make_ts(gss_data.time_stamp);
+            clock_pub->publish(clock_msg);
+        }
+    } catch (rpc::rpc_error& e)
+    {
+        std::string msg = e.get_error().as<std::string>();
+        std::cout << "Exception raised by the API, something went wrong while retrieving gss data for publishing simulation clock.\n"
+                  << msg << std::endl;
+    }
+
 }
 
 void AirsimROSWrapper::extra_info_cb(){
