@@ -1,1 +1,96 @@
-{"SeeDocsAt": "https://FS-Driverless.github.io/Formula-Student-Driverless-Simulator/", "SettingsVersion": 1.2, "ViewMode": "SpringArmChase", "ClockSpeed": 1.0, "SpectatorServerPassword": "password", "PawnPaths": {"DefaultCar": {"PawnBP": "Class'/AirSim/VehicleAdv/Cars/TechnionCar/TechnionCarPawn.TechnionCarPawn_C'"}}, "Vehicles": {"FSCar": {"DefaultVehicleState": "", "EnableCollisionPassthrogh": false, "EnableCollisions": true, "AllowAPIAlways": true, "RC": {"RemoteControlID": -1}, "Sensors": {"Imu": {"SensorType": 2, "Enabled": true}, "Gps": {"SensorType": 3, "Enabled": true}, "Lidar1": {"SensorType": 6, "Enabled": true, "X": 2.35, "Y": 0.0, "Z": 0.2, "Roll": 0, "Pitch": 0, "Yaw": 0, "NumberOfLasers": 1, "PointsPerScan": 1000, "VerticalFOVUpper": 1, "VerticalFOVLower": -1, "HorizontalFOVStart": -120.32113697747289, "HorizontalFOVEnd": 120.32113697747289, "RotationsPerSecond": 10, "DrawDebugPoints": false}, "GSS": {"SensorType": 7, "Enabled": true}}, "Cameras": {"cam1": {"CaptureSettings": [{"ImageType": 0, "Width": 785, "Height": 785, "FOV_Degrees": 90}], "X": -0.3, "Y": -0.16, "Z": 0.8, "Pitch": 0.0, "Roll": 0.0, "Yaw": 0}, "cam2": {"CaptureSettings": [{"ImageType": 0, "Width": 785, "Height": 785, "FOV_Degrees": 90}], "X": -0.3, "Y": 0.16, "Z": 0.8, "Pitch": 0.0, "Roll": 0.0, "Yaw": 0.0}}, "X": 2, "Y": 0, "Z": 0, "Pitch": 0, "Roll": 0, "Yaw": 0}}, "SubWindows": []}
+{
+	"SeeDocsAt": "https://FS-Driverless.github.io/Formula-Student-Driverless-Simulator/",
+	"SettingsVersion": 1.2,
+	"ViewMode": "SpringArmChase",
+	"ClockSpeed": 1.0,
+	"SpectatorServerPassword": "password",
+	"PawnPaths": {
+		"DefaultCar": {
+			"PawnBP": "Class'/AirSim/VehicleAdv/Cars/TechnionCar/TechnionCarPawn.TechnionCarPawn_C'"
+		}
+	},
+	"Vehicles": {
+		"FSCar": {
+			"DefaultVehicleState": "",
+			"EnableCollisionPassthrogh": false,
+			"EnableCollisions": true,
+			"AllowAPIAlways": true,
+			"RC": {
+				"RemoteControlID": -1
+			},
+			"Sensors": {
+				"Imu": {
+					"SensorType": 2,
+					"Enabled": true
+				},
+				"Gps": {
+					"SensorType": 3,
+					"Enabled": true
+				},
+				"Lidar1": {
+					"SensorType": 6,
+					"Enabled": true,
+					"X": 2.35,
+					"Y": 0.0,
+					"Z": 0.2,
+					"Roll": 0,
+					"Pitch": 0,
+					"Yaw": 0,
+					"NumberOfLasers": 1,
+					"PointsPerScan": 1000,
+					"VerticalFOVUpper": 1,
+					"VerticalFOVLower": -1,
+					"HorizontalFOVStart": -120.32113697747289,
+					"HorizontalFOVEnd": 120.32113697747289,
+					"RotationsPerSecond": 10,
+					"DrawDebugPoints": false
+				},
+				"GSS": {
+					"SensorType": 7,
+					"Enabled": true
+				}
+			},
+			"Cameras": {
+				"cam1": {
+					"CaptureSettings": [
+						{
+							"ImageType": 0,
+							"Width": 785,
+							"Height": 785,
+							"FOV_Degrees": 90
+						}
+					],
+					"X": -0.3,
+					"Y": -0.16,
+					"Z": 0.8,
+					"Pitch": 0.0,
+					"Roll": 0.0,
+					"Yaw": 0
+				},
+				"cam2": {
+					"CaptureSettings": [
+						{
+							"ImageType": 0,
+							"Width": 785,
+							"Height": 785,
+							"FOV_Degrees": 90
+						}
+					],
+					"X": -0.3,
+					"Y": 0.16,
+					"Z": 0.8,
+					"Pitch": 0.0,
+					"Roll": 0.0,
+					"Yaw": 0.0
+				}
+			},
+			"X": 2,
+			"Y": 0,
+			"Z": 0,
+			"Pitch": 0,
+			"Roll": 0,
+			"Yaw": 0
+		}
+	},
+	"SubWindows": []
+}
