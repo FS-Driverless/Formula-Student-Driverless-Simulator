@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>fsds_ros2_bridge</name>
   <version>0.0.1</version>
   <description>FSDS ROS2 bridge connecting 1 autonomous system to the simulated world</description>
@@ -30,8 +30,11 @@
   <exec_depend>sensor_msgs</exec_depend>
   <exec_depend>std_msgs</exec_depend>
 
-<!--   <export>
+  <!--   <export>
     <nodelet plugin="${prefix}/nodelet_plugins.xml" />
   </export>
  -->
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
 </package>
