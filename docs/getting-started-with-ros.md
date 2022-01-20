@@ -1,10 +1,10 @@
 # Connecting to the simulator with ROS
 
-You can use the ROS bridge to connect the simulator to ROS.
+You can use the ROS bridge to connect the simulator to ROS1 and ROS2.
 The ROS bridge will publish the sensordata from the simulator into ROS topics.
 Your autonomous system will be able to publish car-control messages which the ROS bridge will send to the simulator.
 
-The ROS bridge only works on Ubuntu.
+The ROS bridge works on Ubuntu or in WSL in windows (but it is harder to set up).
 If you have the simulator running on windows we reccommend Windows Subsystem for Linux.
 This offers a virtual Ubuntu machine within Windows.
 You can read [here how to install it](software-install-instructions.md). 
@@ -12,7 +12,7 @@ While you are at it you might also want to [install Xming](software-install-inst
 
 ## Requirements
 
-The ROS bridge requires [ROS Melodic to be installed](software-install-instructions.md), as well as the following dependencies:
+The ROS bridge requires [ROS Melodic/Noetic/Galactic to be installed](software-install-instructions.md), as well as the following dependencies:
 ```
 sudo apt-get install ros-melodic-tf2-geometry-msgs python-catkin-tools ros-melodic-rqt-multiplot ros-melodic-joy ros-melodic-cv-bridge ros-melodic-image-transport libyaml-cpp-dev libcurl4-openssl-dev
 ```
@@ -27,7 +27,7 @@ Ready? Lets clone the repo into your home directory:
 git clone git@github.com:FS-Driverless/Formula-Student-Driverless-Simulator.git --recurse-submodules
 ```
 
-If you havn't setup your ssh keys, you can clone using https by running the following command:
+If you haven't setup your ssh keys, you can clone using https by running the following command:
 ```
 git clone https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator.git --recurse-submodules
 ```
