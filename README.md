@@ -7,7 +7,7 @@
 This is a Formula Student Driverless Simulator (FSDS).
 FSDS is a community project with the goal to provide an end-to-end simulation for FS Driverless teams. 
 It simulates all commonly used sensors and is compatible with ROS. 
-This project has proven itsself during [FS-Online 2020](https://formulastudentonline.com/) where 4 driverless teams competed.
+This project has proven itself during [FS-Online 2020](https://formulastudentonline.com/) where 4 driverless teams competed.
 See [day 1](https://www.youtube.com/watch?v=TCgKwuLo3Eo), [day 2](https://www.youtube.com/watch?v=A-RHuWMZbig) and [day 3](https://www.youtube.com/watch?v=1RwY1cNMqMg).
 
 **Problems?** Ask questions in [Gitter chat](https://gitter.im/FS-Driverless/Formula-Student-Driverless-Simulator) or [open an issue](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/issues).
@@ -34,6 +34,9 @@ When AirSim is compiled, the AirLib binaries are placed within `/UE4Project/Plug
 It launches the fsds_ros_bridge to connect an autonomous system to the Unreal world and stops the bridge when the autonomous system is no longer allowed to control the car.
 
 This repo uses LFS for some large files. All files bigger than 90MB are added to LFS.
+
+## Installation
+For installation and more information about the ROS and python interface, [check the documentation](https://fs-driverless.github.io/Formula-Student-Driverless-Simulator/)
 
 ## Credits
 This project is based on the work of some amazing open-source projects. 

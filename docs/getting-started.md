@@ -23,7 +23,9 @@ If you clone the repo you will already have this file in place.
 If not, copy-paste the contents of the [settings.json file at the root of this repository](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/blob/master/settings.json) into the `~/Formula-Student-Driverless-Simulator`.
 This should get you started with the default sensor configuration, feel free to try your own custom sensor suite.
 
-## From release binaries
+## Installation 
+
+### From release binaries
 
 Pre-compiled binaries are available for every release.
 Go to [releases](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/releases) and download the latest one.
@@ -32,19 +34,20 @@ A window with a car should popup!
 Try driving the car around using the arrowkeys.
 If you get a black screen with some buttons, make sure the folder with the binary is in your user folder (Windows: `C:\Users\username\Formula-Student-Driverless-Simulator`, Linux: `~/Formula-Student-Driverless-Simulator`)
 
-## From source using the Unreal Engine Editor
+If all that works, you can continue to [the ROS interface](getting-started-with-ros.md) or [the python interface](getting-started-with-python.md).
+### From source using the Unreal Engine Editor
 Instead of running the simulator from release binaries, you can compile it manually using unreal engine.
 This is usefull if you want to get the latest changes or if you want to make changes to the maps or the simulation itself.
 If you want to run the unreal engine project from source you will need [unreal engine and visual studio 2019](software-install-instructions.md).
 On Ubuntu you can skip the visual studio 2019 part, but you still need Unreal Engine.
 
-### 1. Get the repository
+#### 1. Get the repository
 
 You can either download the repo using the big green download button on the [github page of this project](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator) or clone the repository. For cloning, checkout the documentation on this further down this page. Make sure you clone the repository in your **home directory**.
 
 When downloading or cloning, by default you get the latest, unreleased version. This is probably not the version that you want. Make sure you select the version that you need! 
 
-### 2. Compiling the AirSim plugin
+#### 2. Compiling the AirSim plugin
 The Unreal Engine project requires the AirSim plugin.
 We have to compile this plugin first.
 The AirSim plugin is made up of AirLib (/AirSim/AirLib) and the plugin code (/UE4Project/Plugins/AirSim/Source).
@@ -65,7 +68,7 @@ On Ubuntu, go to folder `AirSim` and run `setup.sh` and `build.sh`.
 
 The first time this takes quite a while. Go walk around a bit, maybe start playing [factoryidle](https://factoryidle.com/). 
 
-### 3. Working with the Unreal Engine project
+#### 3. Working with the Unreal Engine project
 
 Launch Unreal Engine, press Browse and open the FSDS project in `~/Driverless-Competition-Simulator/UE4Project/FSOnline.uproject`. 
 The project should now open correctly. 
@@ -75,7 +78,7 @@ If it does not, make sure of the following:
  * you have cloned with LFS enabed. If not, run `git lfs install` and `git lfs pull` to download the large files.
  * within `~/Driverless-Competition-Simulator/AirSim/`, you have run `build.cmd` on Windows and `./setup.sh && ./build.sh` on Ubuntu.
 
-On Ubuntu, we recommend adding the following alias to your ~/.bashrc to speed up the process of opening the repository in the future:
+On Ubuntu, we recommend adding the following alias to your `~/.bashrc` to speed up the process of opening the repository in the future:
 `alias ue='~/UnrealEngine/Engine/Binaries/Linux/UE4Editor ~/Formula-Student-Driverless-Simulator/UE4Project/FSOnline.uproject'`
 
 It might show an error like 'This project was made with a different version of the Unreal Engine'. In that case select `more options` and `skip conversion`.
@@ -92,7 +95,7 @@ If you make changes to the plugin code or AirLib, you only have to recompile the
 This can be done from within the Unreal Editor. go to to `Window` -> `Developer tools` -> `Modules`.
 Search for `AirSim` and click `Recompile`.
 
-### 4. Launching the game
+#### 4. Launching the game
 
 To run the game, click the big Play button.
 If you want to run it like it would run when packaged, choose 'Run as standalone game'.
