@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>FSDS Map Building Tutorial - Formula Student Driverless Simulator</title>
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="../css/version-select.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "FSDS Map Building Tutorial";
+    var mkdocs_page_input_path = "map-tutorial.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Formula Student Driverless Simulator</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Introduction</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../system-overview/">System overview</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../getting-started/">Getting started</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../getting-started-with-ros/">Getting started with ROS</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../getting-started-with-python/">Getting started with Python</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Vehicle & Sensors</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../vehicle_model/">Vehicle model</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../imu/">IMU</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../lidar/">Lidar</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../camera/">Camera</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../gps/">GPS</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../ground-speed-sensor/">GSS</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">#tech-madness</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../ros-bridge/">ROS Bridge</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../statistics/">ROS Bridge statistics</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../joystick/">Joystick</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../docker_ubuntu/">Docker</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../coordinate-frames/">Coordinate frames</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../import-car-3d-model/">Import your 3d car model</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../gcp-remote-workstation/">Google cloud remote workstation</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../software-install-instructions/">Software install instructions</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../how-to-release/">How to release</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Competition tooling</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../operator/">Operator</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../competition-signals/">System flow and signals</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../spectator/">Spectator</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Formula Student Driverless Simulator</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>FSDS Map Building Tutorial</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/edit/master/docs/map-tutorial.md"> Edit on FS-Driverless/Formula-Student-Driverless-Simulator</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="fsds-map-building-tutorial">FSDS Map Building Tutorial</h1>
+<p>Building new maps for FSDS is very useful to test your Autonomous System under various conditions. Creating a map requires using AirSim and Unreal Engine Editor from the FSDS source code. Instructions to install these can be found <a href="../getting-started/">here</a>.</p>
+<p>The simplest way to get started is to copy and paste an existing map and modify it to your needs. The simple trainning map with no added decorations can be found <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/blob/master/UE4Project/Content/TrainingMap.umap">here</a>. The base map used in competition can be found <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/tree/master/UE4Project/Content/Competition">this folder</a> along with the maps used in the 2020 FSOnline competition which all include decorations.</p>
+<p>All assets required and used by other maps can be found in the the <code>UE4Project/Content</code> folder found <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/tree/master/UE4Project/Content">here</a>. Once an asset is placed in the map, it is then called an actor.</p>
+<p>All transforms are done using Unreal Units (uu) which relate to real metric units through the <code>World to Meters</code> value from the <code>World Settings</code>. All maps use a value of 100 meaning 1 uu = 1cm (or 100 uu = 1m).</p>
+<h2 id="placing-cones">Placing Cones</h2>
+<!-- How to set the track (cones) -->
+
+<h3 id="startfinish-line">Start/Finish Line</h3>
+<p>The <code>StartFinishLine</code> asset as it's name suggests implements a start and finish line in one. The asset can be found under <code>Content/FormulaStudentAssets</code>. The asset blueprints start a lap timer when the car first drives over a colision box within the asset. All other following colisions with that box stops the current lap timer, and starts a new one.</p>
+<p>Placing the Start/Finish line is as simple as dragging it from the content browser into the editor. You can move it around with your mouse using the translation axis with the actor selected in the <code>World Outliner</code>. Or enter in transform values in the actor's Details. </p>
+<p>You must then make sure that the added asset is linked to the referee for the map. The referee must also have it's values updated. See the Referee section for details.</p>
+<p>If any static object is in contact with the collision detection box, it will start the timer before you have first driven over it. To fix this, you can update the "Spline Cones Center" variable string to match the string of the actor colliding with the box. This is primarily used for the skidpad tracks, where cones exist on the collision boundary.</p>
+<h3 id="cone-splines">Cone Splines</h3>
+<p>The cone splines assets can be found in <code>Content/RaceCourse/Model/Splines</code>. There is a <code>spline_cones</code> asset used for placing blue and yellow cones or <code>spline_cones_mini_orange</code> used for small orange cones.</p>
+<p>You can place a cone spline by dragging it from the content browser into the editor. Moving the main translation axis or editing the transform of the <code>self</code> value of the actor's details will move the entire cone spline. To edit individual positions of the spline points, click on a spline point, then under the <code>Spline (Inherited)</code> details of the actor, the <code>Selected Points</code> will allow you to edit the position of the spline point relative to the actor's main transform location.</p>
+<p>Additional spline points can be added by right clickling on a spline point, selecting <code>Duplicate Spline Point</code> and moving the newly created point to the desired location. In the right click menu, you can also change the spline type (curve, linear or constant), snap it to the floor, or delete the point.</p>
+<p>The distance between blue and yellow cones will default to 3.5m with a default spacing between cones of 4m. These values can be changed in the actor's details under the <code>self</code> options.</p>
+<p>You must then make sure that the added asset is linked to the referee for the map. The referee must also have it's values updated. See the Referee section for details.</p>
+<p>An example <code>spline_cones</code> actor can be seen below. The first image shows the <code>self</code> details with the main transform menu, referee reference, and spacing options. The second image shows when a spline point is selected, with the <code>Selected Points</code> menu to edit the spline point.</p>
+<p><img alt="Self Spline Details" src="../images/map_tutorial_spline.png" /></p>
+<p><img alt="Spline Point Details" src="../images/map_tutorial_spline_point.png" /></p>
+<h3 id="finish-line">Finish Line</h3>
+<p>The <code>FinishLine</code> asset is a special instance of the <code>StartFinishLine</code> asset. The asset can be found under <code>Content/FormulaStudentAssets</code>.  This asset is used if the track is not a loop but linear, like the acceleration track, where the start and finish are at different locations.</p>
+<p>The blueprints of this asset calls the functions of the Start/Finish line asset to end that actor's timer when the vehicle collides with the box of the finish line.</p>
+<p>You must make sure that the added asset is linked to both the Start/Finish actor and referee. Failing to link to the Start/Finish actor will mean that lap times will not be properly stopped. See the Referee section for details about the referee link.</p>
+<h3 id="referee">Referee</h3>
+<p>The <code>RefereeBP</code> asset is used to display cone hits, display lap times, pass cone locations and other messages to ros. The asset can be found under <code>Content/FormulaStudentAssets</code>. One referee must be placed in the map and linked to all cone actors in your map in order for it to function properly.</p>
+<p>The various reference links are described below with details about allowed links. At a minimum, the <code>Cones</code> field must link to an actor made of the <code>spline_cones</code> asset and the <code>Track Orange Start</code> must link to an actor made of the <code>StartFinishLine</code> asset. If other cone asset actors exist, not making the optional links means that then cone hits, printing the list of cones to ros, or other functions from that actor may not work properly. The links must be made to actors of the correct asset type as shown below.</p>
+<table>
+<thead>
+<tr>
+<th>Link Variable Name</th>
+<th>Description</th>
+<th>Actor Asset Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Cones</code></td>
+<td><strong>Required.</strong> This should be the main spline of your track with yellow and blue cones.</td>
+<td><code>spline_cones</code></td>
+</tr>
+<tr>
+<td><code>Track Orange Start</code></td>
+<td><strong>Required.</strong> This will be your Start/Finish line of your map.</td>
+<td><code>StartFinishLine</code></td>
+</tr>
+<tr>
+<td><code>Track Orange Mini</code></td>
+<td><strong>Optional.</strong> If you have a spline of mini orange cones, it should be linked here. This is used in the acceleration track for the finish area.</td>
+<td><code>spline_cones_mini_orange</code></td>
+</tr>
+<tr>
+<td><code>Track Orange Finish</code></td>
+<td><strong>Optional.</strong> If using a seperate finish line, it must be linked here. This is used in the acceleration map.</td>
+<td><code>FinishLine</code></td>
+</tr>
+<tr>
+<td><code>Track Orange Mini Skidpad</code></td>
+<td><strong>Optional.</strong> If you have a second spline of mini orange cones , it should be linked here. This is used in the skidpad map since 2 splines are needed for the start and finish areas.</td>
+<td><code>spline_cones_mini_orange</code></td>
+</tr>
+<tr>
+<td><code>Cones Skidpad 1,2,3</code></td>
+<td><strong>Optional.</strong> If your track is made of multiple yellow and blue cone splines, it should be linked here. These are used to create the skidpad track.</td>
+<td><code>spline_cones</code></td>
+</tr>
+</tbody>
+</table>
+<p>An example of the minimum required referee references can be seen below.</p>
+<p><img alt="Referee Minimum Reqruiement" src="../images/map_tutorial_referee.png" /></p>
+<h2 id="car-starting-position">Car Starting Position</h2>
+<p>The starting position of the car on the map is determined by the <code>PlayerStart</code> actor. Through the transforms of the actor, it can be moved to any desired location and orientation on the track. This must be present for the vehicle to spawn.</p>
+<h2 id="weather-and-day-cycle-conditions">Weather and Day Cycle Conditions</h2>
+<p><!--Sorry I don't know how to this :/.-->
+Tutorial not yet complete.</p>
+<p>"How to set the weather and day cycle conditions. We don't want automatic environment changes so we must document how to set these to some static value."</p>
+<h2 id="other-decorations">Other Decorations</h2>
+<p>Other decorations and textures exist within the content folders to give your maps a better look. For example, there are <code>spline_tires</code> and <code>spline_fences</code> assests which can be used to place tires and fences on the tracks. There exists many banner adverts, bleachers and much more for you to play around with!</p>
+<p>There is also a laptime display asset called <code>LaptimeDisplay</code> found in the <code>Content/FormulaStudentAssets</code> folder. It will display the current lap time in the world. If used, you must be sure to update the actor's reference to the <code>StartFinishLine</code> asset placed in your world since it must know where to pull the time from.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>GPLv2</p>
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+      <script src="../js/version-select.js" defer></script>
+
+</body>
+</html>

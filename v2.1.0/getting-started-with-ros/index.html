@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Getting started with ROS - Formula Student Driverless Simulator</title>
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="../css/version-select.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Getting started with ROS";
+    var mkdocs_page_input_path = "getting-started-with-ros.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Formula Student Driverless Simulator</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Introduction</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../system-overview/">System overview</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../getting-started/">Getting started</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Getting started with ROS</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#connecting-to-the-simulator-with-ros">Connecting to the simulator with ROS</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#requirements">Requirements</a></li>
+        
+            <li><a class="toctree-l4" href="#cloning-the-repository">Cloning the repository</a></li>
+        
+            <li><a class="toctree-l4" href="#preparing-airlib">Preparing AirLib</a></li>
+        
+            <li><a class="toctree-l4" href="#building-the-workspace">Building the workspace</a></li>
+        
+            <li><a class="toctree-l4" href="#launching-the-ros-bridge">Launching the ros bridge</a></li>
+        
+            <li><a class="toctree-l4" href="#connecting-your-autonomous-system">Connecting your autonomous system</a></li>
+        
+            <li><a class="toctree-l4" href="#multiple-computers">Multiple computers</a></li>
+        
+            <li><a class="toctree-l4" href="#notes-on-running-the-ros-bridge-in-wsl">Notes on running the ROS bridge in WSL.</a></li>
+        
+        </ul>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../getting-started-with-python/">Getting started with Python</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Vehicle & Sensors</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../vehicle_model/">Vehicle model</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../imu/">IMU</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../lidar/">Lidar</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../camera/">Camera</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../gps/">GPS</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../ground-speed-sensor/">GSS</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">#tech-madness</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../ros-bridge/">ROS Bridge</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../statistics/">ROS Bridge statistics</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../joystick/">Joystick</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../docker_ubuntu/">Docker</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../coordinate-frames/">Coordinate frames</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../import-car-3d-model/">Import your 3d car model</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../gcp-remote-workstation/">Google cloud remote workstation</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../software-install-instructions/">Software install instructions</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../how-to-release/">How to release</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Competition tooling</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../operator/">Operator</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../competition-signals/">System flow and signals</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../spectator/">Spectator</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Formula Student Driverless Simulator</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Introduction &raquo;</li>
+        
+      
+    
+    <li>Getting started with ROS</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/edit/master/docs/getting-started-with-ros.md"> Edit on FS-Driverless/Formula-Student-Driverless-Simulator</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="connecting-to-the-simulator-with-ros">Connecting to the simulator with ROS</h1>
+<p>You can use the ROS bridge to connect the simulator to ROS1 and ROS2.
+The ROS bridge will publish the sensordata from the simulator into ROS topics.
+Your autonomous system will be able to publish car-control messages which the ROS bridge will send to the simulator.</p>
+<p>The ROS bridge works on Ubuntu or in WSL in windows (but it is harder to set up).
+If you have the simulator running on windows we reccommend Windows Subsystem for Linux.
+This offers a virtual Ubuntu machine within Windows.
+You can read <a href="../software-install-instructions/">here how to install it</a>. 
+While you are at it you might also want to <a href="../software-install-instructions/">install Xming</a> so you can run rviz and rqt_plot from within WSL.</p>
+<h2 id="requirements">Requirements</h2>
+<p>The ROS bridge requires <a href="../software-install-instructions/">ROS Melodic/Noetic/Galactic to be installed</a>, as well as the following dependencies:</p>
+<pre><code>sudo apt-get install ros-melodic-tf2-geometry-msgs python-catkin-tools ros-melodic-rqt-multiplot ros-melodic-joy ros-melodic-cv-bridge ros-melodic-image-transport libyaml-cpp-dev libcurl4-openssl-dev
+</code></pre>
+
+<h2 id="cloning-the-repository">Cloning the repository</h2>
+<p><strong>Before you clone, make sure you have git lfs installed!</strong></p>
+<p>Ready? Lets clone the repo into your home directory:</p>
+<pre><code>git clone git@github.com:FS-Driverless/Formula-Student-Driverless-Simulator.git --recurse-submodules
+</code></pre>
+
+<p>If you haven't setup your ssh keys, you can clone using https by running the following command:</p>
+<pre><code>git clone https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator.git --recurse-submodules
+</code></pre>
+
+<p><strong>THE REPO HAS TO BE CLONED IN THE HOME DIRECTORY!</strong>. So the repo location should be <code>$HOME/Formula-Student-Driverless-Simulator</code>.
+Why you ask? Because we couldn't get relative paths in the C++ code to work so now we have hard-coded some paths to the home directory.
+I know yes it is ugly but it works. If you are bothered by it I would welcome you to open a pr with a fix.</p>
+<p>If this folder already exists as a result of any previous step, move the existing folder out of the way and merge the content afterwards.</p>
+<p>If you are on Windows and cloned this repository in a Windows directory, go into the cloned repo and run <code>git config core.fileMode false</code> to ignore file mode changes. 
+If you want to share the the cloned directory with the Ubuntu WSL system, create a symlink within WSL like so:</p>
+<pre><code>ln -s /mnt/c/Users/developer/Formula-Student-Driverless-Simulator ~/Formula-Student-Driverless-Simulator
+</code></pre>
+
+<p>Now, checkout the version equal to the simulator. 
+If you are running for example simulator packaged version v2.1.0, run <code>git checkout tags/v2.1.0</code> to get the ROS brige to the same version</p>
+<h2 id="preparing-airlib">Preparing AirLib</h2>
+<p>AirLib is the shared code between the ROS wrapper and the AirSim Unreal Engine plugin.
+We need to stage the source before we can compile it together with the wrapper.</p>
+<p>If you are working in a WSL shared folder where previously build.cmd was ran, you can skip this step.</p>
+<p>Open an Ubuntu terminal and run <code>AirSim/setup.sh</code>.
+This will download the nessesary libraries required to compile AirLib.
+You will only need to run this once.</p>
+<p>Everything setup.sh does is also included in build.cmd.</p>
+<h2 id="building-the-workspace">Building the workspace</h2>
+<pre><code>cd ros
+catkin init
+catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release #(Optional)
+catkin build
+</code></pre>
+
+<h2 id="launching-the-ros-bridge">Launching the ros bridge</h2>
+<p>The ROS bridge consists of a few nodes to achieve the highest performance and keep the codebase clean.
+Everything can be launched using the <code>fsds_ros_bridge.launch</code> launchfile.</p>
+<pre><code>cd ros
+source devel/setup.bash
+roslaunch fsds_ros_bridge fsds_ros_bridge.launch
+</code></pre>
+
+<p>The ROS bridge will read the settings from <code>~/Formula-Student-Driverless-Simulator/settings.json</code>.
+Make sure this is the same configuration file as the simulator uses.</p>
+<p><a href="../ros-bridge/">Read all about configuring the ROS bridge here.</a></p>
+<h2 id="connecting-your-autonomous-system">Connecting your autonomous system</h2>
+<p>The ROS bridge of this simulator had to make use of several custom msgs (for control commands, the groundtruth track, etc). 
+These messages are defined in a ROS package called <code>fs_msgs</code> which is located in a separate, light <a href="https://github.com/FS-Driverless/fs_msgs">repository</a>. 
+To implement publishers and subscibers for these messages types in your autonomous pipeline, you will have to add the <code>fs_msgs</code> repository as a submodule in your codebase (inside de <code>src</code> directory of an existing <strong>catkin workspace</strong> as done in this repository) or clone it and build it somewhere else in your system.</p>
+<p>Now, all that is left to do is subscribe to the following topics to receive sensordata</p>
+<ul>
+<li><code>/fsds/gps</code></li>
+<li><code>/fsds/imu</code></li>
+<li><code>/fsds/camera/CAMERA_NAME</code></li>
+<li><code>/fsds/camera/CAMERA_NAME/camera_info</code></li>
+<li><code>/fsds/lidar/LIDAR_NAME</code></li>
+<li><code>/fsds/testing_only/odom</code></li>
+<li><code>/fsds/testing_only/track</code></li>
+<li><code>/fsds/testing_only/extra_info</code></li>
+</ul>
+<p>and publish to the following topic <code>/fsds/control_command</code> to publish the vehicle control setpoints.</p>
+<h2 id="multiple-computers">Multiple computers</h2>
+<p>If you have 2 computer, you can run the simulator and your autonomous system each on their own computer.
+But where does the ROS-bridge run? You have 2 options:</p>
+<ol>
+<li>
+<p>Run the ROS bridge on the same computer as your autonomous system.
+   The ROS bridge will connect to the simulator using a TCP connection to send control commands and receive sensor data.
+   The ROS bridge will use local ROS topics to communicate with the autonomous system.
+   Use the <code>host</code> argument in the <code>fsds_ros_bridge.launch</code> file to tell the ROS bridge where the simulator is at.
+   Ensure firewall rules allow the ROS bridge to connect to the simulator on port 41451.</p>
+</li>
+<li>
+<p>Run the ROS bridge on the same computer as the simulator.
+   Your autonomous system would use ROS multi-computer networking to publish/subscribe to FSDS topics.
+   Follow <a href="http://wiki.ros.org/ROS/NetworkSetup">this tutorial</a> and <a href="http://wiki.ros.org/ROS/Tutorials/ MultipleMachines">this one</a> on the ROS Wiki to learn how to do this.</p>
+</li>
+</ol>
+<p>If you have never worked with a multi-computer ROS networking before, option 1 is probably the way to go.</p>
+<p>If you are running the simulator on Windows, option 1 is the easiest as well.
+You can run the ROS bridge within WSL and use option 2 but there are some constraints, see below.</p>
+<h2 id="notes-on-running-the-ros-bridge-in-wsl">Notes on running the ROS bridge in WSL.</h2>
+<p>It is possible to run the ROS bridge in Windows Subsystem Linux (WSL).
+However, when using WSL with a multi-computer ROS setup, <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/issues/227">things get weird</a>.
+The problem is that everything crashes when you run the ROS bridge in WSL and try to send control commands via ROS from a different computer on the network.
+To work around this problem, you should know:</p>
+<p><strong>The only way to reliably have a ROS bridge in WSL receive control commands from another computer is to send these messages using UDP from a C++ node.</strong></p>
+<p>To enable UDP on the control setpoint topic, set the <code>UDP_control</code> argument like so:</p>
+<pre><code>roslaunch fsds_ros_bridge fsds_ros_bridge.launch UDP_control:=true
+</code></pre>
+
+<p>UDP is only supported in roscpp. If you are using a Python node to send controll commands, UDP won't help a thing.</p>
+<p>This setup has been tested on WSL 1 (Ubuntu 18.04), second machine (Ubuntu 18.04) with ROS melodic on both machines.</p>
+<p>If you are using WSL 2 and you manage to get ROS to work with 2 machines, please help us understand how by writing a comment on <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/issues/227">this</a> issue.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../getting-started-with-python/" class="btn btn-neutral float-right" title="Getting started with Python">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../getting-started/" class="btn btn-neutral" title="Getting started"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>GPLv2</p>
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../getting-started/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../getting-started-with-python/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+      <script src="../js/version-select.js" defer></script>
+
+</body>
+</html>
