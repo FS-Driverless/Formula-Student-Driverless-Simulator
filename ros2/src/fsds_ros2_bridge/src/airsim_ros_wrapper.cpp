@@ -129,6 +129,9 @@ void AirsimROSWrapper::initialize_ros()
     update_imu_every_n_sec        = nh_->declare_parameter<double>     ("update_imu_every_n_sec"       , 0.004);
     update_gss_every_n_sec        = nh_->declare_parameter<double>     ("update_gss_every_n_sec"       , 0.01);
     publish_static_tf_every_n_sec = nh_->declare_parameter<double>     ("publish_static_tf_every_n_sec", 1.0);
+    map_frame_id_                 = nh_->declare_parameter<std::string>("map_frame_id"                 , "fsds/map");
+    vehicle_frame_id_             = nh_->declare_parameter<std::string>("vehicle_frame_id"             , "fsds/FSCar");
+
 
     RCLCPP_INFO_STREAM(nh_->get_logger(), "Manual mode: " << manual_mode);
 
@@ -307,9 +310,9 @@ msr::airlib::Quaternionr AirsimROSWrapper::get_airlib_quat(const tf2::Quaternion
 nav_msgs::msg::Odometry AirsimROSWrapper::get_odom_msg_from_airsim_state(const msr::airlib::CarApiBase::CarState& car_state) const
 {
     nav_msgs::msg::Odometry odom_enu_msg;
-    odom_enu_msg.header.frame_id = "fsds/map";
+    odom_enu_msg.header.frame_id = map_frame_id_;
     odom_enu_msg.header.stamp = make_ts(car_state.timestamp);
-    odom_enu_msg.child_frame_id = "fsds/FSCar";
+    odom_enu_msg.child_frame_id = vehicle_frame_id_;
     odom_enu_msg.pose.pose.position.x = car_state.getPosition().x();
     odom_enu_msg.pose.pose.position.y = car_state.getPosition().y();
     odom_enu_msg.pose.pose.position.z = car_state.getPosition().z();
@@ -319,11 +322,11 @@ nav_msgs::msg::Odometry AirsimROSWrapper::get_odom_msg_from_airsim_state(const m
     odom_enu_msg.pose.pose.orientation.z = car_state.getOrientation().z();
     odom_enu_msg.pose.pose.orientation.w = car_state.getOrientation().w();
 
-    odom_enu_msg.twist.twist.linear.x = car_state.kinematics_estimated.twist.linear.x();
-    odom_enu_msg.twist.twist.linear.y = car_state.kinematics_estimated.twist.linear.y();
-    odom_enu_msg.twist.twist.linear.z = car_state.kinematics_estimated.twist.linear.z();
-    odom_enu_msg.twist.twist.angular.x = car_state.kinematics_estimated.twist.angular.x();
-    odom_enu_msg.twist.twist.angular.y = car_state.kinematics_estimated.twist.angular.y();
+    odom_enu_msg.twist.twist.linear.x = car_state.speed;
+    odom_enu_msg.twist.twist.linear.y = 0;
+    odom_enu_msg.twist.twist.linear.z = 0;
+    odom_enu_msg.twist.twist.angular.x = 0;
+    odom_enu_msg.twist.twist.angular.y = 0;
     odom_enu_msg.twist.twist.angular.z = car_state.kinematics_estimated.twist.angular.z();
 
     return odom_enu_msg;
