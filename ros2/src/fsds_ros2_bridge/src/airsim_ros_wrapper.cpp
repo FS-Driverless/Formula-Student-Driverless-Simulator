@@ -317,16 +317,26 @@ nav_msgs::msg::Odometry AirsimROSWrapper::get_odom_msg_from_airsim_state(const m
     odom_enu_msg.pose.pose.position.y = car_state.getPosition().y();
     odom_enu_msg.pose.pose.position.z = car_state.getPosition().z();
 
-    odom_enu_msg.pose.pose.orientation.x = car_state.getOrientation().x();
-    odom_enu_msg.pose.pose.orientation.y = car_state.getOrientation().y();
-    odom_enu_msg.pose.pose.orientation.z = car_state.getOrientation().z();
-    odom_enu_msg.pose.pose.orientation.w = car_state.getOrientation().w();
+    double x = car_state.getOrientation().x();
+    double y = car_state.getOrientation().y();
+    double z = car_state.getOrientation().z();
+    double w = car_state.getOrientation().w();
 
-    odom_enu_msg.twist.twist.linear.x = car_state.speed;
-    odom_enu_msg.twist.twist.linear.y = 0;
-    odom_enu_msg.twist.twist.linear.z = 0;
-    odom_enu_msg.twist.twist.angular.x = 0;
-    odom_enu_msg.twist.twist.angular.y = 0;
+    odom_enu_msg.pose.pose.orientation.x = x;
+    odom_enu_msg.pose.pose.orientation.y = y;
+    odom_enu_msg.pose.pose.orientation.z = z;
+    odom_enu_msg.pose.pose.orientation.w = w;
+
+    double yaw = atan2(2.0f * (w * z + x * y), 1.0f - 2.0f * (y * y + z * z));
+
+    double linear_forward = car_state.kinematics_estimated.twist.linear.x() * cos(yaw) + car_state.kinematics_estimated.twist.linear.y() * sin(yaw);
+    double linear_sideways = car_state.kinematics_estimated.twist.linear.x() * sin(yaw) + car_state.kinematics_estimated.twist.linear.y() * -cos(yaw);
+
+    odom_enu_msg.twist.twist.linear.x = linear_forward;
+    odom_enu_msg.twist.twist.linear.y = linear_sideways;
+    odom_enu_msg.twist.twist.linear.z = car_state.kinematics_estimated.twist.linear.z();
+    odom_enu_msg.twist.twist.angular.x = 0.0;
+    odom_enu_msg.twist.twist.angular.y = 0.0;
     odom_enu_msg.twist.twist.angular.z = car_state.kinematics_estimated.twist.angular.z();
 
     return odom_enu_msg;
