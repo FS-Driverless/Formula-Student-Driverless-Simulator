@@ -170,6 +170,8 @@ private:
     std::shared_ptr<rclcpp::Service<fs_msgs::srv::Reset>> reset_srvr_;
 
     std::string vehicle_name;
+    std::string map_frame_id_;
+    std::string vehicle_frame_id_;
     CarApiBase::Point2D car_start_pos; // In Unreal coordinates
 
 
