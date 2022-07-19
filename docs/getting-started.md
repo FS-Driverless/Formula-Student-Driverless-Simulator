@@ -21,7 +21,9 @@ The simulator will load settings from the file `Formula-Student-Driverless-Simul
 This file is required for the simulator to work and contains the sensor configuration of the car.
 If you clone the repo you will already have this file in place.
 If not, copy-paste the contents of the [settings.json file at the root of this repository](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/blob/master/settings.json) into the `~/Formula-Student-Driverless-Simulator`.
-This should get you started with the default sensor configuration, feel free to try your own custom sensor suite.
+This should get you started with the default vehicle and sensor configuration, but feel free to try your own custom sensor suite.
+The default vehicle is the Technion Formula Student racing car, but teams participating in the UK edition of FS-AI might want
+to simulate the ADS-DV vehicle. To do so, change the value of the `PawnBP` field in `settings.json` to `"Class'/AirSim/VehicleAdv/Cars/AdsDv/AdsDv_Pawn.AdsDv_Pawn_C'"`.
 
 ## Installation 
 
