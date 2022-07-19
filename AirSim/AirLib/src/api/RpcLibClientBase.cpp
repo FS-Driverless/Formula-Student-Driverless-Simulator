@@ -115,11 +115,10 @@ void RpcLibClientBase::confirmConnection()
 {
     ClockBase* clock = ClockFactory::get();
 
-    std::cout << "Waiting for connection - " << std::endl;
     clock->sleep_for(1);
     if (getConnectionState() != RpcLibClientBase::ConnectionState::Connected)
     {
-        throw std::runtime_error("Failed connecting to rps client (airsim). Is the simulator running?");
+        throw std::runtime_error("Failed connecting to RPC server (airsim). Is the simulator running?");
     }
 
     auto server_ver = getServerVersion();
@@ -131,18 +130,11 @@ void RpcLibClientBase::confirmConnection()
         client_ver, client_min_ver, server_ver, server_min_ver);
 
     if (server_ver < server_min_ver) {
-        std::cerr << std::endl << ver_info << std::endl;
-        std::cerr << std::endl << "AirSim server is of older version and not supported by this client. Please upgrade!" << std::endl;
+        throw std::runtime_error("AirSim server is of older version and not supported by this client. Please upgrade! (" + ver_info + ")");
     }
     else if (client_ver < client_min_ver) {
-        std::cerr << std::endl << ver_info << std::endl;
-        std::cerr << std::endl << "AirSim client is of older version and not supported by this server. Please upgrade!" << std::endl;
+        throw std::runtime_error("AirSim client is of older version and not supported by this server. Please upgrade! (" + ver_info + ")");
     }
-    // do not print this in ok scenario because nobody wants to see it.
-    // else
-    //     std::cout << std::endl << ver_info << std::endl;
-    
-    std::cout << "Connected to the simulator!" << std::endl;
 }
 
 

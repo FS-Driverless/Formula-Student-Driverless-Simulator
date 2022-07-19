@@ -37,14 +37,8 @@ rclcpp::Time make_ts(uint64_t unreal_ts)
     return rclcpp::Time(unreal_ts);
 }
 
-std::string logprefix()
-{
-    return "[cambridge " + camera_name + "] ";
-}
-
-std::vector<ImageResponse> getImage(ImageRequest req)
-{
-    // We are using simGetImages instead of simGetImage because the latter does not return image dimention information.
+std::vector<ImageResponse> getImage(ImageRequest req) {
+     // We are using simGetImages instead of simGetImage because the latter does not return image dimention information.
     std::vector<ImageRequest> reqs;
     reqs.push_back(req);
 
@@ -167,13 +161,7 @@ void doDepthImageUpdate()
     fps_statistic.addCount();
 }
 
-void printFps()
-{
-    std::cout << logprefix() << "Average FPS: " << (fps_statistic.getCount() / FPS_WINDOW) << std::endl;
-    fps_statistic.Reset();
-}
-
-int main(int argc, char **argv)
+int main(int argc, char ** argv)
 {
     rclcpp::init(argc, argv);
     std::shared_ptr<rclcpp::Node> nh = rclcpp::Node::make_shared("fsds_ros2_bridge_camera");
@@ -184,14 +172,12 @@ int main(int argc, char **argv)
     host_ip = nh->declare_parameter<std::string>("host_ip", "localhost");
     depthcamera = nh->declare_parameter<bool>("depthcamera", false);
 
-    if (camera_name == "")
-    {
-        std::cout << logprefix() << "camera_name unset." << std::endl;
+    if(camera_name == "") {
+        RCLCPP_FATAL(nh->get_logger(), "camera_name unset.");
         return 1;
     }
-    if (framerate == 0)
-    {
-        std::cout << logprefix() << "framerate unset." << std::endl;
+    if(framerate == 0) {
+        RCLCPP_FATAL(nh->get_logger(), "framerate unset.");
         return 1;
     }
 
@@ -202,15 +188,13 @@ int main(int argc, char **argv)
     msr::airlib::CarRpcLibClient client(host_ip, RpcLibPort, 5);
     airsim_api = &client;
 
-    try
-    {
+    try {
+        std::cout << "Waiting for connection - " << std::endl;
         airsim_api->confirmConnection();
-    }
-    catch (const std::exception &e)
-    {
+        std::cout << "Connected to the simulator!" << std::endl;
+    } catch (const std::exception &e) {
         std::string msg = e.what();
-        std::cout << logprefix() << "Exception raised by the API, something went wrong." << std::endl
-                  << msg << std::endl;
+        RCLCPP_ERROR(nh->get_logger(), "Exception raised by the API, something went wrong: %s\n", msg.c_str());
         return 1;
     }
 
@@ -219,8 +203,11 @@ int main(int argc, char **argv)
     info_pub = nh->create_publisher<sensor_msgs::msg::CameraInfo>("/fsds/" + camera_name + "/camera_info", 1);
 
     // start the loop
-    rclcpp::TimerBase::SharedPtr imageTimer = nh->create_wall_timer(dseconds{1 / framerate}, depthcamera ? &doDepthImageUpdate : &doImageUpdate);
-    rclcpp::TimerBase::SharedPtr fpsTimer = nh->create_wall_timer(dseconds{FPS_WINDOW}, &printFps);
+    rclcpp::TimerBase::SharedPtr imageTimer = nh->create_wall_timer(dseconds { 1/framerate }, depthcamera ? &doDepthImageUpdate : &doImageUpdate);
+    rclcpp::TimerBase::SharedPtr fpsTimer = nh->create_wall_timer(dseconds { FPS_WINDOW }, [&nh](){
+        RCLCPP_DEBUG(nh->get_logger(), "Average FPS: %d\n", fps_statistic.getCount()/FPS_WINDOW);
+        fps_statistic.Reset();
+    });
     rclcpp::spin(nh);
     return 0;
 }
