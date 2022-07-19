@@ -19,11 +19,11 @@ AirsimROSWrapper::AirsimROSWrapper(const std::shared_ptr<rclcpp::Node>& nh, cons
         msr::airlib::AirSimSettings::singleton().load();
         for (const auto &warning : msr::airlib::AirSimSettings::singleton().warning_messages)
         {
-            RCLCPP_WARN(nh_->get_logger(), "Configuration warning: %s", warning.c_str());
+            RCLCPP_WARN_STREAM(nh_->get_logger(), "Configuration warning: " << warning);
         }
         for (const auto &error : msr::airlib::AirSimSettings::singleton().error_messages)
         {
-            RCLCPP_ERROR(nh_->get_logger(), "Configuration error: %s", error.c_str());
+            RCLCPP_ERROR_STREAM(nh_->get_logger(), "Configuration error: " << error);
         }
     }
     catch (std::exception &ex) {
@@ -49,7 +49,7 @@ void AirsimROSWrapper::initialize_airsim()
     catch (rpc::rpc_error& e)
     {
         std::string msg = e.get_error().as<std::string>();
-        RCLCPP_ERROR(nh_->get_logger(), "Exception raised by the API, something went wrong: %s", msg.c_str());
+        RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API, something went wrong." << std::endl << msg);
     }
 }
 
@@ -79,7 +79,7 @@ void AirsimROSWrapper::publish_track() {
     } catch (rpc::rpc_error& e)
     {
         std::string msg = e.get_error().as<std::string>();
-        RCLCPP_ERROR(nh_->get_logger(), "Exception raised by the API, something went wrong while retreiving referee state for publishing track: %s", msg.c_str());
+        RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API, something went wrong while retreiving referee state for publishing track." << std::endl << msg);
     }
     
     // Get car initial position
@@ -462,7 +462,7 @@ void AirsimROSWrapper::odom_cb()
     catch (rpc::rpc_error& e)
     {
         std::string msg = e.get_error().as<std::string>();
-        RCLCPP_ERROR(nh_->get_logger(), "Exception raised by the API while getting car state: %s", msg.c_str());
+        RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API while getting car state:" << std::endl << msg);
     }
 }
 
@@ -490,7 +490,7 @@ void AirsimROSWrapper::gps_timer_cb()
  catch (rpc::rpc_error& e)
  {
     std::string msg = e.get_error().as<std::string>();
-    RCLCPP_ERROR(nh_->get_logger(), "Exception raised by the API while getting gps data: %s", msg.c_str());
+    RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API while getting gps data:" << std::endl << msg);
  }
 }
 
@@ -523,7 +523,7 @@ void AirsimROSWrapper::imu_timer_cb()
     catch (rpc::rpc_error& e)
     {
         std::string msg = e.get_error().as<std::string>();
-        RCLCPP_ERROR(nh_->get_logger(), "Exception raised by the API while getting imu data: %s" , msg.c_str());
+        RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API while getting imu data:" << std::endl << msg);
     }
 }
 
@@ -555,7 +555,7 @@ void AirsimROSWrapper::gss_timer_cb()
     catch (rpc::rpc_error& e)
     {
         std::string msg = e.get_error().as<std::string>();
-        RCLCPP_ERROR(nh_->get_logger(), "Exception raised by the API while getting gss data: %s", msg.c_str());
+        RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API while getting gss data:" << std::endl << msg);
     }
 }
 
@@ -704,7 +704,7 @@ void AirsimROSWrapper::lidar_timer_cb(const std::string& lidar_name, const int l
     catch (rpc::rpc_error& e)
     {
         std::string msg = e.get_error().as<std::string>();
-        RCLCPP_ERROR(nh_->get_logger(), "Exception raised by the API, didn't get lidar response: %s", msg.c_str());
+        RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API, didn't get lidar response." << std::endl << msg);
     }
 }
 
@@ -806,7 +806,7 @@ void AirsimROSWrapper::finished_signal_cb(const fs_msgs::msg::FinishedSignal& ms
     std::string operator_url(std::getenv("OPERATOR_URL"));
     operator_url = operator_url + "/finished";
 
-    RCLCPP_DEBUG(nh_->get_logger(), "Operator token: %s, operator url: %s", operator_token.c_str(), operator_url.c_str());
+    RCLCPP_DEBUG_STREAM(nh_->get_logger(), "Operator token: " <<  operator_token << " operator url: " << operator_url);
 
     // Send JSON HTTP POST request
     CURL *curl;
@@ -853,7 +853,7 @@ void AirsimROSWrapper::clock_timer_cb(){
     } catch (rpc::rpc_error& e)
     {
         std::string msg = e.get_error().as<std::string>();
-        RCLCPP_ERROR(nh_->get_logger(), "Exception raised by the API, something went wrong while retrieving gss data for publishing simulation clock: %s", msg.c_str());
+        RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API, something went wrong while retrieving gss data for publishing simulation clock: " << msg);
     }
 
 }
@@ -867,7 +867,7 @@ void AirsimROSWrapper::extra_info_cb(){
     } catch (rpc::rpc_error& e)
     {
         std::string msg = e.get_error().as<std::string>();
-        RCLCPP_ERROR(nh_->get_logger(), "Exception raised by the API, something went wrong while retrieving referee state for sending extra info: %s", msg.c_str());
+        RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API, something went wrong while retrieving referee state for sending extra info." << std::endl << msg);
     }
 
 	fs_msgs::msg::ExtraInfo extra_info_msg;
