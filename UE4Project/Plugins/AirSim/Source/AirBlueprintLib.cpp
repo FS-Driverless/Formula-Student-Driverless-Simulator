@@ -541,6 +541,9 @@ void UAirBlueprintLib::FollowActor(AActor* follower, const AActor* followee, con
     float dist_offset = (dist - offset_dist) / offset_dist;
     float lerp_alpha = common_utils::Utils::clip((dist_offset*dist_offset) * 0.01f + 0.01f, 0.0f, 1.0f);
     next_location = FMath::Lerp(follower->GetActorLocation(), next_location, lerp_alpha);
+
+    if (fixed_z)
+        next_location.Z = fixed_z_val;
     follower->SetActorLocation(next_location);
 
     FRotator next_rot = UKismetMathLibrary::FindLookAtRotation(follower->GetActorLocation(), followee->GetActorLocation());

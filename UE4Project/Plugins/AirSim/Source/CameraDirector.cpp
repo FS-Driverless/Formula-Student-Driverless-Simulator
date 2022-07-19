@@ -38,7 +38,7 @@ void ACameraDirector::Tick(float DeltaTime)
         //do nothing, we have camera turned off
     }
     else { //make camera move in desired way
-        UAirBlueprintLib::FollowActor(ExternalCamera, follow_actor_, initial_ground_obs_offset_, ext_obs_fixed_z_);
+        UAirBlueprintLib::FollowActor(ExternalCamera, follow_actor_, initial_ground_obs_offset_, ext_obs_fixed_z_, 400.0);
     }
 }
 
