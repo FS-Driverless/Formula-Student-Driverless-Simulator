@@ -2,6 +2,9 @@
 
 #pragma once
 #include <string>
+#include <sstream>
+#include <iostream>
+#include <fstream>
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -19,9 +22,9 @@ class AIRSIM_API Ucustom_map_loader : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable, Category = "custom map loader")
 		static bool FileSaveString(FString SaveTextB, FString FileNameB);
 
-	UFUNCTION(BlueprintPure, Category = "custom map loader")
+	UFUNCTION(BlueprintCallable, Category = "custom map loader")
 		static bool FileLoadString(FString FileNameA, FString& SaveTextA);
 
-	UFUNCTION(BlueprintPure, Category = "custom map loader")
+	UFUNCTION(BlueprintCallable, Category = "custom map loader")
 		static TArray<FString> ProcessFile(FString data, TArray<FTransform>& blue_cones, TArray<FTransform>& yellow_cones);
 };

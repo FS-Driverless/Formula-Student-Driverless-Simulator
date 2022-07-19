@@ -11,31 +11,66 @@ bool Ucustom_map_loader::FileSaveString(FString SaveTextB, FString FileNameB)
 bool Ucustom_map_loader::FileLoadString(FString FileNameA, FString& SaveTextA)
 {
 	const TCHAR* file = *FileNameA;
+	UE_LOG(LogTemp, Warning, TEXT("LOADING STRING"));
 	return FFileHelper::LoadFileToString(SaveTextA, file);
 }
 
+
+struct Actor {
+	FString type;
+	float x;
+	float y;
+	float heading;
+	float x_variance;
+	float y_variance;
+	float xy_variance;
+};
+
 TArray<FString> Ucustom_map_loader::ProcessFile(FString data, TArray<FTransform> & blue_cones, TArray<FTransform> & yellow_cones) {
 	TArray<FString> lines;
-	
-	FString left = "";
+	TArray<FString> values;
+
+	FString left = "", new_left = "";
 	FString right = data;
 
 	while (right.Split("\n", &left, &right)) {
-		lines.Add(left);
-		std::string line = TCHAR_TO_UTF8(&left);
-
-		FString fcolor(line.c_str());
-		UE_LOG(LogTemp, Warning, TEXT("The Actor's name is %s"), *fcolor);
-
-		//char color[100];
-		//float x = 0, y = 0, z = 0;
-		//std::sscanf(line.c_str(), "%s %f %f %f", color, &x, &y, &z);
+		FString value = "";
 		
+		Actor actor;
 
-		//UE_LOG(LogTemp, Warning, TEXT("%s"), *color);
+		left.Split(",", &actor.type, &left);
+		left.Split(",", &value, &left);
+		actor.x = FCString::Atof(*value);
+		left.Split(",", &value, &left);
+		actor.y = FCString::Atof(*value);
+		left.Split(",", &value, &left);
+		actor.heading = FCString::Atof(*value);
+		left.Split(",", &value, &left);
+		actor.x_variance = FCString::Atof(*value);
+		left.Split(",", &value, &left);
+		actor.y_variance = FCString::Atof(*value);
+		left.Split(",", &value, &left);
+		actor.xy_variance = FCString::Atof(*value);
+
+
+		if (actor.type == "yellow") {
+			FTransform transform{
+				FRotator{},                 // Rotation
+				FVector{actor.x, actor.y, 105.0f},  // Translation
+				FVector{1.0f, 1.0f, 1.0f}   // Scale
+			};
+			yellow_cones.Add(transform);
+		}
+
+		if (actor.type == "blue") {
+			FTransform transform{
+				FRotator{},                 // Rotation
+				FVector{actor.x, actor.y, 105.0f},  // Translation
+				FVector{1.0f, 1.0f, 1.0f}   // Scale
+			};
+			blue_cones.Add(transform);
+		}
+		
 	}
-
-	lines.Add(right);
-
 	return lines;
 }
