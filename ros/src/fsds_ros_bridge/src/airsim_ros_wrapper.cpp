@@ -39,8 +39,10 @@ void AirsimROSWrapper::initialize_airsim()
     // todo do not reset if already in air?
     try
     {
+        std::cout << "Waiting for connection - " << std::endl;
         airsim_client_.confirmConnection();
         airsim_client_lidar_.confirmConnection();
+        std::cout << "Connected to the simulator!" << std::endl;
     }
     catch (rpc::rpc_error& e)
     {

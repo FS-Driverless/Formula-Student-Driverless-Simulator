@@ -173,7 +173,9 @@ int main(int argc, char ** argv)
     airsim_api = &client;
 
     try {
+        std::cout << "Waiting for connection - " << std::endl;
         airsim_api->confirmConnection();
+        std::cout << "Connected to the simulator!" << std::endl;
     } catch (const std::exception &e) {
         std::string msg = e.what();
         std::cout << logprefix() << "Exception raised by the API, something went wrong." << std::endl
