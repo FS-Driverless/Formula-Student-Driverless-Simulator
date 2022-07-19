@@ -1,5 +1,6 @@
 #include <chrono>
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include <algorithm>
 
@@ -17,19 +18,21 @@ namespace ros_bridge
         Statistics(){};
         Statistics(const std::string name) : _statisticsType(name){};
 
-        void Print()
+        std::string getSummaryAsString()
         {
+            std::stringstream ss;
             // print statistics summary to the console
             if (_rosMsgCount != 0)
             {
                 double ros_msg_hz = _time_elapsed == 0.0f ? 1 : _rosMsgCount/_time_elapsed;
-                std::cout << _statisticsType << " msgs/s: " << ros_msg_hz << "\n";
+                ss << _statisticsType << " msgs/s: " << ros_msg_hz << "\n";
             }
             if (!_durationHistory.empty())
             {
                 float max_latency = *std::max_element(_durationHistory.begin(), _durationHistory.end());
-                std::cout <<  _statisticsType <<  " rpc max latency: " << max_latency << "us\n";
+                ss <<  _statisticsType <<  " rpc max latency: " << max_latency << "us\n";
             }
+            return ss.str();
         }
 
         void addDurationRecording(const Duration &duration)

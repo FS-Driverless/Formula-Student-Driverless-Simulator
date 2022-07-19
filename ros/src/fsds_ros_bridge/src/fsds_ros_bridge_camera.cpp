@@ -39,10 +39,6 @@ ros::Time make_ts(uint64_t unreal_ts)
    return out.fromNSec(unreal_ts);
 }
 
-std::string logprefix() {
-    return "[cambridge " + camera_name + "] ";
-}
-
 std::vector<ImageResponse> getImage(ImageRequest req) {
      // We are using simGetImages instead of simGetImage because the latter does not return image dimention information.
     std::vector<ImageRequest> reqs;
@@ -139,12 +135,6 @@ void doDepthImageUpdate(const ros::TimerEvent&) {
     fps_statistic.addCount();
 }
 
-void printFps(const ros::TimerEvent&)
-{
-    std::cout << logprefix() << "Average FPS: " << (fps_statistic.getCount()/FPS_WINDOW) << std::endl;
-    fps_statistic.Reset();
-}
-
 int main(int argc, char ** argv)
 {
     ros::init(argc, argv, "fsds_ros_bridge_camera");
@@ -157,11 +147,11 @@ int main(int argc, char ** argv)
     nh.param<bool>("depthcamera", depthcamera, false);    
 
     if(camera_name == "") {
-        std::cout << logprefix() << "camera_name unset." << std::endl;
+        ROS_FATAL("camera_name not set.");
         return 1;
     }
     if(framerate == 0) {
-        std::cout << logprefix() << "framerate unset." << std::endl;
+        ROS_FATAL("framerate not set.");
         return 1;
     }
 
@@ -178,8 +168,7 @@ int main(int argc, char ** argv)
         std::cout << "Connected to the simulator!" << std::endl;
     } catch (const std::exception &e) {
         std::string msg = e.what();
-        std::cout << logprefix() << "Exception raised by the API, something went wrong." << std::endl
-                  << msg << std::endl;
+        ROS_ERROR_STREAM("Exception raised by the API, something went wrong." << std::endl << msg);
         return 1;
     }
 
@@ -188,7 +177,10 @@ int main(int argc, char ** argv)
 
     // start the loop
     ros::Timer imageTimer = nh.createTimer(ros::Duration(1/framerate), depthcamera ? doDepthImageUpdate : doImageUpdate);
-    ros::Timer fpsTimer = nh.createTimer(ros::Duration(FPS_WINDOW), printFps);
+    ros::Timer fpsTimer = nh.createTimer(ros::Duration(FPS_WINDOW), [&nh](const ros::TimerEvent&){
+        ROS_DEBUG_STREAM("Average FPS: " << fps_statistic.getCount()/FPS_WINDOW);
+        fps_statistic.Reset();
+    });
     ros::spin();
     return 0;
 } 

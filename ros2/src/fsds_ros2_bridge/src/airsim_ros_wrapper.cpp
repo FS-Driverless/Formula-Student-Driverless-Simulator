@@ -737,7 +737,7 @@ void AirsimROSWrapper::PrintStatistics()
     
     for (auto &getLidarDataStatistics : getLidarDataVecStatistics)
     {
-        dbg_msg << getLidarDataStatistics.getSummaryAsString() << std::endl;;
+        dbg_msg << getLidarDataStatistics.getSummaryAsString() << std::endl;
     }
 
     // Reset lidar statistics
