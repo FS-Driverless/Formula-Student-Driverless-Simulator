@@ -35,10 +35,6 @@ rclcpp::Time make_ts(uint64_t unreal_ts)
    return rclcpp::Time(unreal_ts);
 }
 
-std::string logprefix() {
-    return "[cambridge " + camera_name + "] ";
-}
-
 std::vector<ImageResponse> getImage(ImageRequest req) {
      // We are using simGetImages instead of simGetImage because the latter does not return image dimention information.
     std::vector<ImageRequest> reqs;
@@ -135,12 +131,6 @@ void doDepthImageUpdate() {
     fps_statistic.addCount();
 }
 
-void printFps()
-{
-    std::cout << logprefix() << "Average FPS: " << (fps_statistic.getCount()/FPS_WINDOW) << std::endl;
-    fps_statistic.Reset();
-}
-
 int main(int argc, char ** argv)
 {
     rclcpp::init(argc, argv);
@@ -153,11 +143,11 @@ int main(int argc, char ** argv)
     depthcamera = nh->declare_parameter<bool>("depthcamera", false);    
 
     if(camera_name == "") {
-        std::cout << logprefix() << "camera_name unset." << std::endl;
+        RCLCPP_FATAL(nh->get_logger(), "camera_name unset.");
         return 1;
     }
     if(framerate == 0) {
-        std::cout << logprefix() << "framerate unset." << std::endl;
+        RCLCPP_FATAL(nh->get_logger(), "framerate unset.");
         return 1;
     }
 
@@ -169,11 +159,12 @@ int main(int argc, char ** argv)
     airsim_api = &client;
 
     try {
+        std::cout << "Waiting for connection - " << std::endl;
         airsim_api->confirmConnection();
+        std::cout << "Connected to the simulator!" << std::endl;
     } catch (const std::exception &e) {
         std::string msg = e.what();
-        std::cout << logprefix() << "Exception raised by the API, something went wrong." << std::endl
-                  << msg << std::endl;
+        RCLCPP_ERROR(nh->get_logger(), "Exception raised by the API, something went wrong: %s\n", msg.c_str());
         return 1;
     }
 
@@ -182,7 +173,10 @@ int main(int argc, char ** argv)
 
     // start the loop
     rclcpp::TimerBase::SharedPtr imageTimer = nh->create_wall_timer(dseconds { 1/framerate }, depthcamera ? &doDepthImageUpdate : &doImageUpdate);
-    rclcpp::TimerBase::SharedPtr fpsTimer = nh->create_wall_timer(dseconds { FPS_WINDOW }, &printFps);
+    rclcpp::TimerBase::SharedPtr fpsTimer = nh->create_wall_timer(dseconds { FPS_WINDOW }, [&nh](){
+        RCLCPP_DEBUG(nh->get_logger(), "Average FPS: %d\n", fps_statistic.getCount()/FPS_WINDOW);
+        fps_statistic.Reset();
+    });
     rclcpp::spin(nh);
     return 0;
 } 
