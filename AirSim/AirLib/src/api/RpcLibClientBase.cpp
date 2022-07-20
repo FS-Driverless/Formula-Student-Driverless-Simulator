@@ -357,6 +357,11 @@ msr::airlib::Kinematics::State RpcLibClientBase::simGetGroundTruthKinematics(con
     return pimpl_->client.call("simGetGroundTruthKinematics", vehicle_name).as<RpcLibAdapatorsBase::KinematicsState>().to();
 }
 
+msr::airlib::WheelStates RpcLibClientBase::simGetWheelStates(const std::string& vehicle_name) const
+{
+    return pimpl_->client.call("simGetWheelStates", vehicle_name).as<RpcLibAdapatorsBase::WheelStates>().to();
+}
+
 void RpcLibClientBase::cancelLastTask(const std::string& vehicle_name)
 {
     pimpl_->client.call("cancelLastTask", vehicle_name);

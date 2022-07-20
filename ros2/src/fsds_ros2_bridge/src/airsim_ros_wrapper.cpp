@@ -117,20 +117,22 @@ void AirsimROSWrapper::initialize_ros()
     double update_gps_every_n_sec;
     double update_imu_every_n_sec;
     double update_gss_every_n_sec;
+    double update_wheel_states_every_n_sec;
     double publish_static_tf_every_n_sec;
     bool manual_mode;
 
-    mission_name_                 = nh_->declare_parameter<std::string>("mission_name"                 , "");
-    track_name_                   = nh_->declare_parameter<std::string>("track_name"                   , "");
-    competition_mode_             = nh_->declare_parameter<bool>       ("competition_mode"             , false);
-    manual_mode                   = nh_->declare_parameter<bool>       ("manual_mode"                  , false);
-    update_odom_every_n_sec       = nh_->declare_parameter<double>     ("update_odom_every_n_sec"      , 0.004);
-    update_gps_every_n_sec        = nh_->declare_parameter<double>     ("update_gps_every_n_sec"       , 0.1);
-    update_imu_every_n_sec        = nh_->declare_parameter<double>     ("update_imu_every_n_sec"       , 0.004);
-    update_gss_every_n_sec        = nh_->declare_parameter<double>     ("update_gss_every_n_sec"       , 0.01);
-    publish_static_tf_every_n_sec = nh_->declare_parameter<double>     ("publish_static_tf_every_n_sec", 1.0);
-    map_frame_id_                 = nh_->declare_parameter<std::string>("map_frame_id"                 , "fsds/map");
-    vehicle_frame_id_             = nh_->declare_parameter<std::string>("vehicle_frame_id"             , "fsds/FSCar");
+    mission_name_                   = nh_->declare_parameter<std::string>("mission_name"                   , "");
+    track_name_                     = nh_->declare_parameter<std::string>("track_name"                     , "");
+    competition_mode_               = nh_->declare_parameter<bool>       ("competition_mode"               , false);
+    manual_mode                     = nh_->declare_parameter<bool>       ("manual_mode"                    , false);
+    update_odom_every_n_sec         = nh_->declare_parameter<double>     ("update_odom_every_n_sec"        , 0.004);
+    update_gps_every_n_sec          = nh_->declare_parameter<double>     ("update_gps_every_n_sec"         , 0.1);
+    update_imu_every_n_sec          = nh_->declare_parameter<double>     ("update_imu_every_n_sec"         , 0.004);
+    update_gss_every_n_sec          = nh_->declare_parameter<double>     ("update_gss_every_n_sec"         , 0.01);
+    update_wheel_states_every_n_sec = nh_->declare_parameter<double>     ("update_wheel_states_every_n_sec", 0.01);
+    publish_static_tf_every_n_sec   = nh_->declare_parameter<double>     ("publish_static_tf_every_n_sec"  , 1.0);
+    map_frame_id_                   = nh_->declare_parameter<std::string>("map_frame_id"                   , "fsds/map");
+    vehicle_frame_id_               = nh_->declare_parameter<std::string>("vehicle_frame_id"               , "fsds/FSCar");
 
 
     RCLCPP_INFO_STREAM(nh_->get_logger(), "Manual mode: " << manual_mode);
@@ -145,6 +147,7 @@ void AirsimROSWrapper::initialize_ros()
     clock_timer_ = nh_->create_wall_timer(dseconds{0.01}, std::bind(&AirsimROSWrapper::clock_timer_cb, this));
 
     gps_update_timer_ = nh_->create_wall_timer(dseconds{update_gps_every_n_sec}, std::bind(&AirsimROSWrapper::gps_timer_cb, this));
+    wheel_states_update_timer_ = nh_->create_wall_timer(dseconds{update_wheel_states_every_n_sec}, std::bind(&AirsimROSWrapper::wheel_states_timer_cb, this));
     imu_update_timer_ = nh_->create_wall_timer(dseconds{update_imu_every_n_sec}, std::bind(&AirsimROSWrapper::imu_timer_cb, this));
     gss_update_timer_ = nh_->create_wall_timer(dseconds{update_gss_every_n_sec}, std::bind(&AirsimROSWrapper::gss_timer_cb, this));
     statictf_timer_ = nh_->create_wall_timer(dseconds{publish_static_tf_every_n_sec}, std::bind(&AirsimROSWrapper::statictf_cb, this));
@@ -190,6 +193,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         global_gps_pub = nh_->create_publisher<sensor_msgs::msg::NavSatFix>("gps", 10);
         imu_pub = nh_->create_publisher<sensor_msgs::msg::Imu>("imu", 10);
         gss_pub = nh_->create_publisher<geometry_msgs::msg::TwistStamped>("gss", 10);
+        wheel_states_pub = nh_->create_publisher<fs_msgs::msg::WheelStates>("wheel_states", 10);
 
         bool UDP_control;
         nh_->get_parameter("UDP_control", UDP_control);
@@ -556,6 +560,47 @@ void AirsimROSWrapper::gss_timer_cb()
     {
         std::string msg = e.get_error().as<std::string>();
         RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API while getting gss data:" << std::endl << msg);
+    }
+}
+
+
+void AirsimROSWrapper::wheel_states_timer_cb()
+{
+    try 
+    {
+        struct msr::airlib::WheelStates wheel_states_data;
+        {
+            std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
+            wheel_states_data = airsim_client_.simGetWheelStates(vehicle_name);
+            lck.unlock();
+        }
+
+        fs_msgs::msg::WheelStates wheel_states_msg;
+
+        wheel_states_msg.header.frame_id = "fsds/" + vehicle_name;
+        wheel_states_msg.header.stamp = make_ts(wheel_states_data.time_stamp);
+        
+        wheel_states_msg.fl_rpm = wheel_states_data.fl.rpm;
+        wheel_states_msg.fr_rpm = wheel_states_data.fr.rpm;
+        wheel_states_msg.rl_rpm = wheel_states_data.rl.rpm;
+        wheel_states_msg.rr_rpm = wheel_states_data.rr.rpm;
+
+        wheel_states_msg.fl_rotation_angle = wheel_states_data.fl.rotation_angle;
+        wheel_states_msg.fr_rotation_angle = wheel_states_data.fr.rotation_angle;
+        wheel_states_msg.rl_rotation_angle = wheel_states_data.rl.rotation_angle;
+        wheel_states_msg.rr_rotation_angle = wheel_states_data.rr.rotation_angle;
+
+        wheel_states_msg.fl_steering_angle = wheel_states_data.fl.steering_angle;
+        wheel_states_msg.fr_steering_angle = wheel_states_data.fr.steering_angle;
+        wheel_states_msg.rl_steering_angle = wheel_states_data.rl.steering_angle;
+        wheel_states_msg.rr_steering_angle = wheel_states_data.rr.steering_angle;
+
+        wheel_states_pub->publish(wheel_states_msg);
+    }
+    catch (rpc::rpc_error& e)
+    {
+        std::string msg = e.get_error().as<std::string>();
+        RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API while getting wheel states data:" << std::endl << msg);
     }
 }
 

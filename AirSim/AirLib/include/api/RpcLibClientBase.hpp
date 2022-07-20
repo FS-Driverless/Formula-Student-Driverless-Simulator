@@ -11,6 +11,7 @@
 #include "sensors/gps/GpsBase.hpp"
 #include "sensors/distance/DistanceBase.hpp"
 #include "physics/Kinematics.hpp"
+#include "physics/WheelStates.hpp"
 #include "api/WorldSimApiBase.hpp"
 
 namespace msr { namespace airlib {
@@ -97,6 +98,7 @@ public:
     void simSetCameraFov(const std::string& camera_name, float fov_degrees, const std::string& vehicle_name = "");
 
     msr::airlib::Kinematics::State simGetGroundTruthKinematics(const std::string& vehicle_name = "") const;
+    msr::airlib::WheelStates simGetWheelStates(const std::string& vehicle_name = "") const;
 
 	std::vector<std::string> simSwapTextures(const std::string& tags, int tex_id = 0, int component_id = 0, int material_id = 0);
 

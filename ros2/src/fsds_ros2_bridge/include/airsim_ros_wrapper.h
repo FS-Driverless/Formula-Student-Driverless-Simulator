@@ -19,6 +19,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include <fs_msgs/msg/finished_signal.hpp>
 #include <fs_msgs/msg/track.hpp>
 #include <fs_msgs/msg/extra_info.hpp>
+#include <fs_msgs/msg/wheel_states.hpp>
 #include <chrono>
 #include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/msg/pose_stamped.hpp>
@@ -126,6 +127,7 @@ private:
     void gps_timer_cb();
     void imu_timer_cb();
     void gss_timer_cb();
+    void wheel_states_timer_cb();
     void statictf_cb();
     void car_control_cb(const fs_msgs::msg::ControlCommand& msg);
     void lidar_timer_cb(const std::string& camera_name, const int lidar_index);
@@ -205,6 +207,7 @@ private:
     rclcpp::TimerBase::SharedPtr gps_update_timer_;
     rclcpp::TimerBase::SharedPtr imu_update_timer_;
     rclcpp::TimerBase::SharedPtr gss_update_timer_;
+    rclcpp::TimerBase::SharedPtr wheel_states_update_timer_;
     std::vector<rclcpp::TimerBase::SharedPtr> airsim_lidar_update_timers_;
     rclcpp::TimerBase::SharedPtr statistics_timer_;
     rclcpp::TimerBase::SharedPtr go_signal_timer_;
@@ -220,6 +223,7 @@ private:
     std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::NavSatFix>> global_gps_pub;
     std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Imu>> imu_pub;
     std::shared_ptr<rclcpp::Publisher<geometry_msgs::msg::TwistStamped>> gss_pub;
+    std::shared_ptr<rclcpp::Publisher<fs_msgs::msg::WheelStates>> wheel_states_pub;
     std::shared_ptr<rclcpp::Publisher<fs_msgs::msg::Track>> track_pub;
     std::shared_ptr<rclcpp::Publisher<fs_msgs::msg::GoSignal>> go_signal_pub_;
 	std::shared_ptr<rclcpp::Publisher<fs_msgs::msg::ExtraInfo>> extra_info_pub;
