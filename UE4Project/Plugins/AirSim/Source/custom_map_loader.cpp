@@ -25,7 +25,6 @@ struct Actor {
 	float y_variance;
 	float xy_variance;
 };
-
 TArray<FString> Ucustom_map_loader::ProcessFile(FString data, TArray<FTransform> & blue_cones, TArray<FTransform> & yellow_cones) {
 	TArray<FString> lines;
 	TArray<FString> values;
@@ -34,29 +33,36 @@ TArray<FString> Ucustom_map_loader::ProcessFile(FString data, TArray<FTransform>
 	FString right = data;
 
 	while (right.Split("\n", &left, &right)) {
-		FString value = "";
+		lines.Add(left);
 		
+	}
+
+	lines.Add(right);
+
+	for (FString& line : lines) {
+		FString value = "";
+
 		Actor actor;
 
-		left.Split(",", &actor.type, &left);
-		left.Split(",", &value, &left);
-		actor.x = FCString::Atof(*value);
-		left.Split(",", &value, &left);
-		actor.y = FCString::Atof(*value);
-		left.Split(",", &value, &left);
+		line.Split(",", &actor.type, &line);
+		line.Split(",", &value, &line);
+		actor.x = FCString::Atof(*value) * 100;
+		line.Split(",", &value, &line);
+		actor.y = FCString::Atof(*value) * 100;
+		line.Split(",", &value, &line);
 		actor.heading = FCString::Atof(*value);
-		left.Split(",", &value, &left);
+		line.Split(",", &value, &line);
 		actor.x_variance = FCString::Atof(*value);
-		left.Split(",", &value, &left);
+		line.Split(",", &value, &line);
 		actor.y_variance = FCString::Atof(*value);
-		left.Split(",", &value, &left);
+		line.Split(",", &value, &line );
 		actor.xy_variance = FCString::Atof(*value);
 
 
 		if (actor.type == "yellow") {
 			FTransform transform{
 				FRotator{},                 // Rotation
-				FVector{actor.x, actor.y, 105.0f},  // Translation
+				FVector{actor.x, actor.y, 5.0f},  // Translation
 				FVector{1.0f, 1.0f, 1.0f}   // Scale
 			};
 			yellow_cones.Add(transform);
@@ -65,12 +71,12 @@ TArray<FString> Ucustom_map_loader::ProcessFile(FString data, TArray<FTransform>
 		if (actor.type == "blue") {
 			FTransform transform{
 				FRotator{},                 // Rotation
-				FVector{actor.x, actor.y, 105.0f},  // Translation
+				FVector{actor.x, actor.y, 5.0f},  // Translation
 				FVector{1.0f, 1.0f, 1.0f}   // Scale
 			};
 			blue_cones.Add(transform);
 		}
-		
 	}
+
 	return lines;
 }
