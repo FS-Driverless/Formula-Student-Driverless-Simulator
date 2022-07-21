@@ -59,6 +59,24 @@ Within the _Vehicle Layout Overview_ picture the red dot represents the center o
 
 ![SUVCarPawn](images/vehicle_dynamic_model.png)
 
+## Available Vehicles
+
+### TechnionCar
+
+![TechnionCar](images/technion_car.png)
+
+This is the default vehicle described above, used for the FSOnline 2020 competition.
+
+To select this vehicle set the PawnBP field in `~/Formula-Student-Driverless-Simulator/settings.json` to `Class'/AirSim/VehicleAdv/Cars/TechnionCar/TechnionCarPawn.TechnionCarPawn_C'`
+
+### AdsDv
+
+![AdsDv](images/ads_dv.png)
+
+This is an autonomous vehicle provided to teams by IMeche for the Formula Student AI competition in the UK. Contributed by Mateusz Lichota from [Imperial Drivelrless](https://driverless.imperial.ac.uk/) 
+
+To select this vehicle set the PawnBP field in `~/Formula-Student-Driverless-Simulator/settings.json` to `Class'/AirSim/VehicleAdv/Cars/AdsDv/AdsDv_Pawn.AdsDv_Pawn_C'`
+
 # How to configure vehicle properties?
 
 All vehicle proprties are set in the unreal vehicle pawn classes.
