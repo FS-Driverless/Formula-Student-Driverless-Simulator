@@ -23,7 +23,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
-#include <geometry_msgs/msg/twist_stamped.hpp>
+#include <geometry_msgs/msg/twist_with_covariance_stamped.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <rosgraph_msgs/msg/clock.hpp>
 #include <iostream>
@@ -217,7 +217,7 @@ private:
     std::shared_ptr<rclcpp::Publisher<nav_msgs::msg::Odometry>> odom_pub;
     std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::NavSatFix>> global_gps_pub;
     std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Imu>> imu_pub;
-    std::shared_ptr<rclcpp::Publisher<geometry_msgs::msg::TwistStamped>> gss_pub;
+    std::shared_ptr<rclcpp::Publisher<geometry_msgs::msg::TwistWithCovarianceStamped>> gss_pub;
     std::shared_ptr<rclcpp::Publisher<fs_msgs::msg::Track>> track_pub;
     std::shared_ptr<rclcpp::Publisher<fs_msgs::msg::GoSignal>> go_signal_pub_;
 	std::shared_ptr<rclcpp::Publisher<fs_msgs::msg::ExtraInfo>> extra_info_pub;
