@@ -43,7 +43,11 @@ On Ubuntu you can skip the visual studio 2019 part, but you still need Unreal En
 
 #### 1. Get the repository
 
-You can either download the repo using the big green download button on the [github page of this project](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator) or clone the repository. For cloning, checkout the documentation on this further down this page. Make sure you clone the repository in your **home directory**.
+You can either download the repo using the big green download button on the [github page of this project](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator) or clone the repository. For cloning, checkout the documentation on this further down this page. Make sure you clone the repository in your **home directory** and git **submodules** are included:
+
+```
+git clone https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator.git --recurse-submodules
+```
 
 When downloading or cloning, by default you get the latest, unreleased version. This is probably not the version that you want. Make sure you select the version that you need! 
 

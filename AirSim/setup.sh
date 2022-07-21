@@ -22,44 +22,19 @@ case $key in
 esac
 done
 
-# llvm tools
-if [ "$(uname)" == "Darwin" ]; then # osx
-    brew update
-    brew tap llvm-hs/homebrew-llvm
-    brew install llvm@8
-else #linux
-    #install clang and build tools
-    VERSION=$(lsb_release -rs | cut -d. -f1)
-    # Since Ubuntu 17 clang is part of the core repository
-    # See https://packages.ubuntu.com/search?keywords=clang-8
-    if [ "$VERSION" -lt "17" ]; then
-        wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-        sudo apt-get update
-    fi
-    sudo apt-get install -y clang-8 clang++-8 libc++-8-dev libc++abi-8-dev
+#install clang and build tools
+VERSION=$(lsb_release -rs | cut -d. -f1)
+# Since Ubuntu 17 clang is part of the core repository
+# See https://packages.ubuntu.com/search?keywords=clang-8
+if [ "$VERSION" -lt "17" ]; then
+    wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+    sudo apt-get update
 fi
+sudo apt-get install -y clang-8 clang++-8 libc++-8-dev libc++abi-8-dev
 
-#give user perms to access USB port - this is not needed if not using PX4 HIL
-#TODO: figure out how to do below in travis
-if [ "$(uname)" == "Darwin" ]; then # osx
-    if [[ ! -z "${whoami}" ]]; then #this happens when running in travis
-        sudo dseditgroup -o edit -a `whoami` -t user dialout
-    fi
-
-    brew install wget
-    brew install coreutils
-    brew install cmake  # should get cmake 3.8
-
-else #linux
-    if [[ ! -z "${whoami}" ]]; then #this happens when running in travis
-        sudo /usr/sbin/useradd -G dialout $USER
-        sudo usermod -a -G dialout $USER
-    fi
-
-    #install additional tools
-    sudo apt-get install -y build-essential
-    sudo apt-get install -y unzip
-fi
+#install additional tools
+sudo apt-get install -y build-essential
+sudo apt-get install -y unzip
 
 if ! which cmake; then
     # CMake not installed
@@ -85,22 +60,6 @@ if version_less_than_equal_to $cmake_ver $MIN_CMAKE_VERSION; then
     fi
 else
     echo "Already have good version of cmake: $cmake_ver"
-fi
-
-# Download rpclib
-if [ ! -d "external/rpclib/rpclib-2.2.1" ]; then
-    echo "*********************************************************************************************"
-    echo "Downloading rpclib..."
-    echo "*********************************************************************************************"
-
-    wget  https://github.com/rpclib/rpclib/archive/v2.2.1.zip
-
-    # remove previous versions
-    rm -rf "external/rpclib"
-
-    mkdir -p "external/rpclib"
-    unzip v2.2.1.zip -d external/rpclib
-    rm v2.2.1.zip
 fi
 
 echo "Installing Eigen library..."
