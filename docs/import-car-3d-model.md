@@ -37,7 +37,7 @@ Export any textures to image format.
 Before we export the model, check that all deltra transforms have been applied and [all scales are set to 1](https://blender.stackexchange.com/questions/31769/how-to-set-the-current-scale-to-1/31771).
 Also don't forget to [recalculate normals](https://blender.stackexchange.com/a/153695/100133)
 
-Export the 3d model to FBX format using all default settings.
+Export the 3d model to FBX format. Make sure to select 'Z up' and 'X forward' options.
 Ensure you are only exporting meshes and armature.
 
 ## 2. Importing the model into unreal engine
@@ -94,7 +94,12 @@ Now make it look like this:
 
 ![](images/ue-anim.png)
 
-# 6. Create a pawn
+# 6. Create the wheel assets
+Make a copy of `AirSim/Content/VehicleAdv/WheelData/FormulaBackWheel` and `FormulaFrontWheel`, name it however you want, and adjust the radius and steering angle parameters to 
+match the wheels of your car. If your car's wheels are significantly different than those of the default vehicle, skipping this step can prevent the vehice 
+from moving at all.
+
+# 7. Create a pawn
 Go into your car folder and create create a new Blueprint Class with base class CarPawn.
 This will be the actual pawn that will be controlled by the autonomous system.
 
@@ -106,19 +111,23 @@ In the components browser, select 'VehicleMovement'
 Next, in the details pane:
 
 * Set `Mass` to `255,0`
-* In the `Wheel Setups` set the first two `Wheel Class` to `FormulaFrontWheel` and the last two `Wheel Class` to `FormulaBackWheel`
+* In the `Wheel Setups` set the first two `Wheel Class` to the front wheel asset created in step 6, and the last two `Wheel Class` to the back wheel asset.
 * In `Wheel Setups` set the `Bone Name` of each wheel to the corresponding bone name as found in the skeleton. From top to bottom they are front left, front right, back left, back right
 * From Drag Coefficient onwards all settings should be exactly equal to the settings in `SuvCarPawn`. Have fun copy-pasting.
 
-# 7. Selecting a car
+# 8. Selecting a car
 Update your settings.json `PawnPaths -> DefaultCar -> PawnBP` field in the `settings.json` to point at the newly created pawn. 
 Currently the following values are supported:
 
 * `Class'/AirSim/VehicleAdv/Cars/TechnionCar/TechnionCarPawn.TechnionCarPawn_C'`
-* `Class'/AirSim/VehicleAdv/Cars/SuvCar/SuvCarPawn.SuvCarPawn_C'` 
+* `Class'/AirSim/VehicleAdv/Cars/SuvCar/SuvCarPawn.SuvCarPawn_C'`
+* `Class'/AirSim/VehicleAdv/Cars/AdsDv/AdsDv_Pawn.AdsDv_Pawn_C'`
 
+To make it point to your car use the following format:
 
-# 8. Sharing your vehicle with the world!
+`Class'/AirSim/VehicleAdv/Cars/<your car folder>/<your car pawn asset name>.<your car pawn asset name>_C'`
+
+# 9. Sharing your vehicle with the world!
 
 Wouldn't it be amazing if other people could enjoy your team's vehicle 3d model as well?
 You are welcome to create a pull request with your vehicle and it might be added to the base project repository!
