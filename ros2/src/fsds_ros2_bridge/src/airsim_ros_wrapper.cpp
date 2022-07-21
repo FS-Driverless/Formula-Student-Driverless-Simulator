@@ -542,6 +542,10 @@ void AirsimROSWrapper::gss_timer_cb()
         gss_msg.header.frame_id = "fsds/" + vehicle_name;
         gss_msg.header.stamp = make_ts(gss_data.time_stamp);
 
+        gss_msg.twist.angular.x = gss_data.angular_velocity.x();
+        gss_msg.twist.angular.y = gss_data.angular_velocity.y();
+        gss_msg.twist.angular.z = gss_data.angular_velocity.z();
+        
         gss_msg.twist.linear.x = gss_data.linear_velocity.x();
         gss_msg.twist.linear.y = gss_data.linear_velocity.y();
         gss_msg.twist.linear.z = gss_data.linear_velocity.z();
