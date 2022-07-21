@@ -25,6 +25,7 @@ The fsds_ros_bridge.launch launches the following nodes:
 | `/fsds/gss` | Ground speed sensor provide linear velocity of the vehicle (`fsds/FSCar`). Velocity is m/s. | [geometry_msgs/TwistStamped](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)  | 100 |
 | `/fsds/testing_only/odom` | Ground truth car position and orientation in ENU frame about the CoG of the car (`fsds/FSCar`).  The units are `m` for distance. The orientation are expressed in terms of quaternions. The message is in the `fsds/map` frame. This is a frame that is not (yet) used anywhere else and is just here so you can easely reference it if needed. | [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)  | 250 |
 | `/fsds/testing_only/track` | Ground truth cone position and color with respect to the starting location of the car in ENU. Currently this only publishes the *initial position* of cones that are part of the track spline. Any cones placed manually in the world are not published here. Additionally, the track is published once and the message is latched (meaning it is always available for a newly created subscriber). | [fs_msgs/Track](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/Track.msg)  | Latched |
+|`/fsds/testing_only/extra_info`|This topic contains extra information about the simulator. At the moment these are the doo_counter, that keeps track of the amount of cones that have been hit, and the times of the laps|[fs_msgs/ExtraInfo](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/ExtraInfo.msg)|1|
 | `/fsds/camera/CAMERA_NAME` | Camera images. See [./camera.md](camera docs). | [sensor_msgs/Image](https://docs.ros.org/api/sensor_msgs/html/msg/Image.html)  | ~18 |
 | `/fsds/lidar/LIDARNAME` | Publishes the lidar points for each lidar sensor. All points are in the `fsds/LIDARNAME` frame. Transformations between the `fsds/LIDARNAME` and `fsds/FSCar` frame are being published regularly. More info on the lidar sensor can be found [here](lidar.md) | [sensor_msgs/PointCloud](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/PointCloud.html)  | ``RotationsPerSecond` param in `settings.json` |
 | `/fsds/signal/go` | GO signal that is sent every second by the ROS bridge.The car is only allowed to drive once this message has been received. If no GO signal is received for more than 4 seconds, the AS can assume that `fsds_ros_bridge` has been shut down. This message also includes the mission type and track. More info about signal topics can be found in the [competition-signals guide](competition-signals.md) | [fs_msgs/GoSignal](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/GoSignal.msg)  | 1 |
@@ -35,13 +36,13 @@ The fsds_ros_bridge.launch launches the following nodes:
 
 | Topic name | Description | Message |
 |---|---|---|
-| `/fsds/control_command` | This message includes the dimensionless values throttle, steering and brake. Throttle and brake range from 0 to 1. For steering `-1` steers full to the left and `+1` steers full to the right. The contents of this message fill the essential parts of the `msr::airlib::CarApiBase::CarControl` struct.  This is the only way to control the car when the airsim ROS client is connected (keyboard will no longer work!). | [fs_msgs/ControlCommand](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/ControlCommand.msg) |
+| `/fsds/control_command` | This message includes the dimensionless values throttle, steering and brake. Throttle and brake range from 0 to 1. For steering `-1` steers full to the left and `+1` steers full to the right. Maximum steering angle is by default 25 degrees. The contents of this message fill the essential parts of the `msr::airlib::CarApiBase::CarControl` struct.  This is the only way to control the car when the airsim ROS client is connected (keyboard will no longer work!). | [fs_msgs/ControlCommand](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/ControlCommand.msg) |
 | `/fsds/signal/finished` | Finished signal that is sent by the AS to stop the mission. The ROS bridge will forward the signal to the operator which in turn will stop the ROS bridge and finish the run. | [fs_msgs/FinishedSignal](https://github.com/FS-Driverless/fs_msgs/blob/master/msg/FinishedSignal.msg) |
 
 
 ## Services
 
-- `/fsds/reset` [fsds_ros_bridge/Reset](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/blob/master/ros/src/fsds_ros_bridge/srv/Reset.srv)   
+- `/fsds/reset` [fs_msgs/Reset](https://github.com/FS-Driverless/fs_msgs/blob/master/srv/Reset.srv)   
  Resets car to start location.
 
 ## Units

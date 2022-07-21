@@ -52,21 +52,17 @@ In case you want to run the ros bridge on Windows, you will need Windows Subsyst
 3. If you are on windows server, enable windows susbsystem for linux in the server manager and [install ubuntu](https://docs.microsoft.com/en-us/windows/wsl/install-on-server#download-a-linux-distribution).
 
 
-## Install ROS Melodic (Ubuntu / WSL)
+## Install ROS Melodic/Noetic/Galactic (Ubuntu / WSL)
 
-```
-sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
-curl -sSL 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xC1CF6E31E6BADE8868B172B4F42ED6FBAB17C654' | sudo apt-key add -
-sudo apt update
-sudo apt install ros-melodic-desktop
-```
+Follow [the guide on their website](http://wiki.ros.org/ROS/Installation) 
 
-Add the following line to end of your `~/.bashrc` file:
+And add the following line to end of your `~/.bashrc` file:
 ```
 source /opt/ros/melodic/setup.bash
 source ~/Formula-Student-Driverless-Simulator/ros/devel/setup.bash
 ```
+
+Be sure to replace `melodic` with your specific version
 
 ## Gui applications from WSL (Xming)
 By default, if you are running Windows Subsystem for Linux with Ubuntu, you can't run gui applications.

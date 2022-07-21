@@ -148,7 +148,7 @@ void ASimModeBase::initializeTimeOfDay()
         sky_sphere_ = sky_spheres[0];
         static const FName sun_prop_name(TEXT("Directional light actor"));
         auto* p = sky_sphere_class_->FindPropertyByName(sun_prop_name);
-        UObjectProperty* sun_prop = Cast<UObjectProperty>(p);
+        FObjectProperty* sun_prop = CastField<FObjectProperty>(p);
         UObject* sun_obj = sun_prop->GetObjectPropertyValue_InContainer(sky_sphere_);
         sun_ = Cast<ADirectionalLight>(sun_obj);
         if (sun_)
@@ -423,8 +423,8 @@ void ASimModeBase::setupVehiclesAndCamera()
                 //compute initial pose
                 FVector spawn_position = uu_origin.GetLocation();
                 msr::airlib::Vector3r settings_position = vehicle_setting.position;
-                if (!msr::airlib::VectorMath::hasNan(settings_position))
-                    spawn_position = getGlobalNedTransform().fromGlobalEnu(settings_position);
+                //if (!msr::airlib::VectorMath::hasNan(settings_position))
+                    //spawn_position = getGlobalNedTransform().fromGlobalEnu(settings_position);
                 FRotator spawn_rotation = toFRotator(vehicle_setting.rotation, uu_origin.Rotator());
 
                 //spawn vehicle pawn

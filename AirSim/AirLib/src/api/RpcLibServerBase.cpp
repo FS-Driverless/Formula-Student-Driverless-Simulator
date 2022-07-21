@@ -291,6 +291,10 @@ RpcLibServerBase::RpcLibServerBase(ApiProvider* api_provider, const std::string&
         const Kinematics::State& result = *getVehicleSimApi(vehicle_name)->getGroundTruthKinematics();
         return RpcLibAdapatorsBase::KinematicsState(result);
     });
+    pimpl_->server.bind("simGetWheelStates", [&](const std::string& vehicle_name) -> RpcLibAdapatorsBase::WheelStates {
+        const WheelStates& result = *getVehicleSimApi(vehicle_name)->getWheelStates();
+        return RpcLibAdapatorsBase::WheelStates(result);
+    });
 
     pimpl_->server.bind("cancelLastTask", [&](const std::string& vehicle_name) -> void {
         getVehicleApi(vehicle_name)->cancelLastTask();

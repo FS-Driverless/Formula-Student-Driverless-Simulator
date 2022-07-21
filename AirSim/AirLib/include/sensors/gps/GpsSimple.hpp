@@ -69,7 +69,7 @@ public: //methods
 
     virtual ~GpsSimple() = default;
     //generate Gaussian noise 
-    const float getGaussianNoise(float mean, float var)
+    float getGaussianNoise(float mean, float var)
     {
         std::normal_distribution<float> distribution(mean, var);
         auto seed = (unsigned int)std::chrono::system_clock::now().time_since_epoch().count();
@@ -80,8 +80,8 @@ public: //methods
     msr::airlib::GeoPoint generateErrors(msr::airlib::GeoPoint geo_point, real_T eph, real_T epv)
     {
         HomeGeoPoint geo_point_in = HomeGeoPoint(geo_point);
-        float var_h = pow(eph, 2)/18;
-        float var_v = pow(epv, 2)/9;
+        float var_h = (float) pow(eph, 2)/18;
+        float var_v = (float) pow(epv, 2)/9;
         msr::airlib::GeoPoint geo_point_err = EarthUtils::nedToGeodetic(msr::airlib::Vector3r(getGaussianNoise(0, var_h), getGaussianNoise(0,var_h), getGaussianNoise(0, var_v)), geo_point_in);
         msr::airlib::GeoPoint geo_point_out = geo_point;
         geo_point_out.latitude = geo_point_err.latitude;
@@ -93,8 +93,8 @@ public: //methods
 
     //Create a constant offset to add to the geo_point when vehicle at a standstill
     msr::airlib::Vector3r getZeroVelOffset(real_T eph_final, real_T epv_final)
-    {   float var_h = pow(eph_final, 2)/18;
-        float var_v = pow(epv_final, 2)/9;
+    {   float var_h = (float) pow(eph_final, 2)/18;
+        float var_v = (float) pow(epv_final, 2)/9;
         return msr::airlib::Vector3r(getGaussianNoise(0, var_h), getGaussianNoise(0, var_h), getGaussianNoise(0, var_v));
     }
 

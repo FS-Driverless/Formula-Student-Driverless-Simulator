@@ -29,6 +29,7 @@ void CarPawnSimApi::initialize()
     Kinematics::State initial_kinematic_state = Kinematics::State::zero();;
     initial_kinematic_state.pose = getPose();
     kinematics_.reset(new Kinematics(initial_kinematic_state));
+    wheel_states_ = std::make_unique<WheelStates>();
 
     //initialize state
     params_.pawn->GetActorBounds(true, initial_state_.mesh_origin, initial_state_.mesh_bounds);
@@ -75,6 +76,7 @@ void CarPawnSimApi::createVehicleApi(ACarPawn* pawn, const msr::airlib::GeoPoint
 //these are called on render ticks
 void CarPawnSimApi::updateRenderedState(float dt)
 {
+    updateWheelStates(dt);
     updateKinematics(dt);
     vehicle_api_->getStatusMessages(vehicle_api_messages_);
 
@@ -589,9 +591,49 @@ void CarPawnSimApi::updateKinematics(float dt)
     kinematics_->update();
 }
 
+float computeAngleChange(float prev_rotation_angle_rad, float new_rotation_angle_rad) 
+{
+    return new_rotation_angle_rad + (new_rotation_angle_rad > prev_rotation_angle_rad ? 0.0f : 2.0f * M_PI) - prev_rotation_angle_rad;
+}
+
+void CarPawnSimApi::updateWheelStates(float dt)
+{
+    wheel_states_->time_stamp = msr::airlib::ClockFactory::get()->nowNanos();
+
+    const float unreal_rotation_angle_to_radians = (2 * M_PI) / -1800.0;
+    const float unreal_steering_angle_to_radians = (M_PI) / 180.0;
+    const float radians_per_second_to_rpm = 60.0 / (2 * M_PI);
+
+    //update kinematics from pawn's movement instead of physics engine
+    float fl_new_rotation_angle_rad = movement_->Wheels[0]->GetRotationAngle() * unreal_rotation_angle_to_radians;
+    float fr_new_rotation_angle_rad = movement_->Wheels[1]->GetRotationAngle() * unreal_rotation_angle_to_radians;
+    float rl_new_rotation_angle_rad = movement_->Wheels[2]->GetRotationAngle() * unreal_rotation_angle_to_radians;
+    float rr_new_rotation_angle_rad = movement_->Wheels[3]->GetRotationAngle() * unreal_rotation_angle_to_radians;
+
+    wheel_states_->fl.rpm = 0.3 * wheel_states_->fl.rpm + 0.7 * computeAngleChange(wheel_states_->fl.rotation_angle, fl_new_rotation_angle_rad) / dt * radians_per_second_to_rpm;
+    wheel_states_->fr.rpm = 0.3 * wheel_states_->fr.rpm + 0.7 * computeAngleChange(wheel_states_->fr.rotation_angle, fr_new_rotation_angle_rad) / dt * radians_per_second_to_rpm;
+    wheel_states_->rl.rpm = 0.3 * wheel_states_->rl.rpm + 0.7 * computeAngleChange(wheel_states_->rl.rotation_angle, rl_new_rotation_angle_rad) / dt * radians_per_second_to_rpm;
+    wheel_states_->rr.rpm = 0.3 * wheel_states_->rr.rpm + 0.7 * computeAngleChange(wheel_states_->rr.rotation_angle, rr_new_rotation_angle_rad) / dt * radians_per_second_to_rpm;
+
+    wheel_states_->fl.rotation_angle = fl_new_rotation_angle_rad;
+    wheel_states_->fr.rotation_angle = fr_new_rotation_angle_rad;
+    wheel_states_->rl.rotation_angle = rl_new_rotation_angle_rad;
+    wheel_states_->rr.rotation_angle = rr_new_rotation_angle_rad;
+
+    wheel_states_->fl.steering_angle = movement_->Wheels[0]->GetSteerAngle() * unreal_steering_angle_to_radians;
+    wheel_states_->fr.steering_angle = movement_->Wheels[1]->GetSteerAngle() * unreal_steering_angle_to_radians;
+    wheel_states_->rl.steering_angle = movement_->Wheels[2]->GetSteerAngle() * unreal_steering_angle_to_radians;
+    wheel_states_->rr.steering_angle = movement_->Wheels[3]->GetSteerAngle() * unreal_steering_angle_to_radians;
+}
+
 const msr::airlib::Kinematics::State* CarPawnSimApi::getGroundTruthKinematics() const
 {
     return & kinematics_->getState();
+}
+
+const msr::airlib::WheelStates* CarPawnSimApi::getWheelStates() const
+{
+    return wheel_states_.get();
 }
 
 msr::airlib::Kinematics* CarPawnSimApi::getKinematics()
