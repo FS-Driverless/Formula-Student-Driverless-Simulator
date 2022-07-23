@@ -3,6 +3,8 @@
 
 #include "custom_map_loader.h"
 
+static FString custom_map_path;
+
 bool Ucustom_map_loader::FileSaveString(FString SaveTextB, FString FileNameB)
 {
 	return FFileHelper::SaveStringToFile(SaveTextB, L"test.txt");
@@ -81,14 +83,6 @@ TArray<FString> Ucustom_map_loader::ProcessFile(FString data, TArray<FTransform>
 	return lines;
 }
 
-
-float Ucustom_map_loader::getDist(FTransform& a1, FTransform& a2) {
-	// Euclidean distance
-	float dist = std::sqrt((a1.GetLocation().X - a2.GetLocation().X) * (a1.GetLocation().X - a2.GetLocation().X) + (a1.GetLocation().Y - a2.GetLocation().Y) * (a1.GetLocation().Y - a2.GetLocation().Y));
-
-	return dist;
-}
-
 FTransform Ucustom_map_loader::GetFinishTransform(TArray<FTransform> big_orange_cones) {
 
 	FVector location{0.0f, 0.0f, 0.0f};
@@ -117,4 +111,14 @@ FTransform Ucustom_map_loader::GetFinishTransform(TArray<FTransform> big_orange_
 	};
 
 	return transform;
+}
+
+
+void Ucustom_map_loader::SetCustomMapPath(FString path) {
+	custom_map_path = path;
+}
+
+
+FString Ucustom_map_loader::GetCustomMapPath() {
+	return custom_map_path;
 }

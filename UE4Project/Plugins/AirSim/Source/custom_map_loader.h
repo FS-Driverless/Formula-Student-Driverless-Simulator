@@ -31,5 +31,10 @@ class AIRSIM_API Ucustom_map_loader : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable, Category = "custom map loader")
 		static FTransform GetFinishTransform(TArray<FTransform> big_orange_cones);
 
-	static float getDist(FTransform& a1, FTransform& a2);
+	UFUNCTION(BlueprintCallable, Category = "custom map loader")
+		static void SetCustomMapPath(FString path);
+
+	UFUNCTION(BlueprintCallable, Category = "custom map loader")
+		static FString GetCustomMapPath();
+
 };
