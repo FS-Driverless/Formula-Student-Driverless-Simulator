@@ -26,5 +26,10 @@ class AIRSIM_API Ucustom_map_loader : public UBlueprintFunctionLibrary
 		static bool FileLoadString(FString FileNameA, FString& SaveTextA);
 
 	UFUNCTION(BlueprintCallable, Category = "custom map loader")
-		static TArray<FString> ProcessFile(FString data, TArray<FTransform>& blue_cones, TArray<FTransform>& yellow_cones);
+		static TArray<FString> ProcessFile(FString data, TArray<FTransform>& blue_cones, TArray<FTransform>& yellow_cones, TArray<FTransform> & big_orange_cones);
+
+	UFUNCTION(BlueprintCallable, Category = "custom map loader")
+		static FTransform GetFinishTransform(TArray<FTransform> big_orange_cones);
+
+	static float getDist(FTransform& a1, FTransform& a2);
 };
