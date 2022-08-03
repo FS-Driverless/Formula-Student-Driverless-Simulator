@@ -13,6 +13,12 @@
 /**
  * 
  */
+
+struct Coordinate {
+	float x = 0.0f;
+	float y = 0.0f;
+};
+
 UCLASS()
 class AIRSIM_API Ucustom_map_loader : public UBlueprintFunctionLibrary
 {
@@ -37,4 +43,8 @@ class AIRSIM_API Ucustom_map_loader : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable, Category = "custom map loader")
 		static FString GetCustomMapPath();
 
+
+
+
+	static float getEuclideanDistance(Coordinate coord1, Coordinate coord2);
 };
