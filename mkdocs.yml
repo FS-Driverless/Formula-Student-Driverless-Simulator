@@ -34,8 +34,3 @@ nav:
     - "Operator": "operator.md"
     - "System flow and signals": "competition-signals.md"
     - "Spectator": "spectator.md"
-
-extra_css:
-  - css\version-select.css
-extra_javascript:
-  - js\version-select.js

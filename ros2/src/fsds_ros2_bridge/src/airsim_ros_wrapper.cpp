@@ -19,11 +19,11 @@ AirsimROSWrapper::AirsimROSWrapper(const std::shared_ptr<rclcpp::Node>& nh, cons
         msr::airlib::AirSimSettings::singleton().load();
         for (const auto &warning : msr::airlib::AirSimSettings::singleton().warning_messages)
         {
-            std::cout << "Configuration warning: " << warning;
+            RCLCPP_WARN_STREAM(nh_->get_logger(), "Configuration warning: " << warning);
         }
         for (const auto &error : msr::airlib::AirSimSettings::singleton().error_messages)
         {
-            std::cout << "Configuration error: " << error;
+            RCLCPP_ERROR_STREAM(nh_->get_logger(), "Configuration error: " << error);
         }
     }
     catch (std::exception &ex) {
@@ -33,7 +33,7 @@ AirsimROSWrapper::AirsimROSWrapper(const std::shared_ptr<rclcpp::Node>& nh, cons
     initialize_statistics();
     initialize_ros();
 
-    std::cout << "AirsimROSWrapper Initialized!\n";
+    RCLCPP_INFO(nh_->get_logger(), "AirsimROSWrapper Initialized!");
 }
 
 void AirsimROSWrapper::initialize_airsim()
@@ -41,14 +41,15 @@ void AirsimROSWrapper::initialize_airsim()
     // todo do not reset if already in air?
     try
     {
+        RCLCPP_INFO(nh_->get_logger(), "Waiting for connection");
         airsim_client_.confirmConnection();
         airsim_client_lidar_.confirmConnection();
+        RCLCPP_INFO(nh_->get_logger(), "Connected to the simulator!");
     }
     catch (rpc::rpc_error& e)
     {
         std::string msg = e.get_error().as<std::string>();
-        std::cout << "Exception raised by the API, something went wrong." << std::endl
-                  << msg << std::endl;
+        RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API, something went wrong." << std::endl << msg);
     }
 }
 
@@ -78,8 +79,7 @@ void AirsimROSWrapper::publish_track() {
     } catch (rpc::rpc_error& e)
     {
         std::string msg = e.get_error().as<std::string>();
-        std::cout << "Exception raised by the API, something went wrong while retreiving referee state for publishing track." << std::endl
-                  << msg << std::endl;
+        RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API, something went wrong while retreiving referee state for publishing track." << std::endl << msg);
     }
     
     // Get car initial position
@@ -117,18 +117,23 @@ void AirsimROSWrapper::initialize_ros()
     double update_gps_every_n_sec;
     double update_imu_every_n_sec;
     double update_gss_every_n_sec;
+    double update_wheel_states_every_n_sec;
     double publish_static_tf_every_n_sec;
     bool manual_mode;
 
-    mission_name_                 = nh_->declare_parameter<std::string>("mission_name"                 , "");
-    track_name_                   = nh_->declare_parameter<std::string>("track_name"                   , "");
-    competition_mode_             = nh_->declare_parameter<bool>       ("competition_mode"             , false);
-    manual_mode                   = nh_->declare_parameter<bool>       ("manual_mode"                  , false);
-    update_odom_every_n_sec       = nh_->declare_parameter<double>     ("update_odom_every_n_sec"      , 0.004);
-    update_gps_every_n_sec        = nh_->declare_parameter<double>     ("update_gps_every_n_sec"       , 0.1);
-    update_imu_every_n_sec        = nh_->declare_parameter<double>     ("update_imu_every_n_sec"       , 0.004);
-    update_gss_every_n_sec        = nh_->declare_parameter<double>     ("update_gss_every_n_sec"       , 0.01);
-    publish_static_tf_every_n_sec = nh_->declare_parameter<double>     ("publish_static_tf_every_n_sec", 1.0);
+    mission_name_                   = nh_->declare_parameter<std::string>("mission_name"                   , "");
+    track_name_                     = nh_->declare_parameter<std::string>("track_name"                     , "");
+    competition_mode_               = nh_->declare_parameter<bool>       ("competition_mode"               , false);
+    manual_mode                     = nh_->declare_parameter<bool>       ("manual_mode"                    , false);
+    update_odom_every_n_sec         = nh_->declare_parameter<double>     ("update_odom_every_n_sec"        , 0.004);
+    update_gps_every_n_sec          = nh_->declare_parameter<double>     ("update_gps_every_n_sec"         , 0.1);
+    update_imu_every_n_sec          = nh_->declare_parameter<double>     ("update_imu_every_n_sec"         , 0.004);
+    update_gss_every_n_sec          = nh_->declare_parameter<double>     ("update_gss_every_n_sec"         , 0.01);
+    update_wheel_states_every_n_sec = nh_->declare_parameter<double>     ("update_wheel_states_every_n_sec", 0.01);
+    publish_static_tf_every_n_sec   = nh_->declare_parameter<double>     ("publish_static_tf_every_n_sec"  , 1.0);
+    map_frame_id_                   = nh_->declare_parameter<std::string>("map_frame_id"                   , "fsds/map");
+    vehicle_frame_id_               = nh_->declare_parameter<std::string>("vehicle_frame_id"               , "fsds/FSCar");
+
 
     RCLCPP_INFO_STREAM(nh_->get_logger(), "Manual mode: " << manual_mode);
 
@@ -142,6 +147,7 @@ void AirsimROSWrapper::initialize_ros()
     clock_timer_ = nh_->create_wall_timer(dseconds{0.01}, std::bind(&AirsimROSWrapper::clock_timer_cb, this));
 
     gps_update_timer_ = nh_->create_wall_timer(dseconds{update_gps_every_n_sec}, std::bind(&AirsimROSWrapper::gps_timer_cb, this));
+    wheel_states_update_timer_ = nh_->create_wall_timer(dseconds{update_wheel_states_every_n_sec}, std::bind(&AirsimROSWrapper::wheel_states_timer_cb, this));
     imu_update_timer_ = nh_->create_wall_timer(dseconds{update_imu_every_n_sec}, std::bind(&AirsimROSWrapper::imu_timer_cb, this));
     gss_update_timer_ = nh_->create_wall_timer(dseconds{update_gss_every_n_sec}, std::bind(&AirsimROSWrapper::gss_timer_cb, this));
     statictf_timer_ = nh_->create_wall_timer(dseconds{publish_static_tf_every_n_sec}, std::bind(&AirsimROSWrapper::statictf_cb, this));
@@ -187,6 +193,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         global_gps_pub = nh_->create_publisher<sensor_msgs::msg::NavSatFix>("gps", 10);
         imu_pub = nh_->create_publisher<sensor_msgs::msg::Imu>("imu", 10);
         gss_pub = nh_->create_publisher<geometry_msgs::msg::TwistWithCovarianceStamped>("gss", 10);
+        wheel_states_pub = nh_->create_publisher<fs_msgs::msg::WheelStates>("wheel_states", 10);
 
         bool UDP_control;
         nh_->get_parameter("UDP_control", UDP_control);
@@ -223,27 +230,22 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
             {
             case msr::airlib::SensorBase::SensorType::Imu:
             {
-                std::cout << "Imu" << std::endl;                
                 break;
             }
             case msr::airlib::SensorBase::SensorType::Gps:
             {
-                std::cout << "Gps" << std::endl;
                 break;
             }
             case msr::airlib::SensorBase::SensorType::Distance:
             {
-                std::cout << "Distance" << std::endl;
                 break;
             }
             case msr::airlib::SensorBase::SensorType::GSS:
             {
-                std::cout << "Ground Speed Sensor" << std::endl;
                 break;
             }
             case msr::airlib::SensorBase::SensorType::Lidar:
             {
-                std::cout << "Lidar" << std::endl;
                 auto lidar_setting = *static_cast<LidarSetting *>(sensor_setting.get());
                 set_nans_to_zeros_in_pose(*vehicle_setting, lidar_setting);
                 append_static_lidar_tf(curr_vehicle_name, sensor_name, lidar_setting); // todo is there a more readable way to down-cast?
@@ -260,8 +262,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
             }
             default:
             {
-                std::cout << sensor_setting->sensor_name << std::endl;
-                throw std::invalid_argument("Unexpected sensor type (D)");
+                throw std::invalid_argument("Unexpected sensor type (D) with name " + sensor_setting->sensor_name);
             }
             }
         }
@@ -307,23 +308,33 @@ msr::airlib::Quaternionr AirsimROSWrapper::get_airlib_quat(const tf2::Quaternion
 nav_msgs::msg::Odometry AirsimROSWrapper::get_odom_msg_from_airsim_state(const msr::airlib::CarApiBase::CarState& car_state) const
 {
     nav_msgs::msg::Odometry odom_enu_msg;
-    odom_enu_msg.header.frame_id = "fsds/map";
+    odom_enu_msg.header.frame_id = map_frame_id_;
     odom_enu_msg.header.stamp = make_ts(car_state.timestamp);
-    odom_enu_msg.child_frame_id = "fsds/FSCar";
+    odom_enu_msg.child_frame_id = vehicle_frame_id_;
     odom_enu_msg.pose.pose.position.x = car_state.getPosition().x();
     odom_enu_msg.pose.pose.position.y = car_state.getPosition().y();
     odom_enu_msg.pose.pose.position.z = car_state.getPosition().z();
 
-    odom_enu_msg.pose.pose.orientation.x = car_state.getOrientation().x();
-    odom_enu_msg.pose.pose.orientation.y = car_state.getOrientation().y();
-    odom_enu_msg.pose.pose.orientation.z = car_state.getOrientation().z();
-    odom_enu_msg.pose.pose.orientation.w = car_state.getOrientation().w();
+    double x = car_state.getOrientation().x();
+    double y = car_state.getOrientation().y();
+    double z = car_state.getOrientation().z();
+    double w = car_state.getOrientation().w();
 
-    odom_enu_msg.twist.twist.linear.x = car_state.kinematics_estimated.twist.linear.x();
-    odom_enu_msg.twist.twist.linear.y = car_state.kinematics_estimated.twist.linear.y();
+    odom_enu_msg.pose.pose.orientation.x = x;
+    odom_enu_msg.pose.pose.orientation.y = y;
+    odom_enu_msg.pose.pose.orientation.z = z;
+    odom_enu_msg.pose.pose.orientation.w = w;
+
+    double yaw = atan2(2.0f * (w * z + x * y), 1.0f - 2.0f * (y * y + z * z));
+
+    double linear_forward = car_state.kinematics_estimated.twist.linear.x() * cos(yaw) + car_state.kinematics_estimated.twist.linear.y() * sin(yaw);
+    double linear_sideways = car_state.kinematics_estimated.twist.linear.x() * sin(yaw) + car_state.kinematics_estimated.twist.linear.y() * -cos(yaw);
+
+    odom_enu_msg.twist.twist.linear.x = linear_forward;
+    odom_enu_msg.twist.twist.linear.y = linear_sideways;
     odom_enu_msg.twist.twist.linear.z = car_state.kinematics_estimated.twist.linear.z();
-    odom_enu_msg.twist.twist.angular.x = car_state.kinematics_estimated.twist.angular.x();
-    odom_enu_msg.twist.twist.angular.y = car_state.kinematics_estimated.twist.angular.y();
+    odom_enu_msg.twist.twist.angular.x = 0.0;
+    odom_enu_msg.twist.twist.angular.y = 0.0;
     odom_enu_msg.twist.twist.angular.z = car_state.kinematics_estimated.twist.angular.z();
 
     return odom_enu_msg;
@@ -454,10 +465,8 @@ void AirsimROSWrapper::odom_cb()
     }
     catch (rpc::rpc_error& e)
     {
-        std::cout << "error" << std::endl;
         std::string msg = e.get_error().as<std::string>();
-        std::cout << "Exception raised by the API while getting car state:" << std::endl
-                  << msg << std::endl;
+        RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API while getting car state:" << std::endl << msg);
     }
 }
 
@@ -484,10 +493,8 @@ void AirsimROSWrapper::gps_timer_cb()
  }
  catch (rpc::rpc_error& e)
  {
-    std::cout << "error" << std::endl;
     std::string msg = e.get_error().as<std::string>();
-    std::cout << "Exception raised by the API while getting gps data:" << std::endl
-              << msg << std::endl;
+    RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API while getting gps data:" << std::endl << msg);
  }
 }
 
@@ -519,10 +526,8 @@ void AirsimROSWrapper::imu_timer_cb()
     }
     catch (rpc::rpc_error& e)
     {
-        std::cout << "error" << std::endl;
         std::string msg = e.get_error().as<std::string>();
-        std::cout << "Exception raised by the API while getting imu data:" << std::endl
-                << msg << std::endl;
+        RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API while getting imu data:" << std::endl << msg);
     }
 }
 
@@ -565,10 +570,49 @@ void AirsimROSWrapper::gss_timer_cb()
     }
     catch (rpc::rpc_error& e)
     {
-        std::cout << "error" << std::endl;
         std::string msg = e.get_error().as<std::string>();
-        std::cout << "Exception raised by the API while getting gss data:" << std::endl
-                << msg << std::endl;
+        RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API while getting gss data:" << std::endl << msg);
+    }
+}
+
+
+void AirsimROSWrapper::wheel_states_timer_cb()
+{
+    try 
+    {
+        struct msr::airlib::WheelStates wheel_states_data;
+        {
+            std::unique_lock<std::recursive_mutex> lck(car_control_mutex_);
+            wheel_states_data = airsim_client_.simGetWheelStates(vehicle_name);
+            lck.unlock();
+        }
+
+        fs_msgs::msg::WheelStates wheel_states_msg;
+
+        wheel_states_msg.header.frame_id = "fsds/" + vehicle_name;
+        wheel_states_msg.header.stamp = make_ts(wheel_states_data.time_stamp);
+        
+        wheel_states_msg.fl_rpm = wheel_states_data.fl.rpm;
+        wheel_states_msg.fr_rpm = wheel_states_data.fr.rpm;
+        wheel_states_msg.rl_rpm = wheel_states_data.rl.rpm;
+        wheel_states_msg.rr_rpm = wheel_states_data.rr.rpm;
+
+        wheel_states_msg.fl_rotation_angle = wheel_states_data.fl.rotation_angle;
+        wheel_states_msg.fr_rotation_angle = wheel_states_data.fr.rotation_angle;
+        wheel_states_msg.rl_rotation_angle = wheel_states_data.rl.rotation_angle;
+        wheel_states_msg.rr_rotation_angle = wheel_states_data.rr.rotation_angle;
+
+        wheel_states_msg.fl_steering_angle = wheel_states_data.fl.steering_angle;
+        wheel_states_msg.fr_steering_angle = wheel_states_data.fr.steering_angle;
+        wheel_states_msg.rl_steering_angle = wheel_states_data.rl.steering_angle;
+        wheel_states_msg.rr_steering_angle = wheel_states_data.rr.steering_angle;
+
+        wheel_states_pub->publish(wheel_states_msg);
+    }
+    catch (rpc::rpc_error& e)
+    {
+        std::string msg = e.get_error().as<std::string>();
+        RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API while getting wheel states data:" << std::endl << msg);
     }
 }
 
@@ -717,8 +761,7 @@ void AirsimROSWrapper::lidar_timer_cb(const std::string& lidar_name, const int l
     catch (rpc::rpc_error& e)
     {
         std::string msg = e.get_error().as<std::string>();
-        std::cout << "Exception raised by the API, didn't get lidar response." << std::endl
-                  << msg << std::endl;
+        RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API, didn't get lidar response." << std::endl << msg);
     }
 }
 
@@ -735,29 +778,32 @@ void AirsimROSWrapper::PrintStatistics()
     // {
     //     statistics_obj->Print();
     // }
-    std::cout << "--------- ros_wrapper statistics ---------" << std::endl;
-    setCarControlsStatistics.Print();
-    getGpsDataStatistics.Print();
-    getCarStateStatistics.Print();
-    getImuStatistics.Print();
-    getGSSStatistics.Print();
-    control_cmd_sub_statistics.Print();
-    global_gps_pub_statistics.Print();
-    odom_pub_statistics.Print();
-    imu_pub_statistics.Print();
-    gss_pub_statistics.Print();
+
+    std::stringstream dbg_msg;
+    dbg_msg << "--------- ros_wrapper statistics ---------" << std::endl;
+    dbg_msg << setCarControlsStatistics.getSummaryAsString() << std::endl;
+    dbg_msg << getGpsDataStatistics.getSummaryAsString() << std::endl;
+    dbg_msg << getCarStateStatistics.getSummaryAsString() << std::endl;
+    dbg_msg << getImuStatistics.getSummaryAsString() << std::endl;
+    dbg_msg << getGSSStatistics.getSummaryAsString() << std::endl;
+    dbg_msg << control_cmd_sub_statistics.getSummaryAsString() << std::endl;
+    dbg_msg << global_gps_pub_statistics.getSummaryAsString() << std::endl;
+    dbg_msg << odom_pub_statistics.getSummaryAsString() << std::endl;
+    dbg_msg << imu_pub_statistics.getSummaryAsString() << std::endl;
+    dbg_msg << gss_pub_statistics.getSummaryAsString() << std::endl;
     
     for (auto &getLidarDataStatistics : getLidarDataVecStatistics)
     {
-        getLidarDataStatistics.Print();
+        dbg_msg << getLidarDataStatistics.getSummaryAsString() << std::endl;
     }
 
     // Reset lidar statistics
     for (auto &lidar_pub_statistics : lidar_pub_vec_statistics)
     {
-        lidar_pub_statistics.Print();
+        dbg_msg << lidar_pub_statistics.getSummaryAsString() << std::endl;
     }
-    std::cout << "------------------------------------------" << std::endl;
+    dbg_msg << "------------------------------------------" << std::endl;
+    RCLCPP_DEBUG(nh_->get_logger(), dbg_msg.str().c_str());
 }
 
 void AirsimROSWrapper::ResetStatistics()
@@ -817,8 +863,7 @@ void AirsimROSWrapper::finished_signal_cb(const fs_msgs::msg::FinishedSignal& ms
     std::string operator_url(std::getenv("OPERATOR_URL"));
     operator_url = operator_url + "/finished";
 
-    std::cout << operator_token << std::endl;
-    std::cout << operator_url << std::endl;
+    RCLCPP_DEBUG_STREAM(nh_->get_logger(), "Operator token: " <<  operator_token << " operator url: " << operator_url);
 
     // Send JSON HTTP POST request
     CURL *curl;
@@ -840,7 +885,7 @@ void AirsimROSWrapper::finished_signal_cb(const fs_msgs::msg::FinishedSignal& ms
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_obj.c_str());
 
     res = curl_easy_perform(curl);
-    std::cout << res << std::endl;
+    RCLCPP_DEBUG(nh_->get_logger(), "curl_easy_perform() returned: %d", res);
 
     curl_easy_cleanup(curl);
     curl_global_cleanup();
@@ -865,8 +910,7 @@ void AirsimROSWrapper::clock_timer_cb(){
     } catch (rpc::rpc_error& e)
     {
         std::string msg = e.get_error().as<std::string>();
-        std::cout << "Exception raised by the API, something went wrong while retrieving gss data for publishing simulation clock.\n"
-                  << msg << std::endl;
+        RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API, something went wrong while retrieving gss data for publishing simulation clock: " << msg);
     }
 
 }
@@ -880,8 +924,7 @@ void AirsimROSWrapper::extra_info_cb(){
     } catch (rpc::rpc_error& e)
     {
         std::string msg = e.get_error().as<std::string>();
-        std::cout << "Exception raised by the API, something went wrong while retrieving referee state for sending extra info." << std::endl
-                  << msg << std::endl;
+        RCLCPP_ERROR_STREAM(nh_->get_logger(), "Exception raised by the API, something went wrong while retrieving referee state for sending extra info." << std::endl << msg);
     }
 
 	fs_msgs::msg::ExtraInfo extra_info_msg;

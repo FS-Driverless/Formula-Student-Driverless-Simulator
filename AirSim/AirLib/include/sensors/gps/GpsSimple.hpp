@@ -69,7 +69,7 @@ public: //methods
 
     virtual ~GpsSimple() = default;
     //generate Gaussian noise 
-    const float getGaussianNoise(float mean, float var)
+    float getGaussianNoise(float mean, float var)
     {
         std::normal_distribution<float> distribution(mean, var);
         auto seed = (unsigned int)std::chrono::system_clock::now().time_since_epoch().count();

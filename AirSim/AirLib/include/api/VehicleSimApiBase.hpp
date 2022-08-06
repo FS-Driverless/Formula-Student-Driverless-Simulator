@@ -8,6 +8,7 @@
 #include "common/UpdatableObject.hpp"
 #include "common/ImageCaptureBase.hpp"
 #include "physics/Kinematics.hpp"
+#include "physics/WheelStates.hpp"
 #include "common/AirSimSettings.hpp"
 
 namespace msr { namespace airlib {
@@ -50,6 +51,7 @@ public:
     virtual Pose getPose() const = 0;
     virtual void setPose(const Pose& pose, bool ignore_collision) = 0;
     virtual const Kinematics::State* getGroundTruthKinematics() const = 0;
+    virtual const WheelStates* getWheelStates() const = 0;
 
     virtual CameraInfo getCameraInfo(const std::string& camera_name) const = 0;
     virtual void setCameraOrientation(const std::string& camera_name, const Quaternionr& orientation) = 0;

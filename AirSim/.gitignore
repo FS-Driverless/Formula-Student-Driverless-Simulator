@@ -260,7 +260,6 @@ ModelManifest.xml
 /cmake/DroneShell/DroneShell
 /cmake/DroneServer/DroneServer
 cmake/AirLibUnitTests/Makefile
-external/
 deps/
 cmake_build/
 

@@ -7,6 +7,7 @@
 #include "common/Common.hpp"
 #include "common/CommonStructs.hpp"
 #include "physics/Kinematics.hpp"
+#include "physics/WheelStates.hpp"
 #include "common/ImageCaptureBase.hpp"
 #include "api/WorldSimApiBase.hpp"
 
@@ -283,6 +284,78 @@ public:
             s.accelerations.linear = linear_acceleration.to();
             s.accelerations.angular = angular_acceleration.to();
 
+            return s;
+        }
+    };
+
+    struct WheelStates {
+        msr::airlib::TTimePoint time_stamp;
+
+        float fl_rpm;
+        float fr_rpm;
+        float rl_rpm;
+        float rr_rpm;
+
+        float fl_rotation_angle;
+        float fr_rotation_angle;
+        float rl_rotation_angle;
+        float rr_rotation_angle;
+
+        float fl_steering_angle;
+        float fr_steering_angle;
+        float rl_steering_angle;
+        float rr_steering_angle;
+
+        MSGPACK_DEFINE_MAP(
+            time_stamp,
+            fl_rpm, fr_rpm, rl_rpm, rr_rpm,
+            fl_rotation_angle, fr_rotation_angle, rl_rotation_angle, rr_rotation_angle,
+            fl_steering_angle, fr_steering_angle, rl_steering_angle, rr_steering_angle
+        );
+
+        WheelStates()
+        {}
+
+        WheelStates(const msr::airlib::WheelStates& ws)
+        {
+            time_stamp = ws.time_stamp;
+
+            fl_rpm = ws.fl.rpm;
+            fr_rpm = ws.fr.rpm;
+            rl_rpm = ws.rl.rpm;
+            rr_rpm = ws.rr.rpm;
+
+            fl_rotation_angle = ws.fl.rotation_angle;
+            fr_rotation_angle = ws.fr.rotation_angle;
+            rl_rotation_angle = ws.rl.rotation_angle;
+            rr_rotation_angle = ws.rr.rotation_angle;
+
+            fl_steering_angle = ws.fl.steering_angle;
+            fr_steering_angle = ws.fr.steering_angle;
+            rl_steering_angle = ws.rl.steering_angle;
+            rr_steering_angle = ws.rr.steering_angle;
+        }
+
+        msr::airlib::WheelStates to() const
+        {
+            msr::airlib::WheelStates s;
+            s.time_stamp = time_stamp;
+
+            s.fl.rpm = fl_rpm;
+            s.fr.rpm = fr_rpm;
+            s.rl.rpm = rl_rpm;
+            s.rr.rpm = rr_rpm;
+
+            s.fl.rotation_angle = fl_rotation_angle;
+            s.fr.rotation_angle = fr_rotation_angle;
+            s.rl.rotation_angle = rl_rotation_angle;
+            s.rr.rotation_angle = rr_rotation_angle;
+            
+            s.fl.steering_angle = fl_steering_angle;
+            s.fr.steering_angle = fr_steering_angle;
+            s.rl.steering_angle = rl_steering_angle;
+            s.rr.steering_angle = rr_steering_angle;
+            
             return s;
         }
     };

@@ -45,36 +45,10 @@ if ERRORLEVEL 1 (
   )
 )
 
-REM //---------- get rpclib ----------
-IF NOT EXIST external\rpclib mkdir external\rpclib
-IF NOT EXIST external\rpclib\rpclib-2.2.1 (
-	REM //leave some blank lines because powershell shows download banner at top of console
-	ECHO(
-	ECHO(   
-	ECHO(   
-	ECHO *****************************************************************************************
-	ECHO Downloading rpclib
-	ECHO *****************************************************************************************
-	powershell -command "& { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; iwr https://github.com/rpclib/rpclib/archive/v2.2.1.zip -OutFile external\rpclib.zip }"
-	
-	REM //remove any previous versions
-	rmdir external\rpclib /q /s
-
-	powershell -command "& { Expand-Archive -Path external\rpclib.zip -DestinationPath external\rpclib }"
-	del external\rpclib.zip /q
-	
-	REM //Don't fail the build if the high-poly car is unable to be downloaded
-	REM //Instead, just notify users that the gokart will be used.
-	IF NOT EXIST external\rpclib\rpclib-2.2.1 (
-		ECHO Unable to download high-polycount SUV. Your AirSim build will use the default vehicle.
-		goto :buildfailed
-	)
-)
-
 REM //---------- Build rpclib ------------
 ECHO Starting cmake to build rpclib...
-IF NOT EXIST external\rpclib\rpclib-2.2.1\build mkdir external\rpclib\rpclib-2.2.1\build
-cd external\rpclib\rpclib-2.2.1\build
+IF NOT EXIST external\rpclib\build mkdir external\rpclib\build
+cd external\rpclib\build
 REM cmake -G"Visual Studio 14 2015 Win64" ..
 cmake -G"Visual Studio 16 2019" ..
 
@@ -95,15 +69,15 @@ set RPCLIB_TARGET_LIB=AirLib\deps\rpclib\lib\x64
 if NOT exist %RPCLIB_TARGET_LIB% mkdir %RPCLIB_TARGET_LIB%
 set RPCLIB_TARGET_INCLUDE=AirLib\deps\rpclib\include
 if NOT exist %RPCLIB_TARGET_INCLUDE% mkdir %RPCLIB_TARGET_INCLUDE%
-robocopy /MIR external\rpclib\rpclib-2.2.1\include %RPCLIB_TARGET_INCLUDE%
+robocopy /MIR external\rpclib\include %RPCLIB_TARGET_INCLUDE%
 
 if "%buildMode%" == "--Debug" (
-robocopy /MIR external\rpclib\rpclib-2.2.1\build\Debug %RPCLIB_TARGET_LIB%\Debug
+robocopy /MIR external\rpclib\build\Debug %RPCLIB_TARGET_LIB%\Debug
 ) else if "%buildMode%" == "--Release" (
-robocopy /MIR external\rpclib\rpclib-2.2.1\build\Release %RPCLIB_TARGET_LIB%\Release
+robocopy /MIR external\rpclib\build\Release %RPCLIB_TARGET_LIB%\Release
 ) else (
-robocopy /MIR external\rpclib\rpclib-2.2.1\build\Debug %RPCLIB_TARGET_LIB%\Debug
-robocopy /MIR external\rpclib\rpclib-2.2.1\build\Release %RPCLIB_TARGET_LIB%\Release
+robocopy /MIR external\rpclib\build\Debug %RPCLIB_TARGET_LIB%\Debug
+robocopy /MIR external\rpclib\build\Release %RPCLIB_TARGET_LIB%\Release
 )
 
 REM //---------- get Eigen library ----------

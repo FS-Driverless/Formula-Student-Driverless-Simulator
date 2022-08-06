@@ -131,6 +131,7 @@ public:
     virtual void setTraceLine(const std::vector<float>& color_rgba, float thickness) override;
 
     virtual const msr::airlib::Kinematics::State* getGroundTruthKinematics() const override;
+    virtual const msr::airlib::WheelStates* getWheelStates() const override;
 
     void updateMovement(const msr::airlib::CarApiBase::CarControls& controls);
 
@@ -159,6 +160,7 @@ private:
     void plot(std::istream& s, FColor color, const Vector3r& offset);
     CarPawnSimApi::Pose toPose(const FVector& u_position, const FQuat& u_quat) const;
     void updateKinematics(float dt);
+    void updateWheelStates(float dt);
     void setStartPosition(const FVector& position, const FRotator& rotator);
 private:
     Params params_;
@@ -217,6 +219,7 @@ private:
     State state_, initial_state_;
 
     std::unique_ptr<msr::airlib::Kinematics> kinematics_;
+    std::unique_ptr<msr::airlib::WheelStates> wheel_states_;
 
     FColor trace_color_ = FColor::Purple;
     float trace_thickness_ = 3.0f;
