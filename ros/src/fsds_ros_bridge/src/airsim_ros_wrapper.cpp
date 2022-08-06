@@ -178,7 +178,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         vehicle_name = curr_vehicle_name;
         global_gps_pub = nh_.advertise<sensor_msgs::NavSatFix>("gps", 10);
         imu_pub = nh_.advertise<sensor_msgs::Imu>("imu", 10);
-        gss_pub = nh_.advertise<geometry_msgs::TwistStamped>("gss", 10);
+        gss_pub = nh_.advertise<geometry_msgs::TwistWithCovarianceStamped>("gss", 10);
 
         bool UDP_control;
         nh_private_.getParam("UDP_control", UDP_control);
@@ -532,13 +532,25 @@ void AirsimROSWrapper::gss_timer_cb(const ros::TimerEvent& event)
             lck.unlock();
         }
 
-        geometry_msgs::TwistStamped gss_msg;
+        geometry_msgs::TwistWithCovarianceStamped gss_msg;
         gss_msg.header.frame_id = "fsds/" + vehicle_name;
         gss_msg.header.stamp = make_ts(gss_data.time_stamp);
 
-        gss_msg.twist.linear.x = gss_data.linear_velocity.x();
-        gss_msg.twist.linear.y = gss_data.linear_velocity.y();
-        gss_msg.twist.linear.z = gss_data.linear_velocity.z();
+        gss_msg.twist.twist.angular.x = gss_data.angular_velocity.x();
+        gss_msg.twist.twist.angular.y = gss_data.angular_velocity.y();
+        gss_msg.twist.twist.angular.z = gss_data.angular_velocity.z();
+        
+        gss_msg.twist.twist.linear.x = gss_data.linear_velocity.x();
+        gss_msg.twist.twist.linear.y = gss_data.linear_velocity.y();
+        gss_msg.twist.twist.linear.z = gss_data.linear_velocity.z();
+
+        // The 0.1 covariances for everything were just guessed, don't assume theese are correct
+        gss_msg.twist.covariance[0] = 0.1;
+        gss_msg.twist.covariance[7] = 0.1;
+        gss_msg.twist.covariance[14] = 0.1;
+        gss_msg.twist.covariance[21] = 0.1;
+        gss_msg.twist.covariance[28] = 0.1;
+        gss_msg.twist.covariance[35] = 0.1;
 
         {
             ros_bridge::ROSMsgCounter counter(&gss_pub_statistics);
