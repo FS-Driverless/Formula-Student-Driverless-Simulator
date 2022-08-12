@@ -7,8 +7,8 @@ int main(int argc, char ** argv)
     rclcpp::init(argc, argv);
     std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("fsds_ros2_bridge"); 
 
-    std::string host_ip = "localhost";
-    node->get_parameter("host_ip", host_ip);
+    std::string host_ip = node->declare_parameterstd::string("host_ip", "localhost");
+
     AirsimROSWrapper airsim_ros_wrapper(node, host_ip);
 
     // if (airsim_ros_wrapper.is_used_lidar_timer_cb_queue_)
