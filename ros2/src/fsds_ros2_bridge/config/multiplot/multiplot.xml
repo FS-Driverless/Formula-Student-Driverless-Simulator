@@ -783,10 +783,10 @@
                                         <type>0</type>
                                     </scale>
                                     <topic>/fsds/gss</topic>
-                                    <type>geometry_msgs/TwistStamped</type>
+                                    <type>geometry_msgs/TwistWithCovarianceStamped</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>twist/linear/x</field>
+                                    <field>twist/twist/linear/x</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -796,7 +796,7 @@
                                         <type>0</type>
                                     </scale>
                                     <topic>/fsds/gss</topic>
-                                    <type>geometry_msgs/TwistStamped</type>
+                                    <type>geometry_msgs/TwistWithCovarianceStamped</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -834,10 +834,10 @@
                                         <type>0</type>
                                     </scale>
                                     <topic>/fsds/gss</topic>
-                                    <type>geometry_msgs/TwistStamped</type>
+                                    <type>geometry_msgs/TwistWithCovarianceStamped</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>twist/linear/y</field>
+                                    <field>twist/twist/linear/y</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -847,7 +847,7 @@
                                         <type>0</type>
                                     </scale>
                                     <topic>/fsds/gss</topic>
-                                    <type>geometry_msgs/TwistStamped</type>
+                                    <type>geometry_msgs/TwistWithCovarianceStamped</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -885,10 +885,10 @@
                                         <type>0</type>
                                     </scale>
                                     <topic>/fsds/gss</topic>
-                                    <type>geometry_msgs/TwistStamped</type>
+                                    <type>geometry_msgs/TwistWithCovarianceStamped</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>twist/linear/z</field>
+                                    <field>twist/twist/linear/z</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -898,7 +898,7 @@
                                         <type>0</type>
                                     </scale>
                                     <topic>/fsds/gss</topic>
-                                    <type>geometry_msgs/TwistStamped</type>
+                                    <type>geometry_msgs/TwistWithCovarianceStamped</type>
                                 </y_axis>
                             </axes>
                             <color>

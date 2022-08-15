@@ -729,8 +729,9 @@ public:
 
         msr::airlib::TTimePoint time_stamp;
         Vector3r linear_velocity;
+        Vector3r angular_velocity;
 
-        MSGPACK_DEFINE_MAP(time_stamp, linear_velocity);
+        MSGPACK_DEFINE_MAP(time_stamp, linear_velocity, angular_velocity);
 
         GSSData()
         {}
@@ -739,12 +740,14 @@ public:
         {
             time_stamp = o.time_stamp;
             linear_velocity = o.linear_velocity;
+            angular_velocity = o.angular_velocity;
         }
 
         msr::airlib::GSSSimple::Output to() const
         {
             msr::airlib::GSSSimple::Output s;
             s.linear_velocity = linear_velocity.to();
+            s.angular_velocity = angular_velocity.to();
             s.time_stamp = time_stamp;
  
             return s;
