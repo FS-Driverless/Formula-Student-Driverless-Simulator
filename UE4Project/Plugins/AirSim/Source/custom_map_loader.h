@@ -5,6 +5,7 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"

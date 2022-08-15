@@ -28,6 +28,10 @@ struct Actor {
 };
 
 TArray<FString> Ucustom_map_loader::ProcessFile(FString data, TArray<FTransform> & blue_cones, TArray<FTransform> & yellow_cones, TArray<FTransform> & big_orange_cones) {
+	// Get random seed for rotation of cones
+	srand((unsigned)time(NULL));
+
+	// Read the lines
 	TArray<FString> lines;
 	TArray<FString> values;
 
@@ -41,6 +45,7 @@ TArray<FString> Ucustom_map_loader::ProcessFile(FString data, TArray<FTransform>
 
 	lines.Add(right);
 
+	// Process each line
 	for (FString& line : lines) {
 		FString value = "";
 
@@ -61,9 +66,9 @@ TArray<FString> Ucustom_map_loader::ProcessFile(FString data, TArray<FTransform>
 		actor.xy_variance = FCString::Atof(*value);
 
 		FTransform transform{
-				FRotator{0.0f, 0.0f, 0.0f},       // Rotation
-				FVector{actor.x, actor.y, 5.0f},  // Translation
-				FVector{1.0f, 1.0f, 1.0f}         // Scale
+				FRotator{0.0f, float(rand() % 360), 0.0f},      // Rotation
+				FVector{actor.x, actor.y, 5.0f},				// Translation
+				FVector{1.0f, 1.0f, 1.0f}						// Scale
 		};
 
 		
