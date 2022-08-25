@@ -5,10 +5,6 @@
 
 static FString custom_map_path;
 
-bool Ucustom_map_loader::FileSaveString(FString SaveTextB, FString FileNameB)
-{
-	return FFileHelper::SaveStringToFile(SaveTextB, L"test.txt");
-}
 
 bool Ucustom_map_loader::FileLoadString(FString FileNameA, FString& SaveTextA)
 {
@@ -167,7 +163,7 @@ FTransform Ucustom_map_loader::GetFinishTransform(TArray<FTransform> big_orange_
 		angle = (std::atan2f(start_line.second.y - start_line.first.y, start_line.second.x - start_line.first.x) - PI / 2) * 180 / PI;
 	}
 	else {
-		UE_LOG(LogTemp, Warning, TEXT("Only start finish lines with 2 or 4 big orange cones are supported. Angle of the start finish line will probably be incorrect."), );
+		UE_LOG(LogTemp, Warning, TEXT("Only start finish lines with 2 or 4 big orange cones are supported. Angle of the start finish line will probably be incorrect."));
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("x1: %f, x2: %f, y1: %f, y2: %f"), big_orange_cones[0].GetLocation().X, big_orange_cones[1].GetLocation().X, big_orange_cones[0].GetLocation().Y, big_orange_cones[1].GetLocation().Y);
