@@ -24,6 +24,9 @@ The AirSim server uses the AirLib shared code (see `/AirSim/AirLib`).
 `/ros` is a ROS workspace that contains the `fsds_ros_bridge`. 
 This node can connect 1 autonomous system with the simulated world.
 
+`/ros2` is a ROS2 workspace that contains the `fsds_ros2_bridge`. 
+This node can connect 1 autonomous system with the simulated world.
+
 `/python` is a python client to connect with the simulator.
 
 `/AirSim` is a slimmed-down, hard-fork of the [AirSim](https://github.com/microsoft/AirSim) project.
@@ -32,6 +35,8 @@ When AirSim is compiled, the AirLib binaries are placed within `/UE4Project/Plug
 
 `/operator` is a python project that offers a web GUI for officials to control the simulation, stores lap times and chooses what car is currently connected to the world.
 It launches the fsds_ros_bridge to connect an autonomous system to the Unreal world and stops the bridge when the autonomous system is no longer allowed to control the car.
+
+`/maps` contains all the custom maps created by contributors.
 
 This repo uses LFS for some large files. All files bigger than 90MB are added to LFS.
 

@@ -1,4 +1,5 @@
 # FSDS Map Building Tutorial
+**Before attempting this, take a look at [our custom mapping page](custom-mapping.md)**
 
 Building new maps for FSDS is very useful to test your Autonomous System under various conditions. Creating a map requires using AirSim and Unreal Engine Editor from the FSDS source code. Instructions to install these can be found [here](getting-started.md).
 

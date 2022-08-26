@@ -13,6 +13,7 @@ nav:
     - "Getting started": "getting-started.md"
     - "Getting started with ROS": "getting-started-with-ros.md"
     - "Getting started with Python": "getting-started-with-python.md"
+    - "Getting started with custom mapping": "custom-mapping.md"
   - "Vehicle & Sensors":
     - "Vehicle model": "vehicle_model.md"
     - "IMU": "imu.md"
