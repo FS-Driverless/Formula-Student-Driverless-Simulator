@@ -12,15 +12,15 @@ Go to [unrealengine.com](https://www.unrealengine.com/) and download the epic in
 You need an account for this.
 Install the epic installer.
 
-Launch the epic installer and install Unreal Engine 4.25
+Launch the epic installer and install Unreal Engine 4.27
 
 ## Install Unreal Engine (Ubuntu)
-This project uses Unreal Engine 4.25.
+This project uses Unreal Engine 4.27.
 Before you can use unreal engine on Ubuntu, you must register at [unrealengine.com](https://www.unrealengine.com/) and get access to the UnrealEngine github repo.
 
 After you get access, clone the repo and build it:
 ```
-git clone --depth=1 -b 4.25 https://github.com/EpicGames/UnrealEngine.git
+git clone --depth=1 -b 4.27 https://github.com/EpicGames/UnrealEngine.git
 cd UnrealEngine	
 ./Setup.sh && ./GenerateProjectFiles.sh && make	
 ```
