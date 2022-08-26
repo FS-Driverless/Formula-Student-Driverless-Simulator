@@ -17,9 +17,19 @@ For developing this project, you need quite a good computer because Unreal Engin
 If your computer does not suffice you can use a remote workstation on Google Cloud Platform.
 Read [this tutorial](gcp-remote-workstation.md) on how to setup your virtual workstation.
 
-The simulator will load settings from the file `Formula-Student-Driverless-Simulator/settings.json` in your **home directory**.
-This file is required for the simulator to work and contains the sensor configuration of the car.
-If you clone the repo you will already have this file in place.
+## Settings
+
+In order to work, the simulator requires a `settings.json` file, which contains general settings and the sensor configuration of the car.
+The simulator will look for this file in the following places:
+- `~/Formula-Student-Driverless-Simulator/settings.json` in your **home directory**,
+- The folder the simulator binary is located in (`<the folder with FSDS.sh>/FSOnline/Binaries/<your OS>/`). 
+- The current working directory when the simulator binary is launched
+- The path supplied via the `-settings "<path to settings.json file>` command line argument to the binary
+
+Alternatively, when programatically generating the setttings, the simulator also accepts
+the settings as a URL encoded json string (e.g. `-settings "%7B%22SeeDocsAt%22%3A%22https%....`)
+
+If you cloned the repo in your home directory you will already have this file in place.
 If not, copy-paste the contents of the [settings.json file at the root of this repository](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/blob/master/settings.json) into the `~/Formula-Student-Driverless-Simulator`.
 This should get you started with the default vehicle and sensor configuration, but feel free to try your own custom sensor suite.
 The default vehicle is the Technion Formula Student racing car, but teams participating in the UK edition of FS-AI might want
