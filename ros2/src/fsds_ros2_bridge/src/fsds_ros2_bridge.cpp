@@ -7,7 +7,7 @@ int main(int argc, char ** argv)
     rclcpp::init(argc, argv);
     std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("fsds_ros2_bridge"); 
 
-    std::string host_ip = node->declare_parameterstd::string("host_ip", "localhost");
+    std::string host_ip = node->declare_parameter<std::string>("host_ip", "localhost");
 
     AirsimROSWrapper airsim_ros_wrapper(node, host_ip);
 
