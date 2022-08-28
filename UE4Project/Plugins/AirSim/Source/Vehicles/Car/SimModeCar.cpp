@@ -115,7 +115,7 @@ std::unique_ptr<CarPawnSimApi> ASimModeCar::createVehicleSimApi(
 {
     auto vehicle_pawn = static_cast<TVehiclePawn*>(pawn_sim_api_params.pawn);
     auto vehicle_sim_api = std::unique_ptr<CarPawnSimApi>(new CarPawnSimApi(pawn_sim_api_params, 
-        vehicle_pawn->getKeyBoardControls(), vehicle_pawn->getVehicleMovementComponent()));
+        vehicle_pawn->getKeyBoardControls()));
     vehicle_sim_api->initialize();
     vehicle_sim_api->reset();
     return vehicle_sim_api;
