@@ -160,7 +160,7 @@ private:
     void plot(std::istream& s, FColor color, const Vector3r& offset);
     CarPawnSimApi::Pose toPose(const FVector& u_position, const FQuat& u_quat) const;
     void updateKinematics(float dt);
-    void updateWheelStates(float dt);
+    void updateWheelStates();
     void setStartPosition(const FVector& position, const FRotator& rotator);
 private:
     Params params_;
