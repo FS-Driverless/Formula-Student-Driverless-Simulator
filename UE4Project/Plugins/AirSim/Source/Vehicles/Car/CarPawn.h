@@ -46,7 +46,6 @@ public:
     {
         return &pawn_events_;
     }
-    UWheeledVehicleMovementComponent* getVehicleMovementComponent() const;
     const msr::airlib::CarApiBase::CarControls& getKeyBoardControls() const
     {
         return keyboard_controls_;
@@ -54,7 +53,6 @@ public:
 
 private:
     void updateHUDStrings();
-    void setupVehicleMovementComponent();
     void updateInCarHUD();
     void updatePhysicsMaterial();
 
