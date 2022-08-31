@@ -19,7 +19,7 @@
 
 using namespace msr::airlib;
 
-CarPawnSimApi::CarPawnSimApi(const Params& params, const msr::airlib::CarApiBase::CarControls& keyboard_controls)
+CarPawnSimApi::CarPawnSimApi(const Params& params, const msr::airlib::CarApiBase::CarControls& keyboard_controls, UWheeledVehicleMovementComponent* movement)
     : params_(params), keyboard_controls_(keyboard_controls), ned_transform_(params.pawn, *params.global_transform)
 {
 }

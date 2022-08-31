@@ -77,7 +77,8 @@ public:
 
     //VehicleSimApiBase interface
     //implements game interface to update pawn
-    CarPawnSimApi(const Params& params, const msr::airlib::CarApiBase::CarControls& keyboard_controls);
+    CarPawnSimApi(const Params& params,
+        const msr::airlib::CarApiBase::CarControls& keyboard_controls, UWheeledVehicleMovementComponent* movement);
 
     virtual void update() override;
     void updatePawn();
