@@ -230,6 +230,7 @@ private:
 	std::shared_ptr<rclcpp::Publisher<rosgraph_msgs::msg::Clock>> clock_pub;
     
     /// ROS subscribers
-    std::shared_ptr<rclcpp::Subscription<std::remove_cv_t<std::remove_reference_t<const fs_msgs::msg::ControlCommand &>>, std::allocator<void>, rclcpp::message_memory_strategy::MessageMemoryStrategy<std::remove_cv_t<std::remove_reference_t<const fs_msgs::msg::ControlCommand &>>, std::allocator<void>>>> control_cmd_sub;
+    // std::shared_ptr<rclcpp::Subscription<std::remove_cv_t<std::remove_reference_t<const fs_msgs::msg::ControlCommand &>>, std::allocator<void>, rclcpp::message_memory_strategy::MessageMemoryStrategy<std::remove_cv_t<std::remove_reference_t<const fs_msgs::msg::ControlCommand &>>, std::allocator<void>>>> control_cmd_sub;
+    rclcpp::Subscription<fs_msgs::msg::ControlCommand>::SharedPtr control_cmd_sub;
     rclcpp::Subscription<fs_msgs::msg::FinishedSignal>::SharedPtr finished_signal_sub_;
 };

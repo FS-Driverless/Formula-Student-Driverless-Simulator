@@ -199,9 +199,9 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         nh_->get_parameter("UDP_control", UDP_control);
 
         if(UDP_control){
-            auto control_cmd_sub = nh_->create_subscription<fs_msgs::msg::ControlCommand>("control_command", 1, std::bind(&AirsimROSWrapper::car_control_cb, this, std::placeholders::_1));
+            control_cmd_sub = nh_->create_subscription<fs_msgs::msg::ControlCommand>("control_command", 1, std::bind(&AirsimROSWrapper::car_control_cb, this, std::placeholders::_1));
         } else {
-            auto control_cmd_sub = nh_->create_subscription<fs_msgs::msg::ControlCommand>("control_command", 1, std::bind(&AirsimROSWrapper::car_control_cb, this, std::placeholders::_1));
+            control_cmd_sub = nh_->create_subscription<fs_msgs::msg::ControlCommand>("control_command", 1, std::bind(&AirsimROSWrapper::car_control_cb, this, std::placeholders::_1));
         }
 
         if(!competition_mode_) {
