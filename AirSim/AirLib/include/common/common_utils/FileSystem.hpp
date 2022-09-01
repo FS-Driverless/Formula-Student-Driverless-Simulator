@@ -111,9 +111,15 @@ public:
         return fullPath;
     }
 
+    static std::string getAppDataFolder() {
+        return ensureFolder(combine(getUserHomeFolder(), ProductFolderName));
+    }
+
+    // used by the ROS bridge, should be removed once ROS bridge switches
+    // to loading the settings text via an RPC call
     static std::string getConfigFilePath()
     {
-        return combine(combine(getUserHomeFolder(), "Formula-Student-Driverless-Simulator"), "settings.json");
+        return combine(getAppDataFolder(), "settings.json");
     }
 
     static std::string getLogFileNamePath(const std::string& fullPath, const std::string& prefix, const std::string& suffix, const std::string& extension, 

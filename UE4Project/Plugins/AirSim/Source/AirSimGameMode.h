@@ -30,7 +30,11 @@ public:
     
 private:
     void initializeSettings();
-    void readSettingsTextFromFile(FString fileName, std::string& settingsText);
+    bool getSettingsText(FString& settingsTextOutput);
+    bool readSettingsTextFromFile(std::string fileName, FString& settingsTextOutput);
+    bool readSettingsTextFromFile(FString fileName, FString& settingsTextOutput);
+    bool getSettingsTextFromCommandLine(FString& settingsTextOutput);
+    bool parseSettingsStringFromCommandLine(FString maybeQuotedString, FString& settingsTextOutput);
 
     void setUnrealEngineSettings();
 

@@ -22,7 +22,6 @@ namespace msr { namespace airlib {
 
 class Settings {
 private:
-    std::string full_filepath_;
     nlohmann::json doc_;
 
 private:
@@ -40,8 +39,6 @@ public:
 
     static Settings& loadJSonString(const std::string& json_str)
     {
-        singleton().full_filepath_ = "";
-
         if (json_str.length() > 0) {
             std::stringstream ss;
             ss << json_str;
@@ -49,7 +46,6 @@ public:
         } else {
             throw std::invalid_argument("Invalid settings.json: json string empty.");
         }
-
         return singleton();
     }
 

@@ -6,6 +6,7 @@
 #include "AirBlueprintLib.h"
 #include "common/AirSimSettings.hpp"
 #include "Vehicles/Car/SimModeCar.h"
+#include "GenericPlatform/GenericPlatformHttp.h"
 
 
 class AUnrealLog : public msr::airlib::Utils::Logger
@@ -99,9 +100,9 @@ void AAirSimGameMode::PostLogin(APlayerController * newPlayer) {
 
 void AAirSimGameMode::initializeSettings()
 {
-    std::string settingsText;
-    readSettingsTextFromFile(FString(common_utils::FileSystem::getConfigFilePath().c_str()), settingsText);
-    msr::airlib::AirSimSettings::initializeSettings(settingsText);
+    FString settingsText;
+    getSettingsText(settingsText);
+    msr::airlib::AirSimSettings::initializeSettings(std::string(TCHAR_TO_UTF8(*settingsText)));
 
     msr::airlib::AirSimSettings::singleton().load();
     for (const auto &warning : msr::airlib::AirSimSettings::singleton().warning_messages)
@@ -114,23 +115,60 @@ void AAirSimGameMode::initializeSettings()
     }
 }
 
-void AAirSimGameMode::readSettingsTextFromFile(FString settingsFilepath, std::string &settingsText)
-{
-    if (!FPaths::FileExists(settingsFilepath)) {
-        throw std::runtime_error("settings.json file does not exist. Ensure the ~/Formula-Student-Driverless-Simulator/settings.json file exists.");
-    }
-    FString settingsTextFStr;
-    if (FFileHelper::LoadFileToString(settingsTextFStr, *settingsFilepath))
-    {
-        UAirBlueprintLib::LogMessageString("Loaded settings from ", TCHAR_TO_UTF8(*settingsFilepath), LogDebugLevel::Informational);
-        settingsText = TCHAR_TO_UTF8(*settingsTextFStr);
-    }
-    else
-    {
-        UAirBlueprintLib::LogMessageString("Cannot read settings.json file ", TCHAR_TO_UTF8(*settingsFilepath), LogDebugLevel::Failure);
-        throw std::runtime_error("Failed reading settings.json. Ensure the ~/Formula-Student-Driverless-Simulator/settings.json file is correct.");
-    }
+bool AAirSimGameMode::getSettingsText(FString& settingsTextOutput) {
+    return (
+        getSettingsTextFromCommandLine(settingsTextOutput)
+        ||
+        readSettingsTextFromFile(common_utils::FileSystem::combine(std::string(TCHAR_TO_UTF8(*FPaths::LaunchDir())), "settings.json"), settingsTextOutput)
+        ||
+        readSettingsTextFromFile(common_utils::FileSystem::combine(common_utils::FileSystem::getExecutableFolder(), "settings.json"), settingsTextOutput)
+        ||
+        readSettingsTextFromFile(common_utils::FileSystem::combine(common_utils::FileSystem::getAppDataFolder(), "settings.json"), settingsTextOutput)
+    );
 }
+
+bool AAirSimGameMode::readSettingsTextFromFile(std::string settingsFilepath, FString& settingsTextOutput) {
+    return readSettingsTextFromFile(FString(settingsFilepath.c_str()), settingsTextOutput);
+}
+
+
+bool AAirSimGameMode::readSettingsTextFromFile(FString settingsFilepath, FString& settingsTextOutput) {
+    UAirBlueprintLib::LogMessage("Attempting to load settings from " + settingsFilepath, FString(""), LogDebugLevel::Informational);
+    bool found = FPaths::FileExists(settingsFilepath);
+    if (found) {
+        bool readSuccessful = FFileHelper::LoadFileToString(settingsTextOutput, *settingsFilepath);
+        if (readSuccessful) {
+            UAirBlueprintLib::LogMessage("Loaded settings from " + settingsFilepath, FString(""), LogDebugLevel::Informational);
+        }
+        else {
+            UAirBlueprintLib::LogMessage("Cannot read file " + settingsFilepath, FString(""), LogDebugLevel::Failure);
+            throw std::runtime_error("Cannot read settings file.");
+        }
+    }
+
+    return found;
+}
+
+bool AAirSimGameMode::getSettingsTextFromCommandLine(FString& settingsTextOutput) {
+    FString settingsParamValue;
+
+    return (
+        FParse::Value(FCommandLine::Get(), TEXT("settings"), settingsParamValue)
+        && (
+            readSettingsTextFromFile(settingsParamValue.TrimQuotes(), settingsTextOutput)
+            || parseSettingsStringFromCommandLine(settingsParamValue, settingsTextOutput)
+        )
+    );
+}
+
+bool AAirSimGameMode::parseSettingsStringFromCommandLine(FString urlEncodedSettings, FString& settingsTextOutput) {
+    UAirBlueprintLib::LogMessageString("Attempting to load settings directly from command line: ", std::string(TCHAR_TO_UTF8(*urlEncodedSettings)), LogDebugLevel::Informational);
+    
+    settingsTextOutput = FGenericPlatformHttp::UrlDecode(urlEncodedSettings);
+    UAirBlueprintLib::LogMessageString("Loaded settings directly from command line", std::string(TCHAR_TO_UTF8(*settingsTextOutput)), LogDebugLevel::Informational);
+    return true;
+}
+
 
 void AAirSimGameMode::setUnrealEngineSettings()
 {
