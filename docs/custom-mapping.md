@@ -1,6 +1,24 @@
 # Custom Mapping
 
-## Format
+## Loading custom maps
+
+### From the GUI
+Open the simulator and in the "Level" drop down select "CustomMap". 
+Paste the absolute path to your map in the text field that showed up and run the simulator.
+
+![droneport track](images/FEB_droneport_track.png)
+
+To load a new map, restart the simulator and give it a new absolute path to the new map.
+
+### From command line
+
+When launching the simulator executable, add the absolute path to the map as a command line argument:
+
+`"$UE4_PROJECT_ROOT/FSOnline/Binaries/Linux/Blocks" FSOnline -CustomMap="<path to the custom map here>"`
+
+The simulator will launch directly into the custom map, skipping the menu entirely.
+
+## Custom map file format
 The maps need to be made in a specific format. We chose to use csv files.
 The format within the csv files will have to look as follows:
 
@@ -33,10 +51,6 @@ yellow,6.0,0.0,0.0,0.01,0.01,0.0
 
 It is important to either have 4 or 2 big orange cones to make sure that we can calculate how the start finish line should be oriented.
 
-## Loading it in the simulator
-Open the simulator and select custom map. A text field will show up, paste the absolute path to your map and run the simulator.
-![droneport track](images/FEB_droneport_track.png)
-To load a new map, restart the simulator and give it a new absolute path to the new map.
 
 ## Share it with the community
-You can share your maps with the community by adding them to the `maps` folder and creating a pull request.
+You are welcome to share your maps with the community by adding them to the `maps` folder and creating a pull request.
