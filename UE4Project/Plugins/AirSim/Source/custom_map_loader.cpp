@@ -63,7 +63,7 @@ TArray<FString> Ucustom_map_loader::ProcessFile(FString data, TArray<FTransform>
 
 		FTransform transform{
 				FRotator{0.0f, float(rand() % 360), 0.0f},      // Rotation
-				FVector{actor.x, actor.y, 5.0f},				// Translation
+				FVector{actor.x, -actor.y, 5.0f},				// Translation
 				FVector{1.0f, 1.0f, 1.0f}						// Scale
 		};
 
