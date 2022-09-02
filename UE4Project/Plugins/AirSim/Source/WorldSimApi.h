@@ -49,6 +49,7 @@ public:
     virtual void simPlotTransforms(const std::vector<Pose>& poses, float scale, float thickness, float duration, bool is_persistent) override;
     virtual void simPlotTransformsWithNames(const std::vector<Pose>& poses, const std::vector<std::string>& names, float tf_scale, float tf_thickness, float text_scale, const std::vector<float>& text_color_rgba, float duration) override;
 	virtual std::vector<MeshPositionVertexBuffersResponse> getMeshPositionVertexBuffers() const override;
+    virtual std::string getSettingsString() const override;
 
 private:
     ASimModeBase* simmode_;

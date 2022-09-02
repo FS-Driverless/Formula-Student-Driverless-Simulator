@@ -249,3 +249,8 @@ std::vector<WorldSimApi::MeshPositionVertexBuffersResponse> WorldSimApi::getMesh
 	}, true);
 	return responses;
 }
+
+std::string WorldSimApi::getSettingsString() const
+{
+    return msr::airlib::AirSimSettings::singleton().settings_text_;
+}
