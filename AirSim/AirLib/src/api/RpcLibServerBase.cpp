@@ -89,6 +89,9 @@ RpcLibServerBase::RpcLibServerBase(ApiProvider* api_provider, const std::string&
     pimpl_->server.bind("getMinRequiredClientVersion", []() -> int {
         return 1;
     });
+     pimpl_->server.bind("getSettingsString", [&]() -> std::string {
+        return getWorldSimApi()->getSettingsString();
+    });
        
     pimpl_->server.bind("simPause", [&](bool is_paused) -> void { 
         getWorldSimApi()->pause(is_paused); 

@@ -197,3 +197,11 @@ class FSDSClient:
     def getRefereeState(self):
         referee_state_raw = self.client.call('getRefereeState')
         return RefereeState.from_msgpack(referee_state_raw)
+
+    def getSettingsString(self):
+        """
+        Fetch the settings text being used by AirSim
+        Returns:
+            str: Settings text in JSON format
+        """
+        return self.client.call('getSettingsString')

@@ -328,6 +328,8 @@ public: //fields
 	std::string speed_unit_label = "m\\s";
     std::map<std::string, std::unique_ptr<SensorSetting>> sensor_defaults;
 
+    std::string settings_text_ = "";
+
 public: //methods
     static AirSimSettings& singleton()
     {
@@ -367,6 +369,7 @@ public: //methods
     static void initializeSettings(const std::string& json_settings_text)
     {
         try {
+            singleton().settings_text_ = json_settings_text;
             Settings::loadJSonString(json_settings_text);
         }
         catch (std::exception &ex) {

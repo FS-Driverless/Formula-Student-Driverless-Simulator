@@ -13,8 +13,9 @@ AirsimROSWrapper::AirsimROSWrapper(const std::shared_ptr<rclcpp::Node>& nh, cons
                                                                                                     static_tf_pub_(this->nh_)
 {
     try {
-        auto settingsText = this->readTextFromFile(common_utils::FileSystem::getConfigFilePath());
-        msr::airlib::AirSimSettings::initializeSettings(settingsText);
+        airsim_client_.confirmConnection();
+        std::string settings_text = airsim_client_.getSettingsString();
+        msr::airlib::AirSimSettings::initializeSettings(settings_text);
 
         msr::airlib::AirSimSettings::singleton().load();
         for (const auto &warning : msr::airlib::AirSimSettings::singleton().warning_messages)

@@ -11,8 +11,9 @@ AirsimROSWrapper::AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHan
                                                                                                                                airsim_client_lidar_(host_ip)
 {
     try {
-        auto settingsText = this->readTextFromFile(common_utils::FileSystem::getConfigFilePath());
-        msr::airlib::AirSimSettings::initializeSettings(settingsText);
+        airsim_client_.confirmConnection();
+        std::string settings_text = airsim_client_.getSettingsString();
+        msr::airlib::AirSimSettings::initializeSettings(settings_text);
 
         msr::airlib::AirSimSettings::singleton().load();
         for (const auto &warning : msr::airlib::AirSimSettings::singleton().warning_messages)
