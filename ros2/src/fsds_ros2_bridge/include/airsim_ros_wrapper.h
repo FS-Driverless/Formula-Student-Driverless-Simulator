@@ -39,11 +39,9 @@ STRICT_MODE_OFF //todo what does this do?
 #include <sensor_msgs/msg/imu.hpp>
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
-#include <std_srvs/srv/empty.hpp>
 // #include <tf/tf.h>
 #include <tf2/LinearMath/Matrix3x3.h>
 #include <tf2/LinearMath/Quaternion.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf2_ros/static_transform_broadcaster.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
@@ -230,6 +228,6 @@ private:
 	std::shared_ptr<rclcpp::Publisher<rosgraph_msgs::msg::Clock>> clock_pub;
     
     /// ROS subscribers
-    std::shared_ptr<rclcpp::Subscription<std::remove_cv_t<std::remove_reference_t<const fs_msgs::msg::ControlCommand &>>, std::allocator<void>, rclcpp::message_memory_strategy::MessageMemoryStrategy<std::remove_cv_t<std::remove_reference_t<const fs_msgs::msg::ControlCommand &>>, std::allocator<void>>>> control_cmd_sub;
+    rclcpp::Subscription<fs_msgs::msg::ControlCommand>::SharedPtr control_cmd_sub;
     rclcpp::Subscription<fs_msgs::msg::FinishedSignal>::SharedPtr finished_signal_sub_;
 };
