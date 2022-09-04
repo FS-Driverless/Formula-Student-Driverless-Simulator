@@ -32,8 +32,8 @@ if [ "$(uname)" == "Darwin" ]; then
     export CC=/usr/local/opt/llvm@8/bin/clang
     export CXX=/usr/local/opt/llvm@8/bin/clang++
 else
-    export CC="clang-14"
-    export CXX="clang++-14"
+    export CC="clang-12"
+    export CXX="clang++-12"
 fi
 
 #install EIGEN library
