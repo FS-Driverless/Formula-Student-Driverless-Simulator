@@ -30,7 +30,7 @@ if [ "$VERSION" -lt "17" ]; then
     wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
     sudo apt-get update
 fi
-sudo apt-get install -y clang-8 clang++-8 libc++-8-dev libc++abi-8-dev
+sudo apt-get install -y clang-14 clang++-14 libc++-14-dev libc++abi-14-dev
 
 #install additional tools
 sudo apt-get install -y build-essential
