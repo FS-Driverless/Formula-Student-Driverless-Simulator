@@ -33,7 +33,7 @@ void UnrealLidarSensor::createLasers()
     laser_angles_.clear();
     for (auto i = 0u; i < params.number_of_lasers; ++i)
     {
-        const float vertical_angle = params.vertical_FOV_upper - static_cast<float>(i) * delta_angle;
+        const float vertical_angle = -(params.vertical_FOV_upper - static_cast<float>(i) * delta_angle);
         laser_angles_.emplace_back(vertical_angle);
     }
 }
@@ -97,7 +97,6 @@ bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const ms
 
     // We need to compose rotations here rather than rotate a vector by a quaternion
     // Hence using coordOrientationAdd(..) rather than rotateQuaternion(..)
-
     // get ray quaternion in lidar frame (angles must be in radians)
     msr::airlib::Quaternionr ray_q_l = msr::airlib::VectorMath::toQuaternion(
         msr::airlib::Utils::degreesToRadians(vertical_angle),   //pitch - rotation around Y axis
@@ -113,6 +112,8 @@ bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const ms
     // get ray vector (end position)
     Vector3r end = VectorMath::rotateVector(VectorMath::front(), ray_q_w, true) * params.range + start;
    
+    //DrawDebugLine(actor_->GetWorld(), ned_transform_->fromLocalEnu(start), ned_transform_->fromLocalEnu(end), FColor::Blue, false, 0.1);
+
     FHitResult hit_result = FHitResult(ForceInit);
     bool is_hit = UAirBlueprintLib::GetObstacle(actor_, ned_transform_->fromLocalEnu(start), ned_transform_->fromLocalEnu(end), hit_result, actor_, ECC_Visibility);
 
