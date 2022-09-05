@@ -112,8 +112,6 @@ bool UnrealLidarSensor::shootLaser(const msr::airlib::Pose& lidar_pose, const ms
     // get ray vector (end position)
     Vector3r end = VectorMath::rotateVector(VectorMath::front(), ray_q_w, true) * params.range + start;
    
-    //DrawDebugLine(actor_->GetWorld(), ned_transform_->fromLocalEnu(start), ned_transform_->fromLocalEnu(end), FColor::Blue, false, 0.1);
-
     FHitResult hit_result = FHitResult(ForceInit);
     bool is_hit = UAirBlueprintLib::GetObstacle(actor_, ned_transform_->fromLocalEnu(start), ned_transform_->fromLocalEnu(end), hit_result, actor_, ECC_Visibility);
 
