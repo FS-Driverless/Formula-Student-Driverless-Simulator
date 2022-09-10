@@ -77,7 +77,7 @@ public:
     AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, const std::string& host_ip);
     ~AirsimROSWrapper(){};
 
-    void initialize_airsim();
+    void initialize_airsim(TTimeDelta timeout);
     void initialize_ros();
     void publish_track();
     void initialize_statistics();
