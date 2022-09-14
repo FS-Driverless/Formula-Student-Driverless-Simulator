@@ -74,7 +74,7 @@ struct SimpleMatrix
 class AirsimROSWrapper
 {
 public:
-    AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, const std::string& host_ip);
+    AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, const std::string& host_ip, double timeout_sec);
     ~AirsimROSWrapper(){};
 
     void initialize_airsim(TTimeDelta timeout);

@@ -4,12 +4,13 @@
 // PLUGINLIB_EXPORT_CLASS(AirsimROSWrapper, nodelet::Nodelet)
 #include "common/AirSimSettings.hpp"
 
-AirsimROSWrapper::AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, const std::string& host_ip) : nh_(nh),
+AirsimROSWrapper::AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, const std::string& host_ip, double timeout_sec) : nh_(nh),
                                                                                                                                nh_private_(nh_private),
                                                                                                                                lidar_async_spinner_(1, &lidar_timer_cb_queue_), // same as above, but for lidar
-                                                                                                                               airsim_client_(host_ip),
-                                                                                                                               airsim_client_lidar_(host_ip)
+                                                                                                                               airsim_client_(host_ip, RpcLibPort, timeout_sec),
+                                                                                                                               airsim_client_lidar_(host_ip, RpcLibPort, timeout_sec)
 {
+    initialize_airsim(timeout_sec);
     try {
         airsim_client_.confirmConnection();
         std::string settings_text = airsim_client_.getSettingsString();
@@ -35,14 +36,15 @@ AirsimROSWrapper::AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHan
     ROS_INFO_STREAM("AirsimROSWrapper Initialized!");
 }
 
-void AirsimROSWrapper::initialize_airsim()
+void AirsimROSWrapper::initialize_airsim(double timeout)
 {
     // todo do not reset if already in air?
     try
     {
+        double elapsed = 0.0;
         ROS_INFO_STREAM("Waiting for connection - ");
-        airsim_client_.confirmConnection();
-        airsim_client_lidar_.confirmConnection();
+        airsim_client_.confirmConnection(timeout);
+        airsim_client_lidar_.confirmConnection(timeout);
         ROS_INFO_STREAM("Connected to the simulator!");
     }
     catch (rpc::rpc_error& e)
@@ -257,8 +259,6 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
     }
 
     reset_srvr_ = nh_.advertiseService("reset", &AirsimROSWrapper::reset_srv_cb, this);
-
-    initialize_airsim();
 }
 
 ros::Time AirsimROSWrapper::make_ts(uint64_t unreal_ts)

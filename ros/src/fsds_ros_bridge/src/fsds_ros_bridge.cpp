@@ -9,8 +9,11 @@ int main(int argc, char ** argv)
     ros::NodeHandle nh_private("~");
 
     std::string host_ip = "localhost";
+    double timeout_sec = 10;
     nh_private.getParam("host_ip", host_ip);
-    AirsimROSWrapper airsim_ros_wrapper(nh, nh_private, host_ip);
+    nh_private.getParam("timeout", timeout_sec);
+
+    AirsimROSWrapper airsim_ros_wrapper(nh, nh_private, host_ip, timeout_sec);
 
     if (airsim_ros_wrapper.is_used_lidar_timer_cb_queue_)
     {
