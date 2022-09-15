@@ -35,7 +35,7 @@ jobs:
       
     - name: Compilation settings
       run: |
-        sudo apt-get -y install gcc-8 g++-8 rsync libyaml-cpp-dev
+        sudo apt-get -y install gcc-8 g++-8 rsync libyaml-cpp-dev libcurl4-openssl-dev
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 700 --slave /usr/bin/g++ g++ /usr/bin/g++-7
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 800 --slave /usr/bin/g++ g++ /usr/bin/g++-8
       
