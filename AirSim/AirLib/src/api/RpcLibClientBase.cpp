@@ -58,9 +58,9 @@ struct RpcLibClientBase::impl {
 
 typedef msr::airlib_rpclib::RpcLibAdapatorsBase RpcLibAdapatorsBase;
 
-RpcLibClientBase::RpcLibClientBase(const string&  ip_address, uint16_t port, float timeout_sec)
+RpcLibClientBase::RpcLibClientBase(const string&  ip_address, uint16_t port, float timeout_sec) : ip_address_(ip_address), port_(port), timeout_sec_(timeout_sec)
 {
-    pimpl_.reset(new impl(ip_address, port, timeout_sec));
+    pimpl_.reset(new impl(ip_address_, port_, timeout_sec_));
 }
 
 RpcLibClientBase::~RpcLibClientBase()
@@ -111,11 +111,21 @@ void RpcLibClientBase::reset()
     pimpl_->client.call("reset");
 }
 
-void RpcLibClientBase::confirmConnection()
+void RpcLibClientBase::confirmConnection(double timeout)
 {
     ClockBase* clock = ClockFactory::get();
 
-    clock->sleep_for(1);
+    double delay = 0.2;
+    for (double elapsed = 0.0; elapsed <= timeout; elapsed += delay) {
+        pimpl_.reset(new impl(ip_address_, port_, timeout_sec_));
+        if (getConnectionState() == RpcLibClientBase::ConnectionState::Connected)
+        {
+            break;
+        }
+        clock->sleep_for(delay);
+    }
+
+    
     if (getConnectionState() != RpcLibClientBase::ConnectionState::Connected)
     {
         throw std::runtime_error("Failed connecting to RPC server (airsim). Is the simulator running?");

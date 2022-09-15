@@ -162,9 +162,12 @@ int main(int argc, char ** argv)
     msr::airlib::CarRpcLibClient client(host_ip, RpcLibPort, 5);
     airsim_api = &client;
 
+    double timeout_sec = 10.0;
+    nh.getParam("timeout", timeout_sec);
+
     try {
         std::cout << "Waiting for connection - " << std::endl;
-        airsim_api->confirmConnection();
+        airsim_api->confirmConnection(timeout_sec);
         std::cout << "Connected to the simulator!" << std::endl;
     } catch (const std::exception &e) {
         std::string msg = e.what();

@@ -26,7 +26,7 @@ public:
     RpcLibClientBase(const string& ip_address = "localhost", uint16_t port = RpcLibPort, float timeout_sec = 60);
     virtual ~RpcLibClientBase();    //required for pimpl
 
-    void confirmConnection();
+    void confirmConnection(double timeout);
     void reset();
 
     ConnectionState getConnectionState();
@@ -107,6 +107,10 @@ protected:
     const void* getClient() const;
 
 private:
+    std::string ip_address_;
+    uint16_t port_;
+    float timeout_sec_;
+
     struct impl;
     std::unique_ptr<impl> pimpl_;
 };
