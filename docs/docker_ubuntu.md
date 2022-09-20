@@ -30,7 +30,7 @@ After building the image, verify that the image exists by runnig:
 ```
 
 #### Run FSDS inside the Docker container 
-Get [the binary](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/releases/download/v2.1.0/fsds-v2.1.0-linux.zip), or package your own project in Ubuntu. 
+Get [the binary](https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/releases/download/v2.2.0/fsds-v2.2.0-linux.zip), or package your own project in Ubuntu. 
 You can either download the latest version yourself, or use the `download_FSDSSimulator_binary.sh` helper script.
 
 Now, run fsds inside the Docker container:
@@ -41,15 +41,15 @@ Now, run fsds inside the Docker container:
 
 Replace the variables as follows:
    * `DOCKER_IMAGE_NAME`: Same as `target_image` parameter in previous step. By default, enter `fsdsairsim_binary:vulkan-ubuntu18.04`   
-   * `UNREAL_BINARY_SHELL_SCRIPT`: for FSDSsimulator enviroment, it will be `fsds-v2.1.0-linux/FSDS.sh`
+   * `UNREAL_BINARY_SHELL_SCRIPT`: for FSDSsimulator enviroment, it will be `fsds-v2.2.0-linux/FSDS.sh`
    * `UNREAL_BINARY_ARGUMENTS`: For FSDSsimulator, most relevant would be `-windowed`, `-ResX`, `-ResY`. [See here all options](https://docs.unrealengine.com/en-us/Programming/Basics/CommandLineArguments).
 
-For FSDSsimulator, you can do a `$ ./run_airsim_image_binary.sh fsdsairsim_binary:vulkan-ubuntu18.04 fsds-v2.1.0-linux/FSDS.sh -windowed -ResX=1080 -ResY=720`
+For FSDSsimulator, you can do a `$ ./run_airsim_image_binary.sh fsdsairsim_binary:vulkan-ubuntu18.04 fsds-v2.2.0-linux/FSDS.sh -windowed -ResX=1080 -ResY=720`
 
 To run in headless mode, use suffix `-- headless` at the end:
 
 ```bash
-$ ./run_airsim_image_binary.sh fsds-v2.1.0-linux/FSDS.sh -- headless
+$ ./run_airsim_image_binary.sh fsds-v2.2.0-linux/FSDS.sh -- headless
 ```
 
 You need to have a `settings.json` file in the current working directory from where you run `./run_airsim_image_binary.sh`.
