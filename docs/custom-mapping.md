@@ -14,7 +14,7 @@ To load a new map, restart the simulator and give it a new absolute path to the 
 
 When launching the simulator executable, add the absolute path to the map as a command line argument:
 
-`"$UE4_PROJECT_ROOT/FSOnline/Binaries/Linux/Blocks" FSOnline -CustomMap="<path to the custom map here>"`
+`"$UE4_PROJECT_ROOT/FSOnline/Binaries/Linux/Blocks" FSOnline -CustomMapPath="<path to the custom map here>"`
 
 The simulator will launch directly into the custom map, skipping the menu entirely.
 
