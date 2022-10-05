@@ -58,7 +58,7 @@ class Operator:
 
     def launch_simulator(self):
         self.check_accesstoken()
-
+        
         # Abort if simulator is already running
         if self.simulation_process is not None:
             abort(400, description='Simulation already running.')
