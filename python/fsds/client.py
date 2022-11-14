@@ -25,6 +25,19 @@ class FSDSClient:
         """
         self.client.call('reset')
 
+    def restart(self):
+        """
+        Reset the vehicle AND THE CONES to their original starting state
+        """
+        try:
+            self.client.call('restart')
+        except Exception as e:
+            print(e)
+
+        time.sleep(0.1)  # VERY IMPORTANT!
+
+        self.__init__(self.ip, self.port, self.timeout_value)
+
     def ping(self):
         """
         If connection is established then this call will return true otherwise it will be blocked until timeout
