@@ -28,6 +28,7 @@ public:
 
     void confirmConnection(double timeout);
     void reset();
+    void restart();
 
     ConnectionState getConnectionState();
     bool ping();

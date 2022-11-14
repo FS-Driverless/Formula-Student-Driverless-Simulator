@@ -111,6 +111,11 @@ void RpcLibClientBase::reset()
     pimpl_->client.call("reset");
 }
 
+void RpcLibClientBase::restart()
+{
+    pimpl_->client.call("restart");
+}
+
 void RpcLibClientBase::confirmConnection(double timeout)
 {
     ClockBase* clock = ClockFactory::get();
