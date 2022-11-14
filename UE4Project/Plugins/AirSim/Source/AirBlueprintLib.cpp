@@ -20,7 +20,7 @@
 #include "Misc/ObjectThumbnail.h"
 #include "Engine/Engine.h"
 #include <exception>
-#include "AirLib/include/common/common_utils/Utils.hpp"
+#include "common/common_utils/Utils.hpp"
 
 /*
 //TODO: change naming conventions to same as other files?
@@ -371,8 +371,8 @@ std::vector<msr::airlib::MeshPositionVertexBuffersResponse> UAirBlueprintLib::Ge
 
         //Various checks if there is even a valid mesh
         if (!comp->GetStaticMesh()) continue;
-        if (!comp->GetStaticMesh()->RenderData) continue;
-        if (comp->GetStaticMesh()->RenderData->LODResources.Num() == 0) continue;
+        if (!comp->GetStaticMesh()->GetRenderData()) continue;
+        if (comp->GetStaticMesh()->GetRenderData()->LODResources.Num() == 0) continue;
 
         msr::airlib::MeshPositionVertexBuffersResponse mesh;
         mesh.name = name;
@@ -387,7 +387,7 @@ std::vector<msr::airlib::MeshPositionVertexBuffersResponse> UAirBlueprintLib::Ge
         mesh.orientation.y() = att.Y;
         mesh.orientation.z() = att.Z;
 
-        FPositionVertexBuffer* vertex_buffer = &comp->GetStaticMesh()->RenderData->LODResources[0].VertexBuffers.PositionVertexBuffer;
+        FPositionVertexBuffer* vertex_buffer = &comp->GetStaticMesh()->GetRenderData()->LODResources[0].VertexBuffers.PositionVertexBuffer;
         if (vertex_buffer)
         {
             const int32 vertex_count = vertex_buffer->VertexBufferRHI->GetSize();
@@ -403,7 +403,7 @@ std::vector<msr::airlib::MeshPositionVertexBuffersResponse> UAirBlueprintLib::Ge
                     RHIUnlockVertexBuffer(vertex_buffer->VertexBufferRHI);
                 });
 
-            FStaticMeshLODResources& lod = comp->GetStaticMesh()->RenderData->LODResources[0];
+            FStaticMeshLODResources& lod = comp->GetStaticMesh()->GetRenderData()->LODResources[0];
             FRawStaticIndexBuffer* IndexBuffer = &lod.IndexBuffer;
             int num_indices = IndexBuffer->IndexBufferRHI->GetSize() / IndexBuffer->IndexBufferRHI->GetStride();
 

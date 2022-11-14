@@ -19,7 +19,7 @@
 
 #include "Modules/ModuleManager.h"
 #include "Runtime/Landscape/Classes/LandscapeComponent.h"
-#include "AirLib/include/common/AirSimSettings.hpp"
+#include "common/AirSimSettings.hpp"
 #include <string>
 #include <regex>
 #include "AirBlueprintLib.generated.h"
