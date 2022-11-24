@@ -282,11 +282,36 @@ bool AirsimROSWrapper::reset_srv_cb(fs_msgs::Reset::Request& request, fs_msgs::R
 }
 
 bool AirsimROSWrapper::restart_airsim_service(std_srvs::TriggerRequest& request, std_srvs::TriggerResponse& response){
+    // Stop all timers
+    odom_update_timer_.stop();
+    gps_update_timer_.stop();
+    imu_update_timer_.stop();
+    gss_update_timer_.stop();
+    statistics_timer_.stop();
+    go_signal_timer_.stop();
+    statictf_timer_.stop();
+	extra_info_timer_.stop();
+    for(auto timer: airsim_lidar_update_timers_){
+        timer.stop();
+    }
+
     airsim_client_.restart();
-    
-    ros::Rate(10).sleep();
-    
+    airsim_client_lidar_.restart();
+
     initialize_airsim(10);
+
+    odom_update_timer_.start();
+    gps_update_timer_.start();
+    imu_update_timer_.start();
+    gss_update_timer_.start();
+    statistics_timer_.start();
+    go_signal_timer_.start();
+    statictf_timer_.start();
+	extra_info_timer_.start();
+    for(auto & timer: airsim_lidar_update_timers_){
+        timer.start();
+    }
+    
 }
 
 tf2::Quaternion AirsimROSWrapper::get_tf2_quat(const msr::airlib::Quaternionr& airlib_quat) const
@@ -456,6 +481,11 @@ void AirsimROSWrapper::odom_cb(const ros::TimerEvent& event)
     {
         std::string msg = e.get_error().as<std::string>();
         ROS_ERROR_STREAM("Exception raised by the API while getting car state:" << std::endl << msg);
+    }
+    catch (rpc::timeout& e){
+        std::cout << "Timeout for simGetImage, probably restarting" << std::endl;
+        std::cout << "Trying to reconnect" << std::endl;
+        airsim_client_.confirmConnection(10.0f);
     }
 }
 
