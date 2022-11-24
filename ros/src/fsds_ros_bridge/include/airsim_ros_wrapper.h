@@ -49,6 +49,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include <fstream>
 #include <curl/curl.h>
 #include <ros/transport_hints.h>
+#include <std_srvs/Trigger.h>
 // #include "nodelet/nodelet.h"
 #define printVariableNameAndValue(x) std::cout << "The name of variable **" << (#x) << "** and the value of variable is => " << x << "\n"
 
@@ -139,6 +140,7 @@ private:
 
     /// ROS service callbacks
     bool reset_srv_cb(fs_msgs::Reset::Request& request, fs_msgs::Reset::Response& response);
+    bool restart_airsim_service(std_srvs::TriggerRequest& request, std_srvs::TriggerResponse& response);
 
     // methods which parse setting json ang generate ros pubsubsrv
     void create_ros_pubs_from_settings_json();
@@ -209,6 +211,7 @@ private:
 
     std::vector<ros::Publisher> lidar_pub_vec_;
 
+    ros::ServiceServer restart_service_;
 
     /// ROS publishers
     ros::Publisher clock_pub_;

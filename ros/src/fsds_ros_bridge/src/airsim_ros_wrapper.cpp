@@ -137,6 +137,7 @@ void AirsimROSWrapper::initialize_ros()
     if(!competition_mode_) {
         odom_update_timer_ = nh_private_.createTimer(ros::Duration(update_odom_every_n_sec), &AirsimROSWrapper::odom_cb, this);
 		extra_info_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::extra_info_cb, this);
+        restart_service_ = nh_private_.advertiseService("restart_level", &AirsimROSWrapper::restart_airsim_service, this);
     }
 
     gps_update_timer_ = nh_private_.createTimer(ros::Duration(update_gps_every_n_sec), &AirsimROSWrapper::gps_timer_cb, this);
@@ -278,6 +279,14 @@ bool AirsimROSWrapper::reset_srv_cb(fs_msgs::Reset::Request& request, fs_msgs::R
 
     airsim_client_.reset();
     return true; //todo
+}
+
+bool AirsimROSWrapper::restart_airsim_service(std_srvs::TriggerRequest& request, std_srvs::TriggerResponse& response){
+    airsim_client_.restart();
+    
+    ros::Rate(10).sleep();
+    
+    initialize_airsim(10);
 }
 
 tf2::Quaternion AirsimROSWrapper::get_tf2_quat(const msr::airlib::Quaternionr& airlib_quat) const
