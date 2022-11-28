@@ -71,6 +71,41 @@ struct SimpleMatrix
     }
 };
 
+struct enabledSensors {
+    bool lidar = false;
+    bool camera = false;
+    bool gps = false;
+    bool gss = false;
+    bool imu = false;
+    
+    void print() {
+        std::stringstream ss;
+        std::cout << "Printing enabled sensors:" << std::endl;
+        
+        if(lidar){
+            ss << "Lidar enabled\n";
+        }
+        
+        if(camera){
+            ss << "Camera enabled\n";
+        }
+        
+        if(gps){
+            ss << "GPS enabled\n";
+        }
+        
+        if(gss){
+            ss << "GSS enabled\n";
+        }
+        
+        if(imu){
+            ss << "IMU enabled\n";
+        }
+        
+        std::cout << ss.str();
+    }
+};
+
 class AirsimROSWrapper
 {
 public:
@@ -108,6 +143,8 @@ private:
     std::vector<ros_bridge::Statistics> lidar_pub_vec_statistics;
     ros_bridge::Statistics imu_pub_statistics;
     ros_bridge::Statistics gss_pub_statistics;
+    
+    enabledSensors enabled_sensors;
     
     // create std::vector<Statistics*> which I can use to iterate over all these options 
     // and apply common operations such as print, reset

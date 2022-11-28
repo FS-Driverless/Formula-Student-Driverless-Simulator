@@ -12,9 +12,7 @@ AirsimROSWrapper::AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHan
 {
     initialize_airsim(timeout_sec);
     try {
-        ROS_INFO_STREAM("READING SETTINGS");
         std::string settings_text = airsim_client_.getSettingsString();
-        ROS_INFO_STREAM("SETTINGS READ");
 
         msr::airlib::AirSimSettings::initializeSettings(settings_text);
         msr::airlib::AirSimSettings::singleton().load();
@@ -31,8 +29,8 @@ AirsimROSWrapper::AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHan
         throw std::invalid_argument(std::string("Failed loading settings.json.") + ex.what());
     }
     
-    initialize_statistics();
     initialize_ros();
+    initialize_statistics();
 
     ROS_INFO_STREAM("AirsimROSWrapper Initialized!");
 }
@@ -58,15 +56,26 @@ void AirsimROSWrapper::initialize_airsim(double timeout)
 void AirsimROSWrapper::initialize_statistics()
 {
     setCarControlsStatistics = ros_bridge::Statistics("setCarControls");
-    getGpsDataStatistics = ros_bridge::Statistics("getGpsData");
+    
+    if(enabled_sensors.gps){
+        getGpsDataStatistics = ros_bridge::Statistics("getGpsData");
+        global_gps_pub_statistics = ros_bridge::Statistics("global_gps_pub");
+    }
+    
     getCarStateStatistics = ros_bridge::Statistics("getCarState");
-    getImuStatistics = ros_bridge::Statistics("getImu");
-    getGSSStatistics = ros_bridge::Statistics("getGSS");
+    
+    if(enabled_sensors.imu){
+        getImuStatistics = ros_bridge::Statistics("getImu");
+        imu_pub_statistics = ros_bridge::Statistics("imu_pub");
+    }
+
+    if(enabled_sensors.gss){
+        getGSSStatistics = ros_bridge::Statistics("getGSS");
+        gss_pub_statistics = ros_bridge::Statistics("gss_pub");
+    }
+    
     control_cmd_sub_statistics = ros_bridge::Statistics("control_cmd_sub");
-    global_gps_pub_statistics = ros_bridge::Statistics("global_gps_pub");
     odom_pub_statistics = ros_bridge::Statistics("odom_pub");
-    imu_pub_statistics = ros_bridge::Statistics("imu_pub");
-    gss_pub_statistics = ros_bridge::Statistics("gss_pub");
 
     // Populate statistics obj vector
     // statistics_obj_ptr = {&setCarControlsStatistics, &getGpsDataStatistics, &getCarStateStatistics, &control_cmd_sub_statistics, &global_gps_pub_statistics, &odom_local_ned_pub_statistics};
@@ -138,10 +147,16 @@ void AirsimROSWrapper::initialize_ros()
         odom_update_timer_ = nh_private_.createTimer(ros::Duration(update_odom_every_n_sec), &AirsimROSWrapper::odom_cb, this);
 		extra_info_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::extra_info_cb, this);
     }
+    
+    if(enabled_sensors.gps)
+        gps_update_timer_ = nh_private_.createTimer(ros::Duration(update_gps_every_n_sec), &AirsimROSWrapper::gps_timer_cb, this);
+    
+    if(enabled_sensors.imu)
+        imu_update_timer_ = nh_private_.createTimer(ros::Duration(update_imu_every_n_sec), &AirsimROSWrapper::imu_timer_cb, this);
+    
+    if(enabled_sensors.gss)
+        gss_update_timer_ = nh_private_.createTimer(ros::Duration(update_gss_every_n_sec), &AirsimROSWrapper::gss_timer_cb, this);
 
-    gps_update_timer_ = nh_private_.createTimer(ros::Duration(update_gps_every_n_sec), &AirsimROSWrapper::gps_timer_cb, this);
-    imu_update_timer_ = nh_private_.createTimer(ros::Duration(update_imu_every_n_sec), &AirsimROSWrapper::imu_timer_cb, this);
-    gss_update_timer_ = nh_private_.createTimer(ros::Duration(update_gss_every_n_sec), &AirsimROSWrapper::gss_timer_cb, this);
     statictf_timer_ = nh_private_.createTimer(ros::Duration(publish_static_tf_every_n_sec), &AirsimROSWrapper::statictf_cb, this);
 
     statistics_timer_ = nh_private_.createTimer(ros::Duration(1), &AirsimROSWrapper::statistics_timer_cb, this);
@@ -179,10 +194,22 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 
         set_nans_to_zeros_in_pose(*vehicle_setting);
 
+        enabled_sensors.gss = (vehicle_setting->sensors.find("GSS") != vehicle_setting->sensors.end());
+        enabled_sensors.gps = (vehicle_setting->sensors.find("Gps") != vehicle_setting->sensors.end());
+        enabled_sensors.imu = (vehicle_setting->sensors.find("Imu") != vehicle_setting->sensors.end());
+
+        enabled_sensors.print();
+
         vehicle_name = curr_vehicle_name;
-        global_gps_pub = nh_.advertise<sensor_msgs::NavSatFix>("gps", 10);
-        imu_pub = nh_.advertise<sensor_msgs::Imu>("imu", 10);
-        gss_pub = nh_.advertise<geometry_msgs::TwistWithCovarianceStamped>("gss", 10);
+
+        if(enabled_sensors.gps)
+            global_gps_pub = nh_.advertise<sensor_msgs::NavSatFix>("gps", 10);
+            
+        if(enabled_sensors.imu)
+            imu_pub = nh_.advertise<sensor_msgs::Imu>("imu", 10);
+        
+        if(enabled_sensors.gss)
+            gss_pub = nh_.advertise<geometry_msgs::TwistWithCovarianceStamped>("gss", 10);
 
         bool UDP_control;
         nh_private_.getParam("UDP_control", UDP_control);
@@ -712,16 +739,27 @@ void AirsimROSWrapper::PrintStatistics()
     std::stringstream dbg_msg;
     dbg_msg << "--------- ros_wrapper statistics ---------" << std::endl;
     dbg_msg << setCarControlsStatistics.getSummaryAsString() << std::endl;
-    dbg_msg << getGpsDataStatistics.getSummaryAsString() << std::endl;
+
+    if(enabled_sensors.gps){
+        dbg_msg << getGpsDataStatistics.getSummaryAsString() << std::endl;
+        dbg_msg << global_gps_pub_statistics.getSummaryAsString() << std::endl;
+    }
+
     dbg_msg << getCarStateStatistics.getSummaryAsString() << std::endl;
-    dbg_msg << getImuStatistics.getSummaryAsString() << std::endl;
-    dbg_msg << getGSSStatistics.getSummaryAsString() << std::endl;
+
+    if(enabled_sensors.imu){
+        dbg_msg << getImuStatistics.getSummaryAsString() << std::endl;
+        dbg_msg << imu_pub_statistics.getSummaryAsString() << std::endl;
+    }
+
+    if(enabled_sensors.gss){
+        dbg_msg << getGSSStatistics.getSummaryAsString() << std::endl;
+        dbg_msg << gss_pub_statistics.getSummaryAsString() << std::endl;
+    }
+
     dbg_msg << control_cmd_sub_statistics.getSummaryAsString() << std::endl;
-    dbg_msg << global_gps_pub_statistics.getSummaryAsString() << std::endl;
     dbg_msg << odom_pub_statistics.getSummaryAsString() << std::endl;
-    dbg_msg << imu_pub_statistics.getSummaryAsString() << std::endl;
-    dbg_msg << gss_pub_statistics.getSummaryAsString() << std::endl;
-    
+
     for (auto &getLidarDataStatistics : getLidarDataVecStatistics)
     {
         dbg_msg << getLidarDataStatistics.getSummaryAsString() << std::endl;
@@ -744,15 +782,25 @@ void AirsimROSWrapper::ResetStatistics()
     //     statistics_obj->Reset();
     // }
     setCarControlsStatistics.Reset();
-    getGpsDataStatistics.Reset();
+
+    if(enabled_sensors.gps){
+        getGpsDataStatistics.Reset();
+        global_gps_pub_statistics.Reset();
+    }
     getCarStateStatistics.Reset();
-    getImuStatistics.Reset();
-    getGSSStatistics.Reset();
+
+    if(enabled_sensors.imu){
+        getImuStatistics.Reset();
+        imu_pub_statistics.Reset();
+    }
+
+    if(enabled_sensors.gss){
+        getGSSStatistics.Reset();
+        gss_pub_statistics.Reset();
+    }
+
     control_cmd_sub_statistics.Reset();
-    global_gps_pub_statistics.Reset();
     odom_pub_statistics.Reset();
-    imu_pub_statistics.Reset();
-    gss_pub_statistics.Reset();
 
     for (auto &getLidarDataStatistics : getLidarDataVecStatistics)
     {
