@@ -26,6 +26,8 @@ ros_bridge::Statistics fps_statistic;
 
 // settings
 std::string camera_name = "";
+std::string camera_frame_prefix = "";
+std::string camera_frame_id = "";
 double framerate = 0.0;
 std::string host_ip = "localhost";
 bool depthcamera = false;
@@ -75,7 +77,7 @@ void doImageUpdate(const ros::TimerEvent&)
     img_msg->encoding = "bgr8";
     img_msg->is_bigendian = 0;
     img_msg->header.stamp = make_ts(img_response.time_stamp);
-    img_msg->header.frame_id = "/fsds/camera/"+camera_name;
+    img_msg->header.frame_id = camera_frame_id;
     
     image_pub.publish(img_msg);
     fps_statistic.addCount();
@@ -129,7 +131,7 @@ void doDepthImageUpdate(const ros::TimerEvent&) {
     cv::Mat depth_img = noisify_depthimage(manual_decode_depth(img_response));
     sensor_msgs::ImagePtr img_msg = cv_bridge::CvImage(std_msgs::Header(), "32FC1", depth_img).toImageMsg();
     img_msg->header.stamp = make_ts(img_response.time_stamp);
-    img_msg->header.frame_id = "/fsds/camera/"+camera_name;    
+    img_msg->header.frame_id = camera_frame_id;    
     
     image_pub.publish(img_msg);
     fps_statistic.addCount();
@@ -142,6 +144,9 @@ int main(int argc, char ** argv)
 
     // load settings
     nh.param<std::string>("camera_name", camera_name, "");
+    nh.param<std::string>("camera_frame_prefix", camera_frame_prefix, "");
+    camera_frame_id = camera_frame_prefix + camera_name;
+
     nh.param<double>("framerate", framerate, 0.0);
     nh.param<std::string>("host_ip", host_ip, "localhost");
     nh.param<bool>("depthcamera", depthcamera, false);    
@@ -176,7 +181,7 @@ int main(int argc, char ** argv)
     }
 
     // ready topic
-    image_pub = nh.advertise<sensor_msgs::Image>("/fsds/camera/" + camera_name, 1);
+    image_pub = nh.advertise<sensor_msgs::Image>(camera_frame_id, 1);
 
     // start the loop
     ros::Timer imageTimer = nh.createTimer(ros::Duration(1/framerate), depthcamera ? doDepthImageUpdate : doImageUpdate);
