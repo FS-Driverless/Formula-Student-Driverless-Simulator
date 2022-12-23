@@ -26,6 +26,8 @@ ros_bridge::Statistics fps_statistic;
 
 // settings
 std::string camera_name = "";
+std::string camera_frame_prefix = "";
+std::string camera_frame_id = "";
 double framerate = 0.0;
 std::string host_ip = "localhost";
 bool depthcamera = false;
@@ -76,13 +78,13 @@ void doImageUpdate()
     img_msg->encoding = "bgr8";
     img_msg->is_bigendian = 0;
     img_msg->header.stamp = make_ts(img_response.time_stamp);
-    img_msg->header.frame_id = "/fsds/" + camera_name;
+    img_msg->header.frame_id = camera_frame_id;
 
     image_pub->publish(*img_msg);
 
     sensor_msgs::msg::CameraInfo::SharedPtr info_msg = std::make_shared<sensor_msgs::msg::CameraInfo>();
     info_msg->header.stamp = make_ts(img_response.time_stamp);
-    info_msg->header.frame_id = "/fsds/" + camera_name;
+    info_msg->header.frame_id = camera_frame_id;
     info_msg->width = img_response.width;
     info_msg->height = img_response.height;
     info_msg->distortion_model = "plumb_bob";
@@ -155,7 +157,7 @@ void doDepthImageUpdate()
     cv::Mat depth_img = noisify_depthimage(manual_decode_depth(img_response));
     sensor_msgs::msg::Image::SharedPtr img_msg = cv_bridge::CvImage(std_msgs::msg::Header(), "32FC1", depth_img).toImageMsg();
     img_msg->header.stamp = make_ts(img_response.time_stamp);
-    img_msg->header.frame_id = "/fsds/" + camera_name;
+    img_msg->header.frame_id = camera_frame_id;
 
     image_pub->publish(*img_msg);
     fps_statistic.addCount();
@@ -168,6 +170,9 @@ int main(int argc, char ** argv)
 
     // load settings
     camera_name = nh->declare_parameter<std::string>("camera_name", "");
+    camera_frame_prefix = nh->declare_parameter<std::string>("camera_frame_prefix", "/fsds/");
+    camera_frame_id = camera_frame_prefix + camera_name;
+
     framerate = nh->declare_parameter<double>("framerate", 0.0);
     host_ip = nh->declare_parameter<std::string>("host_ip", "localhost");
     depthcamera = nh->declare_parameter<bool>("depthcamera", false);
@@ -201,8 +206,8 @@ int main(int argc, char ** argv)
     }
 
     // ready topic
-    image_pub = nh->create_publisher<sensor_msgs::msg::Image>("/fsds/" + camera_name + "/image_color", 1);
-    info_pub = nh->create_publisher<sensor_msgs::msg::CameraInfo>("/fsds/" + camera_name + "/camera_info", 1);
+    image_pub = nh->create_publisher<sensor_msgs::msg::Image>(camera_frame_id + "/image_color", 1);
+    info_pub = nh->create_publisher<sensor_msgs::msg::CameraInfo>(camera_frame_id + "/camera_info", 1);
 
     // start the loop
     rclcpp::TimerBase::SharedPtr imageTimer = nh->create_wall_timer(dseconds { 1/framerate }, depthcamera ? &doDepthImageUpdate : &doImageUpdate);
