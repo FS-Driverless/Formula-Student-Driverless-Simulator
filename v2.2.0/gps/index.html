@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>GPS - Formula Student Driverless Simulator</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="../css/version-select.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "GPS";
+        var mkdocs_page_input_path = "gps.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Formula Student Driverless Simulator
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Introduction</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../system-overview/">System overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../getting-started/">Getting started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../getting-started-with-ros/">Getting started with ROS</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../getting-started-with-python/">Getting started with Python</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../custom-mapping/">Getting started with custom mapping</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Vehicle & Sensors</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../vehicle_model/">Vehicle model</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../imu/">IMU</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lidar/">Lidar</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../camera/">Camera</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">GPS</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#add-the-gps-to-the-car">Add the gps to the car</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#python-client">Python client</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../ground-speed-sensor/">GSS</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">#tech-madness</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../ros-bridge/">ROS Bridge</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../statistics/">ROS Bridge statistics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../joystick/">Joystick</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../docker_ubuntu/">Docker</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../coordinate-frames/">Coordinate frames</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../import-car-3d-model/">Import your 3d car model</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../map-tutorial/">Making your own map in UE4</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../gcp-remote-workstation/">Google cloud remote workstation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../software-install-instructions/">Software install instructions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../how-to-release/">How to release</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Competition tooling</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../operator/">Operator</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../competition-signals/">System flow and signals</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../spectator/">Spectator</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Formula Student Driverless Simulator</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>Vehicle & Sensors &raquo;</li>
+      <li>GPS</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/edit/master/docs/gps.md">Edit on FS-Driverless/Formula-Student-Driverless-Simulator</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="gps">GPS</h1>
+<p>The GPS model in AirSim has been configured to mimic an average GPS receiver used during formula student competitions.</p>
+<p>The GPS operates at 10 Hz, this value can be altered with update_frequency parameter.</p>
+<p>The GPS is located in the <a href="../vehicle_model/">vehicle pawn center</a>. 
+The GPS captures the position of the vehicle in the geodetic reference system, namely longitude [deg], latitude [deg], altitude [m].</p>
+<p>At this moment there is no artificial latency added.
+Still there will be some delay between the creation of the gps points and arrival at the autonomous system because of network latency.<br />
+In the future, this can be altered with update_frequency parameter.         </p>
+<p>All GPS positions are timestamped.</p>
+<p>As soon as the car starts, gps becomes available at maximum resolution. 
+There is no warmup time since during physical formula student events cars often start with pre-locked gps.</p>
+<p>The inaccuracies in the GPS sensor position is generated with adding an offset vector from the ground truth, as a vector [x_err, y_err, z_err]<sup>T</sup>, where x_err, y_err are generated through a Gaussian distribution with 0 mean and eph variance, and z_err through a Gaussian distribution with 0 mean and epv variance.
+Currently the eph is set to <strong>4 cm</strong>.<br />
+This noise, however, is only added if the measured velocity is above an arbitrarily chosen threshold (currently 0.1m/s). 
+To velocities below that, this additional inaccuracy is not introduced to avoid "jumpy" positions during standstill of the vehicle. </p>
+<p>See GpsSimple.hpp (/AirSim/AirLib/include/sensors/gps/GpsSimple.hpp) and <a href="/AirSim/AirLib/include/sensors/gps/GpsSimpleParams.hpp">GpsSimpleParams.hpp</a> for the implementation of the gps model.</p>
+<h2 id="add-the-gps-to-the-car">Add the gps to the car</h2>
+<p>In your <code>settings.json</code>, add the following to the <code>Sensors</code> object within the vehicle configuration:</p>
+<pre><code class="language-json">&quot;Gps&quot; : {
+    &quot;SensorType&quot;: 3,
+    &quot;Enabled&quot;: true
+},
+</code></pre>
+<p>The key of the object, in this case <code>Gps</code> is the name of the sensor: this gps sensor is named <code>Gps</code>.
+Use this name to retrieve sensordata.</p>
+<p>At the moment no accuracy-configuration is supported.</p>
+<h2 id="python-client">Python client</h2>
+<pre><code class="language-python"># Args:
+#   gps_name (str, optional): Name of GPS to get data from, specified in settings.json. When no name is provided the last gps will be used.
+#   vehicle_name (str, optional): Name of vehicle to which the sensor corresponds to.
+# Returns:
+#   time_stamp (np.uint64): nanosecond timestamp of when the gps position was captured
+#   gnss:
+#     eph (float): Standard deviation of horizontal position error (meters)
+#     epv (float): Standard deviation of vertical position error (meters)
+#     geo_point: The altitude, latitude and longitude of the gps
+#       latitude (float)
+#       longitude (float)
+#       altitude (float)
+#     velocity (Vector3r): Velocity in three directions (x_val, y_val and z_val) in meter/second
+#     time_utc (np.uint64): UTC millisecond timestamp of when the gps position was captured
+gps_data = client.getGpsData(gps_name = '', vehicle_name = 'FSCar')
+</code></pre>
+<p>An example of how to collect gps data:</p>
+<pre><code class="language-python">import time
+import fsds
+
+# connect to the AirSim simulator 
+client = fsds.FSDSClient()
+
+# Check network connection
+client.confirmConnection()
+
+while True:
+    gps = client.getGpsData()
+
+    print(&quot;timestamp nano: &quot;, gps.time_stamp)
+    print(&quot;timestamp utc:  &quot;, gps.gnss.time_utc)
+    print(&quot;eph: &quot;, gps.gnss.eph)
+    print(&quot;epv: &quot;, gps.gnss.epv)
+    print(&quot;geo point: &quot;, gps.gnss.geo_point)
+    print(&quot;velocity: &quot;, gps.gnss.velocity)
+
+    print()
+
+    time.sleep(1)
+</code></pre>
+<p>Full example <a href="https://github.com/FS-Driverless/Formula-Student-Driverless-Simulator/tree/master/python/examples/gps.py">here</a>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../camera/" class="btn btn-neutral float-left" title="Camera"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../ground-speed-sensor/" class="btn btn-neutral float-right" title="GSS">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>GPLv2</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../camera/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../ground-speed-sensor/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+      <script src="../js/version-select.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

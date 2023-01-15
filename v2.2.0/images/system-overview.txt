@@ -1,0 +1,36 @@
+# This file is the source for the image with the same name.
+# Use https://www.planttext.com/ to render this text to an image
+
+@startuml
+
+title Packages - Component Diagram
+
+package "Google Cloud" {
+    node "Autonomous Instance" {
+        [Team's autonomous system] as AS
+    }
+    
+    node "Simulation Instance" {
+        package "Unreal Engine" {
+            [Game Engine]
+            [AirSim plugin]
+        }
+        [Operator]
+        [ROS-Bridge]
+    } 
+    
+    
+    [Operator] --> [AirSim plugin]: Get referee state
+    [ROS-Bridge] --> [AirSim plugin]: Set car control setpoints
+    [ROS-Bridge] <-- [AirSim plugin]: Get Sensor data
+
+    [AS] -right-> [ROS-Bridge] : Car control setpoints
+    [ROS-Bridge] -left-> [AS] : Sensor data
+}
+
+[Official's browser<size:20><&person></size>] as official
+[official] -down-> [Operator] : Instruction
+
+[Spectator] -up-> [Game Engine]
+
+@enduml
