@@ -1,5 +1,8 @@
 # Custom Mapping
 
+## Making custom maps
+You can make your own custom map by using the [following format below](#custom-map-file-format) or by using the [random track generator](https://github.com/mvanlobensels/random-track-generator) from @mvanlobensels that now has the posibility to export maps for FSDS
+
 ## Loading custom maps
 
 ### From the GUI
