@@ -45,7 +45,7 @@ ln -s /mnt/c/Users/developer/Formula-Student-Driverless-Simulator ~/Formula-Stud
 ```
 
 Now, checkout the version equal to the simulator. 
-If you are running for example simulator packaged version v2.1.0, run `git checkout tags/v2.1.0` to get the ROS brige to the same version
+If you are running for example simulator packaged version v2.2.0, run `git checkout tags/v2.2.0` to get the ROS brige to the same version
 
 ## Preparing AirLib
 
