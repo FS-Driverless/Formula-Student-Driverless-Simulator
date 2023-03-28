@@ -144,7 +144,7 @@ int main(int argc, char ** argv)
 
     // load settings
     nh.param<std::string>("camera_name", camera_name, "");
-    nh.param<std::string>("camera_frame_prefix", camera_frame_prefix, "/fsds/");
+    nh.param<std::string>("camera_frame_prefix", camera_frame_prefix, "/fsds/camera");
     camera_frame_id = camera_frame_prefix + camera_name;
 
     nh.param<double>("framerate", framerate, 0.0);
