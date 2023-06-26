@@ -26,12 +26,11 @@ done
 VERSION=$(lsb_release -rs | cut -d. -f1)
 # Since Ubuntu 17 clang is part of the core repository
 # See https://packages.ubuntu.com/search?keywords=clang-8
-if [ "$VERSION" -lt "20" ]; then
+if [ "$VERSION" -lt "22" ]; then
     wget https://apt.llvm.org/llvm.sh
     chmod +x llvm.sh
-    sudo ./llvm.sh 12
+    sudo ./llvm.sh 14 all
 fi
-sudo apt-get install -y clang-12 clang++-12 libc++-12-dev libc++abi-12-dev
 
 #install additional tools
 sudo apt-get install -y build-essential

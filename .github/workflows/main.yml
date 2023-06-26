@@ -54,7 +54,20 @@ jobs:
        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
   build_ros2:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        compiler: [ g++-11, clang++-14 ]
     steps:
+      - name: Compilation settings
+        run: |
+          sudo apt-get -y install gcc g++
+      - name: Setup AirSim
+        run: |
+          ./setup.sh
+          ./build.sh
+        working-directory: ./AirSim
       - uses: ros-tooling/setup-ros@v0.6
         with:
           required-ros-distributions: humble
@@ -66,6 +79,9 @@ jobs:
               "build": {
                 "base-path": [
                     "ros2/src/"
-                ]
+                ],
+                "--cmake-args": [
+                    "-DCMAKE_CXX_COMPILER=${{ matrix.compiler }}"
+                ],
               }
             }
