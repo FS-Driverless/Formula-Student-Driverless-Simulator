@@ -12,7 +12,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  build_ros:
     # The type of runner that the job will run on
     runs-on: ubuntu-18.04
 
@@ -52,3 +52,20 @@ jobs:
       working-directory: ./ros 
       env:
        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+
+  build_ros2:
+    steps:
+      - uses: ros-tooling/setup-ros@v0.6
+        with:
+          required-ros-distributions: humble
+      - uses: ros-tooling/action-ros-ci@v0.3
+        with:
+          target-ros2-distro: humble
+          colcon-defaults: |
+            {
+              "build": {
+                "base-path": [
+                    "ros2/src/"
+                ]
+              }
+            }

@@ -28,7 +28,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include <geometry_msgs/msg/twist.hpp>
 #include <rosgraph_msgs/msg/clock.hpp>
 #include <iostream>
-#include <math.h>
+#include <cmath>
 #include <math_common.h>
 #include <nav_msgs/msg/odometry.hpp>
 #include <opencv2/opencv.hpp>
@@ -66,31 +66,31 @@ struct enabledSensors {
     bool gps = false;
     bool gss = false;
     bool imu = false;
-    
-    void print() {
+
+    void print() const {
         std::stringstream ss;
         std::cout << "Printing enabled sensors:" << std::endl;
-        
+
         if(lidar){
             ss << "Lidar enabled\n";
         }
-        
+
         if(camera){
             ss << "Camera enabled\n";
         }
-        
+
         if(gps){
             ss << "GPS enabled\n";
         }
-        
+
         if(gss){
             ss << "GSS enabled\n";
         }
-        
+
         if(imu){
             ss << "IMU enabled\n";
         }
-        
+
         std::cout << ss.str();
     }
 };
@@ -111,7 +111,7 @@ class AirsimROSWrapper
 {
 public:
     AirsimROSWrapper(const std::shared_ptr<rclcpp::Node>& nh, const std::string& host_ip, double timeout_sec);
-    ~AirsimROSWrapper(){};
+    ~AirsimROSWrapper()= default;
 
     void initialize_airsim(double timeout_sec);
     void initialize_ros();
@@ -119,8 +119,8 @@ public:
     void initialize_statistics();
 
     // ros::AsyncSpinner lidar_async_spinner_;
-    bool is_used_lidar_timer_cb_queue_;
-    bool is_used_img_timer_cb_queue_;
+    bool is_used_lidar_timer_cb_queue_{};
+    bool is_used_img_timer_cb_queue_{};
 
     rclcpp::Time first_ros_ts;
     int64_t first_unreal_ts = -1;
@@ -144,11 +144,11 @@ private:
     std::vector<ros_bridge::Statistics> lidar_pub_vec_statistics;
     ros_bridge::Statistics imu_pub_statistics;
     ros_bridge::Statistics gss_pub_statistics;
-    
+
     // create std::vector<Statistics*> which I can use to iterate over all these options 
     // and apply common operations such as print, reset
     // std::vector<ros_bridge::Statistics*> statistics_obj_ptr;
-    
+
     enabledSensors enabled_sensors;
 
     // Print all statistics
@@ -164,17 +164,17 @@ private:
     void gss_timer_cb();
     void wheel_states_timer_cb();
     void statictf_cb();
-    void car_control_cb(const fs_msgs::msg::ControlCommand& msg);
-    void lidar_timer_cb(const std::string& camera_name, const int lidar_index);
+    void car_control_cb(fs_msgs::msg::ControlCommand::SharedPtr msg);
+    void lidar_timer_cb(const std::string& camera_name, int lidar_index);
     void statistics_timer_cb();
     void go_signal_timer_cb();
 	void extra_info_cb();
 	void clock_timer_cb();
 
     /// ROS subscriber callbacks
-    void finished_signal_cb(const fs_msgs::msg::FinishedSignal& msg);
+    void finished_signal_cb(fs_msgs::msg::FinishedSignal::SharedPtr msg);
 
-    rclcpp::Time make_ts(uint64_t unreal_ts) const;
+    [[nodiscard]] static rclcpp::Time make_ts(uint64_t unreal_ts) ;
     // void set_zero_vel_cmd();
 
     /// ROS service callbacks
@@ -185,23 +185,23 @@ private:
     void append_static_camera_tf(const std::string& vehicle_name, const std::string& camera_name, const CameraSetting& camera_setting);
     void append_static_lidar_tf(const std::string& vehicle_name, const std::string& lidar_name, const LidarSetting& lidar_setting);
     void append_static_vehicle_tf(const std::string& vehicle_name, const VehicleSetting& vehicle_setting);
-    void set_nans_to_zeros_in_pose(VehicleSetting& vehicle_setting) const;
-    void set_nans_to_zeros_in_pose(const VehicleSetting& vehicle_setting, CameraSetting& camera_setting) const;
-    void set_nans_to_zeros_in_pose(const VehicleSetting& vehicle_setting, LidarSetting& lidar_setting) const;
+    static void set_nans_to_zeros_in_pose(VehicleSetting& vehicle_setting) ;
+    static void set_nans_to_zeros_in_pose(const VehicleSetting& vehicle_setting, CameraSetting& camera_setting) ;
+    static void set_nans_to_zeros_in_pose(const VehicleSetting& vehicle_setting, LidarSetting& lidar_setting) ;
 
     /// utils. todo parse into an Airlib<->ROS conversion class
-    tf2::Quaternion get_tf2_quat(const msr::airlib::Quaternionr& airlib_quat) const;
-    msr::airlib::Quaternionr get_airlib_quat(const geometry_msgs::msg::Quaternion& geometry_msgs_quat) const;
-    msr::airlib::Quaternionr get_airlib_quat(const tf2::Quaternion& tf2_quat) const;
+    [[nodiscard]] tf2::Quaternion get_tf2_quat(const msr::airlib::Quaternionr& airlib_quat) const;
+    [[nodiscard]] msr::airlib::Quaternionr get_airlib_quat(const geometry_msgs::msg::Quaternion& geometry_msgs_quat) const;
+    [[nodiscard]] msr::airlib::Quaternionr get_airlib_quat(const tf2::Quaternion& tf2_quat) const;
 
-    nav_msgs::msg::Odometry get_odom_msg_from_airsim_state(const msr::airlib::CarApiBase::CarState& car_state) const;
-    sensor_msgs::msg::NavSatFix get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
+    [[nodiscard]] nav_msgs::msg::Odometry get_odom_msg_from_airsim_state(const msr::airlib::CarApiBase::CarState& car_state) const;
+    [[nodiscard]] sensor_msgs::msg::NavSatFix get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
     sensor_msgs::msg::Imu get_imu_msg_from_airsim(const msr::airlib::ImuBase::Output& imu_data);
-    sensor_msgs::msg::PointCloud2 get_lidar_msg_from_airsim(const std::string &lidar_name, const msr::airlib::LidarData& lidar_data) const;
+    [[nodiscard]] static sensor_msgs::msg::PointCloud2 get_lidar_msg_from_airsim(const std::string &lidar_name, const msr::airlib::LidarData& lidar_data) ;
     static bool equalsMessage(const nav_msgs::msg::Odometry& a, const nav_msgs::msg::Odometry& b);
 
 
-    std::string readTextFromFile(std::string settingsFilepath);
+    static std::string readTextFromFile(const std::string& settingsFilepath);
 
 private:
     std::shared_ptr<rclcpp::Service<fs_msgs::srv::Reset>> reset_srvr_;
@@ -209,14 +209,14 @@ private:
     std::string vehicle_name;
     std::string map_frame_id_;
     std::string vehicle_frame_id_;
-    CarApiBase::Point2D car_start_pos; // In Unreal coordinates
+    CarApiBase::Point2D car_start_pos{}; // In Unreal coordinates
 
 
     std::vector<std::string> lidar_names_vec_;
     std::vector<geometry_msgs::msg::TransformStamped> static_tf_msg_vec_;
     std::string mission_name_; // rosparam obtained from launch file
     std::string track_name_; // rosparam obtained from launch file
-    bool competition_mode_;
+    bool competition_mode_{};
     rclcpp::Time go_timestamp_;
 
     std::string host_ip_;
@@ -264,7 +264,7 @@ private:
     std::shared_ptr<rclcpp::Publisher<fs_msgs::msg::GoSignal>> go_signal_pub_;
 	std::shared_ptr<rclcpp::Publisher<fs_msgs::msg::ExtraInfo>> extra_info_pub;
 	std::shared_ptr<rclcpp::Publisher<rosgraph_msgs::msg::Clock>> clock_pub;
-    
+
     /// ROS subscribers
     rclcpp::Subscription<fs_msgs::msg::ControlCommand>::SharedPtr control_cmd_sub;
     rclcpp::Subscription<fs_msgs::msg::FinishedSignal>::SharedPtr finished_signal_sub_;
