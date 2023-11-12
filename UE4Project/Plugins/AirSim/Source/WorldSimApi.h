@@ -18,6 +18,7 @@ public:
 
     virtual bool isPaused() const override;
     virtual void reset() override;
+    virtual void restart();
     virtual void pause(bool is_paused) override;
     virtual void continueForTime(double seconds) override;
 
