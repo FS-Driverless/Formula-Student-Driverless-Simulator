@@ -64,11 +64,8 @@ source ~/Formula-Student-Driverless-Simulator/ros/devel/setup.bash
 
 Be sure to replace `melodic` with your specific version
 
-## Gui applications from WSL (Xming)
+## Gui applications from WSL
 By default, if you are running Windows Subsystem for Linux with Ubuntu, you can't run gui applications.
 This is super annoying if you want to use rqt applicatoins like rviz or rqt_plot.
 It is easy to get this working though!
-Just install [Xming](https://sourceforge.net/projects/xming/) on windows, and run it.
-Next, go into the Ubuntu terminal and run `export DISPLAY=:0`.
-Now you can run any all them gui apps!
-You can even add `export DISPLAY=:0` to your `~/.bashrc` to always be able to use gui apps without having to manually run export.
+Just follow this guide https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-11-with-gui-support#1-overview. They require Ubuntu 20.04 but it also works fine for Ubuntu 18.04. If there are any trouble, follow along this post https://github.com/microsoft/WSL/issues/6430#issuecomment-881766991.

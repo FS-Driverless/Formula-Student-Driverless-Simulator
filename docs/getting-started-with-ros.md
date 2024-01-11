@@ -8,7 +8,7 @@ The ROS bridge works on Ubuntu or in WSL in windows (but it is harder to set up)
 If you have the simulator running on windows we reccommend Windows Subsystem for Linux.
 This offers a virtual Ubuntu machine within Windows.
 You can read [here how to install it](software-install-instructions.md). 
-While you are at it you might also want to [install Xming](software-install-instructions.md) so you can run rviz and rqt_plot from within WSL.
+While you are at it you might also want to [add GUI support](software-install-instructions.md) so you can run rviz and rqt_plot from within WSL.
 
 ## Requirements
 
