@@ -11,7 +11,6 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build_ros:
     # The type of runner that the job will run on
     runs-on: ubuntu-18.04
@@ -52,36 +51,40 @@ jobs:
       working-directory: ./ros 
       env:
        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-
+  
   build_ros2:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-22.04
     strategy:
       matrix:
-        compiler: [ g++-11, clang++-14 ]
+        compiler: [ g++, clang++ ]
+        os: [ubuntu-20.04, ubuntu-22.04]
+        include:
+          - os: ubuntu-22.04
+            distro: humble
+          - os: ubuntu-20.04
+            distro: foxy
+    # The type of runner that the job will run on
+    runs-on: ${{ matrix.os }}
+    container:      
+      image:  osrf/ros:${{ matrix.distro }}-desktop
     steps:
-      - name: Compilation settings
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Compilation Settings
         run: |
-          sudo apt-get -y install gcc g++
+          apt-get update -y
+          apt-get install -y rsync wget libyaml-cpp-dev clang lsb-release wget software-properties-common gnupg
+          wget -O /tmp/cmake.sh https://apt.kitware.com/kitware-archive.sh
+          chmod u+x /tmp/cmake.sh
+          /tmp/cmake.sh && rm /tmp/cmake.sh
+          apt-get update -y && apt-get install -y --no-install-recommends cmake
       - name: Setup AirSim
-        run: |
+        run : |
           ./setup.sh
           ./build.sh
-        working-directory: ./AirSim
-      - uses: ros-tooling/setup-ros@v0.6
-        with:
-          required-ros-distributions: humble
-      - uses: ros-tooling/action-ros-ci@v0.3
-        with:
-          target-ros2-distro: humble
-          colcon-defaults: |
-            {
-              "build": {
-                "base-path": [
-                    "ros2/src/"
-                ],
-                "--cmake-args": [
-                    "-DCMAKE_CXX_COMPILER=${{ matrix.compiler }}"
-                ],
-              }
-            }
+        working-directory: AirSim
+      - name: Build ros2 workspace
+        shell: bash
+          source /opt/ros/${{ matrix.distro }}/setup.bash
+          colcon build --cmake-args -DCMAKE_CXX_COMPILER=${{ matrix.compiler }}
+        working-directory: ros2
