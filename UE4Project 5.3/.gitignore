@@ -1,0 +1,40 @@
+# Rider IDE
+.idea/
+
+# don't check-in generated files
+*.sln
+*_BuiltData.uasset
+/.kdev/
+/*.kdev4
+/*.pro
+/*.workspace
+/*CodeCompletionFolders.txt
+/*CodeLitePreProcessor.txt
+/*.pri
+/CMakeLists.txt
+/Makefile
+
+#Unreal Engine
+StarterContent/
+Saved/
+!DefaultEditorPerProjectUserSettings.ini #contains use less CPU setting
+Binaries/
+Build/
+Debug/
+Intermediate/
+DerivedDataCache/
+UnrealHeaderTool/
+UnrealPak/
+obj/
+.vs/
+.vscode/
+.visuallint/
+*.VC.opendb
+*.VC.db
+*.opensdf
+*.sdf
+*.suo
+*_BuiltData.uasset
+FSOnline.code-workspace 
+
+Plugins/AirSim/Source/AirLib/
