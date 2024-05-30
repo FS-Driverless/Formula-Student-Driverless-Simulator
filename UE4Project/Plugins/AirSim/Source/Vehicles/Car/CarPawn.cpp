@@ -3,7 +3,7 @@
 #include "GameFramework/Controller.h"
 #include "Components/TextRenderComponent.h"
 #include "Components/AudioComponent.h"
-#include "WheeledVehicleMovementComponent4W.h"
+#include "ChaosWheeledVehicleMovementComponent.h"
 
 #include "CarWheelFront.h"
 #include "CarWheelRear.h"

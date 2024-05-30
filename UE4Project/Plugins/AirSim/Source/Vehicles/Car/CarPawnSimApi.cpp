@@ -5,7 +5,6 @@
 
 #include "Engine/World.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "Kismet/GameplayStatics.h"
 #include "Camera/CameraComponent.h"
 
 #include "common/ClockFactory.hpp"
@@ -14,7 +13,8 @@
 #include "common/EarthUtils.hpp"
 
 #include "DrawDebugHelpers.h"
-#include "PhysXVehicleManager.h"
+#include "ChaosVehicleManager.h"
+#include "vehicles/car/firmwares/physxcar/PhysXCarApi.hpp"
 
 
 using namespace msr::airlib;
@@ -69,7 +69,7 @@ void CarPawnSimApi::createVehicleApi(ACarPawn* pawn, const msr::airlib::GeoPoint
 
     vehicle_api_ = std::unique_ptr<CarApiBase>(new PhysXCarApi(getVehicleSetting(), sensor_factory, *getGroundTruthKinematics(), home_geopoint));
     pawn_ = pawn;
-    movement_ = pawn->GetVehicleMovement();
+    movement_ = CastChecked<UChaosWheeledVehicleMovementComponent>(pawn->GetVehicleMovement());
 }
 
 
@@ -600,7 +600,7 @@ void CarPawnSimApi::updateWheelStates()
 {
     wheel_states_->time_stamp = msr::airlib::ClockFactory::get()->nowNanos();
 
-    physx::PxVehicleWheelsDynData& mWheelsDynData = movement_->PVehicle->mWheelsDynData;
+    TArray<TObjectPtr<UChaosVehicleWheel>> wheels =  movement_->Wheels;
 
     const float unreal_rotation_angle_to_radians = (2 * M_PI) / -1800.0;
     const float unreal_steering_angle_to_radians = (M_PI) / 180.0;
@@ -615,20 +615,20 @@ void CarPawnSimApi::updateWheelStates()
         rpm_smoothing_coeff = 0.9;
     }
 
-    wheel_states_->fl.rpm = wheel_states_->fl.rpm * (rpm_smoothing_coeff) + (1 - rpm_smoothing_coeff) * OmegaToRPM(mWheelsDynData.getWheelRotationSpeed(0));
-    wheel_states_->fr.rpm = wheel_states_->fl.rpm * (rpm_smoothing_coeff) + (1 - rpm_smoothing_coeff) * OmegaToRPM(mWheelsDynData.getWheelRotationSpeed(1));
-    wheel_states_->rl.rpm = wheel_states_->fl.rpm * (rpm_smoothing_coeff) + (1 - rpm_smoothing_coeff) * OmegaToRPM(mWheelsDynData.getWheelRotationSpeed(2));
-    wheel_states_->rr.rpm = wheel_states_->fl.rpm * (rpm_smoothing_coeff) + (1 - rpm_smoothing_coeff) * OmegaToRPM(mWheelsDynData.getWheelRotationSpeed(3));
+    wheel_states_->fl.rpm = wheel_states_->fl.rpm * (rpm_smoothing_coeff) + (1 - rpm_smoothing_coeff) * Chaos::OmegaToRPM(wheels[0]->GetRotationAngularVelocity());
+    wheel_states_->fr.rpm = wheel_states_->fl.rpm * (rpm_smoothing_coeff) + (1 - rpm_smoothing_coeff) * Chaos::OmegaToRPM(wheels[1]->GetRotationAngularVelocity());
+    wheel_states_->rl.rpm = wheel_states_->fl.rpm * (rpm_smoothing_coeff) + (1 - rpm_smoothing_coeff) * Chaos::OmegaToRPM(wheels[2]->GetRotationAngularVelocity());
+    wheel_states_->rr.rpm = wheel_states_->fl.rpm * (rpm_smoothing_coeff) + (1 - rpm_smoothing_coeff) * Chaos::OmegaToRPM(wheels[3]->GetRotationAngularVelocity());
 
-    wheel_states_->fl.rotation_angle = mWheelsDynData.getWheelRotationAngle(0);
-    wheel_states_->fr.rotation_angle = mWheelsDynData.getWheelRotationAngle(1);
-    wheel_states_->rl.rotation_angle = mWheelsDynData.getWheelRotationAngle(2);
-    wheel_states_->rr.rotation_angle = mWheelsDynData.getWheelRotationAngle(3);
+    wheel_states_->fl.rotation_angle = wheels[0]->GetRotationAngle();
+    wheel_states_->fr.rotation_angle = wheels[1]->GetRotationAngle();
+    wheel_states_->rl.rotation_angle = wheels[2]->GetRotationAngle();
+    wheel_states_->rr.rotation_angle = wheels[3]->GetRotationAngle();
 
-    wheel_states_->fl.steering_angle = movement_->Wheels[0]->GetSteerAngle() * unreal_steering_angle_to_radians;
-    wheel_states_->fr.steering_angle = movement_->Wheels[1]->GetSteerAngle() * unreal_steering_angle_to_radians;
-    wheel_states_->rl.steering_angle = movement_->Wheels[2]->GetSteerAngle() * unreal_steering_angle_to_radians;
-    wheel_states_->rr.steering_angle = movement_->Wheels[3]->GetSteerAngle() * unreal_steering_angle_to_radians;
+    wheel_states_->fl.steering_angle = wheels[0]->GetSteerAngle() * unreal_steering_angle_to_radians;
+    wheel_states_->fr.steering_angle = wheels[1]->GetSteerAngle() * unreal_steering_angle_to_radians;
+    wheel_states_->rl.steering_angle = wheels[2]->GetSteerAngle() * unreal_steering_angle_to_radians;
+    wheel_states_->rr.steering_angle = wheels[3]->GetSteerAngle() * unreal_steering_angle_to_radians;
 }
 
 const msr::airlib::Kinematics::State* CarPawnSimApi::getGroundTruthKinematics() const
@@ -659,7 +659,7 @@ void CarPawnSimApi::updateMovement(const msr::airlib::CarApiBase::CarControls& c
     movement_->SetSteeringInput(controls.steering);
     movement_->SetBrakeInput(controls.brake);
     movement_->SetHandbrakeInput(controls.handbrake);
-    movement_->SetUseAutoGears(!controls.is_manual_gear);
+    movement_->SetUseAutomaticGears(!controls.is_manual_gear);
 }
 
 
@@ -681,6 +681,7 @@ void CarPawnSimApi::resetPawn()
         vehicle_api_->setCarControls(msr::airlib::CarApiBase::CarControls());
         updateMovement(msr::airlib::CarApiBase::CarControls());
 
+        /* TODO Check if needed
         auto pv = movement_->PVehicle;
         if (pv) {
             pv->mWheelsDynData.setToRestState();
@@ -689,6 +690,7 @@ void CarPawnSimApi::resetPawn()
         if (pvd) {
             pvd->mDriveDynData.setToRestState();
         }
+        */
     }, true);
 
     UAirBlueprintLib::RunCommandOnGameThread([this, &phys_comps]() {
