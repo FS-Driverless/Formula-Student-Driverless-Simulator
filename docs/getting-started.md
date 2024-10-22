@@ -76,19 +76,13 @@ Change to the Docker Build Directory: Note that this directory is within the Air
 
         docker run --rm -it -v $PWD/../..:/home/airsim/Formula-Student-Driverless-Simulator formula-simulator
 
-
-3. Inside the Container: Copy the modified setup.sh and build.sh scripts:
-
-        cp ./docker_build/setup.sh .
-        cp ./docker_build/build.sh .
-
-4. Run the Setup and Build:
+3. Run the Setup and Build:
 
        ./setup.sh && ./build.sh
 
-5. Exit the Docker Container: Press Ctrl + D in the terminal to exit.
+4. Exit the Docker Container: Press Ctrl + D in the terminal to exit.
 
-6. Build the final project, use the following command (this process may take some time):
+5. Build the final project, use the following command (this process may take some time):
 
        ~/UnrealEngine/Engine/Binaries/ThirdParty/Mono/Linux/bin/mono ~/UnrealEngine/Engine/Binaries/DotNET/UnrealBuildTool.exe Development Linux -Project=/home/$uSER/Formula-Student-Driverless-Simulator/UE4Project/FSOnline.uproject -TargetType=Editor -Progress
 
