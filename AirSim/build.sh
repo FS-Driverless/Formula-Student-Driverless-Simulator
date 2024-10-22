@@ -28,9 +28,13 @@ fi
 
 # variable for build output
 build_dir=build_debug
+VERSION=$(lsb_release -rs | cut -d. -f1)
 if [ "$(uname)" == "Darwin" ]; then
     export CC=/usr/local/opt/llvm@8/bin/clang
     export CXX=/usr/local/opt/llvm@8/bin/clang++
+elif [ "$VERSION" -lt "22" ]; then
+    export CC="clang-8"
+    export CXX="clang++-8"
 else
     export CC="clang-12"
     export CXX="clang++-12"

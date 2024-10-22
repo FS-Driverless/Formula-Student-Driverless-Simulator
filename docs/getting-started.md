@@ -56,7 +56,7 @@ This guide outlines the steps for building the project from source on Ubuntu 20.
 #### Build AirSim
 ##### For Ubuntu 20.04
 
-    cd /home/YOUR_USER/Formula-Student-Driverless-Simulator/AirSsim
+    cd /home/$USER/Formula-Student-Driverless-Simulator/AirSim
     cp ./docker_build/setup.sh .
     cp ./docker_build/build.sh .
     ./setup.sh && ./build.sh
@@ -66,7 +66,7 @@ First, install Docker on your Ubuntu system.
 
 Change to the Docker Build Directory: Note that this directory is within the AirSim folder, not the root of the Formula-Student-Driverless-Simulator repository.
 
-    cd /home/YOUR_USER/Formula-Student-Driverless-Simulator/AirSim/docker_build
+    cd /home/$USER/Formula-Student-Driverless-Simulator/AirSim/docker_build
 
 1. Build the Docker Image:
 
@@ -74,8 +74,7 @@ Change to the Docker Build Directory: Note that this directory is within the Air
 
 2. Run the Docker Container: After the build completes, mount your local folder into the container:
 
-        
-        docker run --rm -it -v /home/YOUR_USER/Formula-Student-Driverless-Simulator:/home/airsim/Formula-Student-Driverless-Simulator formula-simulator
+        docker run --rm -it -v $PWD/../..:/home/airsim/Formula-Student-Driverless-Simulator formula-simulator
 
 
 3. Inside the Container: Copy the modified setup.sh and build.sh scripts:
@@ -91,11 +90,11 @@ Change to the Docker Build Directory: Note that this directory is within the Air
 
 6. Build the final project, use the following command (this process may take some time):
 
-       ~/UnrealEngine/Engine/Binaries/ThirdParty/Mono/Linux/bin/mono ~/UnrealEngine/Engine/Binaries/DotNET/UnrealBuildTool.exe Development Linux -Project=/home/YOUR_USER/Formula-Student-Driverless-Simulator/UE4Project/FSOnline.uproject -TargetType=Editor -Progress
+       ~/UnrealEngine/Engine/Binaries/ThirdParty/Mono/Linux/bin/mono ~/UnrealEngine/Engine/Binaries/DotNET/UnrealBuildTool.exe Development Linux -Project=/home/$uSER/Formula-Student-Driverless-Simulator/UE4Project/FSOnline.uproject -TargetType=Editor -Progress
 
 Congratulations! You have successfully built the project from source. You can now open and edit the project by running:
 
-    ./home/YOUR_USERNAME/Formula-Student-Driverless-Simulator/UE4Project/FSOnline.uproject
+    ./home/$USER/Formula-Student-Driverless-Simulator/UE4Project/FSOnline.uproject
 
 ### Building from source using the Unreal Engine Editor for earlier versions of Ubuntu (e.g., Ubuntu 18.04)
 Instead of running the simulator from release binaries, you can compile it manually using unreal engine.
