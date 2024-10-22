@@ -57,8 +57,6 @@ This guide outlines the steps for building the project from source on Ubuntu 20.
 ##### For Ubuntu 20.04
 
     cd /home/$USER/Formula-Student-Driverless-Simulator/AirSim
-    cp ./docker_build/setup.sh .
-    cp ./docker_build/build.sh .
     ./setup.sh && ./build.sh
 
 ##### For Ubuntu 22.04+
