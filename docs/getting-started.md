@@ -47,6 +47,7 @@ Try driving the car around using the arrowkeys.
 If you get a black screen with some buttons, make sure the folder with the binary is in your user folder (Windows: `C:\Users\username\Formula-Student-Driverless-Simulator`, Linux: `~/Formula-Student-Driverless-Simulator`)
 
 If all that works, you can continue to [the ROS interface](getting-started-with-ros.md) or [the python interface](getting-started-with-python.md).
+
 ### From source using the Unreal Engine Editor
 Instead of running the simulator from release binaries, you can compile it manually using unreal engine.
 This is usefull if you want to get the latest changes or if you want to make changes to the maps or the simulation itself.
@@ -76,7 +77,36 @@ On Windows, open the _Developer Command Prompt for VS 2019_, go to `Formula-Stud
 build.cmd
 ```
 
-On Ubuntu, go to folder `AirSim` and run `setup.sh` and `build.sh`.
+On Ubuntu 18.04 and 20.04, go to folder `AirSim` and run `setup.sh` and `build.sh`.
+
+##### For Ubuntu 22.04+
+**Written by Roy Amoyal, Head of the Autonomous Division at BGRacing 2024 (Formula Student Driverless Project at Ben Gurion University)**
+First, install Docker on your Ubuntu system.
+
+Change to the Docker Build Directory: Note that this directory is within the AirSim folder, not the root of the Formula-Student-Driverless-Simulator repository.
+
+    cd /home/$USER/Formula-Student-Driverless-Simulator/AirSim/docker_build
+
+1. Build the Docker Image:
+
+        docker build -t formula-simulator .
+
+2. Run the Docker Container: After the build completes, mount your local folder into the container:
+
+        docker run --rm -it -v $PWD/../..:/home/airsim/Formula-Student-Driverless-Simulator formula-simulator
+
+3. Run the Setup and Build:
+
+       ./setup.sh && ./build.sh
+
+4. Exit the Docker Container: Press Ctrl + D in the terminal to exit.
+
+5. Build the final project, use the following command (this process may take some time):
+
+       ~/UnrealEngine/Engine/Binaries/ThirdParty/Mono/Linux/bin/mono ~/UnrealEngine/Engine/Binaries/DotNET/UnrealBuildTool.exe Development Linux -Project=/home/$uSER/Formula-Student-Driverless-Simulator/UE4Project/FSOnline.uproject -TargetType=Editor -Progress
+
+Congratulations! You have successfully built the project from source. You can now continue with Unreal Engine.
+
 
 > So what does build.cmd or setup.sh+build.sh do? 
   It downloads any nessesary libraries and compiles AirLib.

@@ -14,12 +14,12 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     
@@ -28,18 +28,16 @@ jobs:
       uses: betwo/github-setup-catkin@v1.3.0
       with:
         # Version range or exact version of ROS version to use, using SemVer's version range syntax.
-        ros-version: 'melodic'
+        ros-version: 'noetic'
         build-tool: 'catkin_tools'
         # Root directory of the catkin workspace
         workspace: ./ros
       
     - name: Compilation settings
       run: |
-        sudo apt-get -y install gcc-8 g++-8 rsync libyaml-cpp-dev libcurl4-openssl-dev
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 700 --slave /usr/bin/g++ g++ /usr/bin/g++-7
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 800 --slave /usr/bin/g++ g++ /usr/bin/g++-8
+        sudo apt-get -y install rsync libyaml-cpp-dev libcurl4-openssl-dev
       
-    - name: Setup AirSim 
+    - name: Setup AirSim
       run: |
         ./setup.sh
         ./build.sh
@@ -48,7 +46,7 @@ jobs:
     - name: Build catkin ws
       run: |
         set -ex o pipefail
-        catkin build 
-      working-directory: ./ros 
+        catkin build
+      working-directory: ./ros
       env:
        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
