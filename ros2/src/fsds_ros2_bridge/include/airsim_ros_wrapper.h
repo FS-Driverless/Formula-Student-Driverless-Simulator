@@ -21,7 +21,11 @@ STRICT_MODE_OFF //todo what does this do?
 #include <fs_msgs/msg/extra_info.hpp>
 #include <fs_msgs/msg/wheel_states.hpp>
 #include <chrono>
+#ifdef JAZZY
+#include <cv_bridge/cv_bridge.hpp>
+#else
 #include <cv_bridge/cv_bridge.h>
+#endif
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <geometry_msgs/msg/twist_with_covariance_stamped.hpp>

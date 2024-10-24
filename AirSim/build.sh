@@ -35,9 +35,12 @@ if [ "$(uname)" == "Darwin" ]; then
 elif [ "$VERSION" -lt "22" ]; then
     export CC="clang-8"
     export CXX="clang++-8"
-else
+elif [ "$VERSION" -lt "24" ]; then
     export CC="clang-12"
     export CXX="clang++-12"
+else
+    export CC="clang-16"
+    export CXX="clang++-16"
 fi
 
 #install EIGEN library
