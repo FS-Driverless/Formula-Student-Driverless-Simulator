@@ -30,8 +30,10 @@ if [ "$VERSION" -lt "20" ]; then
     sudo apt-get install -y clang-8 clang++-8 libc++-8-dev libc++abi-8-dev
 elif [ "$VERSION" -lt "22" ]; then
     sudo apt-get install -y clang-8 libc++-8-dev libc++abi-8-dev
-else
+elif [ "$VERSION" -lt "24" ]; then
     sudo apt-get install -y clang-12 clang++-12 libc++-12-dev libc++abi-12-dev
+else
+    sudo apt-get install -y clang-16 clang++-16 libc++-16-dev libc++abi-16-dev
 fi
 
 #install additional tools
