@@ -32,8 +32,13 @@ elif [ "$VERSION" -lt "22" ]; then
     sudo apt-get install -y clang-8 libc++-8-dev libc++abi-8-dev
 elif [ "$VERSION" -lt "24" ]; then
     sudo apt-get install -y clang-12 clang++-12 libc++-12-dev libc++abi-12-dev
-else
+elif [ "$VERSION" -lt "26" ]; then
     sudo apt-get install -y clang-16 clang++-16 libc++-16-dev libc++abi-16-dev
+else
+    # Installing clang 12 for now in all other cases
+    wget https://apt.llvm.org/llvm.sh
+    chmod +x llvm.sh
+    sudo ./llvm.sh 12
 fi
 
 #install additional tools

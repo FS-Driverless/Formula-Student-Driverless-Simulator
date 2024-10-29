@@ -38,9 +38,12 @@ elif [ "$VERSION" -lt "22" ]; then
 elif [ "$VERSION" -lt "24" ]; then
     export CC="clang-12"
     export CXX="clang++-12"
-else
+elif [ "$VERSION" -lt "26" ]; then
     export CC="clang-16"
     export CXX="clang++-16"
+else
+    export CC="clang-12"
+    export CXX="clang++-12"
 fi
 
 #install EIGEN library
