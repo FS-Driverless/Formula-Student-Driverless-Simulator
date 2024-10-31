@@ -11,42 +11,101 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-20.04
+  build: # On Linux, iterates on all ROS 1 and ROS 2 distributions.
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ros_distribution:
+          - noetic
+          - humble
+          - jazzy
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+        # Define the Docker image(s) associated with each ROS distribution.
+        # The include syntax allows additional variables to be defined, like
+        # docker_image in this case. See documentation:
+        # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-including-configurations-in-a-matrix-build
+        #
+        # Platforms are defined in REP 3 and REP 2000:
+        # https://ros.org/reps/rep-0003.html
+        # https://ros.org/reps/rep-2000.html
+        include:
+          # Noetic Ninjemys (May 2020 - May 2025)
+          - docker_image: ghcr.io/catthehacker/ubuntu:act-20.04
+            ros_distribution: noetic
+            ros_version: 1
+
+          # Humble Hawksbill (May 2022 - May 2027)
+          - docker_image: ghcr.io/catthehacker/ubuntu:act-22.04
+            ros_distribution: humble
+            ros_version: 2
+
+          # Jazzy Jalisco (May 2024 - May 2029)
+          - docker_image: ubuntu:24.04
+            ros_distribution: jazzy
+            ros_version: 2
+
+    container:
+      image: ${{ matrix.docker_image }}
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v4
-      with:
-        submodules: recursive
-    
-    # Runs a set of commands using the runners shell
-    - name: Setup ROS
-      uses: betwo/github-setup-catkin@v1.3.0
-      with:
-        # Version range or exact version of ROS version to use, using SemVer's version range syntax.
-        ros-version: 'noetic'
-        build-tool: 'catkin_tools'
-        # Root directory of the catkin workspace
-        workspace: ./ros
+      - name: Update Git
+        run: |
+          apt-get update
+          apt-get install git -y
       
-    - name: Compilation settings
-      run: |
-        sudo apt-get -y install rsync libyaml-cpp-dev libcurl4-openssl-dev
-      
-    - name: Setup AirSim
-      run: |
-        ./setup.sh
-        ./build.sh
-      working-directory: ./AirSim
-       
-    - name: Build catkin ws
-      run: |
-        set -ex o pipefail
-        catkin build
-      working-directory: ./ros
-      env:
-       ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Ubuntu 24.04 specific apt packages
+        if: ${{ contains(matrix.docker_image,'ubuntu:24.04') }}
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata
+          apt-get install -y sudo python3-pip libboost-all-dev nodejs
+          sudo pip3 install -U rosdep --break-system-packages
+
+
+      - name: Act dependencies
+        if: ${{ env.ACT }}
+        run: |
+          apt-get install gnupg lsb-release -y
+
+      - name: setup ROS environment
+        uses: ros-tooling/setup-ros@0.7.9
+        with:
+          required-ros-distributions: ${{ matrix.ros_distribution }}
+
+      - name: Apt packages
+        run: |
+          apt-get update
+          apt-get -y install rsync libyaml-cpp-dev libcurl4-openssl-dev lsb-release wget software-properties-common gnupg
+
+      - name: Setup AirSim
+        run: |
+          ./setup.sh
+          ./build.sh
+        working-directory: AirSim
+
+      - name: Update rosdep
+        run: |
+          rosdep update
+
+      - name: build and test ROS 1
+        if: ${{ matrix.ros_version == 1 }}
+        shell: bash
+        run: |
+          apt-get install -y python3-catkin-tools
+          source /opt/ros/${{ matrix.ros_distribution }}/setup.bash
+          rosdep install --from-paths src --ignore-src -r -y --rosdistro ${{ matrix.ros_distribution }}
+          catkin init
+          catkin build --no-status
+        working-directory: ros
+
+      - name: build and test ROS 2
+        if: ${{ matrix.ros_version == 2 }}
+        shell: bash
+        run: |
+          source /opt/ros/${{ matrix.ros_distribution }}/setup.bash
+          rosdep install --from-paths src --ignore-src -r -y --rosdistro ${{ matrix.ros_distribution }}
+          colcon build
+        working-directory: ros2

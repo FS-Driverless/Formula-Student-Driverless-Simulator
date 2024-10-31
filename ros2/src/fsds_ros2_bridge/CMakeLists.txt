@@ -18,6 +18,11 @@ set(RPC_LIB_INCLUDES " ${AIRSIM_ROOT}/external/rpclib/include")
 set(RPC_LIB rpc) # name of .a file with lib prefix
 message(STATUS "found RPC_LIB_INCLUDES=${RPC_LIB_INCLUDES}")
 
+message(STATUS "distro $ENV{ROS_DISTRO}")
+if($ENV{ROS_DISTRO} STREQUAL "jazzy")
+  add_compile_options(-DJAZZY=1)
+endif()
+
 # find dependencies
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()

@@ -7,7 +7,11 @@
 #include "vehicles/car/api/CarRpcLibClient.hpp"
 #include "statistics.h"
 #include "rpc/rpc_error.h"
+#ifdef JAZZY
+#include <cv_bridge/cv_bridge.hpp>
+#else
 #include <cv_bridge/cv_bridge.h>
+#endif
 #include <math.h>
 
 using dseconds = std::chrono::duration<double>;
