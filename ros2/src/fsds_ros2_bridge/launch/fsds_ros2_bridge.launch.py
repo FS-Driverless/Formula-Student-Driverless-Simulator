@@ -60,6 +60,7 @@ def generate_launch_description():
             package='fsds_ros2_bridge',
             executable='fsds_ros2_bridge',
             name='ros_bridge',
+            namespace='fsds',
             output='screen',
             on_exit=launch.actions.Shutdown(),
             parameters=[
