@@ -2,7 +2,7 @@
 
 The ground speed sensor is modeled around the Kistler ground speed (like the Kistler Correvit SFII).
 
-Velocity information is captured in the global world frame in ENU frame.
+Velocity information is relative to the vehicle frame in ENU coordinates (x forward, y to the left).
 
 At this moment no extra noise is added to the sensordata since the kistler 250hz data averaged into the 100hz is so close to ground truth that adding noise would be unrealistic.
 
