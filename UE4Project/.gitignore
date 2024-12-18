@@ -1,3 +1,6 @@
+# Rider IDE
+.idea/
+
 # don't check-in generated files
 *.sln
 *_BuiltData.uasset
