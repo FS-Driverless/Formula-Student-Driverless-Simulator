@@ -246,7 +246,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 
         if(!competition_mode_) {
             odom_pub = nh_->create_publisher<nav_msgs::msg::Odometry>("testing_only/odom", 10);
-            track_pub = nh_->create_publisher<fs_msgs::msg::Track>("testing_only/track", 10);
+            track_pub = nh_->create_publisher<fs_msgs::msg::Track>("testing_only/track", rclcpp::QoS(10).transient_local());
 			extra_info_pub = nh_->create_publisher<fs_msgs::msg::ExtraInfo>("testing_only/extra_info", 10);
         }
         
