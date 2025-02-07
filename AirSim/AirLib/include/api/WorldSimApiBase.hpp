@@ -28,6 +28,8 @@ public:
 
     virtual bool isPaused() const = 0;
     virtual void reset() = 0;
+    virtual void restart() = 0;
+
     virtual void pause(bool is_paused) = 0;
     virtual void continueForTime(double seconds) = 0;
 

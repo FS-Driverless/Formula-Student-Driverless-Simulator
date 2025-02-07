@@ -49,6 +49,8 @@ public:
     virtual void reset();
     virtual ECameraDirectorMode getInitialViewMode() const;
 
+    virtual void restart();
+
     virtual bool isPaused() const;
     virtual void pause(bool is_paused);
     virtual void continueForTime(double seconds);
