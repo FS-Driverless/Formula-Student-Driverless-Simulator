@@ -3,7 +3,6 @@
 
 #include "AirBlueprintLib.h"
 #include "GameFramework/WorldSettings.h"
-#include "Components/SceneCaptureComponent2D.h"
 #include "Components/SkinnedMeshComponent.h"
 #include "GameFramework/RotatingMovementComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -11,15 +10,15 @@
 #include "Runtime/Engine/Classes/Engine/StaticMesh.h"
 #include "UObject/UObjectIterator.h"
 #include "Camera/CameraComponent.h"
-//#include "Runtime/Foliage/Public/FoliageType.h"
 #include "Misc/MessageDialog.h"
 #include "Engine/LocalPlayer.h"
 #include "Engine/SkeletalMesh.h"
-#include "Slate/SceneViewport.h"
 #include "IImageWrapper.h"
 #include "Misc/ObjectThumbnail.h"
 #include "Engine/Engine.h"
 #include <exception>
+
+#include "IImageWrapperModule.h"
 #include "common/common_utils/Utils.hpp"
 
 /*
@@ -398,9 +397,9 @@ std::vector<msr::airlib::MeshPositionVertexBuffersResponse> UAirBlueprintLib::Ge
             ENQUEUE_RENDER_COMMAND(GetVertexBuffer)(
                 [vertex_buffer, data](FRHICommandListImmediate& RHICmdList)
                 {
-                    FVector* indices = (FVector*)RHILockVertexBuffer(vertex_buffer->VertexBufferRHI, 0, vertex_buffer->VertexBufferRHI->GetSize(), RLM_ReadOnly);
+                    FVector* indices = (FVector*)RHILockBuffer(vertex_buffer->VertexBufferRHI, 0, vertex_buffer->VertexBufferRHI->GetSize(), RLM_ReadOnly);
                     memcpy(data, indices, vertex_buffer->VertexBufferRHI->GetSize());
-                    RHIUnlockVertexBuffer(vertex_buffer->VertexBufferRHI);
+                    RHIUnlockBuffer(vertex_buffer->VertexBufferRHI);
                 });
 
             FStaticMeshLODResources& lod = comp->GetStaticMesh()->GetRenderData()->LODResources[0];
@@ -416,9 +415,9 @@ std::vector<msr::airlib::MeshPositionVertexBuffersResponse> UAirBlueprintLib::Ge
                 ENQUEUE_RENDER_COMMAND(GetIndexBuffer)(
                     [IndexBuffer, data_ptr](FRHICommandListImmediate& RHICmdList)
                     {
-                        uint16_t* indices = (uint16_t*)RHILockIndexBuffer(IndexBuffer->IndexBufferRHI, 0, IndexBuffer->IndexBufferRHI->GetSize(), RLM_ReadOnly);
+                        uint16_t* indices = (uint16_t*)RHILockBuffer(IndexBuffer->IndexBufferRHI, 0, IndexBuffer->IndexBufferRHI->GetSize(), RLM_ReadOnly);
                         memcpy(data_ptr, indices, IndexBuffer->IndexBufferRHI->GetSize());
-                        RHIUnlockIndexBuffer(IndexBuffer->IndexBufferRHI);
+                        RHIUnlockBuffer(IndexBuffer->IndexBufferRHI);
                     });
 
                 //Need to force the render command to go through cause on the next iteration the buffer no longer exists
@@ -439,9 +438,9 @@ std::vector<msr::airlib::MeshPositionVertexBuffersResponse> UAirBlueprintLib::Ge
                 ENQUEUE_RENDER_COMMAND(GetIndexBuffer)(
                     [IndexBuffer, data_ptr](FRHICommandListImmediate& RHICmdList)
                     {
-                        uint32_t* indices = (uint32_t*)RHILockIndexBuffer(IndexBuffer->IndexBufferRHI, 0, IndexBuffer->IndexBufferRHI->GetSize(), RLM_ReadOnly);
+                        uint32_t* indices = (uint32_t*)RHILockBuffer(IndexBuffer->IndexBufferRHI, 0, IndexBuffer->IndexBufferRHI->GetSize(), RLM_ReadOnly);
                         memcpy(data_ptr, indices, IndexBuffer->IndexBufferRHI->GetSize());
-                        RHIUnlockIndexBuffer(IndexBuffer->IndexBufferRHI);
+                        RHIUnlockBuffer(IndexBuffer->IndexBufferRHI);
                     });
 
                 FlushRenderingCommands();
