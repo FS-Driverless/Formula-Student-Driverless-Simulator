@@ -1,18 +1,22 @@
+import os
+
 import launch
 import launch_ros.actions
 
-from os.path import expanduser
-import json 
+import json
+import re
 
 CAMERA_FRAMERATE = 30.0
 
+
 def generate_launch_description():
-    with open(expanduser("~")+'/Formula-Student-Driverless-Simulator/settings.json', 'r') as file:
+    with open(re.sub('ros2/install/fsds_ros2_bridge/share/fsds_ros2_bridge/launch', 'settings.json',
+                     os.path.dirname(__file__)), 'r') as file:
         settings = json.load(file)
 
     camera_configs = settings['Vehicles']['FSCar']['Cameras']
-    if(not camera_configs):
-        print('no cameras configured in ~/Formula-Student-Driverless-Simulator/settings.json')
+    if not camera_configs:
+        print('no cameras configured in settings.json')
 
     camera_nodes = [
         launch_ros.actions.Node(
