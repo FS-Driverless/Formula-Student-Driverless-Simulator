@@ -1,0 +1,3 @@
+[submodule "src/msgs/fs_msgs"]
+	path = src/msgs/fs_msgs
+	url = https://github.com/FS-Driverless/fs_msgs.git

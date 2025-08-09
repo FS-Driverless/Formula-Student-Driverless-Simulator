@@ -1,0 +1,23 @@
+<launch>
+    <!-- Launch argument to choose between cpp or python implementation -->
+    <arg name="use_cpp" default="true" doc="Use C++ implementation if true, Python implementation if false" />
+
+    <!-- Load parameters -->
+    <rosparam file="$(find formula_autonomous_system)/config/config.yaml" command="load" />
+    
+    <!-- C++ node implementation -->
+    <node if="$(arg use_cpp)" 
+          name="formula_autonomous_system" 
+          pkg="formula_autonomous_system" 
+          type="formula_autonomous_system" 
+          output="screen">
+    </node>
+    
+    <!-- Python node implementation -->
+    <node unless="$(arg use_cpp)" 
+          name="formula_autonomous_system" 
+          pkg="formula_autonomous_system" 
+          type="formula_autonomous_system_node.py" 
+          output="screen">
+    </node>
+</launch>
