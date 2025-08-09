@@ -1594,5 +1594,3 @@ void FormulaAutonomousSystem::getImuData(sensor_msgs::Imu& msg, Eigen::Vector3d&
     gyro.z() = msg.angular_velocity.z;
     return;
 }
-
-// commit test
