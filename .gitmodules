@@ -8,6 +8,3 @@
 	path = ros2/src/fs_msgs
 	url = https://github.com/FS-Driverless/fs_msgs.git
 	branch = ros2
-[submodule "KSAE_FSD_SW_Platform"]
-	path = KSAE_FSD_SW_Platform
-	url = https://github.com/forscom25/KSAE_FSD_SW_Platform.git
