@@ -1,0 +1,8 @@
+build/
+devel/
+
+.vscode/
+
+*.pyc
+*.pyo
+src/formula_autonomous_system/launch/local_development.launch

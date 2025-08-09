@@ -1,0 +1,153 @@
+# Formula Autonomous System Configuration
+# Combined configuration file for all subsystems
+# Author: Jiwon Seok (jiwonseok@hanyang.ac.kr)
+# Date: 2025-07-25
+
+system:
+  main_loop_rate: 1000.0 # [Hz]
+
+perception:
+  # ===========================================
+  # LiDAR Perception Parameters
+  # ===========================================
+  
+  lidar_roi_extraction:
+    # LiDAR ROI extraction parameters
+    x_min: 0.0
+    x_max: 50.0
+    y_min: -30.0
+    y_max: 30.0
+    z_min: -10.0
+    z_max: 10.0
+
+  lidar_ground_removal:
+    # RANSAC ground plane fitting parameters
+    ransac_iterations: 30
+    ransac_distance_threshold: 0.01
+
+  lidar_clustering:
+    # DBSCAN clustering parameters
+    dbscan_eps: 0.5
+    dbscan_min_points: 2
+
+  lidar_cone_detection:
+    # Cone geometric constraints
+    cone_min_radius: 0.00
+    cone_max_radius: 0.7
+    cone_min_points: 1
+
+  lidar_extrinsics:
+    # LiDAR position relative to vehicle base (meters, degrees)
+    translation_x: 0.6
+    translation_y: 0.0
+    translation_z: 0.1
+    rotation_roll: 0.0
+    rotation_pitch: 0.0
+    rotation_yaw: 0.0
+
+  # ===========================================
+  # Camera Parameters
+  # ===========================================
+
+  camera_intrinsics:
+    # Camera intrinsic parameters (pixels)
+    # 640x480, horizontal FOV: 90 deg: focal length = 320.0
+    focal_length_x: 320.0
+    focal_length_y: 320.0
+    principal_point_x: 320.0
+    principal_point_y: 240.0
+
+  camera_extrinsics:
+    # Camera position relative to vehicle base (meters, degrees)
+    translation_x: -0.43
+    translation_y: -0.15
+    translation_z: 0.82
+    rotation_roll: 0.0
+    rotation_pitch: 0.0
+    rotation_yaw: 0.0
+
+  camera_image_processing:
+    # Image preprocessing settings
+    enable_preprocessing: false
+    gaussian_blur_sigma: 1.0
+    bilateral_filter_diameter: 9
+
+  camera_hsv_window_size:
+    window_size: 15
+
+  camera_hsv_yellow:
+    # HSV thresholds for yellow cone detection
+    hue_min: 18
+    hue_max: 40
+    saturation_min: 36
+    value_min: 100
+
+  camera_hsv_blue:
+    # HSV thresholds for blue cone detection
+    hue_min: 95
+    hue_max: 110
+    saturation_min: 90
+    value_min: 100
+
+  camera_hsv_orange:
+    # HSV thresholds for orange cone detection
+    hue_min: 10
+    hue_max: 15
+    saturation_min: 100
+    value_min: 100
+
+localization:
+  # ===========================================
+  # Localization Parameters
+  # ===========================================
+  
+  localization:
+    # Reference WGS84 Position
+    # if user defined position is true then use ref_wgs84_latitude, ref_wgs84_longitude, ref_wgs84_altitude
+    # if not then use initial gps position as reference position
+    use_user_defined_ref_wgs84_position: true
+    ref_wgs84_latitude: 47.641467991978416
+    ref_wgs84_longitude: -122.14016501105924
+    ref_wgs84_altitude: 0.0
+    
+    # Velocity Estimation
+    alpha_velocity: 0.1
+
+behavior_planning:
+  default: {}
+
+local_planning:
+  trajectory:
+    # Basic trajectory generation
+    lookahead_distance: 20.0
+    waypoint_spacing: 2.0
+    default_speed: 3.0
+    
+    # Cone-based path planning (meters)
+    max_cone_distance: 25.0
+    lane_offset: 2.0
+    
+    # Safety parameters (meters)
+    safety_margin: 0.5
+
+control:
+  ControllerSelection:
+    # lateral_controller_type: "PurePursuit", "Stanley"
+    lateral_controller_type: "PurePursuit" 
+
+  PurePursuit:
+    lookahead_distance: 5.0
+    max_steer_angle: 1.0
+
+  Stanley:
+    k_gain: 0.7
+
+  SpeedControl:
+    target_speed: 1.0
+    pid_kp: 0.3
+    pid_ki: 0.0
+    pid_kd: 0.01
+    max_throttle: 0.4
+
+  Vehicle:
+    wheel_base: 1.55
