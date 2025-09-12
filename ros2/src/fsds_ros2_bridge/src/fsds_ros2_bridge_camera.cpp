@@ -107,6 +107,12 @@ void doImageUpdate()
                    0, 1, 0,
                    0, 0, 1};
 
+    info_msg->p = {fx, 0, cx, 0,
+                   0, fy, cy, 0,
+                   0, 0, 1.0, 0};
+
+    info_pub->publish(*info_msg);
+
     fps_statistic.addCount();
 }
 
