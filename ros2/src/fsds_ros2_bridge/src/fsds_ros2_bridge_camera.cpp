@@ -180,7 +180,7 @@ int main(int argc, char ** argv)
 
     // load settings
     camera_name = nh->declare_parameter<std::string>("camera_name", "");
-    camera_frame_prefix = nh->declare_parameter<std::string>("camera_frame_prefix", "/fsds/camera");
+    camera_frame_prefix = nh->declare_parameter<std::string>("camera_frame_prefix", "/fsds/");
     camera_frame_id = camera_frame_prefix + camera_name;
 
     framerate = nh->declare_parameter<double>("framerate", 0.0);
