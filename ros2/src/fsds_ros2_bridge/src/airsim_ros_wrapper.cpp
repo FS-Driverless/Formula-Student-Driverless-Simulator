@@ -764,8 +764,20 @@ void AirsimROSWrapper::append_static_camera_tf(const std::string& vehicle_name, 
     static_cam_tf_body_msg.transform.translation.x = camera_setting.position.x();
     static_cam_tf_body_msg.transform.translation.y = camera_setting.position.y();
     static_cam_tf_body_msg.transform.translation.z = camera_setting.position.z();
+
+    // Existing quaternion from camera settings
     tf2::Quaternion quat;
-    quat.setRPY(math_common::deg2rad(camera_setting.rotation.roll), math_common::deg2rad(camera_setting.rotation.pitch), math_common::deg2rad(camera_setting.rotation.yaw));
+    quat.setRPY(math_common::deg2rad(camera_setting.rotation.roll), 
+                math_common::deg2rad(camera_setting.rotation.pitch), 
+                math_common::deg2rad(camera_setting.rotation.yaw));
+
+    // Rotation fix for ROS convention
+    tf2::Quaternion additional_rotation(-0.5, 0.5, -0.5, 0.5);
+
+    // Multiply the quaternions to apply the additional rotation
+    quat *= additional_rotation;
+
+    // Assign the result to the message
     static_cam_tf_body_msg.transform.rotation.x = quat.x();
     static_cam_tf_body_msg.transform.rotation.y = quat.y();
     static_cam_tf_body_msg.transform.rotation.z = quat.z();
