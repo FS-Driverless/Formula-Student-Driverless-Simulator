@@ -23,6 +23,16 @@ void WorldSimApi::reset()
         }, true);
 }
 
+void WorldSimApi::restart()
+{
+    //APlayerController::RestartLevel()
+    //simmode_->EndPlay(EEndPlayReason::Quit);
+    //simmode_->restart();
+    UAirBlueprintLib::RunCommandOnGameThread([this]() {
+        simmode_->restart();
+        }, true);
+}
+
 void WorldSimApi::pause(bool is_paused)
 {
     simmode_->pause(is_paused);

@@ -31,6 +31,7 @@ std::string camera_frame_id = "";
 double framerate = 0.0;
 std::string host_ip = "localhost";
 bool depthcamera = false;
+double timeout_sec = 10.0;
 
 ros::Time make_ts(uint64_t unreal_ts)
 {
@@ -54,6 +55,10 @@ std::vector<ImageResponse> getImage(ImageRequest req) {
         std::string msg = e.get_error().as<std::string>();
         std::cout << "Exception raised by the API while getting image:" << std::endl
                 << msg << std::endl;
+    } catch (rpc::timeout & e) {
+        std::cout << "Timeout for simGetImage, probably restarting" << std::endl;
+        std::cout << "Trying to reconnect" << std::endl;
+        airsim_api->confirmConnection(timeout_sec);
     }
     return img_responses;
 }
@@ -167,7 +172,6 @@ int main(int argc, char ** argv)
     msr::airlib::CarRpcLibClient client(host_ip, RpcLibPort, 5);
     airsim_api = &client;
 
-    double timeout_sec = 10.0;
     nh.getParam("timeout", timeout_sec);
 
     try {
