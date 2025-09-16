@@ -1,7 +1,6 @@
 #pragma once
 
 #include "GameFramework/Pawn.h"
-#include "Particles/ParticleSystemComponent.h"
 #include "UnrealImageCapture.h"
 
 #include <vector>
@@ -12,17 +11,15 @@
 #include "SimJoyStick/SimJoyStick.h"
 #include "api/VehicleApiBase.hpp"
 #include "api/VehicleSimApiBase.hpp"
-#include "common/common_utils/Signal.hpp"
 #include "common/common_utils/UniqueValueMap.hpp"
 
 #include "CoreMinimal.h"
-#include "WheeledVehicleMovementComponent4W.h"
+#include "ChaosWheeledVehicleMovementComponent.h"
 
 #include "CarPawn.h"
 #include "PawnEvents.h"
 #include "CarPawnSimApi.h"
 #include "vehicles/car/api/CarApiBase.hpp"
-#include "vehicles/car/firmwares/physxcar/PhysXCarApi.hpp"
 #include "physics/Kinematics.hpp"
 #include "common/Common.hpp"
 #include "common/CommonStructs.hpp"
@@ -166,7 +163,7 @@ private:
 
     std::unique_ptr<msr::airlib::CarApiBase> vehicle_api_;
     ACarPawn* pawn_;
-    UWheeledVehicleMovementComponent* movement_;
+    UChaosWheeledVehicleMovementComponent* movement_;
     msr::airlib::CarApiBase::CarControls last_controls_;
     const msr::airlib::Kinematics::State* pawn_kinematics_;
     std::vector<std::string> vehicle_api_messages_;
