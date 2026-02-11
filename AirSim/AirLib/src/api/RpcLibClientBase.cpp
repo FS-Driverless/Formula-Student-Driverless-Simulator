@@ -208,6 +208,16 @@ void RpcLibClientBase::simSetVehiclePose(const Pose& pose, bool ignore_collision
     pimpl_->client.call("simSetVehiclePose", RpcLibAdapatorsBase::Pose(pose), ignore_collision, vehicle_name);
 }
 
+void RpcLibClientBase::simResetToPose(const Pose& pose, const std::string& vehicle_name)
+{
+    pimpl_->client.call("simResetToPose", RpcLibAdapatorsBase::Pose(pose), vehicle_name);
+}
+
+void RpcLibClientBase::simSetVehicleLinearVelocity(const Vector3r& velocity, const std::string& vehicle_name)
+{
+    pimpl_->client.call("simSetVehicleLinearVelocity", RpcLibAdapatorsBase::Vector3r(velocity), vehicle_name);
+}
+
 void RpcLibClientBase::simSetTraceLine(const std::vector<float>& color_rgba, float thickness, const std::string & vehicle_name)
 {
     pimpl_->client.call("simSetTraceLine", color_rgba, thickness, vehicle_name);

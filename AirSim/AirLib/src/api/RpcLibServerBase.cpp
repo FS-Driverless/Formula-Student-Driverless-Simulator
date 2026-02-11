@@ -150,6 +150,10 @@ RpcLibServerBase::RpcLibServerBase(ApiProvider* api_provider, const std::string&
         return RpcLibAdapatorsBase::Pose(pose);
     });
 
+    pimpl_->server.bind("simSetVehicleLinearVelocity", [&](const RpcLibAdapatorsBase::Vector3r& velocity, const std::string& vehicle_name) -> void {
+        getVehicleSimApi(vehicle_name)->setLinearVelocity(velocity.to());
+    });
+
     pimpl_->server.bind("simSetTraceLine", [&](const std::vector<float>& color_rgba, float thickness, const std::string& vehicle_name) -> void {
         getVehicleSimApi(vehicle_name)->setTraceLine(color_rgba, thickness);
     });
@@ -182,6 +186,10 @@ RpcLibServerBase::RpcLibServerBase(ApiProvider* api_provider, const std::string&
         else
             getVehicleApi("")->reset();
         resetInProgress = false;
+    });
+
+    pimpl_->server.bind("simResetToPose", [&](const RpcLibAdapatorsBase::Pose& pose, const std::string& vehicle_name) -> void {
+        getWorldSimApi()->resetToPose(pose.to(), vehicle_name);
     });
 
     pimpl_->server.bind("simPrintLogMessage", [&](const std::string& message, const std::string& message_param, unsigned char severity) -> void {

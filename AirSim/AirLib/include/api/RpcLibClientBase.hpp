@@ -84,6 +84,8 @@ public:
 
     Pose simGetVehiclePose(const std::string& vehicle_name = "") const;
     void simSetVehiclePose(const Pose& pose, bool ignore_collision, const std::string& vehicle_name = "");
+    void simResetToPose(const Pose& pose, const std::string& vehicle_name = "");
+    void simSetVehicleLinearVelocity(const Vector3r& velocity, const std::string& vehicle_name = "");
     void simSetTraceLine(const std::vector<float>& color_rgba, float thickness=3.0f, const std::string& vehicle_name = "");
 
     vector<ImageCaptureBase::ImageResponse> simGetImages(vector<ImageCaptureBase::ImageRequest> request, const std::string& vehicle_name = "");

@@ -50,6 +50,8 @@ public:
 
     virtual Pose getPose() const = 0;
     virtual void setPose(const Pose& pose, bool ignore_collision) = 0;
+    virtual void resetToPose(const Pose& pose) = 0;
+    virtual void setLinearVelocity(const Vector3r& velocity) = 0;
     virtual const Kinematics::State* getGroundTruthKinematics() const = 0;
     virtual const WheelStates* getWheelStates() const = 0;
 

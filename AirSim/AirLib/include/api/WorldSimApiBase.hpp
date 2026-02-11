@@ -28,6 +28,7 @@ public:
 
     virtual bool isPaused() const = 0;
     virtual void reset() = 0;
+    virtual void resetToPose(const Pose& pose, const std::string& vehicle_name = "") = 0;
     virtual void pause(bool is_paused) = 0;
     virtual void continueForTime(double seconds) = 0;
 
