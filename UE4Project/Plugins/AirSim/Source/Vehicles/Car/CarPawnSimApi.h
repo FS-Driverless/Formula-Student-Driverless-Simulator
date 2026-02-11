@@ -44,7 +44,7 @@ public:
     typedef msr::airlib::ImageCaptureBase ImageCaptureBase;
 
     struct Params {
-        APawn* pawn; 
+        APawn* pawn;
         const CoordFrameTransformer* global_transform;
         PawnEvents* pawn_events;
         common_utils::UniqueValueMap<std::string, APIPCamera*> cameras;
@@ -61,7 +61,7 @@ public:
             const msr::airlib::GeoPoint home_geopoint_val,
             std::string vehicle_name_val)
         {
-            pawn = pawn_val; 
+            pawn = pawn_val;
             global_transform = global_transform_val;
             pawn_events = pawn_events_val;
             cameras = cameras_val;
@@ -204,7 +204,7 @@ private:
         FVector last_debug_position;
         FVector current_position;
         FVector current_debug_position;
-        FVector debug_position_offset;        
+        FVector debug_position_offset;
         bool tracing_enabled;
         bool collisions_enabled;
         bool passthrough_enabled;
@@ -216,7 +216,7 @@ private:
         FVector ground_offset;
         FVector transformation_offset;
     };
-    
+
     State state_, initial_state_;
 
     std::unique_ptr<msr::airlib::Kinematics> kinematics_;

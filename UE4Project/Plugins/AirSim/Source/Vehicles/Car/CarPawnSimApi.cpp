@@ -224,7 +224,7 @@ void CarPawnSimApi::setStartPosition(const FVector& position, const FRotator& ro
 
     //compute our home point
     Vector3r nedWrtOrigin = ned_transform_.toGlobalEnu(initial_state_.start_location);
-    home_geo_point_ = msr::airlib::EarthUtils::nedToGeodetic(nedWrtOrigin, 
+    home_geo_point_ = msr::airlib::EarthUtils::nedToGeodetic(nedWrtOrigin,
         AirSimSettings::singleton().origin_geopoint);
 }
 
@@ -302,7 +302,7 @@ void CarPawnSimApi::createCamerasFromSettings()
     }
 }
 
-void CarPawnSimApi::onCollision(class UPrimitiveComponent* MyComp, class AActor* Other, class UPrimitiveComponent* OtherComp, 
+void CarPawnSimApi::onCollision(class UPrimitiveComponent* MyComp, class AActor* Other, class UPrimitiveComponent* OtherComp,
     bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
     // Deflect along the surface when we collide.
@@ -323,8 +323,8 @@ void CarPawnSimApi::onCollision(class UPrimitiveComponent* MyComp, class AActor*
     ++state_.collision_info.collision_count;
 
 
-    UAirBlueprintLib::LogMessageString("Collision", Utils::stringf("#%d with %s - ObjID %d", 
-        state_.collision_info.collision_count, 
+    UAirBlueprintLib::LogMessageString("Collision", Utils::stringf("#%d with %s - ObjID %d",
+        state_.collision_info.collision_count,
         state_.collision_info.object_name.c_str(), state_.collision_info.object_id),
         LogDebugLevel::Informational);
 }
@@ -398,7 +398,7 @@ msr::airlib::RCData CarPawnSimApi::getRCData() const
         rc_data_.switches = joystick_state_.buttons;
         rc_data_.vendor_id = joystick_state_.pid_vid.substr(0, joystick_state_.pid_vid.find('&'));
 
-        
+
         //switch index 0 to 7 for FrSky Taranis RC is:
         //front-upper-left, front-upper-right, top-right-left, top-right-left, top-left-right, top-right-right, top-left-left, top-right-left
 
@@ -461,7 +461,7 @@ void CarPawnSimApi::toggleTrace()
 
     if (!state_.tracing_enabled)
         UKismetSystemLibrary::FlushPersistentDebugLines(params_.pawn->GetWorld());
-    else {     
+    else {
         state_.debug_position_offset = state_.current_debug_position - state_.current_position;
         state_.last_debug_position = state_.last_position;
     }
@@ -609,7 +609,7 @@ void CarPawnSimApi::updateKinematics(float dt)
     kinematics_->update();
 }
 
-float computeAngleChange(float prev_rotation_angle_rad, float new_rotation_angle_rad) 
+float computeAngleChange(float prev_rotation_angle_rad, float new_rotation_angle_rad)
 {
     return new_rotation_angle_rad + (new_rotation_angle_rad > prev_rotation_angle_rad ? 0.0f : 2.0f * M_PI) - prev_rotation_angle_rad;
 }
@@ -626,7 +626,7 @@ void CarPawnSimApi::updateWheelStates()
 
     // at very low velocities the angular velocity becomes very unstable,
     // so a higher smoothing factor is needed to obtain a usable estimate
-    float higher_smoothing_factor_rpm_threshold = 80; 
+    float higher_smoothing_factor_rpm_threshold = 80;
     float avg_rear_wheel_rpm = (wheel_states_->rr.rpm + wheel_states_->rl.rpm) / 2;
     float rpm_smoothing_coeff = 0.7;
     if (avg_rear_wheel_rpm < higher_smoothing_factor_rpm_threshold) {

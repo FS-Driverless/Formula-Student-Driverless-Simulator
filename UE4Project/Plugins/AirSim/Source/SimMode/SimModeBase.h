@@ -31,14 +31,14 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Api")
     void startApiServer();
-    
+
     UFUNCTION(BlueprintCallable, Category = "Api")
     void stopApiServer();
 
     UFUNCTION(BlueprintCallable, Category = "Api")
     bool isApiServerStarted();
 
-public:	
+public:
     // Sets default values for this actor's properties
     ASimModeBase();
     virtual void BeginPlay() override;
