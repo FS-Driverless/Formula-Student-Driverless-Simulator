@@ -23,6 +23,13 @@ void WorldSimApi::reset()
         }, true);
 }
 
+void WorldSimApi::resetToPose(const Pose& pose, const std::string& vehicle_name)
+{
+    UAirBlueprintLib::RunCommandOnGameThread([this, pose, vehicle_name]() {
+        simmode_->resetToPose(pose, vehicle_name);
+    }, true);
+}
+
 void WorldSimApi::pause(bool is_paused)
 {
     simmode_->pause(is_paused);

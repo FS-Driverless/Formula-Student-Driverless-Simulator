@@ -100,6 +100,7 @@ public:
     virtual std::vector<uint8_t> getImage(const std::string& camera_name, ImageCaptureBase::ImageType image_type) const override;
     virtual Pose getPose() const override;
     virtual void setPose(const Pose& pose, bool ignore_collision) override;
+    virtual void resetToPose(const Pose& pose) override;
 
     virtual msr::airlib::CameraInfo getCameraInfo(const std::string& camera_name) const override;
     const APIPCamera* getCamera(const std::string& camera_name) const;

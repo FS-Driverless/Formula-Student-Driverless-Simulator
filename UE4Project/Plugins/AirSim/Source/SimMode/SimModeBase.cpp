@@ -306,6 +306,11 @@ void ASimModeBase::reset()
     }, true);
 }
 
+void ASimModeBase::resetToPose(const msr::airlib::Pose& pose, const std::string& vehicle_name)
+{
+    getVehicleSimApi(vehicle_name)->resetToPose(pose);
+}
+
 void ASimModeBase::setupInputBindings()
 {
     UAirBlueprintLib::EnableInput(this);

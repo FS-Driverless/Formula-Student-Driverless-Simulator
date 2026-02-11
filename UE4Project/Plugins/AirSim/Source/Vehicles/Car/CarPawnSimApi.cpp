@@ -185,6 +185,13 @@ void CarPawnSimApi::resetImplementation()
     resetPawn();
 }
 
+void CarPawnSimApi::resetToPose(const Pose& pose)
+{
+    setPoseInternal(pose, true);
+    kinematics_->reset();
+    resetPawn();
+}
+
 //physics tick
 void CarPawnSimApi::update()
 {

@@ -47,6 +47,7 @@ public:
 
     //additional overridable methods
     virtual void reset();
+    virtual void resetToPose(const msr::airlib::Pose& pose, const std::string& vehicle_name = "");
     virtual ECameraDirectorMode getInitialViewMode() const;
 
     virtual bool isPaused() const;
