@@ -192,6 +192,17 @@ void CarPawnSimApi::resetToPose(const Pose& pose)
     resetPawn();
 }
 
+void CarPawnSimApi::setLinearVelocity(const msr::airlib::Vector3r& velocity)
+{
+    FVector velocity_uu = ned_transform_.fromLocalEnuVelocity(velocity);
+    auto phys_comps = UAirBlueprintLib::getPhysicsComponents(pawn_);
+    UAirBlueprintLib::RunCommandOnGameThread([velocity_uu, &phys_comps]() {
+        for (auto* phys_comp : phys_comps) {
+            phys_comp->SetPhysicsLinearVelocity(velocity_uu, false, NAME_None);
+        }
+    }, true);
+}
+
 //physics tick
 void CarPawnSimApi::update()
 {

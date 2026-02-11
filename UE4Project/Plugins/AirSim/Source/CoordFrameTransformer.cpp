@@ -34,6 +34,10 @@ CoordFrameTransformer::Vector3r CoordFrameTransformer::toLocalEnuVelocity(const 
 {
     return CoordFrameTransformer::toVector3r(velocity, 1 / world_to_meters_);
 }
+FVector CoordFrameTransformer::fromLocalEnuVelocity(const Vector3r& velocity) const
+{
+    return CoordFrameTransformer::toFVector(velocity, world_to_meters_);
+}
 CoordFrameTransformer::Vector3r CoordFrameTransformer::toGlobalEnu(const FVector& position) const
 {
     return CoordFrameTransformer::toVector3r(position - global_transform_.GetLocation(), 1 / world_to_meters_);

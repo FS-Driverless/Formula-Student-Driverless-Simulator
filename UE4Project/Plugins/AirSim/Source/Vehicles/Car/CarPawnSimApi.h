@@ -101,6 +101,7 @@ public:
     virtual Pose getPose() const override;
     virtual void setPose(const Pose& pose, bool ignore_collision) override;
     virtual void resetToPose(const Pose& pose) override;
+    virtual void setLinearVelocity(const msr::airlib::Vector3r& velocity) override;
 
     virtual msr::airlib::CameraInfo getCameraInfo(const std::string& camera_name) const override;
     const APIPCamera* getCamera(const std::string& camera_name) const;
