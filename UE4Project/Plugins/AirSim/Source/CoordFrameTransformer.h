@@ -29,6 +29,7 @@ public:
     //UU -> local ENU
     Vector3r toLocalEnu(const FVector& position) const;
     Vector3r toLocalEnuVelocity(const FVector& velocity) const;
+    FVector fromLocalEnuVelocity(const Vector3r& velocity) const;
     Vector3r toGlobalEnu(const FVector& position) const;
     Quaternionr toEnu(const FQuat& q) const;
     float toEnu(float length) const;

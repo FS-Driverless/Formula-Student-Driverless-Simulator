@@ -49,7 +49,7 @@ struct RpcLibServerBase::impl {
     ~impl() {
     }
 
-    void stop() {        
+    void stop() {
         server.close_sessions();
         if (!is_async_) {
             // this deadlocks UI thread if async_run was called while there are pending rpc calls.
@@ -92,20 +92,20 @@ RpcLibServerBase::RpcLibServerBase(ApiProvider* api_provider, const std::string&
      pimpl_->server.bind("getSettingsString", [&]() -> std::string {
         return getWorldSimApi()->getSettingsString();
     });
-       
-    pimpl_->server.bind("simPause", [&](bool is_paused) -> void { 
-        getWorldSimApi()->pause(is_paused); 
+
+    pimpl_->server.bind("simPause", [&](bool is_paused) -> void {
+        getWorldSimApi()->pause(is_paused);
     });
-    pimpl_->server.bind("simIsPaused", [&]() -> bool { 
-        return getWorldSimApi()->isPaused(); 
+    pimpl_->server.bind("simIsPaused", [&]() -> bool {
+        return getWorldSimApi()->isPaused();
     });
-    pimpl_->server.bind("simContinueForTime", [&](double seconds) -> void { 
-        getWorldSimApi()->continueForTime(seconds); 
+    pimpl_->server.bind("simContinueForTime", [&](double seconds) -> void {
+        getWorldSimApi()->continueForTime(seconds);
     });
 
-    pimpl_->server.bind("simSetTimeOfDay", [&](bool is_enabled, const string& start_datetime, bool is_start_datetime_dst, 
+    pimpl_->server.bind("simSetTimeOfDay", [&](bool is_enabled, const string& start_datetime, bool is_start_datetime_dst,
         float celestial_clock_speed, float update_interval_secs, bool move_sun) -> void {
-        getWorldSimApi()->setTimeOfDay(is_enabled, start_datetime, is_start_datetime_dst, 
+        getWorldSimApi()->setTimeOfDay(is_enabled, start_datetime, is_start_datetime_dst,
             celestial_clock_speed, update_interval_secs, move_sun);
     });
 
@@ -116,13 +116,13 @@ RpcLibServerBase::RpcLibServerBase(ApiProvider* api_provider, const std::string&
         getWorldSimApi()->setWeatherParameter(param, val);
     });
 
-    pimpl_->server.bind("enableApiControl", [&](bool is_enabled, const std::string& vehicle_name) -> void { 
+    pimpl_->server.bind("enableApiControl", [&](bool is_enabled, const std::string& vehicle_name) -> void {
         getVehicleApi(vehicle_name)->enableApiControl(is_enabled);
     });
-    pimpl_->server.bind("isApiControlEnabled", [&](const std::string& vehicle_name) -> bool { 
+    pimpl_->server.bind("isApiControlEnabled", [&](const std::string& vehicle_name) -> bool {
         return getVehicleApi(vehicle_name)->isApiControlEnabled();
     });
-    pimpl_->server.bind("simGetImages", [&](const std::vector<RpcLibAdapatorsBase::ImageRequest>& request_adapter, const std::string& vehicle_name) -> 
+    pimpl_->server.bind("simGetImages", [&](const std::vector<RpcLibAdapatorsBase::ImageRequest>& request_adapter, const std::string& vehicle_name) ->
         vector<RpcLibAdapatorsBase::ImageResponse> {
             const auto& response = getVehicleSimApi(vehicle_name)->getImages(RpcLibAdapatorsBase::ImageRequest::to(request_adapter));
             return RpcLibAdapatorsBase::ImageResponse::from(response);
@@ -150,6 +150,10 @@ RpcLibServerBase::RpcLibServerBase(ApiProvider* api_provider, const std::string&
         return RpcLibAdapatorsBase::Pose(pose);
     });
 
+    pimpl_->server.bind("simSetVehicleLinearVelocity", [&](const RpcLibAdapatorsBase::Vector3r& velocity, const std::string& vehicle_name) -> void {
+        getVehicleSimApi(vehicle_name)->setLinearVelocity(velocity.to());
+    });
+
     pimpl_->server.bind("simSetTraceLine", [&](const std::vector<float>& color_rgba, float thickness, const std::string& vehicle_name) -> void {
         getVehicleSimApi(vehicle_name)->setTraceLine(color_rgba, thickness);
     });
@@ -166,7 +170,7 @@ RpcLibServerBase::RpcLibServerBase(ApiProvider* api_provider, const std::string&
     pimpl_->server.
         bind("simGetSegmentationObjectID", [&](const std::string& mesh_name) -> int {
         return getWorldSimApi()->getSegmentationObjectID(mesh_name);
-    });    
+    });
 
     pimpl_->server.bind("reset", [&]() -> void {
         //Exit if already resetting.
@@ -182,6 +186,10 @@ RpcLibServerBase::RpcLibServerBase(ApiProvider* api_provider, const std::string&
         else
             getVehicleApi("")->reset();
         resetInProgress = false;
+    });
+
+    pimpl_->server.bind("simResetToPose", [&](const RpcLibAdapatorsBase::Pose& pose, const std::string& vehicle_name) -> void {
+        getWorldSimApi()->resetToPose(pose.to(), vehicle_name);
     });
 
     pimpl_->server.bind("simPrintLogMessage", [&](const std::string& message, const std::string& message_param, unsigned char severity) -> void {
@@ -223,7 +231,7 @@ RpcLibServerBase::RpcLibServerBase(ApiProvider* api_provider, const std::string&
         return RpcLibAdapatorsBase::CameraInfo(camera_info);
     });
 
-    pimpl_->server.bind("simSetCameraOrientation", [&](const std::string& camera_name, const RpcLibAdapatorsBase::Quaternionr& orientation, 
+    pimpl_->server.bind("simSetCameraOrientation", [&](const std::string& camera_name, const RpcLibAdapatorsBase::Quaternionr& orientation,
         const std::string& vehicle_name) -> void {
         getVehicleSimApi(vehicle_name)->setCameraOrientation(camera_name, orientation.to());
     });
@@ -234,7 +242,7 @@ RpcLibServerBase::RpcLibServerBase(ApiProvider* api_provider, const std::string&
     });
 
     pimpl_->server.bind("simGetCollisionInfo", [&](const std::string& vehicle_name) -> RpcLibAdapatorsBase::CollisionInfo {
-        const auto& collision_info = getVehicleSimApi(vehicle_name)->getCollisionInfo(); 
+        const auto& collision_info = getVehicleSimApi(vehicle_name)->getCollisionInfo();
         return RpcLibAdapatorsBase::CollisionInfo(collision_info);
     });
 
@@ -243,7 +251,7 @@ RpcLibServerBase::RpcLibServerBase(ApiProvider* api_provider, const std::string&
     });
 
     pimpl_->server.bind("simGetObjectPose", [&](const std::string& object_name) -> RpcLibAdapatorsBase::Pose {
-        const auto& pose = getWorldSimApi()->getObjectPose(object_name); 
+        const auto& pose = getWorldSimApi()->getObjectPose(object_name);
         return RpcLibAdapatorsBase::Pose(pose);
     });
     pimpl_->server.bind("simSetObjectPose", [&](const std::string& object_name, const RpcLibAdapatorsBase::Pose& pose, bool teleport) -> bool {

@@ -18,6 +18,7 @@ public:
 
     virtual bool isPaused() const override;
     virtual void reset() override;
+    virtual void resetToPose(const Pose& pose, const std::string& vehicle_name = "") override;
     virtual void pause(bool is_paused) override;
     virtual void continueForTime(double seconds) override;
 

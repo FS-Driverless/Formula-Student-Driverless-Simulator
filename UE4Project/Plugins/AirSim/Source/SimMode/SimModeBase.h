@@ -31,14 +31,14 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Api")
     void startApiServer();
-    
+
     UFUNCTION(BlueprintCallable, Category = "Api")
     void stopApiServer();
 
     UFUNCTION(BlueprintCallable, Category = "Api")
     bool isApiServerStarted();
 
-public:	
+public:
     // Sets default values for this actor's properties
     ASimModeBase();
     virtual void BeginPlay() override;
@@ -47,6 +47,7 @@ public:
 
     //additional overridable methods
     virtual void reset();
+    virtual void resetToPose(const msr::airlib::Pose& pose, const std::string& vehicle_name = "");
     virtual ECameraDirectorMode getInitialViewMode() const;
 
     virtual bool isPaused() const;

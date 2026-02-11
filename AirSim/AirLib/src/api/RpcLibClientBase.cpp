@@ -40,7 +40,7 @@ STRICT_MODE_OFF
 STRICT_MODE_ON
 #ifdef _MSC_VER
 __pragma(warning( disable : 4239))
-#endif			  
+#endif
 
 
 namespace msr { namespace airlib {
@@ -125,7 +125,7 @@ void RpcLibClientBase::confirmConnection(double timeout)
         clock->sleep_for(delay);
     }
 
-    
+
     if (getConnectionState() != RpcLibClientBase::ConnectionState::Connected)
     {
         throw std::runtime_error("Failed connecting to RPC server (airsim). Is the simulator running?");
@@ -135,7 +135,7 @@ void RpcLibClientBase::confirmConnection(double timeout)
     auto client_ver = getClientVersion();
     auto server_min_ver = getMinRequiredServerVersion();
     auto client_min_ver = getMinRequiredClientVersion();
-    
+
     std::string ver_info = Utils::stringf("Client Ver:%i (Min Req:%i), Server Ver:%i (Min Req:%i)",
         client_ver, client_min_ver, server_ver, server_min_ver);
 
@@ -208,6 +208,16 @@ void RpcLibClientBase::simSetVehiclePose(const Pose& pose, bool ignore_collision
     pimpl_->client.call("simSetVehiclePose", RpcLibAdapatorsBase::Pose(pose), ignore_collision, vehicle_name);
 }
 
+void RpcLibClientBase::simResetToPose(const Pose& pose, const std::string& vehicle_name)
+{
+    pimpl_->client.call("simResetToPose", RpcLibAdapatorsBase::Pose(pose), vehicle_name);
+}
+
+void RpcLibClientBase::simSetVehicleLinearVelocity(const Vector3r& velocity, const std::string& vehicle_name)
+{
+    pimpl_->client.call("simSetVehicleLinearVelocity", RpcLibAdapatorsBase::Vector3r(velocity), vehicle_name);
+}
+
 void RpcLibClientBase::simSetTraceLine(const std::vector<float>& color_rgba, float thickness, const std::string & vehicle_name)
 {
     pimpl_->client.call("simSetTraceLine", color_rgba, thickness, vehicle_name);
@@ -215,7 +225,7 @@ void RpcLibClientBase::simSetTraceLine(const std::vector<float>& color_rgba, flo
 
 vector<ImageCaptureBase::ImageResponse> RpcLibClientBase::simGetImages(vector<ImageCaptureBase::ImageRequest> request, const std::string& vehicle_name)
 {
-    const auto& response_adaptor = pimpl_->client.call("simGetImages", 
+    const auto& response_adaptor = pimpl_->client.call("simGetImages",
         RpcLibAdapatorsBase::ImageRequest::from(request), vehicle_name)
         .as<vector<RpcLibAdapatorsBase::ImageResponse>>();
 
