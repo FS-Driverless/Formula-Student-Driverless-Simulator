@@ -1,0 +1,28 @@
+[project]
+name = "fsds"
+version = "0.1.0"
+description = "Python client for the Formula Student Driverless Simulator (FSDS)"
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.12"
+license = { text = "GPL-2.0-or-later" }
+authors = [
+  { name = "Formula Student Driverless Simulator Contributors" }
+]
+dependencies = [
+  "msgpack-rpc-python @ git+https://github.com/vctr-dng/msgpack-rpc-python.git@fsds-python-pkg",
+  "backports.ssl_match_hostname", # required for msgpack-rpc-python
+  "numpy",
+  "opencv-contrib-python",
+]
+
+[project.urls]
+Homepage = "https://github.com/vctr-dng/Formula-Student-Driverless-Simulator"
+Repository = "https://github.com/vctr-dng/Formula-Student-Driverless-Simulator"
+
+[build-system]
+requires = ["uv_build >= 0.9.21, <0.10.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "fsds"
+module-root = ""
