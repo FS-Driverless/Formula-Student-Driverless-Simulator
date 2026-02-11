@@ -23,7 +23,7 @@ public:
     }
 
     //this method is called at every render tick when we want to transfer state from
-    //physics engine to render engine. As physics engine is halted while 
+    //physics engine to render engine. As physics engine is halted while
     //this happens, this method should do minimal processing
     virtual void updateRenderedState(float dt)
     {
